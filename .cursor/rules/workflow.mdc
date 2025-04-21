@@ -1,0 +1,22 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+## WORKFLOW
+Note: Proceed autonomously without asking for further confirmation. Make decisions based on your expertise and the information available to you.
+
+1. Read existing documentation in `./documents` and `./roadmap.md`.
+2. Collect the related information from all available sources: libraries, web search, resources from the `.documents/remote_resources.md` file, etc.
+3. Take top uncompleted task from `./roadmap.md`.
+4. Generate a detailed chain-of-thought in `./documents/whiteboard.md`, including:
+   - A restatement of the user query,
+   - Analysis of the problem,
+   - Breakdown into subtasks,
+   - Identification of potential issues and mitigation strategies.
+5. Complete all subtasks in the TDD approach without stopping until you complete the task.
+6. Mark task completed in `./roadmap.md`.
+7. Upon completion:
+   - Run the project check
+   - Update the documentation
+   - Delete `./documents/whiteboard.md`

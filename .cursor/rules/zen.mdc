@@ -1,0 +1,25 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+## ZEN OF DEVELOPMENT
+
+1. Strive for elegance over clutter.
+2. Favor clarity over ambiguity.
+3. Keep solutions as straightforward as possible.
+4. Accept complexity only when simplicity fails.
+5. Prefer flat structures to deep hierarchies.
+6. Embrace whitespace; avoid cramming.
+7. Prioritize readability above all.
+8. Don’t bend rules for special cases.
+9. Balance practicality with purity.
+10. Surface errors; never let them fail silently.
+11. Silence errors only by explicit design.
+12. When unsure, don’t guess—ask or refuse.
+13. Provide one clear, idiomatic way to do each task.
+14. Offer discoverability for non‑obvious solutions.
+15. Act promptly, but don’t rush recklessly.
+16. Delight in ideas you can explain simply.
+17. Question ideas that resist explanation.
+18. Leverage packages, modules, and namespaces abundantly.

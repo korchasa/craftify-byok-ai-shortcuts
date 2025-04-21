@@ -1,0 +1,29 @@
+# Архитектура Craftify
+
+## Общая схема
+- Основное приложение (SwiftUI) и Share Extension используют общий модуль CraftifyShared (SwiftPM).
+- Взаимодействие между модулями через App Group (UserDefaults) и Keychain Sharing.
+- Логирование через LogManagerShared (SPM), хранение логов в App Group контейнере (SQLite/CoreData).
+
+## Ключевые паттерны
+- MVVM + SwiftUI для UI и бизнес-логики.
+- Dependency Injection для менеджеров.
+- FIFO для логов (ограничение 1000 записей).
+
+## Взаимодействие компонентов
+- ShareExtensionManager читает inventory и API-ключ, вызывает ProcessingManager.
+- ProcessingManager формирует запрос, вызывает LLMAPIClient.
+- LLMAPIClient отправляет HTTP POST к OpenAI, парсит ответ через ResponseParser.
+- ClipboardManager копирует результат в UIPasteboard.
+- Все действия логируются через LogManagerShared.
+
+## Обработка ошибок
+- Все ошибки (Keychain, сеть, парсинг, буфер обмена) обрабатываются с показом Alert.
+- Повторные попытки при сетевых ошибках (экспоненциальный backoff).
+- Маскирование API-ключа в логах.
+- При ошибках доступа к ключу — предложение открыть Settings.
+
+## Тестирование
+- Unit-тесты для всех менеджеров.
+- UI/E2E-тесты для основных сценариев.
+- Покрытие ≥ 80% для ключевых модулей.

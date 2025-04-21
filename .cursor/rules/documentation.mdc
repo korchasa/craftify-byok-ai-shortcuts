@@ -1,0 +1,56 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+## DOCUMENTATION STRUCTURE
+
+1. - `./documents/whiteboard.md`:
+- Temporary notes
+- Ongoing plans and progress marks.
+- The only file for in-progress notes.
+
+2. `./documents/project.md`
+- Project overview, goals and requirements
+- Problems solved and solutions provided
+- Target audience and use cases
+- Success metrics and constraints
+
+3. `./documents/architecture.md`
+- System architecture and layers
+- Key design patterns and principles
+- Component interactions
+- Error handling and testing strategies
+
+4. `./documents/implementation.md`
+- Commands and their functionality (in table format)
+- Technology stack and dependencies
+- Development environment and setup
+
+5. `./documents/file_structure.md`
+- Complete file listing of the project
+- Directory organization
+- Key file purposes and relationships
+- File organization patterns
+
+6. `./documents/developer-manual.md`
+- Developer manual for the project
+- How to install dependencies
+- How to run the project
+- How to test the project
+- How to build the project
+- How to deploy the project
+
+7. `./documents/user-manual.md`
+- User manual for the project
+- How to use the project
+- How to test the project
+- How to build the project
+- How to deploy the project
+
+8. `./**/README.md` - in all folders
+- Notes about folder structure and file purposes
+- Architecture decisions and design patterns on the folder level
+- Key algorithms and data structures
+- Performance considerations
+- Error handling and testing strategies
