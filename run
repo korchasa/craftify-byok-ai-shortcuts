@@ -1,0 +1,94 @@
+#!/bin/bash
+set -e
+
+# Цвета для вывода
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+function help() {
+  echo "Usage: ./run <command>"
+  echo "Commands:"
+  echo "  build     - Сборка всех таргетов (MainApp, ShareExtension, CraftifyShared)"
+  echo "  test      - Запуск тестов CraftifyShared"
+  echo "  lint      - Проверка стиля SwiftLint"
+  echo "  format    - Проверка форматирования SwiftFormat"
+  echo "  dev       - Сборка и запуск MainApp в симуляторе iPhone 14 (iOS 16.4)"
+  echo "  check     - Линт, формат, сборка, тесты, size-check (CI)"
+  echo "  clean     - Очистка артефактов сборки"
+  echo "  logs      - Показать device logs (симулятор)"
+  echo "  help      - Показать эту справку"
+}
+
+function ensure_mint() {
+  if ! command -v mint &> /dev/null; then
+    echo -e "${RED}Mint не найден. Установите через 'brew install mint'.${NC}"
+    exit 1
+  fi
+}
+
+SIMULATOR_ID=EE50483C-9861-438F-82D0-52FFB8FDF92C
+
+case "$1" in
+  build)
+    ensure_mint
+    mint run xcodegen
+    open -a Simulator
+    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    ;;
+  test)
+    ensure_mint
+    mint run xcodegen
+    open -a Simulator
+    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test
+    ;;
+  lint)
+    ensure_mint
+    mint run swiftlint --strict
+    ;;
+  format)
+    ensure_mint
+    mint run swiftformat . --lint
+    ;;
+  dev)
+    ensure_mint
+    mint run xcodegen
+    open -a Simulator
+    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    xcrun simctl boot $SIMULATOR_ID || true
+    xcrun simctl install $SIMULATOR_ID "$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | grep -m1 'BUILT_PRODUCTS_DIR =' | awk '{print $3}')/MainApp.app"
+    xcrun simctl launch $SIMULATOR_ID dev.korchasa.Craftify
+    ;;
+  check)
+    ensure_mint
+    mint run xcodegen
+    open -a Simulator
+    mint run swiftlint --strict
+    mint run swiftformat . --lint
+    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build test
+    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
+    EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
+    SIZE=$(du -m "$EXT_PATH" | cut -f1)
+    echo "ShareExtension size: ${SIZE}MB"
+    if [ "$SIZE" -gt 20 ]; then
+      echo -e "${RED}ShareExtension size exceeds 20MB!${NC}"
+      exit 1
+    fi
+    ;;
+  clean)
+    rm -rf build
+    xcodebuild clean -scheme MainApp || true
+    xcodebuild clean -scheme ShareExtension || true
+    xcodebuild clean -scheme CraftifyShared || true
+    ;;
+  logs)
+    xcrun simctl spawn booted log stream --predicate 'process == "MainApp"' --style syslog
+    ;;
+  help|--help|-h|*)
+    help
+    ;;
+esac

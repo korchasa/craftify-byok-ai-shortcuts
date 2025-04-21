@@ -1,0 +1,643 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		07A88205877E305FC64E0B53 /* MainAppPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */; };
+		0B20545A6939E28DEFEA43BA /* ShareExtensionPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B934B34EBEDC14981E43A8C /* ShareExtensionPlaceholder.swift */; };
+		18EECCD03DFD918E9B5B3E92 /* CraftifySharedPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287FEE1390B145F4B46AB9DA /* CraftifySharedPlaceholder.swift */; };
+		29A9841183FA2E40D0CA2144 /* CraftifyShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A62DE97390770A2717EB11 /* CraftifyShared.framework */; };
+		85D3978DD1FDB2AB759D7D8D /* CraftifyShared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93A62DE97390770A2717EB11 /* CraftifyShared.framework */; };
+		8FB073848B309C6448EB1A6C /* CraftifyShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93A62DE97390770A2717EB11 /* CraftifyShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D5FB27D0B30042F36D1A156A /* PlaceholderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1679239FE996353D10353D12 /* PlaceholderTests.swift */; };
+		EEC63FAAA52A9E8376E001B9 /* CraftifyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D28DB3F67CDF5F0E6E146 /* CraftifyApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6BA2D03FDFA9B3B230F5B18A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18ABFDF18819DFB841A32817 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48A8BE9C0269A32AC58437F5;
+			remoteInfo = CraftifyShared;
+		};
+		C87C10045659B049ACBB2BD1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18ABFDF18819DFB841A32817 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 48A8BE9C0269A32AC58437F5;
+			remoteInfo = CraftifyShared;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		95B27F786FCF2D2036450147 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				8FB073848B309C6448EB1A6C /* CraftifyShared.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		1679239FE996353D10353D12 /* PlaceholderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaceholderTests.swift; sourceTree = "<group>"; };
+		287FEE1390B145F4B46AB9DA /* CraftifySharedPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftifySharedPlaceholder.swift; sourceTree = "<group>"; };
+		6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppPlaceholder.swift; sourceTree = "<group>"; };
+		6B934B34EBEDC14981E43A8C /* ShareExtensionPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionPlaceholder.swift; sourceTree = "<group>"; };
+		8DCCC0B120937EB0F608B6DF /* MainApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MainApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93A62DE97390770A2717EB11 /* CraftifyShared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CraftifyShared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B703ED98C53835018AA8D449 /* ShareExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		C1DAB218E4CA60B435C5E758 /* CraftifySharedTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CraftifySharedTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E40D28DB3F67CDF5F0E6E146 /* CraftifyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftifyApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		06D5DFE186558491A6A2BABB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				85D3978DD1FDB2AB759D7D8D /* CraftifyShared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A0B96E2EE0429FF1B71735BB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				29A9841183FA2E40D0CA2144 /* CraftifyShared.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		04977C5144E9E098BCCF2DD5 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				E40D28DB3F67CDF5F0E6E146 /* CraftifyApp.swift */,
+				6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */,
+			);
+			name = Sources;
+			path = src/MainApp/Sources;
+			sourceTree = "<group>";
+		};
+		3BFB260C3693B1CDBE49239D = {
+			isa = PBXGroup;
+			children = (
+				EF46E10A8913B275958BD8D5 /* Sources */,
+				04977C5144E9E098BCCF2DD5 /* Sources */,
+				72455131ED9AE39C67FD478B /* Sources */,
+				D69ADCBFCD046803245F64A8 /* Tests */,
+				948C31D124539F8D906DA2F3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		72455131ED9AE39C67FD478B /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6B934B34EBEDC14981E43A8C /* ShareExtensionPlaceholder.swift */,
+			);
+			name = Sources;
+			path = src/ShareExtension/Sources;
+			sourceTree = "<group>";
+		};
+		948C31D124539F8D906DA2F3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93A62DE97390770A2717EB11 /* CraftifyShared.framework */,
+				C1DAB218E4CA60B435C5E758 /* CraftifySharedTests.xctest */,
+				8DCCC0B120937EB0F608B6DF /* MainApp.app */,
+				B703ED98C53835018AA8D449 /* ShareExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D69ADCBFCD046803245F64A8 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				1679239FE996353D10353D12 /* PlaceholderTests.swift */,
+			);
+			name = Tests;
+			path = src/CraftifyShared/Tests;
+			sourceTree = "<group>";
+		};
+		EF46E10A8913B275958BD8D5 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				287FEE1390B145F4B46AB9DA /* CraftifySharedPlaceholder.swift */,
+			);
+			name = Sources;
+			path = src/CraftifyShared/Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0CCFED8625C441A269CD1E81 /* CraftifySharedTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CC7474F2E02000F1D5E8563 /* Build configuration list for PBXNativeTarget "CraftifySharedTests" */;
+			buildPhases = (
+				B1A862491C9CAE33DA4891E1 /* Sources */,
+				A0B96E2EE0429FF1B71735BB /* Frameworks */,
+				95B27F786FCF2D2036450147 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70E50B5893DBE3A33978A4A4 /* PBXTargetDependency */,
+			);
+			name = CraftifySharedTests;
+			productName = CraftifySharedTests;
+			productReference = C1DAB218E4CA60B435C5E758 /* CraftifySharedTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		48A8BE9C0269A32AC58437F5 /* CraftifyShared */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F2AE08905DC147FE9201D39F /* Build configuration list for PBXNativeTarget "CraftifyShared" */;
+			buildPhases = (
+				2959B93DE34FB50346BBDD2E /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CraftifyShared;
+			productName = CraftifyShared;
+			productReference = 93A62DE97390770A2717EB11 /* CraftifyShared.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		60B67F859084B6AD1ECAD983 /* MainApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA4314CE322B18DB83FC4EA4 /* Build configuration list for PBXNativeTarget "MainApp" */;
+			buildPhases = (
+				AC92B5C69B9264A4F9A5CADA /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MainApp;
+			productName = MainApp;
+			productReference = 8DCCC0B120937EB0F608B6DF /* MainApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6E99CB366D323D89B45B1DAE /* ShareExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0CF9A0756ED58591DB8C5B61 /* Build configuration list for PBXNativeTarget "ShareExtension" */;
+			buildPhases = (
+				A1F677849E1722AFAD453A01 /* Sources */,
+				06D5DFE186558491A6A2BABB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A2AEA3A3762C38720A3BC030 /* PBXTargetDependency */,
+			);
+			name = ShareExtension;
+			productName = ShareExtension;
+			productReference = B703ED98C53835018AA8D449 /* ShareExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		18ABFDF18819DFB841A32817 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					0CCFED8625C441A269CD1E81 = {
+						DevelopmentTeam = YOUR_TEAM_ID;
+						ProvisioningStyle = Automatic;
+					};
+					48A8BE9C0269A32AC58437F5 = {
+						DevelopmentTeam = YOUR_TEAM_ID;
+						ProvisioningStyle = Automatic;
+					};
+					60B67F859084B6AD1ECAD983 = {
+						DevelopmentTeam = YOUR_TEAM_ID;
+						ProvisioningStyle = Automatic;
+					};
+					6E99CB366D323D89B45B1DAE = {
+						DevelopmentTeam = YOUR_TEAM_ID;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 0C4FDC634649F03145613D84 /* Build configuration list for PBXProject "Craftify" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 3BFB260C3693B1CDBE49239D;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				48A8BE9C0269A32AC58437F5 /* CraftifyShared */,
+				0CCFED8625C441A269CD1E81 /* CraftifySharedTests */,
+				60B67F859084B6AD1ECAD983 /* MainApp */,
+				6E99CB366D323D89B45B1DAE /* ShareExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2959B93DE34FB50346BBDD2E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18EECCD03DFD918E9B5B3E92 /* CraftifySharedPlaceholder.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A1F677849E1722AFAD453A01 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0B20545A6939E28DEFEA43BA /* ShareExtensionPlaceholder.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC92B5C69B9264A4F9A5CADA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EEC63FAAA52A9E8376E001B9 /* CraftifyApp.swift in Sources */,
+				07A88205877E305FC64E0B53 /* MainAppPlaceholder.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1A862491C9CAE33DA4891E1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D5FB27D0B30042F36D1A156A /* PlaceholderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		70E50B5893DBE3A33978A4A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48A8BE9C0269A32AC58437F5 /* CraftifyShared */;
+			targetProxy = C87C10045659B049ACBB2BD1 /* PBXContainerItemProxy */;
+		};
+		A2AEA3A3762C38720A3BC030 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 48A8BE9C0269A32AC58437F5 /* CraftifyShared */;
+			targetProxy = 6BA2D03FDFA9B3B230F5B18A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1533195DA0C5DF6077A6A168 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS = group.dev.korchasa.Craftify;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = src/MainApp/Config/Craftify.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = src/MainApp/Config/Info.plist;
+				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3FAB3D9CE82C3E1D3DA35346 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS = group.dev.korchasa.Craftify;
+				CODE_SIGN_ENTITLEMENTS = src/ShareExtension/Config/ShareExtension.entitlements;
+				INFOPLIST_FILE = src/ShareExtension/Config/Info.plist;
+				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify.ShareExtension;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		61B3EA7FDA89142E5C6C8EC5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = src/CraftifyShared/Config/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifyShared;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Release;
+		};
+		6303C7BCAAC465BDE357F217 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifySharedTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7AA30E27F63A2119B297BAAF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifySharedTests;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9DDAB4940DE79E029B7C0173 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS = group.dev.korchasa.Craftify;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = src/MainApp/Config/Craftify.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = src/MainApp/Config/Info.plist;
+				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A2F355CF5770551B45033B59 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = YOUR_TEAM_ID;
+				ENABLE_BITCODE = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		D452CB47C74D1BA3AA9F67B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APP_GROUPS = group.dev.korchasa.Craftify;
+				CODE_SIGN_ENTITLEMENTS = src/ShareExtension/Config/ShareExtension.entitlements;
+				INFOPLIST_FILE = src/ShareExtension/Config/Info.plist;
+				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify.ShareExtension;
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F1BAC4EFB01EBC1D2083F6BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_TESTABILITY = YES;
+				INFOPLIST_FILE = src/CraftifyShared/Config/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifyShared;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+			};
+			name = Debug;
+		};
+		FA06191734E0190954C84C9E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = YOUR_TEAM_ID;
+				ENABLE_BITCODE = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0C4FDC634649F03145613D84 /* Build configuration list for PBXProject "Craftify" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FA06191734E0190954C84C9E /* Debug */,
+				A2F355CF5770551B45033B59 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		0CC7474F2E02000F1D5E8563 /* Build configuration list for PBXNativeTarget "CraftifySharedTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6303C7BCAAC465BDE357F217 /* Debug */,
+				7AA30E27F63A2119B297BAAF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		0CF9A0756ED58591DB8C5B61 /* Build configuration list for PBXNativeTarget "ShareExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D452CB47C74D1BA3AA9F67B1 /* Debug */,
+				3FAB3D9CE82C3E1D3DA35346 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		AA4314CE322B18DB83FC4EA4 /* Build configuration list for PBXNativeTarget "MainApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9DDAB4940DE79E029B7C0173 /* Debug */,
+				1533195DA0C5DF6077A6A168 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F2AE08905DC147FE9201D39F /* Build configuration list for PBXNativeTarget "CraftifyShared" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F1BAC4EFB01EBC1D2083F6BB /* Debug */,
+				61B3EA7FDA89142E5C6C8EC5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 18ABFDF18819DFB841A32817 /* Project object */;
+}

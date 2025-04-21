@@ -8,6 +8,18 @@
    - `mint install nicklockwood/SwiftFormat`
 3. Установить XcodeGen: `mint install yonaskolb/XcodeGen`
 
+### Установка CLI-инструментов через Mint
+
+1. Установите Mint (если не установлен):
+   ```sh
+   brew install mint
+   ```
+2. Установите все инструменты, необходимые проекту:
+   ```sh
+   mint bootstrap
+   ```
+   Mint установит версии CLI-инструментов, указанные в `Mintfile`.
+
 ## Сборка проекта
 - Сгенерировать проект: `xcodegen`
 - Собрать: `./run build`

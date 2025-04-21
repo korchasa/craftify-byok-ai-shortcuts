@@ -1,0 +1,77 @@
+name: Craftify
+options:
+  bundleIdPrefix: dev.korchasa
+  deploymentTarget:
+    iOS: 16.0
+configs:
+  Debug: debug
+  Release: release
+settings:
+  base:
+    DEVELOPMENT_TEAM: YOUR_TEAM_ID
+    SWIFT_VERSION: 5.0
+    CODE_SIGN_STYLE: Automatic
+    IPHONEOS_DEPLOYMENT_TARGET: 16.0
+    ENABLE_BITCODE: NO
+    SWIFT_OPTIMIZATION_LEVEL: '-Onone'
+targets:
+  MainApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: src/MainApp/Sources
+    resources:
+      - path: src/MainApp/Resources
+    info:
+      path: src/MainApp/Config/Info.plist
+    entitlements:
+      path: src/MainApp/Config/Craftify.entitlements
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.korchasa.Craftify
+        APP_GROUPS: group.dev.korchasa.Craftify
+        KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
+        SWIFT_VERSION: 5.0
+  ShareExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: src/ShareExtension/Sources
+    resources:
+      - path: src/ShareExtension/Resources
+    info:
+      path: src/ShareExtension/Config/Info.plist
+    entitlements:
+      path: src/ShareExtension/Config/ShareExtension.entitlements
+    dependencies:
+      - target: CraftifyShared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.korchasa.Craftify.ShareExtension
+        APP_GROUPS: group.dev.korchasa.Craftify
+        KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
+        SWIFT_VERSION: 5.0
+  CraftifyShared:
+    type: framework
+    platform: iOS
+    sources:
+      - path: src/CraftifyShared/Sources
+    resources: []
+    info:
+      path: src/CraftifyShared/Config/Info.plist
+    settings:
+      base:
+        SWIFT_VERSION: 5.0
+        ENABLE_TESTABILITY: YES
+    dependencies: []
+  CraftifySharedTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: src/CraftifyShared/Tests
+    resources: []
+    dependencies:
+      - target: CraftifyShared
+    settings:
+      base:
+        SWIFT_VERSION: 5.0

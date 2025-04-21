@@ -1,0 +1,10 @@
+--exclude CraftifyShared/Package.swift,src/CraftifyShared/Package.swift,Package.swift
+--trailingCommas never
+--linebreakAtEndOfFile enabled
+--indent 4
+--allman false
+--wraparguments beforefirst
+--wrapcollections beforefirst
+--stripunusedargs closure-only
+--self remove
+--disable redundantSelf
