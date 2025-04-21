@@ -64,6 +64,9 @@ targets:
         SWIFT_VERSION: 5.0
         ENABLE_TESTABILITY: YES
     dependencies: []
+    scheme:
+      testTargets:
+        - CraftifySharedTests
   CraftifySharedTests:
     type: bundle.unit-test
     platform: iOS
@@ -72,6 +75,25 @@ targets:
     resources: []
     dependencies:
       - target: CraftifyShared
+      - package: Nimble
+    info:
+      path: src/CraftifyShared/Config/Info.plist
+    scheme:
+      testTargets:
+        - CraftifySharedTests
     settings:
       base:
         SWIFT_VERSION: 5.0
+packages:
+  Nimble:
+    url: https://github.com/Quick/Nimble.git
+    from: 12.0.0
+schemes:
+  CraftifySharedTests:
+    build:
+      targets:
+        CraftifyShared: all
+        CraftifySharedTests: [test]
+    test:
+      targets:
+        - name: CraftifySharedTests

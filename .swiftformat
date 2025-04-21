@@ -1,10 +1,13 @@
 --exclude CraftifyShared/Package.swift,src/CraftifyShared/Package.swift,Package.swift
---trailingCommas never
---linebreakAtEndOfFile enabled
 --indent 4
 --allman false
+--commas inline
 --wraparguments beforefirst
 --wrapcollections beforefirst
 --stripunusedargs closure-only
 --self remove
---disable redundantSelf
+--disable redundantSelf,redundantRawValues,numberFormatting
+--header ignore
+--semicolons never
+--ranges spaced
+--trimwhitespace always

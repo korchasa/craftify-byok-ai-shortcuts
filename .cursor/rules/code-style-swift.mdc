@@ -1,0 +1,87 @@
+---
+description:
+globs: *.swift
+alwaysApply: false
+---
+## Примеры форматирования кода
+
+## Пример с ошибками
+```swift
+import Foundation
+
+final class Example: NSObject {
+    override public init() {
+        super.init()
+    }
+    deinit {}
+    func doSomething() {
+        let x = 42
+        XCTAssertEqual(x, 42)
+    }
+    /// Магическое число, нет ACL, скобки не на новой строке
+    func checkEnum() {
+        enum MyEnum: String, CaseIterable, Codable, Equatable {
+            case foo = "foo"
+            case bar = "bar"
+        }
+        XCTAssertEqual(MyEnum.foo.rawValue, "foo")
+    }
+}
+```
+
+**Ошибки:**
+- Открывающая скобка не на новой строке (`contrasted_opening_brace`)
+- Порядок модификаторов (`override public` вместо `public override`)
+- Нет ACL (`func` без `public`/`private`)
+- Пустой deinit
+- Магическое число (`42`)
+- Нет документации к публичным методам
+- Используется `XCTAssertEqual` вместо Nimble (`expect(x) == 42`)
+- Enum объявлен внутри метода
+
+---
+
+## Пример без ошибок
+```swift
+import Foundation
+
+/// Пример класса с корректным форматированием
+public final class Example: NSObject
+{
+    public override init()
+    {
+        super.init()
+    }
+    /// Очистка ресурсов (если требуется)
+    deinit { /* cleanup */ }
+
+    /// Выполняет действие
+    public func doSomething()
+    {
+        let expectedValue = 42
+        // expect(expectedValue) == 42 // Nimble
+        XCTAssertEqual(expectedValue, 42)
+    }
+
+    /// Проверяет enum
+    public func checkEnum()
+    {
+        enum MyEnum: String, CaseIterable, Codable, Equatable
+        {
+            case bar = "bar"
+            case foo = "foo"
+        }
+        XCTAssertEqual(MyEnum.foo.rawValue, "foo")
+    }
+}
+```
+
+**Исправления:**
+- Открывающая скобка на новой строке
+- Порядок модификаторов: `public override`
+- Явно указан ACL (`public`)
+- deinit содержит комментарий или код
+- Магическое число вынесено в константу
+- Есть документация к публичным методам
+- Enum cases отсортированы
+- (Опционально) Используется Nimble

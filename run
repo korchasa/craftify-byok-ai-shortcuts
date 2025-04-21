@@ -46,11 +46,11 @@ case "$1" in
     ;;
   lint)
     ensure_mint
-    mint run swiftlint --strict
+    mint run swiftlint --strict || { echo -e "${RED}SwiftLint обнаружил ошибки!${NC}"; exit 1; }
     ;;
   format)
     ensure_mint
-    mint run swiftformat . --lint
+    mint run swiftformat . --lint || { echo -e "${RED}SwiftFormat обнаружил ошибки!${NC}"; exit 1; }
     ;;
   dev)
     ensure_mint
@@ -63,13 +63,10 @@ case "$1" in
     ;;
   check)
     ensure_mint
-    mint run xcodegen
-    open -a Simulator
-    mint run swiftlint --strict
-    mint run swiftformat . --lint
-    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build test
-    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
-    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    ./run format
+    ./run lint
+    ./run build
+    ./run test
     xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
     EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
     SIZE=$(du -m "$EXT_PATH" | cut -f1)

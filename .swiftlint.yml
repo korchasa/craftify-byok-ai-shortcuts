@@ -1,8 +1,5 @@
 disabled_rules:
-  - trailing_comma
   - file_length
-  - identifier_name
-  - type_name
   - function_body_length
   - todo
   - line_length
@@ -44,7 +41,6 @@ disabled_rules:
   - for_where
   - function_parameter_count
   - generic_type_name
-  - identifier_name
   - implicit_getter
   - implicit_return
   - joined_default_parameter
@@ -113,9 +109,11 @@ disabled_rules:
   - weak_delegate
   - xctfail_message
   - yoda_condition
+  - contrasted_opening_brace
+  - no_empty_block
+opt_in_rules:
+  - all
 excluded:
   - CraftifyShared/Package.swift
   - src/CraftifyShared/Package.swift
   - Package.swift
-opt_in_rules:
-  - all
