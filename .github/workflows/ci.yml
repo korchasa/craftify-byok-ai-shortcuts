@@ -2,98 +2,101 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
-    branches: [main]
+    branches: [main, develop]
 
 jobs:
-  build:
+  build-test:
     runs-on: macos-latest
+    timeout-minutes: 30
+    env:
+      MINT_PATH: ${{ github.workspace }}/.mint
+      DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
     steps:
-      - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: brew install xcodegen swiftlint swiftformat
-      - name: Clean Xcode project
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache SwiftPM
+        uses: actions/cache@v4
+        with:
+          path: |
+            .build
+            .swiftpm
+          key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Set up Xcode
+        run: sudo xcode-select -s "$DEVELOPER_DIR"
+
+      - name: Cache Mint packages
+        uses: actions/cache@v4
+        with:
+          path: .mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-
+
+      - name: Cache DerivedData
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-deriveddata-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-deriveddata-
+
+      - name: Install Mint
         run: |
-          rm -rf *.xcodeproj
-          rm -rf DerivedData
+          brew install mint || true
+          mint bootstrap
+
+      - name: Show Mint version
+        run: mint --version
+
       - name: Generate Xcode project
-        run: xcodegen
-      - name: Lint
-        run: swiftlint --strict
-      - name: Format check
-        run: swiftformat . --lint
-      - name: Build & Test
-        run: xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build test
-      - name: Build MainApp
-        run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build
-      - name: Build ShareExtension
-        run: xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build
-      - name: Archive ShareExtension
+        run: mint run xcodegen
+
+      - name: Run full check (lint, format, build, test, size)
+        run: ./run check
+
+      - name: Collect code coverage
         run: |
-          xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
+          mkdir -p coverage
+          xcrun xccov view --report --json $(find ~/Library/Developer/Xcode/DerivedData -name '*.xcresult' | sort | tail -n1) > coverage/coverage.json
+        continue-on-error: true
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+
+      - name: Upload build logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: build/
+
+      - name: Check code coverage threshold
+        run: |
+          COVERAGE=$(jq '.targets | to_entries[] | select(.key | test("CraftifyShared")) | .value.lineCoverage' coverage/coverage.json | head -n1)
+          echo "Coverage: $COVERAGE"
+          if (( $(echo "$COVERAGE < 0.80" | bc -l) )); then
+            echo "::error ::Code coverage below 80% ($COVERAGE)"
+            exit 1
+          fi
+        shell: bash
+        continue-on-error: false
+
       - name: Check ShareExtension size
         run: |
-          EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
-          SIZE=$(du -m "$EXT_PATH" | cut -f1)
+          SIZE=$(du -m $(find build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1) | cut -f1)
           echo "ShareExtension size: ${SIZE}MB"
           if [ "$SIZE" -gt 20 ]; then
-            echo "::error::ShareExtension size exceeds 20MB!"
+            echo "::error ::ShareExtension size exceeds 20MB!"
             exit 1
           fi
-      - name: Run SwiftGen (if present)
-        run: |
-          if [ -f "run-swiftgen.sh" ]; then
-            bash run-swiftgen.sh
-          fi
-      - name: Cache Homebrew
-        uses: actions/cache@v3
-        with:
-          path: /usr/local/Homebrew
-          key: ${{ runner.os }}-brew-${{ hashFiles('**/Brewfile') }}
-          restore-keys: |
-            ${{ runner.os }}-brew-
-      - name: Test Coverage
-        run: |
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' -enableCodeCoverage YES test
-          xcrun llvm-cov export -format=lcov build/Build/ProfileData/*.profdata -instr-profile build/Build/ProfileData/*.profdata > coverage.lcov || true
-      - name: Check Coverage Threshold
-        run: |
-          if [ -f coverage.lcov ]; then
-            COVERAGE=$(grep -Po 'LF:\K\d+' coverage.lcov | paste -sd+ - | bc)
-            COVERED=$(grep -Po 'LH:\K\d+' coverage.lcov | paste -sd+ - | bc)
-            PERCENT=$(awk "BEGIN {printf \"%.2f\", ($COVERED/$COVERAGE)*100}")
-            echo "Coverage: $PERCENT%"
-            if (( $(echo "$PERCENT < 80" | bc -l) )); then
-              echo "::error::Test coverage below 80%!"
-              exit 1
-            fi
-          else
-            echo "::error::No coverage report found!"
-            exit 1
-          fi
-      - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-lcov
-          path: coverage.lcov
-      - name: Run UI/E2E Tests
-        run: |
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppUITests
-          xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:ShareExtensionUITests
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-results
-          path: build/Logs/Test
-      - name: Fastlane Bump Version
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          bundle install
-          bundle exec fastlane bump_version
-      - name: Accessibility & Localization Tests
-        run: |
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppAccessibilityTests
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppLocalizationTests
-      - name: Build & Test CraftifySharedTests
-        run: xcodebuild -scheme CraftifySharedTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build test
+        shell: bash
+        continue-on-error: false

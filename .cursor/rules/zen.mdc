@@ -3,23 +3,60 @@ description:
 globs:
 alwaysApply: true
 ---
-## ZEN OF DEVELOPMENT
+## ZEN OF DEVELOPMENT — Junior Dev Edition
 
-1. Strive for elegance over clutter.
-2. Favor clarity over ambiguity.
-3. Keep solutions as straightforward as possible.
-4. Accept complexity only when simplicity fails.
-5. Prefer flat structures to deep hierarchies.
-6. Embrace whitespace; avoid cramming.
-7. Prioritize readability above all.
-8. Don’t bend rules for special cases.
-9. Balance practicality with purity.
-10. Surface errors; never let them fail silently.
-11. Silence errors only by explicit design.
-12. When unsure, don’t guess—ask or refuse.
-13. Provide one clear, idiomatic way to do each task.
-14. Offer discoverability for non‑obvious solutions.
-15. Act promptly, but don’t rush recklessly.
-16. Delight in ideas you can explain simply.
-17. Question ideas that resist explanation.
-18. Leverage packages, modules, and namespaces abundantly.
+1. **Strive for elegance over clutter**
+   Write code that feels crisp and intentional; delete anything that serves no purpose.
+
+2. **Favor clarity over ambiguity**
+   Pick explicit names and avoid “magic numbers” or hidden side effects.
+
+3. **Keep solutions as straightforward as possible**
+   Start with the simplest version that works before adding layers or patterns.
+
+4. **Accept complexity only when simplicity fails**
+   Reach for design patterns, extra layers, or fancy frameworks only after you prove plain code can’t cope.
+
+5. **Prefer flat structures to deep hierarchies**
+   Keep your folder tree, class inheritance, and call stacks shallow so newcomers don’t get lost.
+
+6. **Embrace whitespace; avoid cramming**
+   Blank lines, neat indentation, and generous margins make logic pop out instantly.
+
+7. **Prioritize readability above all**
+   You spend seconds writing a line but hours (or teammates do) rereading it—optimize for the reader.
+
+8. **Don’t bend rules for special cases**
+   Consistency beats clever shortcuts that violate your style guide.
+
+9. **Balance practicality with purity**
+   Clean code matters, but shipping value matters too—find the sweet spot.
+
+10. **Surface errors; never let them fail silently**
+    Log or return errors clearly so bugs show up early in dev, not late in prod.
+
+11. **Silence errors only by explicit design**
+    If you must swallow an error, document why and how you mitigated the risk.
+
+12. **When unsure, don’t guess — check**
+    Read the docs, search in web, run a quick experiment; guessing costs more later.
+
+13. **Provide one clear, idiomatic way to do each task**
+    Pick the community‑accepted pattern so future maintainers don’t wonder which style to follow.
+
+14. **Offer discoverability for non‑obvious solutions**
+    Add comments, README notes, or docstrings pointing to hidden features or tricky constraints.
+
+15. **Act promptly, but don’t rush recklessly**
+    Deliver fast, yet still write tests and review code—speed with control wins.
+
+16. **Delight in ideas you can explain simply**
+    If your design fits on a napkin, you’re on the right track.
+
+17. **Question ideas that resist explanation**
+    Struggling to describe a design often signals it’s overcomplicated—refactor.
+
+18. **Leverage packages, modules, and namespaces abundantly**
+    Reuse trusted libraries and encapsulate your own code; reinventing wheels drains time.
+
+*Read it, code it, live it.*
