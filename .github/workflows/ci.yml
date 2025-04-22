@@ -17,6 +17,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Remove corrupted Package.resolved file
+        run: rm -f **/Package.resolved
+
       - name: Cache SwiftPM
         uses: actions/cache@v4
         with:
@@ -49,29 +52,11 @@ jobs:
           swiftformat --version
           xcbeautify --version
 
-      - name: Format (SwiftFormat)
-        run: swiftformat . --lint
-
-      - name: Lint (SwiftLint)
-        run: swiftlint --strict
-
       - name: Generate Xcode project
         run: xcodegen
 
-      - name: Build MainApp
-        run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
-
-      - name: Build ShareExtension
-        run: xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
-
-      - name: Build CraftifyShared
-        run: xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
-
-      - name: Test CraftifyShared
-        run: xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
-
-      - name: Archive ShareExtension (Release)
-        run: xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
+      - name: Run full check (lint, format, build, test, size)
+        run: ./run check
 
       - name: Collect code coverage
         run: |
@@ -105,8 +90,7 @@ jobs:
 
       - name: Check ShareExtension size
         run: |
-          EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
-          SIZE=$(du -m "$EXT_PATH" | cut -f1)
+          SIZE=$(du -m $(find build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1) | cut -f1)
           echo "ShareExtension size: ${SIZE}MB"
           if [ "$SIZE" -gt 20 ]; then
             echo "::error ::ShareExtension size exceeds 20MB!"
