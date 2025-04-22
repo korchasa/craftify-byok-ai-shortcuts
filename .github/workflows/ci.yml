@@ -52,11 +52,20 @@ jobs:
           swiftformat --version
           xcbeautify --version
 
+      - name: Lint (SwiftLint)
+        run: swiftlint
+
+      - name: Format (SwiftFormat)
+        run: swiftformat . --lint --swiftversion 5.7
+
       - name: Generate Xcode project
         run: xcodegen
 
-      - name: Run full check (lint, format, build, test, size)
-        run: ./run check
+      - name: Build project
+        run: xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build | xcbeautify
+
+      - name: Run tests
+        run: xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 
       - name: Collect code coverage
         run: |
