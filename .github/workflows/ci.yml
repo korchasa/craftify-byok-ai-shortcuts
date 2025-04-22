@@ -22,14 +22,14 @@ jobs:
       - name: Format check
         run: mint run swiftformat . --lint
       - name: Build & Test
-        run: mint run xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build test
+        run: xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build test
       - name: Build MainApp
-        run: mint run xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
+        run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
       - name: Build ShareExtension
-        run: mint run xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
+        run: xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
       - name: Archive ShareExtension
         run: |
-          mint run xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
+          xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
       - name: Check ShareExtension size
         run: |
           EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
@@ -60,8 +60,8 @@ jobs:
             ${{ runner.os }}-mint-
       - name: Test Coverage
         run: |
-          mint run xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -enableCodeCoverage YES test
-          mint run xcrun llvm-cov export -format=lcov build/Build/ProfileData/*.profdata -instr-profile build/Build/ProfileData/*.profdata > coverage.lcov || true
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -enableCodeCoverage YES test
+          xcrun llvm-cov export -format=lcov build/Build/ProfileData/*.profdata -instr-profile build/Build/ProfileData/*.profdata > coverage.lcov || true
       - name: Check Coverage Threshold
         run: |
           if [ -f coverage.lcov ]; then
@@ -84,8 +84,8 @@ jobs:
           path: coverage.lcov
       - name: Run UI/E2E Tests
         run: |
-          mint run xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppUITests
-          mint run xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:ShareExtensionUITests
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppUITests
+          xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:ShareExtensionUITests
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         with:
@@ -98,5 +98,5 @@ jobs:
           bundle exec fastlane bump_version
       - name: Accessibility & Localization Tests
         run: |
-          mint run xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppAccessibilityTests
-          mint run xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppLocalizationTests
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppAccessibilityTests
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppLocalizationTests
