@@ -20,7 +20,7 @@ jobs:
       - name: Format check
         run: swiftformat . --lint
       - name: Build & Test
-        run: xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build test
+        run: xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build test
       - name: Build MainApp
         run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
       - name: Build ShareExtension
