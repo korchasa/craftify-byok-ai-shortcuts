@@ -44,3 +44,59 @@ jobs:
           if [ -f "run-swiftgen.sh" ]; then
             bash run-swiftgen.sh
           fi
+      - name: Cache Homebrew
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/Homebrew
+          key: ${{ runner.os }}-brew-${{ hashFiles('**/Brewfile') }}
+          restore-keys: |
+            ${{ runner.os }}-brew-
+      - name: Cache Mint packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.mint
+          key: ${{ runner.os }}-mint-${{ hashFiles('**/Mintfile') }}
+          restore-keys: |
+            ${{ runner.os }}-mint-
+      - name: Test Coverage
+        run: |
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -enableCodeCoverage YES test
+          xcrun llvm-cov export -format=lcov build/Build/ProfileData/*.profdata -instr-profile build/Build/ProfileData/*.profdata > coverage.lcov || true
+      - name: Check Coverage Threshold
+        run: |
+          if [ -f coverage.lcov ]; then
+            COVERAGE=$(grep -Po 'LF:\K\d+' coverage.lcov | paste -sd+ - | bc)
+            COVERED=$(grep -Po 'LH:\K\d+' coverage.lcov | paste -sd+ - | bc)
+            PERCENT=$(awk "BEGIN {printf \"%.2f\", ($COVERED/$COVERAGE)*100}")
+            echo "Coverage: $PERCENT%"
+            if (( $(echo "$PERCENT < 80" | bc -l) )); then
+              echo "::error::Test coverage below 80%!"
+              exit 1
+            fi
+          else
+            echo "::error::No coverage report found!"
+            exit 1
+          fi
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-lcov
+          path: coverage.lcov
+      - name: Run UI/E2E Tests
+        run: |
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppUITests
+          xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:ShareExtensionUITests
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: build/Logs/Test
+      - name: Fastlane Bump Version
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          bundle install
+          bundle exec fastlane bump_version
+      - name: Accessibility & Localization Tests
+        run: |
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppAccessibilityTests
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppLocalizationTests
