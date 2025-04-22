@@ -22,9 +22,9 @@ jobs:
       - name: Build & Test
         run: xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build test
       - name: Build MainApp
-        run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
+        run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build
       - name: Build ShareExtension
-        run: xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build
+        run: xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build
       - name: Archive ShareExtension
         run: |
           xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
@@ -51,7 +51,7 @@ jobs:
             ${{ runner.os }}-brew-
       - name: Test Coverage
         run: |
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' -enableCodeCoverage YES test
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' -enableCodeCoverage YES test
           xcrun llvm-cov export -format=lcov build/Build/ProfileData/*.profdata -instr-profile build/Build/ProfileData/*.profdata > coverage.lcov || true
       - name: Check Coverage Threshold
         run: |
@@ -75,8 +75,8 @@ jobs:
           path: coverage.lcov
       - name: Run UI/E2E Tests
         run: |
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppUITests
-          xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:ShareExtensionUITests
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppUITests
+          xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:ShareExtensionUITests
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         with:
@@ -89,5 +89,5 @@ jobs:
           bundle exec fastlane bump_version
       - name: Accessibility & Localization Tests
         run: |
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppAccessibilityTests
-          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppLocalizationTests
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppAccessibilityTests
+          xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppLocalizationTests
