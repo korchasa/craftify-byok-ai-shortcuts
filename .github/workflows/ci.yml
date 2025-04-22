@@ -91,3 +91,5 @@ jobs:
         run: |
           xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppAccessibilityTests
           xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' test -only-testing:MainAppLocalizationTests
+      - name: Build & Test CraftifySharedTests
+        run: xcodebuild -scheme CraftifySharedTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone SE (3rd generation),OS=16.4' build test

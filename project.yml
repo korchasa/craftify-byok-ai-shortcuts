@@ -93,6 +93,13 @@ packages:
     url: https://github.com/Quick/Nimble.git
     from: 12.0.0
 schemes:
+  CraftifyShared:
+    build:
+      targets:
+        CraftifyShared: all
+    test:
+      targets:
+        - name: CraftifySharedTests
   CraftifySharedTests:
     build:
       targets:
