@@ -111,6 +111,7 @@ disabled_rules:
   - yoda_condition
   - contrasted_opening_brace
   - no_empty_block
+  - conditional_returns_on_newline
 opt_in_rules:
   - all
 excluded:

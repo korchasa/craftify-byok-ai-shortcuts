@@ -1,8 +1,8 @@
 import XCTest
 
 /// Проверяет, что асинхронный вызов выбрасывает ошибку
-public func XCTAssertThrowsErrorAsync<T>(
-    _ expression: @autoclosure @escaping () async throws -> T,
+public func XCTAssertThrowsErrorAsync(
+    _ expression: @autoclosure @escaping () async throws -> some Any,
     file: StaticString = #file,
     line: UInt = #line,
     _ errorHandler: (Error) -> Void = { _ in }

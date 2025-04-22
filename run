@@ -7,7 +7,7 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 function help() {
-  echo "Usage: ./run <command>"
+  echo "Usage: ./run <command> [args...]"
   echo "Commands:"
   echo "  build     - Сборка всех таргетов (MainApp, ShareExtension, CraftifyShared)"
   echo "  test      - Запуск тестов CraftifyShared"
@@ -18,6 +18,7 @@ function help() {
   echo "  clean     - Очистка артефактов сборки"
   echo "  logs      - Показать device logs (симулятор)"
   echo "  help      - Показать эту справку"
+  echo "\nЛюбые дополнительные параметры после <command> будут переданы в соответствующий инструмент."
 }
 
 function ensure_mint() {
@@ -29,45 +30,48 @@ function ensure_mint() {
 
 SIMULATOR_ID=EE50483C-9861-438F-82D0-52FFB8FDF92C
 
-case "$1" in
+CMD="$1"
+shift || true # Удаляем имя команды, остальные параметры в $@
+
+case "$CMD" in
   build)
     ensure_mint
-    mint run xcodegen
+    mint run xcodegen "$@"
     open -a Simulator
-    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
-    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
-    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
+    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
+    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
     ;;
   test)
     ensure_mint
-    mint run xcodegen
+    mint run xcodegen "$@"
     open -a Simulator
-    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test
+    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@"
     ;;
   lint)
     ensure_mint
-    mint run swiftlint --strict || { echo -e "${RED}SwiftLint обнаружил ошибки!${NC}"; exit 1; }
+    mint run swiftlint --strict "$@" || { echo -e "${RED}SwiftLint обнаружил ошибки!${NC}"; exit 1; }
     ;;
   format)
     ensure_mint
-    mint run swiftformat . --lint || { echo -e "${RED}SwiftFormat обнаружил ошибки!${NC}"; exit 1; }
+    mint run swiftformat . "$@" || { echo -e "${RED}SwiftFormat обнаружил ошибки!${NC}"; exit 1; }
     ;;
   dev)
     ensure_mint
-    mint run xcodegen
+    mint run xcodegen "$@"
     open -a Simulator
-    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build
+    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
     xcrun simctl boot $SIMULATOR_ID || true
     xcrun simctl install $SIMULATOR_ID "$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | grep -m1 'BUILT_PRODUCTS_DIR =' | awk '{print $3}')/MainApp.app"
     xcrun simctl launch $SIMULATOR_ID dev.korchasa.Craftify
     ;;
   check)
     ensure_mint
-    ./run format
-    ./run lint
-    ./run build
-    ./run test
-    xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive
+    ./run format "$@"
+    ./run lint "$@"
+    ./run build "$@"
+    ./run test "$@"
+    xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive "$@"
     EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
     SIZE=$(du -m "$EXT_PATH" | cut -f1)
     echo "ShareExtension size: ${SIZE}MB"
@@ -78,12 +82,12 @@ case "$1" in
     ;;
   clean)
     rm -rf build
-    xcodebuild clean -scheme MainApp || true
-    xcodebuild clean -scheme ShareExtension || true
-    xcodebuild clean -scheme CraftifyShared || true
+    xcodebuild clean -scheme MainApp "$@" || true
+    xcodebuild clean -scheme ShareExtension "$@" || true
+    xcodebuild clean -scheme CraftifyShared "$@" || true
     ;;
   logs)
-    xcrun simctl spawn booted log stream --predicate 'process == "MainApp"' --style syslog
+    xcrun simctl spawn booted log stream --predicate 'process == "MainApp"' --style syslog "$@"
     ;;
   help|--help|-h|*)
     help

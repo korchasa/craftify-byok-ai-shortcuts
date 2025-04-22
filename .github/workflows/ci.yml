@@ -13,12 +13,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Mint
         run: brew install mint
-      - name: Install SwiftLint
-        run: mint install realm/SwiftLint
-      - name: Install SwiftFormat
-        run: mint install nicklockwood/SwiftFormat/SwiftFormat
-      - name: Install XcodeGen
-        run: brew install xcodegen
+      - name: Install mint packages
+        run: mint install --verbose
       - name: Generate Xcode project
         run: xcodegen
       - name: Lint

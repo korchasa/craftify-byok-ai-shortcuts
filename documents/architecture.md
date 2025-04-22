@@ -3,7 +3,7 @@
 ## Общая схема
 - Основное приложение (SwiftUI) и Share Extension используют общий модуль CraftifyShared (SwiftPM).
 - Взаимодействие между модулями через App Group (UserDefaults) и Keychain Sharing.
-- Логирование через LogManagerShared (SPM), хранение логов в App Group контейнере (SQLite/CoreData).
+- Логирование через LogManagerShared (SPM), хранение логов в App Group контейнере (NDJSON-файл, FIFO, маскирование, экспорт, atomic write, DispatchQueue).
 
 ## Ключевые паттерны
 - MVVM + SwiftUI для UI и бизнес-логики.

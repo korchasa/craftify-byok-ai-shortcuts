@@ -24,7 +24,7 @@ public final class LogManagerSharedInMemory: LogManagerShared {
 
     /// Прочитать все логи (FIFO)
     public func getLogs() -> [LogEntry] {
-        return logs
+        logs
     }
 
     /// Удалить все логи
@@ -34,7 +34,7 @@ public final class LogManagerSharedInMemory: LogManagerShared {
 
     /// Экспортировать логи в Data (JSON)
     public func exportLogs() throws -> Data {
-        return try JSONEncoder().encode(logs)
+        try JSONEncoder().encode(logs)
     }
 
     /// Маскировать API-ключ в строке

@@ -51,6 +51,10 @@ targets:
         APP_GROUPS: group.dev.korchasa.Craftify
         KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
         SWIFT_VERSION: 5.0
+        CODE_SIGN_STYLE: Manual
+        CODE_SIGN_IDENTITY: "Apple Development: korchasa@icloud.com (2P55B82U54)"
+        PROVISIONING_PROFILE_SPECIFIER: "09d74528-408d-43f1-96bd-259a04739802"
+        DEVELOPMENT_TEAM: 78M3ZDR5UH
   CraftifyShared:
     type: framework
     platform: iOS

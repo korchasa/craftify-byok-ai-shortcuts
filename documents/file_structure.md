@@ -32,7 +32,6 @@ src/
   - `file_structure.md` — структура файлов
   - `developer-manual.md` — руководство разработчика
   - `user-manual.md` — руководство пользователя
-  - `whiteboard.md` — временные заметки и прогресс
 - `roadmap.md` — поэтапный план реализации
 - `.github/workflows/ci.yml` — CI/CD pipeline
 - `project.yml` — описание проекта для XcodeGen
@@ -40,6 +39,7 @@ src/
 - `Sources/` — исходный код приложения и расширения
 - `Tests/` — модульные и UI тесты
 - `Resources/` — локализация, ассеты
+- App Group контейнер: logs.ndjson — хранилище логов (FIFO, NDJSON)
 
 ## Паттерны организации
 - Разделение main app и Share Extension по таргетам

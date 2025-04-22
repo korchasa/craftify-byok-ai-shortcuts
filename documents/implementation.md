@@ -19,7 +19,7 @@
 - XcodeGen
 - SwiftPM (CraftifyShared, LogManagerShared)
 - Sentry (только MainApp)
-- SQLite/CoreData (логи)
+- NDJSON-файл (FIFO, маскирование, atomic write, экспорт, DispatchQueue) для логов
 - SwiftGen (локализация)
 - GitHub Actions (CI/CD)
 
