@@ -54,3 +54,24 @@ Mint используется для управления версиями CLI-�
 - Ключи кэша строятся на основе ОС и контрольных файлов (`Mintfile`, `Package.resolved`).
 - Кэширование SwiftPM позволяет избежать повторной загрузки и сборки зависимостей, ускоряя pipeline.
 - Remove corrupted Package.resolved | rm -f **/Package.resolved | Удаляет все файлы Package.resolved до кэширования SPM и сборки, предотвращая ошибки из-за повреждённого файла
+
+## Различия между локальной и CI/CD сборкой
+
+- **Локально** для всех операций используются Mint и обёрточные скрипты `./run` (например, `./run check`, `./run lint`, `./run build`). Это обеспечивает единообразие версий инструментов и удобство запуска.
+- **В CI/CD (GitHub Actions)** для ускорения пайплайна все утилиты (swiftlint, swiftformat, xcodegen, xcodebuild и др.) устанавливаются и вызываются напрямую, без Mint и без использования `./run`-скриптов. Это позволяет избежать накладных расходов на запуск Mint и ускоряет выполнение шагов.
+
+**Пример локального запуска:**
+```
+./run check
+```
+
+**Пример в CI/CD:**
+```
+swiftlint
+swiftformat . --lint --swiftversion 5.7
+xcodegen
+xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build | xcbeautify
+xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
+```
+
+Это различие позволяет ускорить CI/CD без потери воспроизводимости и контроля версий инструментов в локальной разработке.
