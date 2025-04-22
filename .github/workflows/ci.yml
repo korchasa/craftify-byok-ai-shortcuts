@@ -46,16 +46,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-deriveddata-
 
-      - name: Install Mint
+      - name: Install tools
         run: |
-          brew install mint || true
-          mint bootstrap
+          brew install xcodegen swiftlint swiftformat xcbeautify || true
 
-      - name: Show Mint version
-        run: mint --version
+      - name: Show tool versions
+        run: |
+          xcodegen --version
+          swiftlint --version
+          swiftformat --version
+          xcbeautify --version
 
       - name: Generate Xcode project
-        run: mint run xcodegen
+        run: xcodegen
 
       - name: Run full check (lint, format, build, test, size)
         run: ./run check
