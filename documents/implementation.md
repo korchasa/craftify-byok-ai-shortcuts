@@ -9,7 +9,7 @@
 | ./run lint     | Проверка стиля (swiftlint)                            |
 | ./run format   | Форматирование кода (swiftformat)                     |
 | ./run dev      | Сборка и запуск в симуляторе iPhone 14 (iOS 16)       |
-| ./run check    | Линт + сборка + тесты                                 |
+| ./run check    | Линт, форматирование, сборка, тесты, проверка размера Share Extension |
 | ./run clean    | Очистка артефактов сборки                             |
 | ./run logs     | Просмотр логов                                        |
 
@@ -43,3 +43,13 @@
 Mint используется для управления версиями CLI-инструментов. Все зависимости перечислены в `Mintfile` в корне проекта.
 
 После завершения этапа 2 все placeholder-файлы и placeholder-тесты удалены. Проект полностью соответствует требованиям линтера и готов к реализации CraftifyShared.
+
+## DevOps и CI/CD
+
+- Используется GitHub Actions (`.github/workflows/ci.yml`).
+- Для ускорения сборки реализовано кэширование:
+  - Mint-пакетов (`.mint`)
+  - DerivedData (`~/Library/Developer/Xcode/DerivedData`)
+  - SwiftPM зависимостей (`.build`, `.swiftpm`)
+- Ключи кэша строятся на основе ОС и контрольных файлов (`Mintfile`, `Package.resolved`).
+- Кэширование SwiftPM позволяет избежать повторной загрузки и сборки зависимостей, ускоряя pipeline.

@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 ## DOCUMENTATION STRUCTURE
 
-1. - `./documents/whiteboard.md`:
+1. `./documents/whiteboard.md`:
 - Temporary notes
 - Ongoing plans and progress marks.
 - The only file for in-progress notes.
