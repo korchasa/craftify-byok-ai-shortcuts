@@ -78,7 +78,7 @@ jobs:
             exit 1
           fi
       - name: Upload Coverage Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-lcov
           path: coverage.lcov
@@ -87,7 +87,7 @@ jobs:
           xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:MainAppUITests
           xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test -only-testing:ShareExtensionUITests
       - name: Upload Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: build/Logs/Test
