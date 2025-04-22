@@ -53,3 +53,4 @@ Mint используется для управления версиями CLI-�
   - SwiftPM зависимостей (`.build`, `.swiftpm`)
 - Ключи кэша строятся на основе ОС и контрольных файлов (`Mintfile`, `Package.resolved`).
 - Кэширование SwiftPM позволяет избежать повторной загрузки и сборки зависимостей, ускоряя pipeline.
+- Remove corrupted Package.resolved | rm -f **/Package.resolved | Удаляет все файлы Package.resolved до кэширования SPM и сборки, предотвращая ошибки из-за повреждённого файла

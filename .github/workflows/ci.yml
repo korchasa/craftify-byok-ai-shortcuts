@@ -17,8 +17,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Remove corrupted Package.resolved file
-        run: rm -f **/Package.resolved
+      - name: Clean potentially broken Package.resolved
+        run: |
+          rm -f Craftify.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
 
       - name: Cache SwiftPM
         uses: actions/cache@v4
@@ -29,6 +30,11 @@ jobs:
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
+
+      - name: Clean SPM build cache if needed
+        if: failure()
+        run: |
+          rm -rf .build .swiftpm
 
       - name: Set up Xcode
         run: sudo xcode-select -s "$DEVELOPER_DIR"
