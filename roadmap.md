@@ -271,3 +271,5 @@
 - Build доступен в TestFlight/App Store.
 - KPI первого дня собраны и переданы stakeholder.
 - План поддержки и hotfix'ов утверждён.
+
+- [x] CI: Автоматически удалять повреждённый Package.resolved перед сборкой (устранение ошибки unknown 'PinsStorage' version '3')
