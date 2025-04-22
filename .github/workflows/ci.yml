@@ -14,13 +14,7 @@ jobs:
       - name: Install Mint
         run: brew install mint
       - name: Install mint packages
-        run: |
-          if [ -f Mintfile ]; then
-            mint bootstrap --verbose
-          else
-            echo "::error::Mintfile not found! Ensure that it exists in the repository root."
-            exit 1
-          fi
+        run: mint bootstrap --verbose
       - name: Generate Xcode project
         run: xcodegen
       - name: Lint
