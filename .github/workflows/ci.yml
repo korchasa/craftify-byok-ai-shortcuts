@@ -13,6 +13,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install dependencies
         run: brew install xcodegen swiftlint swiftformat
+      - name: Clean Xcode project
+        run: |
+          rm -rf *.xcodeproj
+          rm -rf DerivedData
       - name: Generate Xcode project
         run: xcodegen
       - name: Lint
