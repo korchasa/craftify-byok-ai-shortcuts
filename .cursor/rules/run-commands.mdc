@@ -5,8 +5,9 @@ alwaysApply: true
 ---
 ## AVAILABLE COMMANDS
 
-- `./run test` - run the tests
+- `./run test:unit` - run the tests
 - `./run dev` - build and run the project in the iPhone 14(iOS 16) simulator
 - `./run clean` - clean the build artifacts
 - `./run logs` - show the device logs
 - `./run help` - show the help
+- `mint swiftgen`

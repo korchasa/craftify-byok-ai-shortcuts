@@ -44,9 +44,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9EA7AA1A6C701457F0939536"
-               BuildableName = "ShareExtensionTests.xctest"
-               BlueprintName = "ShareExtensionTests"
+               BlueprintIdentifier = "2B930E7C733BF2F51B606A18"
+               BuildableName = "ShareExtensionUnitTests.xctest"
+               BlueprintName = "ShareExtensionUnitTests"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </TestableReference>

@@ -8,7 +8,6 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
     private let module = "TestModule"
     private let message = "Test message"
     private let metadata = ["foo": "bar"]
-    private let apiKey = "sk-12345678ABCDEFGH"
 
     override public func setUp() {
         super.setUp()
@@ -31,7 +30,7 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
     /// Проверяет создание и запись/чтение логов (FIFO)
     public func testLogAndGetLogs() {
         if let tempDir {
-            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir, maxLogCount: 3)
+            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir, maxLogCount: 10)
             logger.clearLogs()
             let logPath = tempDir.appendingPathComponent("logs.ndjson").path
             let fixedDate = Date(timeIntervalSince1970: 1_234_567_890)
@@ -40,9 +39,9 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
             logger.log(entry1)
             logger.log(entry2)
             let logs = logger.getLogs()
-            expect(logs.count) == 2
-            expect(logs[0]) == entry1
-            expect(logs[1]) == entry2
+            expect(logs.count).to(equal(2))
+            expect(logs[0]).to(equal(entry1))
+            expect(logs[1]).to(equal(entry2))
         } else {
             XCTFail("tempDir is nil")
         }
@@ -51,7 +50,7 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
     /// Проверяет удаление логов
     public func testClearLogs() {
         if let tempDir {
-            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir)
+            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir, maxLogCount: 10)
             logger.clearLogs()
             let fixedDate = Date(timeIntervalSince1970: 1_234_567_890)
             logger.log(LogEntry(level: .info, module: module, message: message, metadata: metadata, timestamp: fixedDate))
@@ -76,9 +75,9 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
             logger.log(entry2)
             logger.log(entry3)
             let logs = logger.getLogs()
-            expect(logs.count) == 2
-            expect(logs[0]) == entry2
-            expect(logs[1]) == entry3
+            expect(logs.count).to(equal(2))
+            expect(logs[0]).to(equal(entry2))
+            expect(logs[1]).to(equal(entry3))
         } else {
             XCTFail("tempDir is nil")
         }
@@ -87,39 +86,14 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
     /// Проверяет экспорт логов в JSON
     public func testExportLogs() throws {
         if let tempDir {
-            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir)
+            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir, maxLogCount: 10)
             logger.clearLogs()
             let fixedDate = Date(timeIntervalSince1970: 1_234_567_890)
             let entry = LogEntry(level: .debug, module: module, message: message, metadata: metadata, timestamp: fixedDate)
             logger.log(entry)
             let data = try logger.exportLogs()
             let decoded = try JSONDecoder().decode([LogEntry].self, from: data)
-            expect(decoded) == [entry]
-        } else {
-            XCTFail("tempDir is nil")
-        }
-    }
-
-    /// Проверяет маскирование API-ключа
-    public func testMaskAPIKey() {
-        if let tempDir {
-            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir)
-            let masked = logger.maskAPIKey(apiKey)
-            expect(masked).to(beginWith("sk-1"))
-            expect(masked).to(endWith("EFGH"))
-            expect(masked).to(contain("****"))
-            expect(masked.count) == 12
-        } else {
-            XCTFail("tempDir is nil")
-        }
-    }
-
-    /// Проверяет маскирование короткого ключа
-    public func testMaskShortAPIKey() {
-        if let tempDir {
-            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir)
-            let masked = logger.maskAPIKey("short")
-            expect(masked) == "********"
+            expect(decoded).to(equal([entry]))
         } else {
             XCTFail("tempDir is nil")
         }
@@ -128,13 +102,13 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
     /// Проверяет уровни логов
     public func testLogLevels() {
         if let tempDir {
-            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir)
+            let logger = LogManagerSharedNDJSON(appGroupContainerURL: tempDir, maxLogCount: 10)
             logger.clearLogs()
             let fixedDate = Date(timeIntervalSince1970: 1_234_567_890)
             let entry = LogEntry(level: .warning, module: module, message: message, metadata: metadata, timestamp: fixedDate)
             logger.log(entry)
             let logs = logger.getLogs()
-            expect(logs.first?.level) == .warning
+            expect(logs.first?.level).to(equal(.warning))
         } else {
             XCTFail("tempDir is nil")
         }
@@ -152,7 +126,7 @@ public final class LogManagerSharedNDJSONTests: XCTestCase {
                     logger.log(entry)
                 }
             }
-            expect(logger.getLogs().count) == 10
+            expect(logger.getLogs().count).to(equal(10))
         } else {
             XCTFail("tempDir is nil")
         }

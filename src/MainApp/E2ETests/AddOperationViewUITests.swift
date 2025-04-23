@@ -58,6 +58,20 @@ import XCTest
             expect(viewModel.selectedType) == nil
         }
 
+        public func testAccessibilityLabelsAndDynamicType() throws {
+            let viewModel = AddOperationViewModel()
+            let view = AddOperationView(viewModel: viewModel)
+            let saveButton = try view.inspect().find(button: L10n.addOperationSave)
+            let cancelButton = try view.inspect().find(button: L10n.addOperationCancel)
+            // accessibilityLabel
+            expect(try saveButton.accessibilityLabel()) == L10n.addOperationSave
+            expect(try cancelButton.accessibilityLabel()) == L10n.addOperationCancel
+            // Dynamic Type (проверка поддержки)
+            let title = try view.inspect().find(text: L10n.addOperationTitle)
+            let font = try title.attributes().font()
+            expect(font?.supportsDynamicType ?? false) == true
+        }
+
         deinit {}
     }
 

@@ -10,13 +10,13 @@ cd Craftify-Cursor
 # Генерация Xcode-проекта
 xcodegen
 # Сборка и тесты
-./run test
+./run test:unit
 ```
 
 ## Сборка и запуск
 - Генерация проекта: `xcodegen`
 - Сборка: `./run build`
-- Тесты: `./run test`
+- Тесты: `./run test:unit`
 - Линт: `./run lint`
 - Форматирование: `./run format`
 - Запуск в симуляторе: `./run dev`

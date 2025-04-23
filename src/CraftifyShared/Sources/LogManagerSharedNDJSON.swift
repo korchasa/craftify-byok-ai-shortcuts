@@ -49,16 +49,6 @@ public final class LogManagerSharedNDJSON: LogManagerShared {
         return try JSONEncoder().encode(logs)
     }
 
-    /// Маскировать API-ключ в строке
-    public func maskAPIKey(_ key: String?) -> String {
-        guard let key, key.count > Self.minKeyLengthToMask else {
-            return "********"
-        }
-        let prefix = key.prefix(Self.maskLength)
-        let suffix = key.suffix(Self.maskLength)
-        return "\(prefix)****\(suffix)"
-    }
-
     // MARK: - Private helpers
 
     private func readAllLogs() -> [LogEntry] {

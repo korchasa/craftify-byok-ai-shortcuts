@@ -1,22 +1,21 @@
 import CraftifyShared
 import SwiftUI
+
 #if canImport(ViewInspector)
-    import ViewInspector
+    // moved to EditOperationView+Inspectable.swift
 #endif
 
-public struct AddOperationView: View {
-    @ObservedObject public var viewModel: AddOperationViewModel
+public struct EditOperationView: View {
+    @ObservedObject public var viewModel: EditOperationViewModel
     @Environment(\.dismiss) private var dismiss
-    public var onSave: ((InventoryOperation) -> Void)? = nil
 
-    public init(viewModel: AddOperationViewModel, onSave: ((InventoryOperation) -> Void)? = nil) {
+    public init(viewModel: EditOperationViewModel) {
         self.viewModel = viewModel
-        self.onSave = onSave
     }
 
     public var body: some View {
         VStack(spacing: AddOperationViewConstants.verticalSpacing) {
-            Text(L10n.addOperationTitle)
+            Text(L10n.editOperationTitle)
                 .font(.title2)
                 .bold()
                 .accessibilityAddTraits(.isHeader)
@@ -31,6 +30,7 @@ public struct AddOperationView: View {
             .pickerStyle(.segmented)
             .accessibilityLabel(L10n.addOperationType)
             .padding(.horizontal)
+            .disabled(true) // нельзя менять тип операции при редактировании
 
             formFields
 
@@ -57,8 +57,8 @@ public struct AddOperationView: View {
             .accessibilityLabel(L10n.operationParamComplexityLevel)
             .padding(.horizontal)
         case .correct:
-            Stepper(value: $viewModel.stylePreservationLevel, in: AddOperationViewConstants.styleMin ... AddOperationViewConstants.styleMax) {
-                Text("\(L10n.operationParamStylePreservation): \(viewModel.stylePreservationLevel)/\(AddOperationViewConstants.styleMax)")
+            Stepper(value: $viewModel.stylePreservationLevel, in: EditOperationViewModel.minStylePreservationLevel ... EditOperationViewModel.maxStylePreservationLevel) {
+                Text("\(L10n.operationParamStylePreservation): \(viewModel.stylePreservationLevel)/\(EditOperationViewModel.maxStylePreservationLevel)")
             }
             .accessibilityLabel(L10n.operationParamStylePreservation)
             .padding(.horizontal)
@@ -82,22 +82,21 @@ public struct AddOperationView: View {
                 viewModel.cancel()
                 dismiss()
             }) {
-                Text(L10n.addOperationCancel)
+                Text(L10n.editOperationCancel)
                     .frame(maxWidth: .infinity)
             }
-            .accessibilityLabel(L10n.addOperationCancel)
+            .accessibilityLabel(L10n.editOperationCancel)
             .buttonStyle(.bordered)
 
             Button(action: {
-                if let op = viewModel.makeOperation() {
-                    onSave?(op)
+                if let _ = viewModel.makeOperation() {
                     dismiss()
                 }
             }) {
-                Text(L10n.addOperationSave)
+                Text(L10n.editOperationSave)
                     .frame(maxWidth: .infinity)
             }
-            .accessibilityLabel(L10n.addOperationSave)
+            .accessibilityLabel(L10n.editOperationSave)
             .buttonStyle(.borderedProminent)
             .disabled(!viewModel.isValid)
         }
@@ -105,3 +104,7 @@ public struct AddOperationView: View {
         .padding(.bottom, AddOperationViewConstants.bottomPadding)
     }
 }
+
+#if canImport(ViewInspector)
+    // moved to EditOperationView+Inspectable.swift
+#endif

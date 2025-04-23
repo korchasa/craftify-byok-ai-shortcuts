@@ -14,6 +14,15 @@ src/
     Sources/      # Исходники общей библиотеки
     Config/       # Info.plist
     Tests/        # Unit-тесты CraftifyShared
+    - UnitTests/
+      - AuthManagerTests.swift
+      - ConsentManagerTests.swift
+      - InventoryManagerTests.swift
+      - LogManagerSharedInMemoryTests.swift
+      - LogManagerSharedNDJSONTests.swift
+      - MaskingTests.swift   # Тесты для maskKey (маскирование ключей)
+      - OperationModelsTests.swift
+      - XCTestAsyncHelpers.swift
 ```
 
 Корень репозитория:
@@ -37,7 +46,7 @@ src/
 - `project.yml` — описание проекта для XcodeGen
 - `.xcconfig` — конфигурация сборки
 - `Sources/` — исходный код приложения и расширения
-- `Tests/` — модульные и UI тесты
+- `Tests/` — модульные и UI тесты, а также end-to-end (E2E) тесты для всех ключевых пользовательских сценариев
 - `Resources/` — локализация, ассеты
 - App Group контейнер: logs.ndjson — хранилище логов (FIFO, NDJSON)
 

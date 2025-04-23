@@ -35,12 +35,12 @@ targets:
         SWIFT_VERSION: 5.0
     dependencies:
       - target: CraftifyShared
-  MainAppTests:
+  MainAppUnitTests:
     type: bundle.unit-test
     platform: iOS
     sources:
+      - path: src/MainApp/UnitTests
       - path: src/MainApp/Sources
-      - path: src/MainApp/Tests
       - path: src/MainApp/Resources/Generated/Strings.swift
     dependencies:
       - target: MainApp
@@ -49,9 +49,25 @@ targets:
       - package: CwlCatchException
     info:
       path: src/MainApp/Config/Info.plist
-    scheme:
-      testTargets:
-        - MainAppTests
+    testTarget: true
+    settings:
+      base:
+        SWIFT_VERSION: 5.0
+  MainAppE2ETests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: src/MainApp/E2ETests
+      - path: src/MainApp/Sources
+      - path: src/MainApp/Resources/Generated/Strings.swift
+    dependencies:
+      - target: MainApp
+      - package: Nimble
+      - package: CwlPreconditionTesting
+      - package: CwlCatchException
+    info:
+      path: src/MainApp/Config/Info.plist
+    testTarget: true
     settings:
       base:
         SWIFT_VERSION: 5.0
@@ -78,10 +94,11 @@ targets:
         CODE_SIGN_IDENTITY: "Apple Development: korchasa@icloud.com (2P55B82U54)"
         PROVISIONING_PROFILE_SPECIFIER: "09d74528-408d-43f1-96bd-259a04739802"
         DEVELOPMENT_TEAM: 78M3ZDR5UH
-  ShareExtensionTests:
+  ShareExtensionUnitTests:
     type: bundle.unit-test
     platform: iOS
     sources:
+      - path: src/ShareExtension/UnitTests
       - path: src/ShareExtension/Sources
     dependencies:
       - target: ShareExtension
@@ -90,9 +107,24 @@ targets:
       - package: CwlCatchException
     info:
       path: src/ShareExtension/Config/Info.plist
-    scheme:
-      testTargets:
-        - ShareExtensionTests
+    testTarget: true
+    settings:
+      base:
+        SWIFT_VERSION: 5.0
+  ShareExtensionE2ETests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: src/ShareExtension/E2ETests
+      - path: src/ShareExtension/Sources
+    dependencies:
+      - target: ShareExtension
+      - package: Nimble
+      - package: CwlPreconditionTesting
+      - package: CwlCatchException
+    info:
+      path: src/ShareExtension/Config/Info.plist
+    testTarget: true
     settings:
       base:
         SWIFT_VERSION: 5.0
@@ -108,15 +140,12 @@ targets:
       base:
         SWIFT_VERSION: 5.0
         ENABLE_TESTABILITY: YES
-    scheme:
-      testTargets:
-        - CraftifySharedTests
-  CraftifySharedTests:
+  CraftifySharedUnitTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: src/CraftifyShared/Tests
-    resources: []
+      - path: src/CraftifyShared/UnitTests
+      - path: src/CraftifyShared/Sources
     dependencies:
       - target: CraftifyShared
       - package: Nimble
@@ -124,9 +153,24 @@ targets:
       - package: CwlCatchException
     info:
       path: src/CraftifyShared/Config/Info.plist
-    scheme:
-      testTargets:
-        - CraftifySharedTests
+    testTarget: true
+    settings:
+      base:
+        SWIFT_VERSION: 5.0
+  CraftifySharedE2ETests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: src/CraftifyShared/E2ETests
+      - path: src/CraftifyShared/Sources
+    dependencies:
+      - target: CraftifyShared
+      - package: Nimble
+      - package: CwlPreconditionTesting
+      - package: CwlCatchException
+    info:
+      path: src/CraftifyShared/Config/Info.plist
+    testTarget: true
     settings:
       base:
         SWIFT_VERSION: 5.0
@@ -141,48 +185,49 @@ packages:
     url: https://github.com/mattgallagher/CwlCatchException.git
     from: 2.2.1
 schemes:
-  CraftifyShared:
-    build:
-      targets:
-        CraftifyShared: all
-    test:
-      targets:
-        - name: CraftifySharedTests
-  CraftifySharedTests:
-    build:
-      targets:
-        CraftifyShared: all
-        CraftifySharedTests: [test]
-    test:
-      targets:
-        - name: CraftifySharedTests
   MainApp:
     build:
       targets:
         MainApp: all
-    test:
-      targets:
-        - name: MainAppTests
-  MainAppTests:
+  MainAppUnitTests:
     build:
       targets:
         MainApp: all
-        MainAppTests: [test]
     test:
       targets:
-        - name: MainAppTests
-  ShareExtension:
+        - name: MainAppUnitTests
+  MainAppE2ETests:
+    build:
+      targets:
+        MainApp: all
+    test:
+      targets:
+        - name: MainAppE2ETests
+  ShareExtensionUnitTests:
     build:
       targets:
         ShareExtension: all
     test:
       targets:
-        - name: ShareExtensionTests
-  ShareExtensionTests:
+        - name: ShareExtensionUnitTests
+  ShareExtensionE2ETests:
     build:
       targets:
         ShareExtension: all
-        ShareExtensionTests: [test]
     test:
       targets:
-        - name: ShareExtensionTests
+        - name: ShareExtensionE2ETests
+  CraftifySharedUnitTests:
+    build:
+      targets:
+        CraftifyShared: all
+    test:
+      targets:
+        - name: CraftifySharedUnitTests
+  CraftifySharedE2ETests:
+    build:
+      targets:
+        CraftifyShared: all
+    test:
+      targets:
+        - name: CraftifySharedE2ETests

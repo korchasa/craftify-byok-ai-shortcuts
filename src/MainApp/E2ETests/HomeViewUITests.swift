@@ -80,6 +80,21 @@ import XCTest
             }
         }
 
+        public func testAccessibilityLabelsAndDynamicType() throws {
+            if let viewModel {
+                let view = HomeView(viewModel: viewModel)
+                let addButton = try view.inspect().find(button: L10n.homeAddOperation)
+                let settingsButton = try view.inspect().find(button: L10n.homeSettings)
+                // accessibilityLabel
+                expect(try addButton.accessibilityLabel()) == L10n.homeAddOperation
+                expect(try settingsButton.accessibilityLabel()) == L10n.homeSettings
+                // Dynamic Type (проверка поддержки)
+                let title = try view.inspect().find(text: L10n.homeTitle)
+                let font = try title.attributes().font()
+                expect(font?.supportsDynamicType ?? false) == true
+            }
+        }
+
         deinit {}
     }
 #endif

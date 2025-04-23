@@ -9,11 +9,12 @@ NC='\033[0m'
 function help() {
   echo "Usage: ./run <command> [args...]"
   echo "Commands:"
-  echo "  test      - Запуск тестов CraftifyShared"
-  echo "  dev       - Сборка и запуск MainApp в симуляторе iPhone 14 (iOS 16.4)"
-  echo "  clean     - Очистка артефактов сборки"
-  echo "  logs      - Показать device logs (симулятор)"
-  echo "  help      - Показать эту справку"
+  echo "  test:unit    - Запуск только unit-тестов"
+  echo "  test:e2e     - Запуск только end-to-end (E2E) тестов"
+  echo "  dev          - Сборка и запуск MainApp в симуляторе iPhone 14 (iOS 16.4)"
+  echo "  clean        - Очистка артефактов сборки"
+  echo "  logs         - Показать device logs (симулятор)"
+  echo "  help         - Показать эту справку"
   echo "\nЛюбые дополнительные параметры после <command> будут переданы в соответствующий инструмент."
 }
 
@@ -31,35 +32,48 @@ shift || true # Удаляем имя команды, остальные пар�
 
 ensure_mint
 
+# Универсальная обертка для xcodebuild с xcbeautify
+function run_xcodebuild() {
+  NSUnbufferedIO=YES xcodebuild -sdk iphonesimulator -destination "id=$SIMULATOR_ID" "$@" | mint run xcbeautify
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    echo -e "${RED}xcodebuild failed!${NC}"
+    exit 1
+  fi
+}
+
 case "$CMD" in
-  test)
+  fmt)
     echo ">>>> Run swiftformat"
     mint run swiftformat . "$@" || { echo -e "${RED}SwiftFormat обнаружил ошибки!${NC}"; exit 1; }
+    ;;
+  lint)
     echo ">>>> Run swiftlint"
     mint run swiftlint --strict "$@" || { echo -e "${RED}SwiftLint обнаружил ошибки!${NC}"; exit 1; }
+    ;;
+  test:unit)
+    ./run fmt "$@"
+    ./run lint "$@"
 
+    echo ">>>> Run all unit tests"
     mint run xcodegen "$@"
-    open -a Simulator
+    open --background -a Simulator
+    run_xcodebuild -scheme MainAppUnitTests test "$@"
+    run_xcodebuild -scheme ShareExtensionUnitTests test "$@"
+    run_xcodebuild -scheme CraftifySharedUnitTests test "$@"
+    ;;
+  test:e2e)
+    ./run fmt "$@"
+    ./run lint "$@"
 
-    echo ">>>> Run test"
-    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@" | mint run xcbeautify
-    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-      echo -e "${RED}MainApp тесты завершились с ошибкой!${NC}"
-      exit 1
-    fi
-    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@" | mint run xcbeautify
-    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-      echo -e "${RED}ShareExtension тесты завершились с ошибкой!${NC}"
-      exit 1
-    fi
-    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@" | mint run xcbeautify
-    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-      echo -e "${RED}CraftifyShared тесты завершились с ошибкой!${NC}"
-      exit 1
-    fi
+    echo ">>>> Run all E2E tests"
+    mint run xcodegen "$@"
+    open --background -a Simulator
+    run_xcodebuild -scheme MainAppE2ETests test "$@"
+    run_xcodebuild -scheme ShareExtensionE2ETests test "$@"
+    run_xcodebuild -scheme CraftifySharedE2ETests test "$@"
     ;;
   check-size)
-    xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive "$@" | mint run xcbeautify
+    run_xcodebuild -scheme ShareExtension archive "$@"
     EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
     SIZE=$(du -m "$EXT_PATH" | cut -f1)
     echo "ShareExtension size: ${SIZE}MB"
@@ -70,8 +84,8 @@ case "$CMD" in
     ;;
   dev)
     mint run xcodegen "$@"
-    open -a Simulator
-    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@" | mint run xcbeautify
+    open --background -a Simulator
+    run_xcodebuild -scheme MainApp build "$@"
     xcrun simctl boot $SIMULATOR_ID || true
     xcrun simctl install $SIMULATOR_ID "$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | grep -m1 'BUILT_PRODUCTS_DIR =' | awk '{print $3}')/MainApp.app"
     xcrun simctl launch $SIMULATOR_ID dev.korchasa.Craftify

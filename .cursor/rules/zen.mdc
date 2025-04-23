@@ -3,7 +3,7 @@ description:
 globs:
 alwaysApply: true
 ---
-## ZEN OF DEVELOPMENT — Junior Dev Edition
+## ZEN OF DEVELOPMENT
 
 1. **Strive for elegance over clutter**
    Write code that feels crisp and intentional; delete anything that serves no purpose.
@@ -41,25 +41,23 @@ alwaysApply: true
 12. **Keep the project in working condition**
     The project should not have failing tests, linter errors, silent stubs, and other shortcomings.
 
-13. **When unsure, don’t guess — check**
+13. **When unsure, don't guess — check**
     Read the docs, search in web, run a quick experiment; guessing costs more later.
 
 14. **Provide one clear, idiomatic way to do each task**
-    Pick the community‑accepted pattern so future maintainers don’t wonder which style to follow.
+    Pick the community-accepted pattern so future maintainers don't wonder which style to follow.
 
-15. **Offer discoverability for non‑obvious solutions**
+15. **Offer discoverability for non-obvious solutions**
     Add comments, README notes, or docstrings pointing to hidden features or tricky constraints.
 
-16. **Act promptly, but don’t rush recklessly**
+16. **Act promptly, but don't rush recklessly**
     Deliver fast, yet still write tests and review code—speed with control wins.
 
 17. **Delight in ideas you can explain simply**
-    If your design fits on a napkin, you’re on the right track.
+    If your design fits on a napkin, you're on the right track.
 
 18. **Question ideas that resist explanation**
-    Struggling to describe a design often signals it’s overcomplicated—refactor.
+    Struggling to describe a design often signals it's overcomplicated—refactor.
 
 19. **Leverage packages, modules, and namespaces abundantly**
     Reuse trusted libraries and encapsulate your own code; reinventing wheels drains time.
-
-*Read it, code it, live it.*

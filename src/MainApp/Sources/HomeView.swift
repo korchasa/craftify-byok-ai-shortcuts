@@ -6,6 +6,9 @@ public struct HomeView: View {
     @State private var showAddOperation = false
     @State private var showSettings = false
     @State private var addOperationViewModel = AddOperationViewModel()
+    @State private var showEditOperation = false
+    @State private var editOperationViewModel: EditOperationViewModel? = nil
+    @State private var editingIndex: Int? = nil
 
     public init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -31,20 +34,31 @@ public struct HomeView: View {
             .navigationTitle(L10n.homeTitle)
         }
         .sheet(isPresented: $showAddOperation, onDismiss: { addOperationViewModel.cancel() }, content: {
-            AddOperationView(viewModel: addOperationViewModel)
+            AddOperationView(viewModel: addOperationViewModel, onSave: { op in
+                viewModel.addOperation(op)
+                addOperationViewModel.cancel()
+                showAddOperation = false
+            })
+        })
+        .sheet(item: $editOperationViewModel, onDismiss: {
+            editingIndex = nil
+        }, content: { vm in
+            EditOperationView(viewModel: vm)
                 .onDisappear {
-                    if let op = addOperationViewModel.makeOperation() {
-                        viewModel.addOperation(op)
-                        addOperationViewModel.cancel()
+                    if let idx = editingIndex, let updated = vm.makeOperation() {
+                        viewModel.updateOperation(at: idx, with: updated)
                     }
+                    editingIndex = nil
                 }
         })
-        // .sheet(isPresented: $showSettings, onDismiss: nil, content: { settingsSheet })
+        .sheet(isPresented: $showSettings, onDismiss: nil, content: {
+            SettingsView(viewModel: SettingsViewModel())
+        })
     }
 
     private var operationsList: some View {
         List {
-            ForEach(Array(viewModel.operations.enumerated()), id: \.element) { _, operation in
+            ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
                 HStack {
                     Text(operationLabel(for: operation.operation))
                         .font(.headline)
@@ -52,6 +66,15 @@ public struct HomeView: View {
                     Text(operationParamsDescription(for: operation))
                         .font(.subheadline)
                         .foregroundColor(.secondary)
+                }
+                .swipeActions(edge: .trailing) {
+                    Button {
+                        editOperationViewModel = EditOperationViewModel(operation: operation)
+                        editingIndex = idx
+                    } label: {
+                        Text(L10n.homeEdit)
+                    }
+                    .tint(.blue)
                 }
             }
             .onDelete { indices in

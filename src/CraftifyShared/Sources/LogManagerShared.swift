@@ -10,6 +10,4 @@ public protocol LogManagerShared: AnyObject {
     func clearLogs()
     /// Экспортировать логи в Data (JSON)
     func exportLogs() throws -> Data
-    /// Маскировать API-ключ в строке
-    func maskAPIKey(_ key: String?) -> String
 }

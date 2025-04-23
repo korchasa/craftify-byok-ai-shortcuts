@@ -4,7 +4,7 @@ globs:
 alwaysApply: true
 ---
 ## WORKFLOW (NON-STOP)
-Note: If the user asks to continue the task, then read `./documents` and proceed to item 5.
+Note: If the user asks to continue the task, then read `./documents`, describe current task from `./documents/whiteboard.md` and proceed to item 5.
 
 1. Read existing documentation in `./documents`.
 2. Collect the related information from all available sources: libraries, web search, resources from the `.documents/remote_resources.md` file, etc.
@@ -17,6 +17,7 @@ Note: If the user asks to continue the task, then read `./documents` and proceed
 5. Complete all subtasks in the TDD approach.
 6. Mark task completed in `./documents/mvp-roadmap.md`.
 7. Upon completion:
+   - Run end-to-end tests
    - Update the documentation
    - Delete `./documents/whiteboard.md`
 

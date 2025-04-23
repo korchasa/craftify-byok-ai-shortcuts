@@ -127,12 +127,7 @@ public final class AuthManager: AuthManaging {
 
     /// Маскирует API-ключ для логирования
     public func maskedAPIKey(_ key: String?) -> String {
-        guard let key, key.count >= Self.maskLength else {
-            return String(repeating: "*", count: Self.maskLength)
-        }
-        let prefix = key.prefix(Self.prefixLength)
-        let suffix = key.suffix(Self.suffixLength)
-        return "\(prefix)****\(suffix)"
+        maskKey(key)
     }
 
     deinit {}

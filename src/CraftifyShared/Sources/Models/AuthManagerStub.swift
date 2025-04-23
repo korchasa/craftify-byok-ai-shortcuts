@@ -13,16 +13,28 @@ public final class AuthManagerStub: AuthManaging {
     // MARK: - Properties
 
     public var shouldThrow: AuthManagerError?
+    public var shouldThrowAccessDenied: Bool = false
     private var key: String?
+
+    /// Инициализация stub с дефолтным ключом
+    public init() {
+        self.key = "sk-valid-key-1234567890"
+    }
 
     // MARK: - AuthManaging
 
     /// Получить API-ключ (async stub)
     public func getAPIKey() async throws -> String? { // swiftlint:disable:this async_without_await
+        if shouldThrowAccessDenied {
+            throw AuthManagerError.accessDenied
+        }
         return try getAPIKeySync()
     }
 
     private func getAPIKeySync() throws -> String? {
+        if shouldThrowAccessDenied {
+            throw AuthManagerError.accessDenied
+        }
         if let error = shouldThrow {
             throw error
         }
@@ -31,10 +43,16 @@ public final class AuthManagerStub: AuthManaging {
 
     /// Установить API-ключ (async stub)
     public func setAPIKey(_ key: String) async throws { // swiftlint:disable:this async_without_await
+        if shouldThrowAccessDenied {
+            throw AuthManagerError.accessDenied
+        }
         try setAPIKeySync(key)
     }
 
     private func setAPIKeySync(_ key: String) throws {
+        if shouldThrowAccessDenied {
+            throw AuthManagerError.accessDenied
+        }
         if let error = shouldThrow {
             throw error
         }
@@ -46,10 +64,16 @@ public final class AuthManagerStub: AuthManaging {
 
     /// Удалить API-ключ (async stub)
     public func deleteAPIKey() async throws { // swiftlint:disable:this async_without_await
+        if shouldThrowAccessDenied {
+            throw AuthManagerError.accessDenied
+        }
         try deleteAPIKeySync()
     }
 
     private func deleteAPIKeySync() throws {
+        if shouldThrowAccessDenied {
+            throw AuthManagerError.accessDenied
+        }
         if let error = shouldThrow {
             throw error
         }
@@ -58,12 +82,12 @@ public final class AuthManagerStub: AuthManaging {
 
     /// Маскирует API-ключ для логирования
     public func maskedAPIKey(_ key: String?) -> String {
-        guard let key, key.count >= Self.maskLength else {
-            return String(repeating: "*", count: Self.maskLength)
-        }
-        let prefix = key.prefix(Self.prefixLength)
-        let suffix = key.suffix(Self.suffixLength)
-        return "\(prefix)****\(suffix)"
+        maskKey(key)
+    }
+
+    public var savedKey: String? {
+        get { key }
+        set { key = newValue }
     }
 
     // MARK: - Жизненный цикл

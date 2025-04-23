@@ -147,6 +147,7 @@ disabled_rules:
   - sorted_enum_cases
   - type_contents_order
   - unneeded_parentheses_in_closure_argument
+  - nimble_operator
 excluded:
   - src/MainApp/Resources/Generated/Strings.swift
 opt_in_rules:
