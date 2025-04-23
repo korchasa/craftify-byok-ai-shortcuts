@@ -11,7 +11,7 @@ public final class LogManagerSharedInMemory: LogManagerShared {
     /// Инициализация in-memory логгера
     /// - Parameter maxLogCount: Максимальное количество логов (FIFO)
     public init(maxLogCount: Int = LogManagerSharedInMemory.defaultMaxLogCount) {
-        self.maxLogCount = max(LogManagerSharedInMemory.defaultMaxLogCount, maxLogCount)
+        self.maxLogCount = max(1, maxLogCount)
     }
 
     /// Записать лог

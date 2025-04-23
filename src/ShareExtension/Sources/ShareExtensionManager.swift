@@ -3,15 +3,24 @@ import Foundation
 
 /// Менеджер Share Extension: обработка текста, копирование, согласие, ошибки
 public final class ShareExtensionManager {
-    private let inventoryManager: InventoryManaging
+    /// Менеджер операций (inventory), используемый для получения и управления списком доступных операций обработки текста
+    public let inventoryManager: InventoryManaging
     private let authManager: AuthManaging
     private let clipboardManager: AnyObject
     private let processingManager: AnyObject
     private let consentManager: ConsentManaging
     private var isCancelled = false
     private static let maxTextLength = 12000
+    /// Входной текст для обработки (устанавливается из UI)
+    public var inputText: String = ""
 
     /// Инициализация менеджера Share Extension
+    /// - Parameters:
+    ///   - inventoryManager: менеджер операций
+    ///   - authManager: менеджер API-ключа
+    ///   - clipboardManager: менеджер буфера обмена
+    ///   - processingManager: менеджер обработки текста
+    ///   - consentManager: менеджер согласия пользователя
     public init(
         inventoryManager: InventoryManaging,
         authManager: AuthManaging,
@@ -24,9 +33,14 @@ public final class ShareExtensionManager {
         self.clipboardManager = clipboardManager
         self.processingManager = processingManager
         self.consentManager = consentManager
+        self.inputText = ""
     }
 
-    /// Асинхронная обработка текста и копирование результата
+    /// Запускает обработку текста с выбранной операцией. Результат копируется в буфер обмена, ошибки отображаются пользователю.
+    /// - Parameters:
+    ///   - text: Исходный текст для обработки.
+    ///   - operation: Операция из inventory (InventoryOperation?).
+    /// - Returns: Кортеж (успех: Bool, ошибка: String?) или nil, если операция не выполнена.
     public func process(text: String, operation: InventoryOperation?) async -> (success: Bool, error: String?)? {
         if isCancelled {
             isCancelled = false

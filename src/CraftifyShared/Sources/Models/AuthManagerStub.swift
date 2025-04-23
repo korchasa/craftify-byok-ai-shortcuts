@@ -16,9 +16,9 @@ public final class AuthManagerStub: AuthManaging {
     public var shouldThrowAccessDenied: Bool = false
     private var key: String?
 
-    /// Инициализация stub с дефолтным ключом
-    public init() {
-        self.key = "sk-valid-key-1234567890"
+    /// Инициализация stub с дефолтным ключом или без ключа
+    public init(key: String? = "sk-valid-key-1234567890") {
+        self.key = key
     }
 
     // MARK: - AuthManaging

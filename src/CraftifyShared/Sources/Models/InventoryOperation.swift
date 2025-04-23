@@ -25,4 +25,8 @@ public struct InventoryOperation: Codable, Equatable, Hashable {
         self.params = params
         self.promptTemplate = promptTemplate
     }
+
+    public var id: String {
+        "\(operation.rawValue)-\(promptTemplate.hashValue)"
+    }
 }

@@ -8,3 +8,4 @@
 - Do not use magic numbers — extract to constants
 - Closure body must not exceed 30 lines (closure_body_length)
 - Do not use async without await
+- Для сгенерированных SwiftGen файлов локализаций разрешается отсутствие явных ACL и других нарушений, если это требуется для корректной работы SwiftGen и не мешает сборке.

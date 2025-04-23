@@ -1,0 +1,54 @@
+/* HowToUseView */
+"howtouse_title" = "Как использовать Craftify";
+"howtouse_instruction" = "Выделите текст в любом приложении, поделитесь через Craftify, выберите операцию и мгновенно получите результат.";
+"howtouse_consent" = "Я согласен(на) на отправку текста для обработки в облачный сервис OpenAI";
+"howtouse_privacy_policy" = "Политика конфиденциальности";
+"howtouse_done" = "Готово";
+
+/* HomeView */
+"home_title" = "Craftify — Операции";
+"home_add_operation" = "Добавить операцию";
+"home_settings" = "Настройки";
+"home_edit" = "Редактировать";
+"home_delete" = "Удалить";
+
+/* AddOperationView */
+"add_operation_title" = "Добавить операцию";
+"add_operation_type" = "Тип операции";
+"add_operation_save" = "Сохранить";
+"add_operation_cancel" = "Отмена";
+
+/* EditOperationView */
+"edit_operation_title" = "Редактировать операцию";
+"edit_operation_save" = "Сохранить";
+"edit_operation_cancel" = "Отмена";
+
+/* SettingsView */
+"settings_title" = "Настройки";
+"settings_api_key" = "OpenAI API-ключ";
+"settings_done" = "Готово";
+
+/* Share Extension UI */
+"share_title" = "Craftify — Обработка текста";
+"share_cancel" = "Отмена";
+"share_copied" = "Скопировано в буфер";
+
+/* Operation Params Labels */
+"operation_param_target_language" = "Язык перевода";
+"operation_param_complexity_level" = "Уровень сложности";
+"operation_param_style_preservation" = "Сохранение стиля";
+"operation_param_detail_level" = "Детализация";
+
+/* Picker Values */
+"operation_value_beginner" = "Школьник";
+"operation_value_intermediate" = "Студент";
+"operation_value_advanced" = "Эксперт";
+"operation_value_school" = "Школьник";
+"operation_value_student" = "Студент";
+"operation_value_expert" = "Эксперт";
+
+/* Operation Labels */
+"operation_label_translate" = "Перевод";
+"operation_label_simplify" = "Упрощение";
+"operation_label_correct" = "Коррекция";
+"operation_label_explain" = "Объяснение";
