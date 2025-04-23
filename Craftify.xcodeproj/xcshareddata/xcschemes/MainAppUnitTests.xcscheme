@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "175A77048DFCF8246267697D"
-               BuildableName = "MainAppTests.xctest"
-               BlueprintName = "MainAppTests"
+               BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
+               BuildableName = "MainApp.app"
+               BlueprintName = "MainApp"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "175A77048DFCF8246267697D"
-            BuildableName = "MainAppTests.xctest"
-            BlueprintName = "MainAppTests"
+            BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
+            BuildableName = "MainApp.app"
+            BlueprintName = "MainApp"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -43,9 +43,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "175A77048DFCF8246267697D"
-               BuildableName = "MainAppTests.xctest"
-               BlueprintName = "MainAppTests"
+               BlueprintIdentifier = "A280F9CD54BE725A604A330F"
+               BuildableName = "MainAppUnitTests.xctest"
+               BlueprintName = "MainAppUnitTests"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -63,17 +63,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "175A77048DFCF8246267697D"
-            BuildableName = "MainAppTests.xctest"
-            BlueprintName = "MainAppTests"
+            BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
+            BuildableName = "MainApp.app"
+            BlueprintName = "MainApp"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
-      <CommandLineArguments>
-      </CommandLineArguments>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -81,17 +80,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <CommandLineArguments>
-      </CommandLineArguments>
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "175A77048DFCF8246267697D"
-            BuildableName = "MainAppTests.xctest"
-            BlueprintName = "MainAppTests"
+            BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
+            BuildableName = "MainApp.app"
+            BlueprintName = "MainApp"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

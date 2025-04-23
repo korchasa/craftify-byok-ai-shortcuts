@@ -29,6 +29,20 @@ import XCTest
             expect(try text.string()) == L10n.howtouseTitle
         }
 
+        public func testAccessibilityLabelsAndDynamicType() throws {
+            let stub = ConsentManagerStub()
+            let view = HowToUseView(consentManager: stub)
+            let button = try view.inspect().find(button: L10n.howtouseDone)
+            let toggle = try view.inspect().find(ViewType.Toggle.self)
+            // accessibilityLabel
+            expect(try button.accessibilityLabel()) == L10n.howtouseDone
+            expect(try toggle.accessibilityLabel()) == L10n.howtouseConsent
+            // Dynamic Type (проверка поддержки)
+            let text = try view.inspect().find(text: L10n.howtouseTitle)
+            let font = try text.attributes().font()
+            expect(font?.supportsDynamicType ?? false) == true
+        }
+
         public deinit {}
     }
 

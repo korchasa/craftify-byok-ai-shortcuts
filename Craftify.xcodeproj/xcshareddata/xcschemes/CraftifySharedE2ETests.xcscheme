@@ -43,9 +43,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0CCFED8625C441A269CD1E81"
-               BuildableName = "CraftifySharedTests.xctest"
-               BlueprintName = "CraftifySharedTests"
+               BlueprintIdentifier = "65FAFADBB04233FA468B6321"
+               BuildableName = "CraftifySharedE2ETests.xctest"
+               BlueprintName = "CraftifySharedE2ETests"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -72,8 +72,6 @@
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <CommandLineArguments>
-      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -81,8 +79,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <CommandLineArguments>
-      </CommandLineArguments>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"

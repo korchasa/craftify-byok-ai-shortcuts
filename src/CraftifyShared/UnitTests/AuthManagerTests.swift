@@ -20,7 +20,7 @@ public final class AuthManagerTests: XCTestCase {
         let key = String(repeating: "a", count: 16)
         try await sut?.setAPIKey(key)
         let fetched = try await sut?.getAPIKey()
-        expect(fetched) == key
+        expect(fetched).to(equal(key))
         try? await sut?.deleteAPIKey()
     }
 
@@ -31,7 +31,7 @@ public final class AuthManagerTests: XCTestCase {
         try await sut?.setAPIKey(key)
         try await sut?.deleteAPIKey()
         let fetched = try await sut?.getAPIKey()
-        expect(fetched) == nil
+        expect(fetched).to(beNil())
     }
 
     /// Проверяет ошибку при установке короткого ключа
@@ -45,15 +45,13 @@ public final class AuthManagerTests: XCTestCase {
     public func testMaskedAPIKey() {
         let key = "sk-1234567890abcdef"
         let masked = sut?.maskedAPIKey(key)
-        expect(masked?.hasPrefix("sk-")) == true
-        expect(masked?.hasSuffix("cdef")) == true
-        expect(masked?.count) == 11
+        expect(masked).to(equal("***************cdef"))
     }
 
     /// Проверяет маскирование nil/короткого ключа
     public func testMaskedAPIKeyShortOrNil() {
-        expect(self.sut?.maskedAPIKey(nil)) == "********"
-        expect(self.sut?.maskedAPIKey("abc")) == "********"
+        expect(self.sut?.maskedAPIKey(nil)).to(equal("********"))
+        expect(self.sut?.maskedAPIKey("abc")).to(equal("********"))
     }
 
     deinit {}

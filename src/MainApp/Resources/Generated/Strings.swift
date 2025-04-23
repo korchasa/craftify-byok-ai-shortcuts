@@ -51,6 +51,34 @@ internal enum L10n {
     internal static let shareCopied = Self.tr("Localizable", "share_copied", fallback: "Copied to clipboard")
     /// Share Extension UI
     internal static let shareTitle = Self.tr("Localizable", "share_title", fallback: "Craftify — Text Processing")
+    /// Translate
+    internal static let operationLabelTranslate = Self.tr("Localizable", "operation_label_translate", fallback: "Translate")
+    /// Simplify
+    internal static let operationLabelSimplify = Self.tr("Localizable", "operation_label_simplify", fallback: "Simplify")
+    /// Correct
+    internal static let operationLabelCorrect = Self.tr("Localizable", "operation_label_correct", fallback: "Correct")
+    /// Explain
+    internal static let operationLabelExplain = Self.tr("Localizable", "operation_label_explain", fallback: "Explain")
+    /// Target language
+    internal static let operationParamTargetLanguage = Self.tr("Localizable", "operation_param_target_language", fallback: "Target language")
+    /// Complexity level
+    internal static let operationParamComplexityLevel = Self.tr("Localizable", "operation_param_complexity_level", fallback: "Complexity level")
+    /// Style preservation
+    internal static let operationParamStylePreservation = Self.tr("Localizable", "operation_param_style_preservation", fallback: "Style preservation")
+    /// Detail level
+    internal static let operationParamDetailLevel = Self.tr("Localizable", "operation_param_detail_level", fallback: "Detail level")
+    /// Beginner
+    internal static let operationValueBeginner = Self.tr("Localizable", "operation_value_beginner", fallback: "Beginner")
+    /// Intermediate
+    internal static let operationValueIntermediate = Self.tr("Localizable", "operation_value_intermediate", fallback: "Intermediate")
+    /// Advanced
+    internal static let operationValueAdvanced = Self.tr("Localizable", "operation_value_advanced", fallback: "Advanced")
+    /// School
+    internal static let operationValueSchool = Self.tr("Localizable", "operation_value_school", fallback: "School")
+    /// Student
+    internal static let operationValueStudent = Self.tr("Localizable", "operation_value_student", fallback: "Student")
+    /// Expert
+    internal static let operationValueExpert = Self.tr("Localizable", "operation_value_expert", fallback: "Expert")
 
     private static func tr(_ table: String, _ key: String, _ args: CVarArg..., fallback value: String) -> String {
         let format = BundleToken.bundle.localizedString(forKey: key, value: value, table: table)

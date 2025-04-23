@@ -11,7 +11,7 @@ public final class LogManagerSharedInMemory: LogManagerShared {
     /// Инициализация in-memory логгера
     /// - Parameter maxLogCount: Максимальное количество логов (FIFO)
     public init(maxLogCount: Int = LogManagerSharedInMemory.defaultMaxLogCount) {
-        self.maxLogCount = maxLogCount
+        self.maxLogCount = max(LogManagerSharedInMemory.defaultMaxLogCount, maxLogCount)
     }
 
     /// Записать лог
@@ -34,17 +34,20 @@ public final class LogManagerSharedInMemory: LogManagerShared {
 
     /// Экспортировать логи в Data (JSON)
     public func exportLogs() throws -> Data {
-        try JSONEncoder().encode(logs)
-    }
-
-    /// Маскировать API-ключ в строке
-    public func maskAPIKey(_ key: String?) -> String {
-        guard let key, key.count > Self.minKeyLength else {
-            return "********"
+        let maskedLogs = logs.map { entry -> LogEntry in
+            var maskedMetadata = entry.metadata
+            if let apiKey = maskedMetadata["apiKey"] {
+                maskedMetadata["apiKey"] = maskKey(apiKey)
+            }
+            return LogEntry(
+                level: entry.level,
+                module: entry.module,
+                message: entry.message,
+                metadata: maskedMetadata,
+                timestamp: entry.timestamp
+            )
         }
-        let prefix = key.prefix(Self.maskLength)
-        let suffix = key.suffix(Self.maskLength)
-        return "\(prefix)****\(suffix)"
+        return try JSONEncoder().encode(maskedLogs)
     }
 
     /// Очистка ресурсов (stub)

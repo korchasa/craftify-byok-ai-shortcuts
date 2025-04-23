@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
    LastUpgradeVersion = "1430"
+   wasCreatedForAppExtension = "YES"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,9 +16,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9EA7AA1A6C701457F0939536"
-               BuildableName = "ShareExtensionTests.xctest"
-               BlueprintName = "ShareExtensionTests"
+               BlueprintIdentifier = "6E99CB366D323D89B45B1DAE"
+               BuildableName = "ShareExtension.appex"
+               BlueprintName = "ShareExtension"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +33,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9EA7AA1A6C701457F0939536"
-            BuildableName = "ShareExtensionTests.xctest"
-            BlueprintName = "ShareExtensionTests"
+            BlueprintIdentifier = "6E99CB366D323D89B45B1DAE"
+            BuildableName = "ShareExtension.appex"
+            BlueprintName = "ShareExtension"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -43,9 +44,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9EA7AA1A6C701457F0939536"
-               BuildableName = "ShareExtensionTests.xctest"
-               BlueprintName = "ShareExtensionTests"
+               BlueprintIdentifier = "D52BD7D4A192B7F78A1A3F6F"
+               BuildableName = "ShareExtensionE2ETests.xctest"
+               BlueprintName = "ShareExtensionE2ETests"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -55,25 +56,25 @@
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
-      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
-      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      selectedDebuggerIdentifier = ""
+      selectedLauncherIdentifier = "Xcode.IDEFoundation.Launcher.PosixSpawn"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES">
-      <MacroExpansion>
+      allowLocationSimulation = "YES"
+      launchAutomaticallySubstyle = "2">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9EA7AA1A6C701457F0939536"
-            BuildableName = "ShareExtensionTests.xctest"
-            BlueprintName = "ShareExtensionTests"
+            BlueprintIdentifier = "6E99CB366D323D89B45B1DAE"
+            BuildableName = "ShareExtension.appex"
+            BlueprintName = "ShareExtension"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
-      <CommandLineArguments>
-      </CommandLineArguments>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -81,17 +82,16 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <CommandLineArguments>
-      </CommandLineArguments>
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9EA7AA1A6C701457F0939536"
-            BuildableName = "ShareExtensionTests.xctest"
-            BlueprintName = "ShareExtensionTests"
+            BlueprintIdentifier = "6E99CB366D323D89B45B1DAE"
+            BuildableName = "ShareExtension.appex"
+            BlueprintName = "ShareExtension"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
