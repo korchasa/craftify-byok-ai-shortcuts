@@ -1,1 +1,0 @@
-- Accessibility‑тесты (AX tests, VoiceOver, Dynamic Type) для основных экранов MainApp и Share Extension завершены. Все тесты проходят. Пункт отмечен как выполненный в mvp-roadmap.md.
