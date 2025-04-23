@@ -47,3 +47,8 @@ xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iO
 ## Деплой
 - Release-сборка и публикация через Fastlane (см. инструкции в репозитории)
 - Подписание и provisioning автоматизированы через Fastlane `match`
+
+## Итоги тестирования и CI
+- Все тесты (unit, UI, E2E) для Share Extension проходят успешно.
+- Инструкции по запуску и тестированию актуальны.
+- Покрытие тестами и размер Share Extension контролируются автоматически в CI.

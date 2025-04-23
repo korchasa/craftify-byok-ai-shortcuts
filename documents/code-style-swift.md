@@ -9,3 +9,5 @@
 - Closure body must not exceed 30 lines (closure_body_length)
 - Do not use async without await
 - Для сгенерированных SwiftGen файлов локализаций разрешается отсутствие явных ACL и других нарушений, если это требуется для корректной работы SwiftGen и не мешает сборке.
+- Протоколы именуются с суффиксом -ing (например, ClipboardManaging, ProcessingManaging) для DI-friendly архитектуры.
+- Все менеджеры внедряются через протоколы для тестируемости.

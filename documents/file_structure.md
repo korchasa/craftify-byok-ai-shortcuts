@@ -10,6 +10,21 @@ src/
     Sources/      # Исходники расширения
     Resources/    # Ресурсы расширения
     Config/       # Info.plist, entitlements
+    ClipboardManager.swift
+    ClipboardManaging.swift
+    ProcessingManager.swift
+    ProcessingManaging.swift
+    ShareExtensionViewController.swift
+    UnitTests/
+      - AuthManagerTests.swift
+      - ConsentManagerTests.swift
+      - InventoryManagerTests.swift
+      - LogManagerSharedInMemoryTests.swift
+      - LogManagerSharedNDJSONTests.swift
+      - MaskingTests.swift   # Тесты для maskKey (маскирование ключей)
+      - OperationModelsTests.swift
+      - XCTestAsyncHelpers.swift
+      - ShareExtensionManagerTests.swift
   CraftifyShared/
     Sources/      # Исходники общей библиотеки
     Config/       # Info.plist
@@ -57,3 +72,10 @@ src/
 - Все настройки и CI/CD — через конфигурационные файлы, без ручных изменений в Xcode GUI
 
 // Удалены placeholder-файлы и placeholder-тесты после завершения этапа 2. Структура актуальна на момент перехода к этапу 3.
+
+| src/ShareExtension/Sources/ClipboardManager.swift | Менеджер работы с UIPasteboard (копирование результата) |
+| src/ShareExtension/Sources/ClipboardManaging.swift | Протокол для ClipboardManager (DI, тестируемость) |
+| src/ShareExtension/Sources/ProcessingManager.swift | Асинхронная обработка текста, интеграция с LLMAPIClient |
+| src/ShareExtension/Sources/ProcessingManaging.swift | Протокол для ProcessingManager (DI, тестируемость) |
+| src/ShareExtension/Sources/ShareExtensionViewController.swift | Контроллер расширения, интеграция SwiftUI и UIKit |
+| src/ShareExtension/UnitTests/ShareExtensionManagerTests.swift | Unit-тесты для ShareExtensionManager |
