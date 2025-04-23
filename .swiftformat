@@ -1,4 +1,4 @@
---exclude CraftifyShared/Package.swift,src/CraftifyShared/Package.swift,Package.swift
+--exclude src/MainApp/Resources/Generated/Strings.swift
 --indent 4
 --allman false
 --commas inline

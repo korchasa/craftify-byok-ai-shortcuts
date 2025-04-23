@@ -17,16 +17,24 @@ public final class AuthManagerStub: AuthManaging {
 
     // MARK: - AuthManaging
 
-    /// Получить API-ключ
-    public func getAPIKey() throws -> String? {
+    /// Получить API-ключ (async stub)
+    public func getAPIKey() async throws -> String? { // swiftlint:disable:this async_without_await
+        return try getAPIKeySync()
+    }
+
+    private func getAPIKeySync() throws -> String? {
         if let error = shouldThrow {
             throw error
         }
         return key
     }
 
-    /// Установить API-ключ
-    public func setAPIKey(_ key: String) throws {
+    /// Установить API-ключ (async stub)
+    public func setAPIKey(_ key: String) async throws { // swiftlint:disable:this async_without_await
+        try setAPIKeySync(key)
+    }
+
+    private func setAPIKeySync(_ key: String) throws {
         if let error = shouldThrow {
             throw error
         }
@@ -36,8 +44,12 @@ public final class AuthManagerStub: AuthManaging {
         self.key = key
     }
 
-    /// Удалить API-ключ
-    public func deleteAPIKey() throws {
+    /// Удалить API-ключ (async stub)
+    public func deleteAPIKey() async throws { // swiftlint:disable:this async_without_await
+        try deleteAPIKeySync()
+    }
+
+    private func deleteAPIKeySync() throws {
         if let error = shouldThrow {
             throw error
         }

@@ -1,0 +1,98 @@
+import CraftifyShared
+import SwiftUI
+
+public struct HomeView: View {
+    @ObservedObject public var viewModel: HomeViewModel
+    @State private var showAddOperation = false
+    @State private var showSettings = false
+    @State private var addOperationViewModel = AddOperationViewModel()
+
+    public init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
+        NavigationView {
+            VStack {
+                operationsList
+                HStack {
+                    Button(action: { showAddOperation = true }) {
+                        Text(L10n.homeAddOperation)
+                    }
+                    .accessibilityLabel(L10n.homeAddOperation)
+                    Spacer()
+                    Button(action: { showSettings = true }) {
+                        Text(L10n.homeSettings)
+                    }
+                    .accessibilityLabel(L10n.homeSettings)
+                }
+                .padding()
+            }
+            .navigationTitle(L10n.homeTitle)
+        }
+        .sheet(isPresented: $showAddOperation, onDismiss: { addOperationViewModel.cancel() }, content: {
+            AddOperationView(viewModel: addOperationViewModel)
+                .onDisappear {
+                    if let op = addOperationViewModel.makeOperation() {
+                        viewModel.addOperation(op)
+                        addOperationViewModel.cancel()
+                    }
+                }
+        })
+        // .sheet(isPresented: $showSettings, onDismiss: nil, content: { settingsSheet })
+    }
+
+    private var operationsList: some View {
+        List {
+            ForEach(Array(viewModel.operations.enumerated()), id: \.element) { _, operation in
+                HStack {
+                    Text(operationLabel(for: operation.operation))
+                        .font(.headline)
+                    Spacer()
+                    Text(operationParamsDescription(for: operation))
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .onDelete { indices in
+                for index in indices {
+                    viewModel.removeOperation(at: index)
+                }
+            }
+        }
+        .listStyle(.insetGrouped)
+    }
+
+    private let settingsSheet: AnyView = .init(Text("SettingsView"))
+
+    private func operationLabel(for type: OperationType) -> String {
+        switch type {
+        case .translate: return "Перевод"
+        case .simplify: return "Упрощение"
+        case .correct: return "Коррекция"
+        case .explain: return "Объяснение"
+        }
+    }
+
+    private func operationParamsDescription(for operation: InventoryOperation) -> String {
+        switch operation.operation {
+        case .translate:
+            if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
+                return "Язык: → \(params.targetLanguage)"
+            }
+        case .simplify:
+            if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {
+                return "Уровень: \(params.complexityLevel.rawValue)"
+            }
+        case .correct:
+            if let params = try? JSONDecoder().decode(CorrectParams.self, from: operation.params) {
+                return "Сохранение стиля: \(params.stylePreservationLevel)/3"
+            }
+        case .explain:
+            if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
+                return "Детализация: \(params.detailLevel.rawValue)"
+            }
+        }
+        return ""
+    }
+}

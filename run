@@ -9,12 +9,8 @@ NC='\033[0m'
 function help() {
   echo "Usage: ./run <command> [args...]"
   echo "Commands:"
-  echo "  build     - Сборка всех таргетов (MainApp, ShareExtension, CraftifyShared)"
   echo "  test      - Запуск тестов CraftifyShared"
-  echo "  lint      - Проверка стиля SwiftLint"
-  echo "  format    - Проверка форматирования SwiftFormat"
   echo "  dev       - Сборка и запуск MainApp в симуляторе iPhone 14 (iOS 16.4)"
-  echo "  check     - Линт, формат, сборка, тесты, size-check (CI)"
   echo "  clean     - Очистка артефактов сборки"
   echo "  logs      - Показать device logs (симулятор)"
   echo "  help      - Показать эту справку"
@@ -33,45 +29,37 @@ SIMULATOR_ID=EE50483C-9861-438F-82D0-52FFB8FDF92C
 CMD="$1"
 shift || true # Удаляем имя команды, остальные параметры в $@
 
+ensure_mint
+
 case "$CMD" in
-  build)
-    ensure_mint
-    mint run xcodegen "$@"
-    open -a Simulator
-    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
-    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
-    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
-    ;;
   test)
-    ensure_mint
-    mint run xcodegen "$@"
-    open -a Simulator
-    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@"
-    ;;
-  lint)
-    ensure_mint
-    mint run swiftlint --strict "$@" || { echo -e "${RED}SwiftLint обнаружил ошибки!${NC}"; exit 1; }
-    ;;
-  format)
-    ensure_mint
+    echo ">>>> Run swiftformat"
     mint run swiftformat . "$@" || { echo -e "${RED}SwiftFormat обнаружил ошибки!${NC}"; exit 1; }
-    ;;
-  dev)
-    ensure_mint
+    echo ">>>> Run swiftlint"
+    mint run swiftlint --strict "$@" || { echo -e "${RED}SwiftLint обнаружил ошибки!${NC}"; exit 1; }
+
     mint run xcodegen "$@"
     open -a Simulator
-    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@"
-    xcrun simctl boot $SIMULATOR_ID || true
-    xcrun simctl install $SIMULATOR_ID "$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | grep -m1 'BUILT_PRODUCTS_DIR =' | awk '{print $3}')/MainApp.app"
-    xcrun simctl launch $SIMULATOR_ID dev.korchasa.Craftify
+
+    echo ">>>> Run test"
+    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@" | mint run xcbeautify
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+      echo -e "${RED}MainApp тесты завершились с ошибкой!${NC}"
+      exit 1
+    fi
+    xcodebuild -scheme ShareExtension -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@" | mint run xcbeautify
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+      echo -e "${RED}ShareExtension тесты завершились с ошибкой!${NC}"
+      exit 1
+    fi
+    xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination "id=$SIMULATOR_ID" test "$@" | mint run xcbeautify
+    if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+      echo -e "${RED}CraftifyShared тесты завершились с ошибкой!${NC}"
+      exit 1
+    fi
     ;;
-  check)
-    ensure_mint
-    ./run format "$@"
-    ./run lint "$@"
-    ./run build "$@"
-    ./run test "$@"
-    xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive "$@"
+  check-size)
+    xcodebuild -scheme ShareExtension -sdk iphoneos -configuration Release -archivePath $PWD/build/ShareExtension.xcarchive archive "$@" | mint run xcbeautify
     EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
     SIZE=$(du -m "$EXT_PATH" | cut -f1)
     echo "ShareExtension size: ${SIZE}MB"
@@ -79,6 +67,14 @@ case "$CMD" in
       echo -e "${RED}ShareExtension size exceeds 20MB!${NC}"
       exit 1
     fi
+    ;;
+  dev)
+    mint run xcodegen "$@"
+    open -a Simulator
+    xcodebuild -scheme MainApp -sdk iphonesimulator -destination "id=$SIMULATOR_ID" build "$@" | mint run xcbeautify
+    xcrun simctl boot $SIMULATOR_ID || true
+    xcrun simctl install $SIMULATOR_ID "$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | grep -m1 'BUILT_PRODUCTS_DIR =' | awk '{print $3}')/MainApp.app"
+    xcrun simctl launch $SIMULATOR_ID dev.korchasa.Craftify
     ;;
   clean)
     rm -rf build

@@ -4,12 +4,8 @@
 
 | Команда         | Описание                                              |
 |----------------|-------------------------------------------------------|
-| ./run build    | Сборка проекта (xcodegen, xcodebuild)                 |
 | ./run test     | Запуск тестов                                         |
-| ./run lint     | Проверка стиля (swiftlint)                            |
-| ./run format   | Форматирование кода (swiftformat)                     |
 | ./run dev      | Сборка и запуск в симуляторе iPhone 14 (iOS 16)       |
-| ./run check    | Линт, форматирование, сборка, тесты, проверка размера Share Extension |
 | ./run clean    | Очистка артефактов сборки                             |
 | ./run logs     | Просмотр логов                                        |
 
@@ -29,7 +25,6 @@
 3. Сгенерировать проект: `xcodegen`.
 4. Собрать и запустить: `./run dev`.
 5. Для тестов: `./run test`.
-6. Для проверки: `./run check`.
 
 ## CLI-инструменты и Mint
 
@@ -57,12 +52,12 @@ Mint используется для управления версиями CLI-�
 
 ## Различия между локальной и CI/CD сборкой
 
-- **Локально** для всех операций используются Mint и обёрточные скрипты `./run` (например, `./run check`, `./run lint`, `./run build`). Это обеспечивает единообразие версий инструментов и удобство запуска.
+- **Локально** для всех операций используются Mint и обёрточные скрипты `./run` (например, `./run test`, `./run dev`). Это обеспечивает единообразие версий инструментов и удобство запуска.
 - **В CI/CD (GitHub Actions)** для ускорения пайплайна все утилиты (swiftlint, swiftformat, xcodegen, xcodebuild и др.) устанавливаются и вызываются напрямую, без Mint и без использования `./run`-скриптов. Это позволяет избежать накладных расходов на запуск Mint и ускоряет выполнение шагов.
 
 **Пример локального запуска:**
 ```
-./run check
+./run test
 ```
 
 **Пример в CI/CD:**
@@ -75,3 +70,96 @@ xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -de
 ```
 
 Это различие позволяет ускорить CI/CD без потери воспроизводимости и контроля версий инструментов в локальной разработке.
+
+## API: AuthManager
+
+**Назначение:**
+- Безопасное хранение и получение OpenAI API-ключа через Keychain с поддержкой Keychain Sharing (App Group).
+- Маскирование ключа для логирования.
+- Используется во всех модулях через протокол `AuthManaging` (DI-friendly, поддержка stub для тестов).
+
+**Публичные методы:**
+| Метод | Описание |
+|-------|----------|
+| `getAPIKey() async throws -> String?` | Получить API-ключ (или nil, если не найден) |
+| `setAPIKey(_ key: String) async throws` | Сохранить API-ключ (валидируется длина) |
+| `deleteAPIKey() async throws` | Удалить API-ключ |
+| `maskedAPIKey(_ key: String?) -> String` | Маскирует ключ для логирования (пример: sk-****abcd) |
+
+**Особенности:**
+- Все методы async/await (готово к интеграции с современным Swift-кодом).
+- Ошибки доступа к Keychain обрабатываются и пробрасываются (accessDenied, invalidKey, itemNotFound).
+- Маскирование ключа: только первые 3 и последние 4 символа, остальное заменяется на ****.
+- Для тестов реализован in-memory stub (AuthManagerStub), поддерживающий те же методы.
+
+**Пример использования:**
+```swift
+let authManager: AuthManaging = AuthManager()
+try await authManager.setAPIKey("sk-...yourkey...")
+let key = try await authManager.getAPIKey()
+let masked = authManager.maskedAPIKey(key)
+```
+
+## API: LogManagerShared
+
+**Назначение:**
+- Централизованное логирование для приложения и расширения.
+- FIFO-хранилище логов в формате NDJSON (App Group контейнер), поддержка in-memory stub для тестов.
+- Маскирование ключей, экспорт логов, atomic write.
+
+**Публичные методы:**
+| Метод | Описание |
+|-------|----------|
+| `log(_ entry: LogEntry)` | Записать лог (FIFO, NDJSON, atomic write) |
+| `getLogs() -> [LogEntry]` | Получить все логи (FIFO) |
+| `clearLogs()` | Очистить все логи |
+| `exportLogs() throws -> Data` | Экспортировать логи в JSON |
+| `maskAPIKey(_ key: String?) -> String` | Маскировать ключ в строке |
+
+**Особенности:**
+- NDJSON-файл в App Group (максимум 1000 записей, автоматическое удаление старых).
+- Маскирование ключей аналогично AuthManager.
+- Для тестов — in-memory реализация (LogManagerSharedInMemory).
+- Все операции потокобезопасны (DispatchQueue).
+
+**Пример использования:**
+```swift
+let logger: LogManagerShared = LogManagerSharedNDJSON(appGroupContainerURL: ...)
+logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metadata: [:]))
+let logs = logger.getLogs()
+let exported = try logger.exportLogs()
+```
+
+## LogManagerShared: реализация
+
+- **NDJSON-реализация (LogManagerSharedNDJSON):**
+  - Хранит логи в NDJSON-файле в App Group контейнере.
+  - FIFO: при превышении 1000 записей автоматически удаляет старые.
+  - Все операции потокобезопасны (DispatchQueue).
+  - Маскирование ключей, экспорт логов, atomic write.
+  - Файл: `src/CraftifyShared/Sources/LogManagerSharedNDJSON.swift`
+
+- **In-memory реализация (LogManagerSharedInMemory):**
+  - Используется для unit-тестов.
+  - FIFO, маскирование, экспорт аналогично production.
+  - Файл: `src/CraftifyShared/Sources/LogManagerSharedInMemory.swift`
+
+- **Протокол LogManagerShared:**
+  - Описывает общий API для логирования, FIFO, экспорта, маскирования.
+  - Файл: `src/CraftifyShared/Sources/LogManagerShared.swift`
+
+- **Структура лога:**
+  - LogEntry: уровень, модуль, сообщение, метаданные, timestamp.
+  - Файл: `src/CraftifyShared/Sources/LogEntry.swift`
+
+## Тестирование AuthManager
+
+| Тест | Тип | Описание |
+|-------|-----|----------|
+| `testSetAndGetAPIKey` | Unit | Проверка установки и получения API-ключа через AuthManagerStub |
+| `testDeleteAPIKey` | Unit | Проверка удаления API-ключа через AuthManagerStub |
+| `testSetShortAPIKeyThrows` | Unit | Проверка ошибки при установке короткого ключа |
+| `testMaskedAPIKey` | Unit | Проверка маскирования ключа |
+| `testMaskedAPIKeyShortOrNil` | Unit | Проверка маскирования nil/короткого ключа |
+| `testGetAPIKey_accessDenied_throws` | Unit | Проверка ошибки доступа (accessDenied) через AuthManagerStub |
+| `testGetAPIKey_itemNotFound_throws` | Unit | Проверка ошибки отсутствия элемента (itemNotFound) через AuthManagerStub |

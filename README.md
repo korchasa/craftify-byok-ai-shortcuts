@@ -10,7 +10,7 @@ cd Craftify-Cursor
 # Генерация Xcode-проекта
 xcodegen
 # Сборка и тесты
-./run check
+./run test
 ```
 
 ## Сборка и запуск
