@@ -1,0 +1,54 @@
+/* HowToUseView */
+"howtouse_title" = "How to use Craftify";
+"howtouse_instruction" = "Select text in any app, share to Craftify, choose an operation, and get the result instantly.";
+"howtouse_consent" = "I consent to sending text to the OpenAI cloud service";
+"howtouse_privacy_policy" = "Privacy Policy";
+"howtouse_done" = "Done";
+
+/* HomeView */
+"home_title" = "Craftify — Operations";
+"home_add_operation" = "Add Operation";
+"home_settings" = "Settings";
+"home_edit" = "Edit";
+"home_delete" = "Delete";
+
+/* AddOperationView */
+"add_operation_title" = "Add Operation";
+"add_operation_type" = "Operation Type";
+"add_operation_save" = "Save";
+"add_operation_cancel" = "Cancel";
+
+/* EditOperationView */
+"edit_operation_title" = "Edit Operation";
+"edit_operation_save" = "Save";
+"edit_operation_cancel" = "Cancel";
+
+/* SettingsView */
+"settings_title" = "Settings";
+"settings_api_key" = "OpenAI API Key";
+"settings_done" = "Done";
+
+/* Share Extension UI */
+"share_title" = "Craftify — Text Processing";
+"share_cancel" = "Cancel";
+"share_copied" = "Copied to clipboard";
+
+/* Operation Params Labels */
+"operation_param_target_language" = "Target language";
+"operation_param_complexity_level" = "Complexity level";
+"operation_param_style_preservation" = "Style preservation";
+"operation_param_detail_level" = "Detail level";
+
+/* Picker Values */
+"operation_value_beginner" = "Beginner";
+"operation_value_intermediate" = "Intermediate";
+"operation_value_advanced" = "Advanced";
+"operation_value_school" = "School";
+"operation_value_student" = "Student";
+"operation_value_expert" = "Expert";
+
+/* Operation Labels */
+"operation_label_translate" = "Translate";
+"operation_label_simplify" = "Simplify";
+"operation_label_correct" = "Correct";
+"operation_label_explain" = "Explain";

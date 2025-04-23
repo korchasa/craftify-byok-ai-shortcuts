@@ -9,8 +9,7 @@ NC='\033[0m'
 function help() {
   echo "Usage: ./run <command> [args...]"
   echo "Commands:"
-  echo "  test:unit    - Запуск только unit-тестов"
-  echo "  test:e2e     - Запуск только end-to-end (E2E) тестов"
+  echo "  test         - Запуск всех тестов"
   echo "  dev          - Сборка и запуск MainApp в симуляторе iPhone 14 (iOS 16.4)"
   echo "  clean        - Очистка артефактов сборки"
   echo "  logs         - Показать device logs (симулятор)"
@@ -44,13 +43,13 @@ function run_xcodebuild() {
 case "$CMD" in
   fmt)
     echo ">>>> Run swiftformat"
-    mint run swiftformat . "$@" || { echo -e "${RED}SwiftFormat обнаружил ошибки!${NC}"; exit 1; }
+    mint run swiftformat . "$@" || { echo -e "${RED}SwiftFormat обнаружил ошибки! All other tests will be skipped.${NC}"; exit 1; }
     ;;
   lint)
     echo ">>>> Run swiftlint"
-    mint run swiftlint --strict "$@" || { echo -e "${RED}SwiftLint обнаружил ошибки!${NC}"; exit 1; }
+    mint run swiftlint --strict "$@" || { echo -e "${RED}SwiftLint обнаружил ошибки! All other tests will be skipped.${NC}"; exit 1; }
     ;;
-  test:unit)
+  test)
     ./run fmt "$@"
     ./run lint "$@"
 
@@ -60,10 +59,6 @@ case "$CMD" in
     run_xcodebuild -scheme MainAppUnitTests test "$@"
     run_xcodebuild -scheme ShareExtensionUnitTests test "$@"
     run_xcodebuild -scheme CraftifySharedUnitTests test "$@"
-    ;;
-  test:e2e)
-    ./run fmt "$@"
-    ./run lint "$@"
 
     echo ">>>> Run all E2E tests"
     mint run xcodegen "$@"

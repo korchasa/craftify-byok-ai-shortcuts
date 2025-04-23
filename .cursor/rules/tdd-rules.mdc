@@ -8,14 +8,14 @@ alwaysApply: true
 ### TDD Flow
 1.	Red:
 - Write a minimal, isolated test for new behavior or error reproduce.
-- Run `./run test:unit`.
+- Run `./run test`.
 2.	Green:
 - Implement just enough code to make the test pass.
 - Run the full suite to ensure everything is green.
 3.	Refactor:
 - Clean up code and tests without changing behavior.
 - Eliminate duplication and improve readability.
-- Run `./run test:unit` to confirm the correctness of the refactoring.
+- Run `./run test` to confirm the correctness of the refactoring.
 
 ### Tests rules
 

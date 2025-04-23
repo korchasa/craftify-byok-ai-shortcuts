@@ -11,7 +11,7 @@ public final class SettingsViewModelTests: XCTestCase {
 
     override public func setUp() {
         super.setUp()
-        authManager = AuthManagerStub()
+        authManager = AuthManagerStub(key: nil)
         consentManager = ConsentManagerStub()
         viewModel = SettingsViewModel(authManager: authManager!, consentManager: consentManager!)
     }
@@ -46,11 +46,12 @@ public final class SettingsViewModelTests: XCTestCase {
     }
 
     public func testSaveKey_Invalid() async {
-        guard let viewModel else { XCTFail("viewModel is nil")
+        guard let viewModel, let authManager else { XCTFail("viewModel is nil")
             return
         }
         await MainActor.run { viewModel.apiKey = "short" }
         await viewModel.saveKey()
+        expect(authManager.savedKey == nil) == true
         await expect { try await viewModel.isKeyPresent } == false
         await expect { try await viewModel.errorMessage != nil } == true
     }

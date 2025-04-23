@@ -133,6 +133,7 @@ targets:
     platform: iOS
     sources:
       - path: src/CraftifyShared/Sources
+      - path: src/CraftifyShared/Generated/Strings.swift
     resources: []
     info:
       path: src/CraftifyShared/Config/Info.plist
