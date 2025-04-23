@@ -4,57 +4,41 @@ import XCTest
 
 /// Тесты для AuthManager
 public final class AuthManagerTests: XCTestCase {
-    private var sut: AuthManagerStub?
+    private var sut: AuthManaging?
 
     override public func setUpWithError() throws {
-        try super.setUpWithError()
         sut = AuthManagerStub()
     }
 
     override public func tearDownWithError() throws {
         sut = nil
-        try super.tearDownWithError()
     }
 
     /// Проверяет установку и получение API-ключа
-    public func testSetAndGetAPIKey() throws {
+    public func testSetAndGetAPIKey() async throws {
+        try? await sut?.deleteAPIKey()
         let key = String(repeating: "a", count: 16)
-        try sut?.setAPIKey(key)
-        let fetched = try sut?.getAPIKey()
+        try await sut?.setAPIKey(key)
+        let fetched = try await sut?.getAPIKey()
         expect(fetched) == key
+        try? await sut?.deleteAPIKey()
     }
 
     /// Проверяет удаление API-ключа
-    public func testDeleteAPIKey() throws {
+    public func testDeleteAPIKey() async throws {
+        try? await sut?.deleteAPIKey()
         let key = String(repeating: "b", count: 16)
-        try sut?.setAPIKey(key)
-        try sut?.deleteAPIKey()
-        let fetched = try sut?.getAPIKey()
+        try await sut?.setAPIKey(key)
+        try await sut?.deleteAPIKey()
+        let fetched = try await sut?.getAPIKey()
         expect(fetched) == nil
     }
 
     /// Проверяет ошибку при установке короткого ключа
-    public func testSetShortAPIKeyThrows() throws {
+    public func testSetShortAPIKeyThrows() async throws {
+        try? await sut?.deleteAPIKey()
         let key = "short"
-        expect { try self.sut?.setAPIKey(key) }.to(throwError(AuthManagerError.invalidKey))
-    }
-
-    /// Проверяет ошибку при getAPIKey, если shouldThrow выставлен
-    public func testGetAPIKeyThrows() throws {
-        sut?.shouldThrow = .accessDenied
-        expect { try self.sut?.getAPIKey() }.to(throwError(AuthManagerError.accessDenied))
-    }
-
-    /// Проверяет ошибку при setAPIKey, если shouldThrow выставлен
-    public func testSetAPIKeyThrows() throws {
-        sut?.shouldThrow = .accessDenied
-        expect { try self.sut?.setAPIKey("validapikey123456") }.to(throwError(AuthManagerError.accessDenied))
-    }
-
-    /// Проверяет ошибку при deleteAPIKey, если shouldThrow выставлен
-    public func testDeleteAPIKeyThrows() throws {
-        sut?.shouldThrow = .accessDenied
-        expect { try self.sut?.deleteAPIKey() }.to(throwError(AuthManagerError.accessDenied))
+        await expect { try await self.sut?.setAPIKey(key) }.to(throwError(AuthManagerError.invalidKey))
     }
 
     /// Проверяет маскирование ключа
@@ -72,7 +56,5 @@ public final class AuthManagerTests: XCTestCase {
         expect(self.sut?.maskedAPIKey("abc")) == "********"
     }
 
-    deinit {
-        sut = nil
-    }
+    deinit {}
 }

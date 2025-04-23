@@ -5,12 +5,8 @@ alwaysApply: true
 ---
 ## AVAILABLE COMMANDS
 
-- `./run build` - build the project
 - `./run test` - run the tests
-- `./run lint` - run the linter
-- `./run format` - format the code
 - `./run dev` - build and run the project in the iPhone 14(iOS 16) simulator
-- `./run check` - run the linter, build and test
 - `./run clean` - clean the build artifacts
 - `./run logs` - show the device logs
 - `./run help` - show the help

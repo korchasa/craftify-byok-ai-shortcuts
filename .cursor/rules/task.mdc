@@ -492,12 +492,8 @@ SettingsView
 - Конфигурация: `.xcconfig` (Base, Debug, Release).
 - CLI-скрипты:
   ```
-  ./run build      # (xcodegen, xcodebuild)
   ./run test       # (xcodegen, xcodebuild)
-  ./run lint       # (mint, swiftlint)
-  ./run format     # (mint, swiftformat)
   ./run dev        # (xcodegen, xcodebuild, xcrun, simctl, Simulator)
-  ./run check      # (mint, swiftlint, xcodegen, xcodebuild)
   ./run clean      # (xcodebuild)
   ./run logs       # (log)
   ```

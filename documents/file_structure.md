@@ -32,7 +32,7 @@ src/
   - `file_structure.md` — структура файлов
   - `developer-manual.md` — руководство разработчика
   - `user-manual.md` — руководство пользователя
-- `roadmap.md` — поэтапный план реализации
+  - `mvp-roadmap.md` — поэтапный план реализации MVP
 - `.github/workflows/ci.yml` — CI/CD pipeline
 - `project.yml` — описание проекта для XcodeGen
 - `.xcconfig` — конфигурация сборки
