@@ -47,11 +47,48 @@ jobs:
       - name: Install tools via brew
         run: brew install xcodegen swiftlint swiftformat xcbeautify || true
 
-      - name: Ensure run script is executable
-        run: chmod +x ./run
+      - name: Lint (SwiftLint)
+        run: swiftlint --strict
 
-      - name: Run all tests (lint, format, unit, E2E)
-        run: ./run test
+      - name: Format (SwiftFormat)
+        run: swiftformat . --lint --swiftversion 5.7
+
+      - name: Generate Xcode project
+        run: xcodegen
+
+      - name: Build MainApp
+        run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build | xcbeautify
+
+      - name: Unit tests: MainApp
+        run: xcodebuild -scheme MainAppUnitTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
+
+      - name: Unit tests: ShareExtension
+        run: xcodebuild -scheme ShareExtensionUnitTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
+
+      - name: Unit tests: CraftifyShared
+        run: xcodebuild -scheme CraftifySharedUnitTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
+
+      - name: E2E tests: MainApp
+        run: xcodebuild -scheme MainAppE2ETests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
+
+      - name: E2E tests: ShareExtension
+        run: xcodebuild -scheme ShareExtensionE2ETests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
+
+      - name: E2E tests: CraftifyShared
+        run: xcodebuild -scheme CraftifySharedE2ETests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
+
+      - name: Check ShareExtension size
+        run: |
+          xcodebuild -scheme ShareExtension archive -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4'
+          EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
+          SIZE=$(du -m "$EXT_PATH" | cut -f1)
+          echo "ShareExtension size: ${SIZE}MB"
+          if [ "$SIZE" -gt 20 ]; then
+            echo "::error ::ShareExtension size exceeds 20MB!"
+            exit 1
+          fi
+        shell: bash
+        continue-on-error: false
 
       - name: Collect code coverage
         run: |
@@ -73,11 +110,6 @@ jobs:
             echo "::error ::Code coverage below 80% ($COVERAGE)"
             exit 1
           fi
-        shell: bash
-        continue-on-error: false
-
-      - name: Check ShareExtension size
-        run: ./run check-size
         shell: bash
         continue-on-error: false
 
