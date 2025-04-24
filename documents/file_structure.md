@@ -1,4 +1,4 @@
-# Структура файлов проекта Craftify
+## Структура файлов проекта Craftify
 
 ```
 src/
@@ -47,7 +47,7 @@ src/
 
 Все пути в project.yml обновлены на src/…
 
-## Основные директории и файлы
+### Основные директории и файлы
 
 - `documents/` — документация проекта
   - `project.md` — обзор, цели, аудитория
@@ -65,7 +65,7 @@ src/
 - `Resources/` — локализация, ассеты
 - App Group контейнер: logs.ndjson — хранилище логов (FIFO, NDJSON)
 
-## Паттерны организации
+### Паттерны организации
 - Разделение main app и Share Extension по таргетам
 - Общий код в CraftifyShared (SwiftPM)
 - Документация и спецификации в `documents/`
@@ -79,3 +79,5 @@ src/
 | src/ShareExtension/Sources/ProcessingManaging.swift | Протокол для ProcessingManager (DI, тестируемость) |
 | src/ShareExtension/Sources/ShareExtensionViewController.swift | Контроллер расширения, интеграция SwiftUI и UIKit |
 | src/ShareExtension/UnitTests/ShareExtensionManagerTests.swift | Unit-тесты для ShareExtensionManager |
+
+- Тесты, связанные с таймаутом обработки, реализованы только в unit-тестах ViewModel (ShareExtensionViewModelTests.swift), а не в E2E тестах ShareExtensionManager.

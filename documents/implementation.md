@@ -1,66 +1,66 @@
-# Реализация и стек технологий
+## Implementation and Technology Stack
 
-## Команды CLI
+### CLI Commands
 
-| Команда         | Описание                                              |
-|----------------|-------------------------------------------------------|
-| ./run test     | Запуск тестов                                         |
-| ./run dev      | Сборка и запуск в симуляторе iPhone 14 (iOS 16)       |
-| ./run clean    | Очистка артефактов сборки                             |
-| ./run logs     | Просмотр логов                                        |
+| Command         | Description                                           |
+|----------------|------------------------------------------------------|
+| ./run test     | Run tests                                           |
+| ./run dev      | Build and run in iPhone 14 simulator (iOS 16)      |
+| ./run clean    | Clean build artifacts                                |
+| ./run logs     | View logs                                           |
 
-## Технологический стек
+### Technology Stack
 - Swift 5.7+
 - SwiftUI
 - XcodeGen
 - SwiftPM (CraftifyShared, LogManagerShared)
-- Sentry (только MainApp)
-- NDJSON-файл (FIFO, маскирование, atomic write, экспорт, DispatchQueue) для логов
-- SwiftGen (локализация)
+- Sentry (only MainApp)
+- NDJSON file (FIFO, masking, atomic write, export, DispatchQueue) for logs
+- SwiftGen (localization)
 - GitHub Actions (CI/CD)
 
-## Настройка окружения
-1. Клонировать репозиторий.
-2. Установить зависимости: Mint, SwiftGen, SwiftLint, SwiftFormat.
-3. Сгенерировать проект: `xcodegen`.
-4. Собрать и запустить: `./run dev`.
-5. Для тестов: `./run test`.
+### Environment Setup
+1. Clone the repository.
+2. Install dependencies: Mint, SwiftGen, SwiftLint, SwiftFormat.
+3. Generate the project: `xcodegen`.
+4. Build and run: `./run dev`.
+5. For tests: `./run test`.
 
-## CLI-инструменты и Mint
+### CLI Tools and Mint
 
-| Инструмент     | Версия   | Назначение                        |
-| -------------- | -------- | --------------------------------- |
-| XcodeGen       | 2.42.0   | Генерация Xcode-проекта           |
-| SwiftLint      | 0.59.1   | Анализатор стиля Swift            |
-| SwiftFormat    | 0.55.5   | Форматирование кода Swift         |
-| xcbeautify     | 2.28.0   | Красивый вывод xcodebuild         |
+| Tool           | Version   | Purpose                          |
+|----------------|-----------|----------------------------------|
+| XcodeGen       | 2.42.0   | Generate Xcode project           |
+| SwiftLint      | 0.59.1   | Swift style analyzer             |
+| SwiftFormat    | 0.55.5   | Swift code formatter             |
+| xcbeautify     | 2.28.0   | Beautiful output for xcodebuild  |
 
-Mint используется для управления версиями CLI-инструментов. Все зависимости перечислены в `Mintfile` в корне проекта.
+Mint is used for managing versions of CLI tools. All dependencies are listed in the `Mintfile` at the root of the project.
 
-После завершения этапа 2 все placeholder-файлы и placeholder-тесты удалены. Проект полностью соответствует требованиям линтера и готов к реализации CraftifyShared.
+After completing step 2, all placeholder files and placeholder tests are removed. The project fully complies with linter requirements and is ready for CraftifyShared implementation.
 
-## DevOps и CI/CD
+### DevOps and CI/CD
 
-- Используется GitHub Actions (`.github/workflows/ci.yml`).
-- Для ускорения сборки реализовано кэширование:
-  - Mint-пакетов (`.mint`)
+- GitHub Actions is used (`.github/workflows/ci.yml`).
+- Caching is implemented to speed up builds:
+  - Mint packages (`.mint`)
   - DerivedData (`~/Library/Developer/Xcode/DerivedData`)
-  - SwiftPM зависимостей (`.build`, `.swiftpm`)
-- Ключи кэша строятся на основе ОС и контрольных файлов (`Mintfile`, `Package.resolved`).
-- Кэширование SwiftPM позволяет избежать повторной загрузки и сборки зависимостей, ускоряя pipeline.
-- Remove corrupted Package.resolved | rm -f **/Package.resolved | Удаляет все файлы Package.resolved до кэширования SPM и сборки, предотвращая ошибки из-за повреждённого файла
+  - SwiftPM dependencies (`.build`, `.swiftpm`)
+- Cache keys are built based on OS and control files (`Mintfile`, `Package.resolved`).
+- Caching SwiftPM avoids re-downloading and rebuilding dependencies, speeding up the pipeline.
+- Remove corrupted Package.resolved | rm -f **/Package.resolved | Removes all Package.resolved files before SPM caching and building, preventing errors due to corrupted files.
 
-## Различия между локальной и CI/CD сборкой
+### Differences Between Local and CI/CD Builds
 
-- **Локально** для всех операций используются Mint и обёрточные скрипты `./run` (например, `./run test`, `./run dev`). Это обеспечивает единообразие версий инструментов и удобство запуска.
-- **В CI/CD (GitHub Actions)** для ускорения пайплайна все утилиты (swiftlint, swiftformat, xcodegen, xcodebuild и др.) устанавливаются и вызываются напрямую, без Mint и без использования `./run`-скриптов. Это позволяет избежать накладных расходов на запуск Mint и ускоряет выполнение шагов.
+- **Locally**, Mint and wrapper scripts `./run` (e.g., `./run test`, `./run dev`) are used for all operations. This ensures consistency in tool versions and ease of execution.
+- **In CI/CD (GitHub Actions)**, to speed up the pipeline, all utilities (swiftlint, swiftformat, xcodegen, xcodebuild, etc.) are installed and called directly, without Mint and without using `./run` scripts. This avoids the overhead of running Mint and speeds up execution.
 
-**Пример локального запуска:**
+**Example of local run:**
 ```
 ./run test
 ```
 
-**Пример в CI/CD:**
+**Example in CI/CD:**
 ```
 swiftlint
 swiftformat . --lint --swiftversion 5.7
@@ -69,30 +69,30 @@ xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -de
 xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 ```
 
-Это различие позволяет ускорить CI/CD без потери воспроизводимости и контроля версий инструментов в локальной разработке.
+This difference allows speeding up CI/CD without losing reproducibility and version control of tools in local development.
 
-## API: AuthManager
+### API: AuthManager
 
-**Назначение:**
-- Безопасное хранение и получение OpenAI API-ключа через Keychain с поддержкой Keychain Sharing (App Group).
-- Маскирование ключа для логирования.
-- Используется во всех модулях через протокол `AuthManaging` (DI-friendly, поддержка stub для тестов).
+**Purpose:**
+- Secure storage and retrieval of OpenAI API key via Keychain with Keychain Sharing support (App Group).
+- Masking the key for logging.
+- Used in all modules via the `AuthManaging` protocol (DI-friendly, supports stub for tests).
 
-**Публичные методы:**
-| Метод | Описание |
-|-------|----------|
-| `getAPIKey() async throws -> String?` | Получить API-ключ (или nil, если не найден) |
-| `setAPIKey(_ key: String) async throws` | Сохранить API-ключ (валидируется длина) |
-| `deleteAPIKey() async throws` | Удалить API-ключ |
-| `maskedAPIKey(_ key: String?) -> String` | Маскирует ключ для логирования (пример: sk-****abcd) |
+**Public Methods:**
+| Method | Description |
+|--------|-------------|
+| `getAPIKey() async throws -> String?` | Retrieve API key (or nil if not found) |
+| `setAPIKey(_ key: String) async throws` | Save API key (length validated) |
+| `deleteAPIKey() async throws` | Delete API key |
+| `maskedAPIKey(_ key: String?) -> String` | Masks the key for logging (example: sk-****abcd) |
 
-**Особенности:**
-- Все методы async/await (готово к интеграции с современным Swift-кодом).
-- Ошибки доступа к Keychain обрабатываются и пробрасываются (accessDenied, invalidKey, itemNotFound).
-- Маскирование ключа: только первые 3 и последние 4 символа, остальное заменяется на ****.
-- Для тестов реализован in-memory stub (AuthManagerStub), поддерживающий те же методы.
+**Features:**
+- All methods are async/await (ready for integration with modern Swift code).
+- Keychain access errors are handled and propagated (accessDenied, invalidKey, itemNotFound).
+- Key masking: only the first 3 and last 4 characters are visible, the rest is replaced with ****.
+- For tests, an in-memory stub (AuthManagerStub) is implemented, supporting the same methods.
 
-**Пример использования:**
+**Example Usage:**
 ```swift
 let authManager: AuthManaging = AuthManager()
 try await authManager.setAPIKey("sk-...yourkey...")
@@ -100,28 +100,28 @@ let key = try await authManager.getAPIKey()
 let masked = authManager.maskedAPIKey(key)
 ```
 
-## API: LogManagerShared
+### API: LogManagerShared
 
-**Назначение:**
-- Централизованное логирование для приложения и расширения.
-- FIFO-хранилище логов в формате NDJSON (App Group контейнер), поддержка in-memory stub для тестов.
-- Маскирование ключей, экспорт логов, atomic write.
+**Purpose:**
+- Centralized logging for the application and extension.
+- FIFO log storage in NDJSON format (App Group container), supports in-memory stub for tests.
+- Key masking, log export, atomic write.
 
-**Публичные методы:**
-| Метод | Описание |
-|-------|----------|
-| `log(_ entry: LogEntry)` | Записать лог (FIFO, NDJSON, atomic write) |
-| `getLogs() -> [LogEntry]` | Получить все логи (FIFO) |
-| `clearLogs()` | Очистить все логи |
-| `exportLogs() throws -> Data` | Экспортировать логи в JSON |
+**Public Methods:**
+| Method | Description |
+|--------|-------------|
+| `log(_ entry: LogEntry)` | Write log (FIFO, NDJSON, atomic write) |
+| `getLogs() -> [LogEntry]` | Retrieve all logs (FIFO) |
+| `clearLogs()` | Clear all logs |
+| `exportLogs() throws -> Data` | Export logs to JSON |
 
-**Особенности:**
-- NDJSON-файл в App Group (максимум 1000 записей, автоматическое удаление старых).
-- Маскирование ключей аналогично AuthManager.
-- Для тестов — in-memory реализация (LogManagerSharedInMemory).
-- Все операции потокобезопасны (DispatchQueue).
+**Features:**
+- NDJSON file in App Group (maximum 1000 entries, old ones automatically deleted).
+- Key masking similar to AuthManager.
+- For tests — in-memory implementation (LogManagerSharedInMemory).
+- All operations are thread-safe (DispatchQueue).
 
-**Пример использования:**
+**Example Usage:**
 ```swift
 let logger: LogManagerShared = LogManagerSharedNDJSON(appGroupContainerURL: ...)
 logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metadata: [:]))
@@ -129,77 +129,111 @@ let logs = logger.getLogs()
 let exported = try logger.exportLogs()
 ```
 
-## LogManagerShared: реализация
+### LogManagerShared: Implementation
 
-- **NDJSON-реализация (LogManagerSharedNDJSON):**
-  - Хранит логи в NDJSON-файле в App Group контейнере.
-  - FIFO: при превышении 1000 записей автоматически удаляет старые.
-  - Все операции потокобезопасны (DispatchQueue).
-  - Маскирование ключей, экспорт логов, atomic write.
-  - Файл: `src/CraftifyShared/Sources/LogManagerSharedNDJSON.swift`
+- **NDJSON Implementation (LogManagerSharedNDJSON):**
+  - Stores logs in NDJSON file in App Group container.
+  - FIFO: automatically deletes old entries when exceeding 1000.
+  - All operations are thread-safe (DispatchQueue).
+  - Key masking, log export, atomic write.
+  - File: `src/CraftifyShared/Sources/LogManagerSharedNDJSON.swift`
 
-- **In-memory реализация (LogManagerSharedInMemory):**
-  - Используется для unit-тестов.
-  - FIFO, маскирование, экспорт аналогично production.
-  - Файл: `src/CraftifyShared/Sources/LogManagerSharedInMemory.swift`
+- **In-memory Implementation (LogManagerSharedInMemory):**
+  - Used for unit tests.
+  - FIFO, masking, export similar to production.
+  - File: `src/CraftifyShared/Sources/LogManagerSharedInMemory.swift`
 
-- **Протокол LogManagerShared:**
-  - Описывает общий API для логирования, FIFO, экспорта, маскирования.
-  - Файл: `src/CraftifyShared/Sources/LogManagerShared.swift`
+- **Protocol LogManagerShared:**
+  - Describes a common API for logging, FIFO, export, masking.
+  - File: `src/CraftifyShared/Sources/LogManagerShared.swift`
 
-- **Структура лога:**
-  - LogEntry: уровень, модуль, сообщение, метаданные, timestamp.
-  - Файл: `src/CraftifyShared/Sources/LogEntry.swift`
+- **Log Structure:**
+  - LogEntry: level, module, message, metadata, timestamp.
+  - File: `src/CraftifyShared/Sources/LogEntry.swift`
 
-## Тестирование AuthManager
+### Testing AuthManager
 
-| Тест | Тип | Описание |
-|-------|-----|----------|
-| `testSetAndGetAPIKey` | Unit | Проверка установки и получения API-ключа через AuthManagerStub |
-| `testDeleteAPIKey` | Unit | Проверка удаления API-ключа через AuthManagerStub |
-| `testSetShortAPIKeyThrows` | Unit | Проверка ошибки при установке короткого ключа |
-| `testMaskedAPIKey` | Unit | Проверка маскирования ключа |
-| `testMaskedAPIKeyShortOrNil` | Unit | Проверка маскирования nil/короткого ключа |
-| `testGetAPIKey_accessDenied_throws` | Unit | Проверка ошибки доступа (accessDenied) через AuthManagerStub |
-| `testGetAPIKey_itemNotFound_throws` | Unit | Проверка ошибки отсутствия элемента (itemNotFound) через AuthManagerStub |
+| Test | Type | Description |
+|------|------|-------------|
+| `testSetAndGetAPIKey` | Unit | Check setting and getting API key via AuthManagerStub |
+| `testDeleteAPIKey` | Unit | Check deleting API key via AuthManagerStub |
+| `testSetShortAPIKeyThrows` | Unit | Check error when setting a short key |
+| `testMaskedAPIKey` | Unit | Check key masking |
+| `testMaskedAPIKeyShortOrNil` | Unit | Check masking of nil/short key |
+| `testGetAPIKey_accessDenied_throws` | Unit | Check access error (accessDenied) via AuthManagerStub |
+| `testGetAPIKey_itemNotFound_throws` | Unit | Check item not found error (itemNotFound) via AuthManagerStub |
 
-## Тестирование Masking (maskKey)
+### Testing Masking (maskKey)
 
-| Тест | Тип | Описание |
-|------|-----|----------|
-| `testMaskKey_NormalKey` | Unit | Маскирование обычного ключа (длиннее min длины, видны только последние 4 символа) |
-| `testMaskKey_ExactlyMinLength` | Unit | Маскирование ключа ровно минимальной длины (всё скрыто) |
-| `testMaskKey_ShortKey` | Unit | Маскирование короткого ключа (всё скрыто) |
-| `testMaskKey_NilKey` | Unit | Маскирование nil (всё скрыто) |
+| Test | Type | Description |
+|------|------|-------------|
+| `testMaskKey_NormalKey` | Unit | Masking a normal key (longer than min length, only last 4 characters visible) |
+| `testMaskKey_ExactlyMinLength` | Unit | Masking a key exactly of minimum length (everything hidden) |
+| `testMaskKey_ShortKey` | Unit | Masking a short key (everything hidden) |
+| `testMaskKey_NilKey` | Unit | Masking nil (everything hidden) |
 
-## Запуск тестов
-- Unit и UI тесты: `./run test`
-- Проверка покрытия: отчёт формируется автоматически в CI
-- Обязательное требование: все ключевые пользовательские сценарии должны быть покрыты end-to-end тестами (E2E), включая edge-cases и негативные сценарии.
+### Running Tests
+- Unit and UI tests: `./run test`
+- Coverage check: report is generated automatically in CI
+- Mandatory requirement: all key user scenarios must be covered by end-to-end tests (E2E), including edge cases and negative scenarios.
 
-## Итоги ревью и тестирования Share Extension
-- Все требования MVP для Share Extension выполнены.
-- Размер расширения ≤20 MB подтверждён ручной сборкой и анализом зависимостей.
-- Покрытие тестами (unit, UI, E2E) ≥80%.
-- Все edge-cases реализованы и протестированы.
-- Линтинг (SwiftLint) и форматирование (SwiftFormat) — без ошибок.
+### Share Extension
 
-## Этап 5: Реализация Share Extension (статус: завершён)
+- Fully implemented Share Extension with support for all MVP requirements.
+- Entitlements (App Groups, Keychain Access) configured for both targets.
+- Text limit: 5000 characters, operation buttons blocked when exceeding the limit.
+- Timeout handling: 15s per request, 30s total limit (Task.sleep + Task.cancel).
+- Display toast/notification upon successful result copy.
+- Integration with LogManagerSharedNDJSON: all actions and errors are logged, key masking.
+- Coverage with unit, UI, and E2E tests (errors, timeouts, edge cases).
+- In CI/CD, automatic size check for the extension is implemented (Archive + size report, fail if >20 MB).
 
-- Полностью реализован Share Extension с поддержкой всех требований MVP.
-- Настроены entitlements (App Groups, Keychain Access) для обоих таргетов.
-- Лимит текста: 5000 символов, блокировка кнопок операций при превышении лимита.
-- Обработка таймаутов: 15 с на запрос, 30 с общий лимит (Task.sleep + Task.cancel).
-- Отображение тоста/уведомления при успешном копировании результата.
-- Интеграция LogManagerSharedNDJSON: логируются все действия и ошибки, маскирование ключа.
-- Покрытие unit, UI и E2E тестами (ошибки, таймауты, edge-cases).
-- В CI/CD реализована автоматическая проверка размера расширения (Archive + size report, fail при >20 MB).
+### CI/CD Commands and Steps to Check Share Extension Size
 
-### Команды и шаги CI/CD для проверки размера Share Extension
+| Step | Description |
+|------|-------------|
+| xcodegen | Generate Xcode project |
+| xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos | Build the extension in Release |
+| du -sk build/Products/Release-iphoneos/ShareExtension.appex | Get the size of .appex |
+| Fail if >20 MB | Build is interrupted if the size exceeds the limit |
 
-| Шаг | Описание |
-|-----|----------|
-| xcodegen | Генерация Xcode-проекта |
-| xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos | Сборка расширения в Release |
-| du -sk build/Products/Release-iphoneos/ShareExtension.appex | Получение размера .appex |
-| Fail при >20 MB | Сборка прерывается, если размер превышает лимит |
+### OpenAI Integration
+
+**Архитектура:**
+- Используется LLMAPIClient для отправки запросов к OpenAI API (gpt-4o-mini) через URLSession (ephemeral, timeout 15 сек).
+- Поддерживается retry с экспоненциальным backoff (1, 2, 5 сек) при сетевых ошибках и 429.
+- Все запросы и ответы логируются через LogManagerShared (NDJSON, FIFO 1000 записей, atomic write, потокобезопасно).
+- Ключ OpenAI API всегда маскируется в логах (пример: sk-****abcd).
+- Логи доступны для экспорта пользователем (NDJSON/JSON).
+- SLA: среднее время ответа ≤ 3 с (до 1000 символов), ≤ 8 с (до 5000 символов), общий лимит обработки 30 с.
+- Все ошибки (401, 429, 500, parsing, timeout, cancel) логируются с деталями и метаданными (operation, prompt, длина текста, maskedKey, статус).
+- Пример записи лога:
+```json
+{
+  "level": "info",
+  "module": "LLMAPIClient",
+  "message": "Запрос к OpenAI отправлен",
+  "metadata": {
+    "operation": "translate",
+    "prompt": "Translate: {text}",
+    "length": "120",
+    "maskedKey": "sk-****abcd"
+  },
+  "timestamp": "2024-06-10T12:34:56Z"
+}
+```
+- Для unit- и интеграционных тестов используется in-memory логгер (LogManagerSharedInMemory).
+- Нагрузочное тестирование проводится с помощью скриптов и CI, SLA проверяется автоматически.
+- Все параметры запроса (model, temperature, max_tokens, promptTemplate) фиксированы и логируются.
+- В случае ошибки логируется тип ошибки, maskedKey, статус ответа, сообщение OpenAI.
+
+**Тестирование:**
+- Покрытие unit-тестами: успешный ответ, 401, 429, 500, cancel, retry, parsing error.
+- Интеграционный тест: проверка тела запроса, заголовков, парсинга ответа, логирования.
+- Нагрузочный тест: ≥ 80% запросов укладываются в SLA.
+
+## Особенности реализации таймаута
+- Таймаут обработки текста реализован только в ShareExtensionViewModel (по умолчанию 30 секунд, можно переопределять в тестах через processingTimeoutSeconds).
+- В ShareExtensionManager таймаут не реализован, только бизнес-логика обработки и ошибок.
+- В unit-тестах ViewModel таймаут выставляется через processingTimeoutSeconds.
+- В E2E тестах ShareExtensionManager проверяются только ошибки и успехи обработки, но не таймаут.
