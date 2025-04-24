@@ -10,6 +10,32 @@
 - Dependency Injection for managers.
 - FIFO for logs (limit of 1000 entries).
 
+### Logging and Analytics
+
+#### Log Architecture
+- Все логи пишутся в формате NDJSON в файл в контейнере App Group через LogManagerShared.
+- LogManagerShared поддерживает уровни: debug, info, warning, error.
+- Лог-файл ограничен 1000 записями (FIFO), при превышении лимита старые записи удаляются автоматически.
+- Все операции записи потокобезопасны (DispatchQueue), запись атомарная.
+- Ключи API всегда маскируются (видны только первые и последние 4 символа).
+- Экспорт логов доступен через SettingsView (share sheet), файл в формате JSON.
+- Логи доступны только внутри контейнера App Group и не передаются третьим лицам.
+- Краш-репортинг реализован через New Relic SDK, интегрирован только в основное приложение (не в Share Extension).
+- New Relic App Token хранится в Info.plist и подставляется в рантайме.
+- В Share Extension не используются сторонние SDK для аналитики или crash reporting (минимальный размер, соответствие App Store).
+
+#### Log Export and Retention Policy
+- Пользователь может экспортировать логи через SettingsView.
+- Логи содержат максимум 1000 последних записей (FIFO), все ключи API маскированы.
+- Логи доступны только внутри контейнера App Group.
+- Краш-отчёты отправляются только из основного приложения через New Relic SDK.
+
+#### Consequences
+- Логи всегда доступны для экспорта и диагностики.
+- Краш-аналитика доступна только для основного приложения через New Relic.
+- Share Extension остаётся лёгким и соответствует требованиям приватности.
+- Политика хранения и маскирования логов реализована на уровне кода.
+
 ### Component Interaction
 - ShareExtensionManager reads inventory and API key, calls ProcessingManager.
 - ProcessingManager forms a request, calls LLMAPIClient.
