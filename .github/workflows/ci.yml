@@ -44,10 +44,10 @@ jobs:
       - name: Install Mint
         run: brew install mint || true
 
-      - name: Install Mint dependencies
-        run: mint bootstrap
+      - name: Install tools via brew
+        run: brew install xcodegen swiftlint swiftformat xcbeautify || true
 
-      - name: Ensure ./run is executable
+      - name: Ensure run script is executable
         run: chmod +x ./run
 
       - name: Run all tests (lint, format, unit, E2E)
