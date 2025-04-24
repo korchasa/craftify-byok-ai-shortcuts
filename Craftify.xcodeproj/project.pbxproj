@@ -908,27 +908,27 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					29E4CDE941E2A6EB3924E8DD = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 					2B930E7C733BF2F51B606A18 = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 					48A8BE9C0269A32AC58437F5 = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 					4C8543A90F5821AC5DB9CD4C = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 					60B67F859084B6AD1ECAD983 = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 					65FAFADBB04233FA468B6321 = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 					6E99CB366D323D89B45B1DAE = {
@@ -936,11 +936,11 @@
 						ProvisioningStyle = Manual;
 					};
 					A280F9CD54BE725A604A330F = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 					D52BD7D4A192B7F78A1A3F6F = {
-						DevelopmentTeam = YOUR_TEAM_ID;
+						DevelopmentTeam = 78M3ZDR5UH;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -1291,7 +1291,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.ShareExtensionUnitTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1311,7 +1311,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1328,7 +1328,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.ShareExtensionUnitTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1351,7 +1351,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify.ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "09d74528-408d-43f1-96bd-259a04739802";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1368,7 +1368,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.MainAppUnitTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MainApp.app/MainApp";
 			};
@@ -1393,7 +1393,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifyShared;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1411,7 +1411,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.ShareExtensionE2ETests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1428,7 +1428,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.MainAppE2ETests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MainApp.app/MainApp";
 			};
@@ -1446,7 +1446,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.MainAppUnitTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MainApp.app/MainApp";
 			};
@@ -1464,7 +1464,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifySharedE2ETests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1481,7 +1481,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.ShareExtensionE2ETests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1501,7 +1501,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1542,7 +1542,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = YOUR_TEAM_ID;
+				DEVELOPMENT_TEAM = 78M3ZDR5UH;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1561,7 +1561,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};
@@ -1577,7 +1577,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifySharedUnitTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -1594,7 +1594,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifySharedE2ETests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1611,7 +1611,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.MainAppE2ETests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MainApp.app/MainApp";
 			};
@@ -1635,7 +1635,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify.ShareExtension;
 				PROVISIONING_PROFILE_SPECIFIER = "09d74528-408d-43f1-96bd-259a04739802";
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1652,7 +1652,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifySharedUnitTests;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1676,7 +1676,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.CraftifyShared;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1718,7 +1718,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = YOUR_TEAM_ID;
+				DEVELOPMENT_TEAM = 78M3ZDR5UH;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1744,7 +1744,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};

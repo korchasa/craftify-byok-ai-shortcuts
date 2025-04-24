@@ -14,15 +14,15 @@ public final class AddOperationViewModel: ObservableObject {
     public var isValid: Bool {
         switch selectedType {
         case .translate:
-            return !targetLanguage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            !targetLanguage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         case .simplify:
-            return true // complexityLevel всегда валиден
+            true // complexityLevel всегда валиден
         case .correct:
-            return (Self.minStylePreservationLevel ... Self.maxStylePreservationLevel).contains(stylePreservationLevel)
+            (Self.minStylePreservationLevel ... Self.maxStylePreservationLevel).contains(stylePreservationLevel)
         case .explain:
-            return true // detailLevel всегда валиден
+            true // detailLevel всегда валиден
         case .none:
-            return false
+            false
         }
     }
 

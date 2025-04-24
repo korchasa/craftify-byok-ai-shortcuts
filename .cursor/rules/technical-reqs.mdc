@@ -1,0 +1,9 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+## Technical Requirements
+
+- It is necessary to always use ready-made libraries if they exist on the internet.
+- For all strings displayed to the user, internationalization should be used.

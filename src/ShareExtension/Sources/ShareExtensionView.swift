@@ -38,6 +38,9 @@ public struct ShareExtensionView: View {
             if isProcessing {
                 progressOverlay
             }
+            if viewModel.showCopiedToast {
+                copiedToast
+            }
         }
         .onReceive(viewModel.$errorMessage) { msg in
             if let msg {
@@ -50,6 +53,13 @@ public struct ShareExtensionView: View {
         }
         .onReceive(viewModel.$progress) { val in
             progress = val
+        }
+        .onReceive(viewModel.$showCopiedToast) { show in
+            if show {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    viewModel.hideCopiedToast()
+                }
+            }
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Ошибка"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
@@ -68,7 +78,7 @@ public struct ShareExtensionView: View {
                 }
                 .accessibilityLabel(displayName(for: op.operation))
                 .buttonStyle(.borderedProminent)
-                .disabled(isProcessing)
+                .disabled(isProcessing || viewModel.isInputTextTooLong)
             }
         }
         .padding(.horizontal)
@@ -76,10 +86,10 @@ public struct ShareExtensionView: View {
 
     private func displayName(for type: OperationType) -> String {
         switch type {
-        case .translate: return Strings.operationLabelTranslate
-        case .simplify: return Strings.operationLabelSimplify
-        case .correct: return Strings.operationLabelCorrect
-        case .explain: return Strings.operationLabelExplain
+        case .translate: Strings.operationLabelTranslate
+        case .simplify: Strings.operationLabelSimplify
+        case .correct: Strings.operationLabelCorrect
+        case .explain: Strings.operationLabelExplain
         }
     }
 
@@ -98,5 +108,23 @@ public struct ShareExtensionView: View {
         .shadow(radius: ShareExtensionViewConstants.overlayShadow)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("Обработка, прогресс \(Int(progress * 100))%")
+    }
+
+    private var copiedToast: some View {
+        VStack {
+            Spacer()
+            HStack {
+                Spacer()
+                Text("Скопировано в буфер")
+                    .font(.headline)
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6).opacity(0.95)))
+                    .shadow(radius: 4)
+                Spacer()
+            }
+            Spacer().frame(height: 40)
+        }
+        .transition(.opacity)
+        .zIndex(2)
     }
 }

@@ -11,3 +11,4 @@
 --semicolons never
 --ranges spaced
 --trimwhitespace always
+--swiftversion 5.9
