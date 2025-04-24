@@ -59,22 +59,22 @@ jobs:
       - name: Build MainApp
         run: xcodebuild -scheme MainApp -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build | xcbeautify
 
-      - name: Unit tests: MainApp
+      - name: Unit tests MainApp
         run: xcodebuild -scheme MainAppUnitTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 
-      - name: Unit tests: ShareExtension
+      - name: Unit tests ShareExtension
         run: xcodebuild -scheme ShareExtensionUnitTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 
-      - name: Unit tests: CraftifyShared
+      - name: Unit tests CraftifyShared
         run: xcodebuild -scheme CraftifySharedUnitTests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 
-      - name: E2E tests: MainApp
+      - name: E2E tests MainApp
         run: xcodebuild -scheme MainAppE2ETests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 
-      - name: E2E tests: ShareExtension
+      - name: E2E tests ShareExtension
         run: xcodebuild -scheme ShareExtensionE2ETests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 
-      - name: E2E tests: CraftifyShared
+      - name: E2E tests CraftifyShared
         run: xcodebuild -scheme CraftifySharedE2ETests -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
 
       - name: Check ShareExtension size
