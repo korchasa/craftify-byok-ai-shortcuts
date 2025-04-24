@@ -805,6 +805,8 @@
 			dependencies = (
 			);
 			name = CraftifyShared;
+			packageProductDependencies = (
+			);
 			productName = CraftifyShared;
 			productReference = 93A62DE97390770A2717EB11 /* CraftifyShared.framework */;
 			productType = "com.apple.product-type.framework";
@@ -888,6 +890,8 @@
 				A2AEA3A3762C38720A3BC030 /* PBXTargetDependency */,
 			);
 			name = ShareExtension;
+			packageProductDependencies = (
+			);
 			productName = ShareExtension;
 			productReference = B703ED98C53835018AA8D449 /* ShareExtension.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -992,12 +996,14 @@
 				en,
 			);
 			mainGroup = 3BFB260C3693B1CDBE49239D;
+			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F263637543557C8E31114560 /* XCRemoteSwiftPackageReference "CwlCatchException" */,
 				4E992233038F659822BEDAFD /* XCRemoteSwiftPackageReference "CwlPreconditionTesting" */,
 				2CEA48106F6F0ACB92DE5769 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */,
 				E4DCEA553EB892E2E206C009 /* XCRemoteSwiftPackageReference "Nimble" */,
 			);
+			preferredProjectObjectVersion = 54;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (

@@ -8,6 +8,7 @@
 | ./run dev      | Build and run in iPhone 14 simulator (iOS 16)      |
 | ./run clean    | Clean build artifacts                                |
 | ./run logs     | View logs                                           |
+| ./run init     | Install all CLI dependencies via Homebrew           |
 
 ### Technology Stack
 - Swift 5.7+
@@ -21,12 +22,12 @@
 
 ### Environment Setup
 1. Clone the repository.
-2. Install dependencies: Mint, SwiftGen, SwiftLint, SwiftFormat.
+2. Install dependencies: run `./run init` (installs all CLI tools via Homebrew).
 3. Generate the project: `xcodegen`.
 4. Build and run: `./run dev`.
 5. For tests: `./run test`.
 
-### CLI Tools and Mint
+### CLI Tools
 
 | Tool           | Version   | Purpose                          |
 |----------------|-----------|----------------------------------|
@@ -34,8 +35,9 @@
 | SwiftLint      | 0.59.1   | Swift style analyzer             |
 | SwiftFormat    | 0.55.5   | Swift code formatter             |
 | xcbeautify     | 2.28.0   | Beautiful output for xcodebuild  |
+| swiftgen       | 6.6.3    | Localization code generation     |
 
-Mint is used for managing versions of CLI tools. All dependencies are listed in the `Mintfile` at the root of the project.
+All dependencies are installed via `./run init` using Homebrew. Mint and Mintfile are no longer used.
 
 After completing step 2, all placeholder files and placeholder tests are removed. The project fully complies with linter requirements and is ready for CraftifyShared implementation.
 
@@ -43,17 +45,23 @@ After completing step 2, all placeholder files and placeholder tests are removed
 
 - GitHub Actions is used (`.github/workflows/ci.yml`).
 - Caching is implemented to speed up builds:
-  - Mint packages (`.mint`)
   - DerivedData (`~/Library/Developer/Xcode/DerivedData`)
   - SwiftPM dependencies (`.build`, `.swiftpm`)
-- Cache keys are built based on OS and control files (`Mintfile`, `Package.resolved`).
+- Cache keys are built based on OS and control files (`Package.resolved`).
 - Caching SwiftPM avoids re-downloading and rebuilding dependencies, speeding up the pipeline.
 - Remove corrupted Package.resolved | rm -f **/Package.resolved | Removes all Package.resolved files before SPM caching and building, preventing errors due to corrupted files.
 
+#### CI/CD: Автоматизация нефункциональных требований
+
+- **Size report**: автоматическая проверка размера ShareExtension через `./run size-report` (фейл при >20MB, артефакт size-report.txt).
+- **Comment scan**: автоматический grep по src/ на TODO, FIXME, print, debugPrint (warning в CI).
+- **Build-time metrics**: сбор времени сборки и размера .appex в metrics.json (артефакт build-metrics).
+- Все проверки интегрированы в workflow `.github/workflows/ci.yml`.
+
 ### Differences Between Local and CI/CD Builds
 
-- **Locally**, Mint and wrapper scripts `./run` (e.g., `./run test`, `./run dev`) are used for all operations. This ensures consistency in tool versions and ease of execution.
-- **In CI/CD (GitHub Actions)**, to speed up the pipeline, all utilities (swiftlint, swiftformat, xcodegen, xcodebuild, etc.) are installed and called directly, without Mint and without using `./run` scripts. This avoids the overhead of running Mint and speeds up execution.
+- **Locally**, all CLI tools are installed via `./run init` (Homebrew) and wrapper scripts `./run` (e.g., `./run test`, `./run dev`) are used for all operations. This ensures consistency in tool versions and ease of execution.
+- **In CI/CD (GitHub Actions)**, all utilities (swiftlint, swiftformat, xcodegen, xcodebuild, etc.) are installed and called directly, without Mint and without using `./run` scripts. This avoids the overhead of running Mint and speeds up execution.
 
 **Example of local run:**
 ```

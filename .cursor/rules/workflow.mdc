@@ -8,15 +8,13 @@ Note: If the user asks to continue the task, firstly read documentation, then de
 
 1. Read existing documentation in `./documents`.
 2. Collect the related information from all available sources: libraries, web search, resources from the `.documents/remote_resources.md` file, etc.
-3. Take top uncompleted task from `./documents/mvp-roadmap.md`.
-4. Generate a detailed chain-of-thought in `./documents/whiteboard.md`, including:
+3. Generate a detailed chain-of-thought in `./documents/whiteboard.md`, including:
    - A restatement of the user query,
    - Analysis of the problem,
    - Breakdown into subtasks,
    - Identification of potential issues and mitigation strategies.
-5. Complete all subtasks in the TDD approach.
-6. Mark task completed in `./documents/mvp-roadmap.md`.
-7. Upon completion:
+4. Complete all subtasks in the TDD approach.
+5. Upon completion:
    - Run end-to-end tests
    - Update the documentation
    - Delete `./documents/whiteboard.md`

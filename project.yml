@@ -14,6 +14,8 @@ settings:
     IPHONEOS_DEPLOYMENT_TARGET: 16.0
     ENABLE_BITCODE: NO
     SWIFT_OPTIMIZATION_LEVEL: '-Onone'
+  release:
+    OTHER_LDFLAGS: "$(inherited) -dead_strip -ObjC"
 targets:
   MainApp:
     type: application
@@ -241,3 +243,9 @@ schemes:
     test:
       targets:
         - name: CraftifySharedE2ETests
+  SizeReport:
+    build:
+      targets:
+        ShareExtension: all
+    run:
+      config: Release

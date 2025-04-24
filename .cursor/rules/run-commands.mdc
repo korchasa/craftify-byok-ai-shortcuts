@@ -10,4 +10,4 @@ alwaysApply: true
 - `./run clean` - clean the build artifacts
 - `./run logs` - show the device logs
 - `./run help` - show the help
-- `mint swiftgen`
+- `./run init` - install all CLI dependencies via Homebrew
