@@ -111,6 +111,53 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
         expect(error).to(contain("отменена"))
     }
 
+    public func testTimeoutShowsAlert() async {
+        let inventory = InventoryManagerStub()
+        let auth = AuthManagerStub()
+        let clipboard = ClipboardManagerStub()
+        let processing = SlowProcessingManagerStub()
+        let consent = ConsentManagerStub()
+        consent.setConsent(true)
+        let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
+        inventory.saveInventory([op])
+        let manager = ShareExtensionManager(
+            inventoryManager: inventory,
+            authManager: auth,
+            clipboardManager: clipboard,
+            processingManager: processing,
+            consentManager: consent
+        )
+        let result = await manager.process(text: "Hello", operation: op)
+        guard let error = result?.error else { fail("error is nil")
+            return
+        }
+        expect(error).to(contain("Время обработки истекло"))
+    }
+
+    public func testNetworkErrorUIFlow() async {
+        let inventory = InventoryManagerStub()
+        let auth = AuthManagerStub()
+        let clipboard = ClipboardManagerStub()
+        let processing = ProcessingManagerStub()
+        processing.shouldFailNetwork = true
+        let consent = ConsentManagerStub()
+        consent.setConsent(true)
+        let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
+        inventory.saveInventory([op])
+        let manager = ShareExtensionManager(
+            inventoryManager: inventory,
+            authManager: auth,
+            clipboardManager: clipboard,
+            processingManager: processing,
+            consentManager: consent
+        )
+        let result = await manager.process(text: "Hello", operation: op)
+        guard let error = result?.error else { fail("error is nil")
+            return
+        }
+        expect(error).to(contain("Сетевая ошибка"))
+    }
+
     // MARK: - Helpers
 
     public func makeManager(consent: Bool, apiKey: String = "sk-valid-key-1234567890", simulateNetworkError: Bool = false, simulateParsingError: Bool = false, simulateClipboardError: Bool = false) -> ShareExtensionManager {
@@ -132,4 +179,14 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
             consentManager: consentManager
         )
     }
+}
+
+// Stub для медленной обработки
+final class SlowProcessingManagerStub: NSObject, ProcessingManaging {
+    func process(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+        DispatchQueue.global().asyncAfter(deadline: .now() + 31.0) {
+            completion(.success("Processed: \(text)"))
+        }
+    }
+    func cancel() {}
 }

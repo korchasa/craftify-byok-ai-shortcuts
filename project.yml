@@ -8,8 +8,8 @@ configs:
   Release: release
 settings:
   base:
-    DEVELOPMENT_TEAM: YOUR_TEAM_ID
-    SWIFT_VERSION: 5.0
+    DEVELOPMENT_TEAM: 78M3ZDR5UH
+    SWIFT_VERSION: 5.9
     CODE_SIGN_STYLE: Automatic
     IPHONEOS_DEPLOYMENT_TARGET: 16.0
     ENABLE_BITCODE: NO
@@ -32,7 +32,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: dev.korchasa.Craftify
         APP_GROUPS: group.dev.korchasa.Craftify
         KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
     dependencies:
       - target: CraftifyShared
   MainAppUnitTests:
@@ -52,7 +52,7 @@ targets:
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
   MainAppE2ETests:
     type: bundle.unit-test
     platform: iOS
@@ -70,7 +70,7 @@ targets:
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
   ShareExtension:
     type: app-extension
     platform: iOS
@@ -89,7 +89,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: dev.korchasa.Craftify.ShareExtension
         APP_GROUPS: group.dev.korchasa.Craftify
         KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
         CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "Apple Development: korchasa@icloud.com (2P55B82U54)"
         PROVISIONING_PROFILE_SPECIFIER: "09d74528-408d-43f1-96bd-259a04739802"
@@ -110,7 +110,7 @@ targets:
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
   ShareExtensionE2ETests:
     type: bundle.unit-test
     platform: iOS
@@ -127,7 +127,7 @@ targets:
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
   CraftifyShared:
     type: framework
     platform: iOS
@@ -139,7 +139,7 @@ targets:
       path: src/CraftifyShared/Config/Info.plist
     settings:
       base:
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
         ENABLE_TESTABILITY: YES
   CraftifySharedUnitTests:
     type: bundle.unit-test
@@ -157,7 +157,7 @@ targets:
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
   CraftifySharedE2ETests:
     type: bundle.unit-test
     platform: iOS
@@ -174,7 +174,7 @@ targets:
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.0
+        SWIFT_VERSION: 5.9
 packages:
   Nimble:
     url: https://github.com/Quick/Nimble.git
@@ -204,6 +204,10 @@ schemes:
     test:
       targets:
         - name: MainAppE2ETests
+  ShareExtension:
+    build:
+      targets:
+        ShareExtension: all
   ShareExtensionUnitTests:
     build:
       targets:

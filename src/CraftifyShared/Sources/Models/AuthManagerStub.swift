@@ -1,4 +1,3 @@
-@testable import CraftifyShared
 import Foundation
 
 /// Заглушка для AuthManager, используемая в тестах

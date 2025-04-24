@@ -90,10 +90,10 @@ public struct HomeView: View {
 
     private func operationLabel(for type: OperationType) -> String {
         switch type {
-        case .translate: return "Перевод"
-        case .simplify: return "Упрощение"
-        case .correct: return "Коррекция"
-        case .explain: return "Объяснение"
+        case .translate: "Перевод"
+        case .simplify: "Упрощение"
+        case .correct: "Коррекция"
+        case .explain: "Объяснение"
         }
     }
 

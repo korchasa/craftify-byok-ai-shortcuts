@@ -11,3 +11,4 @@
 - Для сгенерированных SwiftGen файлов локализаций разрешается отсутствие явных ACL и других нарушений, если это требуется для корректной работы SwiftGen и не мешает сборке.
 - Протоколы именуются с суффиксом -ing (например, ClipboardManaging, ProcessingManaging) для DI-friendly архитектуры.
 - Все менеджеры внедряются через протоколы для тестируемости.
+- shorthand_optional_binding: запрещено guard let self или guard let self = self, использовать только guard self != nil

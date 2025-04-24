@@ -51,7 +51,7 @@ jobs:
         run: swiftlint --strict
 
       - name: Format (SwiftFormat)
-        run: swiftformat . --lint --swiftversion 5.7
+        run: swiftformat . --lint --swiftversion 5.9
 
       - name: Ensure generated directories exist
         run: |
@@ -87,11 +87,23 @@ jobs:
 
       - name: Check ShareExtension size
         run: |
-          xcodebuild -scheme ShareExtension archive -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4'
-          EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
-          SIZE=$(du -m "$EXT_PATH" | cut -f1)
-          echo "ShareExtension size: ${SIZE}MB"
-          if [ "$SIZE" -gt 20 ]; then
+          mint run xcodegen
+          rm -rf build
+          xcodebuild build \
+            -scheme ShareExtension \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            BUILD_DIR=build/Products | mint run xcbeautify
+          EXT_PATH="build/Products/Release-iphoneos/ShareExtension.appex"
+          if [ ! -d "$EXT_PATH" ]; then
+            echo "::error ::No .appex found at $EXT_PATH"
+            exit 1
+          fi
+          SIZE_KB=$(du -sk "$EXT_PATH" | awk '{print $1}')
+          SIZE_MB=$(( (SIZE_KB + 1023) / 1024 ))
+          echo "ShareExtension size: ${SIZE_MB} MB"
+          if (( SIZE_MB > 20 )); then
             echo "::error ::ShareExtension size exceeds 20MB!"
             exit 1
           fi

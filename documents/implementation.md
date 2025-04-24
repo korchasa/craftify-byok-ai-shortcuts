@@ -183,3 +183,23 @@ let exported = try logger.exportLogs()
 - Покрытие тестами (unit, UI, E2E) ≥80%.
 - Все edge-cases реализованы и протестированы.
 - Линтинг (SwiftLint) и форматирование (SwiftFormat) — без ошибок.
+
+## Этап 5: Реализация Share Extension (статус: завершён)
+
+- Полностью реализован Share Extension с поддержкой всех требований MVP.
+- Настроены entitlements (App Groups, Keychain Access) для обоих таргетов.
+- Лимит текста: 5000 символов, блокировка кнопок операций при превышении лимита.
+- Обработка таймаутов: 15 с на запрос, 30 с общий лимит (Task.sleep + Task.cancel).
+- Отображение тоста/уведомления при успешном копировании результата.
+- Интеграция LogManagerSharedNDJSON: логируются все действия и ошибки, маскирование ключа.
+- Покрытие unit, UI и E2E тестами (ошибки, таймауты, edge-cases).
+- В CI/CD реализована автоматическая проверка размера расширения (Archive + size report, fail при >20 MB).
+
+### Команды и шаги CI/CD для проверки размера Share Extension
+
+| Шаг | Описание |
+|-----|----------|
+| xcodegen | Генерация Xcode-проекта |
+| xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos | Сборка расширения в Release |
+| du -sk build/Products/Release-iphoneos/ShareExtension.appex | Получение размера .appex |
+| Fail при >20 MB | Сборка прерывается, если размер превышает лимит |

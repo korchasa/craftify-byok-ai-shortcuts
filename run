@@ -10,6 +10,8 @@ function help() {
   echo "Usage: ./run <command> [args...]"
   echo "Commands:"
   echo "  test         - Запуск всех тестов"
+  echo "  build        - Сборка MainApp и ShareExtension"
+  echo "  check-size   - Проверка размера ShareExtension"
   echo "  dev          - Сборка и запуск MainApp в симуляторе iPhone 14 (iOS 16.4)"
   echo "  clean        - Очистка артефактов сборки"
   echo "  logs         - Показать device logs (симулятор)"
@@ -67,12 +69,58 @@ case "$CMD" in
     run_xcodebuild -scheme ShareExtensionE2ETests test "$@"
     run_xcodebuild -scheme CraftifySharedE2ETests test "$@"
     ;;
+  build)
+    echo ">>>> Build MainApp (Release, iphoneos) — production warnings"
+    NSUnbufferedIO=YES xcodebuild build \
+      -scheme MainApp \
+      -configuration Release \
+      -sdk iphoneos \
+      -derivedDataPath build \
+      BUILD_DIR=build/Products \
+      -allowProvisioningUpdates | mint run xcbeautify
+    if [ ${PIPESTATUS[0]} -ne 0 ]; then
+      echo -e "${RED}xcodebuild build MainApp failed!${NC}"
+      exit 1
+    fi
+    echo ">>>> Build ShareExtension (Release, iphoneos) — production warnings"
+    NSUnbufferedIO=YES xcodebuild build \
+      -scheme ShareExtension \
+      -configuration Release \
+      -sdk iphoneos \
+      -derivedDataPath build \
+      BUILD_DIR=build/Products \
+      -allowProvisioningUpdates | mint run xcbeautify
+    if [ ${PIPESTATUS[0]} -ne 0 ]; then
+      echo -e "${RED}xcodebuild build ShareExtension failed!${NC}"
+      exit 1
+    fi
   check-size)
-    run_xcodebuild -scheme ShareExtension archive "$@"
-    EXT_PATH=$(find $PWD/build/ShareExtension.xcarchive/Products/ -name 'ShareExtension.appex' | head -n1)
-    SIZE=$(du -m "$EXT_PATH" | cut -f1)
-    echo "ShareExtension size: ${SIZE}MB"
-    if [ "$SIZE" -gt 20 ]; then
+    echo ">>>> Generating Xcode project"
+    mint run xcodegen "$@"
+    echo ">>>> Cleaning previous build artifacts"
+    rm -rf build
+    echo ">>>> Building ShareExtension (Release, iphoneos)"
+    NSUnbufferedIO=YES xcodebuild build \
+      -scheme ShareExtension \
+      -configuration Release \
+      -sdk iphoneos \
+      -derivedDataPath build \
+      BUILD_DIR=build/Products | mint run xcbeautify
+    if [ ${PIPESTATUS[0]} -ne 0 ]; then
+      echo -e "${RED}xcodebuild build failed!${NC}"
+      exit 1
+    fi
+    EXT_PATH="build/Products/Release-iphoneos/ShareExtension.appex"
+    if [ ! -d "$EXT_PATH" ]; then
+      echo -e "${RED}No .appex found at $EXT_PATH${NC}"
+      exit 1
+    fi
+    # Получаем размер в килобайтах
+    SIZE_KB=$(du -sk "$EXT_PATH" | awk '{print $1}')
+    # Переводим в мегабайты (округление вверх)
+    SIZE_MB=$(( (SIZE_KB + 1023) / 1024 ))
+    echo "ShareExtension size: ${SIZE_MB} MB"
+    if (( SIZE_MB > 20 )); then
       echo -e "${RED}ShareExtension size exceeds 20MB!${NC}"
       exit 1
     fi

@@ -15,12 +15,15 @@ public final class ShareExtensionViewController: UIViewController {
         let clipboardManager = ClipboardManager()
         let processingManager = ProcessingManager()
         let consentManager = ConsentManager(appGroupSuiteName: "group.dev.korchasa.Craftify")
+        let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.korchasa.Craftify")!
+        let logManager = LogManagerSharedNDJSON(appGroupContainerURL: appGroupURL)
         let manager = ShareExtensionManager(
             inventoryManager: inventoryManager,
             authManager: authManager,
             clipboardManager: clipboardManager,
             processingManager: processingManager,
-            consentManager: consentManager
+            consentManager: consentManager,
+            logManager: logManager
         )
         let viewModel = ShareExtensionViewModel(manager: manager)
         let rootView = ShareExtensionView(viewModel: viewModel)
