@@ -7,6 +7,10 @@ import XCTest
     import ViewInspector
 
     public final class AddOperationViewUITests: XCTestCase {
+        private enum TestConstants {
+            static let levelTwo = 2
+        }
+
         public func testPickerShowsAllOperationTypes() throws {
             let viewModel = AddOperationViewModel()
             let view = AddOperationView(viewModel: viewModel)
@@ -51,7 +55,7 @@ import XCTest
         public func testCancelButtonResetsForm() throws {
             let viewModel = AddOperationViewModel()
             viewModel.selectedType = .correct
-            viewModel.stylePreservationLevel = 2
+            viewModel.stylePreservationLevel = TestConstants.levelTwo
             let view = AddOperationView(viewModel: viewModel)
             let button = try view.inspect().find(button: L10n.addOperationCancel)
             try button.tap()

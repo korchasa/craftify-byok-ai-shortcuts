@@ -20,4 +20,20 @@ public enum ShareExtensionViewConstants {
     public static let progressWidth: CGFloat = 180
     /// Радиус blur при обработке
     public static let blurRadius: CGFloat = 2
+    /// Радиус скругления copiedToast
+    public static let copiedToastCornerRadius: CGFloat = 12
+    /// Прозрачность фона copiedToast
+    public static let copiedToastBackgroundOpacity: Double = 0.95
+    /// Радиус тени copiedToast
+    public static let copiedToastShadowRadius: CGFloat = 4
+    /// Отступ снизу copiedToast
+    public static let copiedToastBottomSpacing: CGFloat = 40
+    /// Вертикальный отступ внутри copiedToast
+    public static let copiedToastVerticalSpacing: CGFloat = 8
+    /// Горизонтальный отступ внутри copiedToast
+    public static let copiedToastHorizontalSpacing: CGFloat = 16
+    /// Шрифт copiedToast
+    public static let copiedToastFont: Font = .headline
+    /// Задержка скрытия copiedToast (секунды)
+    public static let copiedToastHideDelay: TimeInterval = 2
 }

@@ -10,4 +10,10 @@ public enum ShareExtensionViewModelConstants {
     public static let maxProgress: Double = 0.9
     /// Значение прогресса при завершении
     public static let completeProgress: Double = 1.0
+    /// Максимальная длина входного текста
+    public static let maxInputTextLength = 5000
+    /// Таймаут обработки (наносекунды)
+    public static let processingTimeoutNanoseconds: UInt64 = 30_000_000_000
+    /// Количество наносекунд в одной секунде
+    public static let nanosecondsPerSecond: UInt64 = 1_000_000_000
 }

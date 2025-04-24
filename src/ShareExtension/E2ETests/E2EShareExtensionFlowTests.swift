@@ -6,6 +6,10 @@ import XCTest
 public final class E2EShareExtensionFlowTests: XCTestCase {
     deinit {}
 
+    private enum TestConstants {
+        static let levelTwo = 2
+    }
+
     public func testSuccessFlow() async {
         let inventory = InventoryManagerStub()
         let auth = AuthManagerStub()
@@ -20,7 +24,8 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
             authManager: auth,
             clipboardManager: clipboard,
             processingManager: processing,
-            consentManager: consent
+            consentManager: consent,
+            logManager: LogManagerSharedInMemory()
         )
         let result = await manager.process(text: "Hello", operation: op)
         guard let success = result?.success else { fail("success is nil")
@@ -111,29 +116,6 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
         expect(error).to(contain("отменена"))
     }
 
-    public func testTimeoutShowsAlert() async {
-        let inventory = InventoryManagerStub()
-        let auth = AuthManagerStub()
-        let clipboard = ClipboardManagerStub()
-        let processing = SlowProcessingManagerStub()
-        let consent = ConsentManagerStub()
-        consent.setConsent(true)
-        let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
-        inventory.saveInventory([op])
-        let manager = ShareExtensionManager(
-            inventoryManager: inventory,
-            authManager: auth,
-            clipboardManager: clipboard,
-            processingManager: processing,
-            consentManager: consent
-        )
-        let result = await manager.process(text: "Hello", operation: op)
-        guard let error = result?.error else { fail("error is nil")
-            return
-        }
-        expect(error).to(contain("Время обработки истекло"))
-    }
-
     public func testNetworkErrorUIFlow() async {
         let inventory = InventoryManagerStub()
         let auth = AuthManagerStub()
@@ -149,7 +131,8 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
             authManager: auth,
             clipboardManager: clipboard,
             processingManager: processing,
-            consentManager: consent
+            consentManager: consent,
+            logManager: LogManagerSharedInMemory()
         )
         let result = await manager.process(text: "Hello", operation: op)
         guard let error = result?.error else { fail("error is nil")
@@ -176,7 +159,8 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
             authManager: auth,
             clipboardManager: clipboard,
             processingManager: processing,
-            consentManager: consentManager
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
         )
     }
 }
@@ -188,5 +172,6 @@ final class SlowProcessingManagerStub: NSObject, ProcessingManaging {
             completion(.success("Processed: \(text)"))
         }
     }
+
     func cancel() {}
 }

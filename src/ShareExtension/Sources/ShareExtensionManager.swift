@@ -98,6 +98,14 @@ public final class ShareExtensionManager {
             case let .success(str):
                 processedText = str
             }
+        } else if let pm = processingManager as? ProcessingManaging {
+            // Асинхронная обработка через continuation
+            do {
+                processedText = try await processAsync(pm: pm, text: text, operation: op)
+            } catch {
+                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка обработки", metadata: ["error": error.localizedDescription]))
+                return (false, error.localizedDescription)
+            }
         } else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing manager unavailable", metadata: [:]))
             return (false, "Processing manager unavailable")
@@ -113,12 +121,30 @@ public final class ShareExtensionManager {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка доступа к буферу", metadata: [:]))
                 return (false, "Ошибка доступа к буферу")
             }
+        } else if let cb = clipboardManager as? ClipboardManaging {
+            if !cb.copy(text: processedText) {
+                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка доступа к буферу", metadata: [:]))
+                return (false, "Ошибка доступа к буферу")
+            }
         } else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка доступа к буферу (тип)", metadata: [:]))
             return (false, "Ошибка доступа к буферу")
         }
         logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Успешное копирование результата", metadata: [:]))
         return (true, nil)
+    }
+
+    private func processAsync(pm: ProcessingManaging, text: String, operation: InventoryOperation) async throws -> String {
+        try await withCheckedThrowingContinuation { continuation in
+            pm.process(text: text, operation: operation) { result in
+                switch result {
+                case let .success(str):
+                    continuation.resume(returning: str)
+                case let .failure(error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 
     /// Устанавливает флаг отмены обработки

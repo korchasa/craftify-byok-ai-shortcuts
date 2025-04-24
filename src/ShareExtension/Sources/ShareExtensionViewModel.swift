@@ -10,19 +10,20 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public var isInputTextTooLong: Bool = false
     @Published public var showCopiedToast: Bool = false
 
-    private let manager: ShareExtensionManager
-    private var processingTask: Task<Void, Never>? = nil
-    private var progressTimer: Timer?
+    public let manager: ShareExtensionManager
+    public var processingTask: Task<Void, Never>? = nil
+    public var progressTimer: Timer?
+    public var processingTimeoutSeconds: Double = 30
 
     public init(manager: ShareExtensionManager) {
         self.manager = manager
         self.operations = manager.inventoryManager.inventory
-        self.isInputTextTooLong = manager.inputText.count > 5000
+        self.isInputTextTooLong = manager.inputText.count > ShareExtensionViewModelConstants.maxInputTextLength
     }
 
     public func process(operation: InventoryOperation) {
         guard !isProcessing else { return }
-        if manager.inputText.count > 5000 {
+        if manager.inputText.count > ShareExtensionViewModelConstants.maxInputTextLength {
             errorMessage = "Текст слишком длинный для обработки"
             return
         }
@@ -37,38 +38,57 @@ public final class ShareExtensionViewModel: ObservableObject {
             }
         }
         processingTask = Task { [weak self] in
-            guard let self else { return }
-            // Запускаем обработку и таймер 30 с параллельно
-            async let result = manager.process(text: manager.inputText, operation: operation)
-            async let timeout: Void = Task.sleep(nanoseconds: 30_000_000_000)
-            let finishedFirst = await withTaskGroup(of: Int.self) { group -> Int in
-                group.addTask { await result; return 0 }
-                group.addTask { await timeout; return 1 }
-                let first = await group.next() ?? 0
-                group.cancelAll()
-                return first
+            await self?.runProcessingWithTimeout(operation: operation)
+        }
+    }
+
+    private func runProcessingWithTimeout(operation: InventoryOperation) async {
+        // Запускаем две задачи: обработка и таймер
+        await withTaskGroup(of: (finishedFirst: Int, result: (success: Bool, error: String?)?).self) { group in
+            let processingTask = Task<(success: Bool, error: String?)?, Never> {
+                await self.manager.process(text: self.manager.inputText, operation: operation)
             }
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                progressTimer?.invalidate()
-                isProcessing = false
-                if finishedFirst == 1 {
-                    errorMessage = "Время обработки истекло"
-                    manager.cancelProcessing()
-                    progress = 0.0
-                } else {
-                    progress = ShareExtensionViewModelConstants.completeProgress
-                    Task { [weak self] in
-                        guard let self else { return }
-                        let res = await result
-                        if let error = res?.error {
-                            errorMessage = error
-                        } else if res?.success == true {
-                            showCopiedToast = true
-                        }
-                    }
-                }
+            let timeoutTask = Task<Void, Never> {
+                let timeoutNs = self.processingTimeoutSeconds * Double(ShareExtensionViewModelConstants.nanosecondsPerSecond)
+                try? await Task.sleep(nanoseconds: UInt64(timeoutNs))
             }
+            group.addTask {
+                let res = await processingTask.value
+                return (0, res)
+            }
+            group.addTask {
+                await timeoutTask.value
+                return (1, nil)
+            }
+            let (finishedFirst, result) = await group.next() ?? (1, nil)
+            processingTask.cancel()
+            timeoutTask.cancel()
+            await MainActor.run {
+                handleProcessingCompletion(finishedFirst: finishedFirst, result: result)
+            }
+        }
+    }
+
+    private func handleProcessingCompletion(finishedFirst: Int, result: (success: Bool, error: String?)?) {
+        progressTimer?.invalidate()
+        isProcessing = false
+        if finishedFirst == 1 {
+            errorMessage = "Время обработки истекло"
+            manager.cancelProcessing()
+            progress = 0.0
+        } else {
+            progress = ShareExtensionViewModelConstants.completeProgress
+            Task { [weak self] in
+                self?.handleResult(result: result)
+            }
+        }
+    }
+
+    private func handleResult(result: (success: Bool, error: String?)?) {
+        if let error = result?.error {
+            errorMessage = error
+        } else if result?.success == true {
+            showCopiedToast = true
         }
     }
 
@@ -82,7 +102,7 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     public func updateInputText(_ text: String) {
         manager.inputText = text
-        isInputTextTooLong = text.count > 5000
+        isInputTextTooLong = text.count > ShareExtensionViewModelConstants.maxInputTextLength
     }
 
     public func hideCopiedToast() {
