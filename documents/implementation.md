@@ -14,7 +14,7 @@
 - SwiftUI
 - XcodeGen
 - SwiftPM (CraftifyShared, LogManagerShared)
-- Sentry (only MainApp)
+- New Relic
 - NDJSON file (FIFO, masking, atomic write, export, DispatchQueue) for logs
 - SwiftGen (localization)
 - GitHub Actions (CI/CD)
