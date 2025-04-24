@@ -41,7 +41,7 @@ src/
 ```
 
 Корень репозитория:
-- Mintfile, project.yml, run, Dockerfile, README.md
+- project.yml, run, Dockerfile, README.md
 - .github/ — CI/CD
 - documents/ — документация
 
@@ -56,7 +56,6 @@ src/
   - `file_structure.md` — структура файлов
   - `developer-manual.md` — руководство разработчика
   - `user-manual.md` — руководство пользователя
-  - `mvp-roadmap.md` — поэтапный план реализации MVP
 - `.github/workflows/ci.yml` — CI/CD pipeline
 - `project.yml` — описание проекта для XcodeGen
 - `.xcconfig` — конфигурация сборки
@@ -81,3 +80,8 @@ src/
 | src/ShareExtension/UnitTests/ShareExtensionManagerTests.swift | Unit-тесты для ShareExtensionManager |
 
 - Тесты, связанные с таймаутом обработки, реализованы только в unit-тестах ViewModel (ShareExtensionViewModelTests.swift), а не в E2E тестах ShareExtensionManager.
+
+- `size-report.txt` — артефакт CI: размер ShareExtension.appex (автоматически сохраняется при сборке)
+- `metrics.json` — артефакт CI: build_time_sec, appex_size_mb (автоматически сохраняется при сборке)
+- `.github/workflows/ci.yml` — содержит шаги size-report, comment-scan, build-time metrics
+- В проекте отсутствуют .xcassets, PDF, PNG, SVG и другие image assets (только Placeholder.txt и .strings)

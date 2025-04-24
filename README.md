@@ -2,36 +2,41 @@
 
 Craftify — iOS-приложение с расширением Share Extension для контекстной обработки текста через OpenAI API.
 
-## Быстрый старт
+## Установка и запуск
 
-```sh
-git clone <repo-url>
-cd Craftify-Cursor
-# Генерация Xcode-проекта
-xcodegen
-# Сборка и тесты
-./run test
-```
+1. Клонируйте репозиторий:
+   ```sh
+   git clone <repo-url>
+   cd Craftify-Cursor
+   ```
+2. Установите все необходимые CLI-инструменты:
+   ```sh
+   ./run init
+   ```
+   Это установит через Homebrew: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen.
+3. Сгенерируйте проект:
+   ```sh
+   xcodegen
+   ```
+4. Соберите и запустите проект:
+   ```sh
+   ./run dev
+   ```
+5. Для запуска тестов:
+   ```sh
+   ./run test
+   ```
 
-## Сборка и запуск
-- Генерация проекта: `xcodegen`
-- Сборка: `./run build`
-- Тесты: `./run test`
-- Линт: `./run lint`
-- Форматирование: `./run format`
-- Запуск в симуляторе: `./run dev`
-
-## Docker
-Для изолированной сборки и тестирования:
-```sh
-docker build -t craftify .
-docker run -it craftify
-```
+## Основные команды
+- `./run init` — установка всех CLI-инструментов
+- `./run dev` — сборка и запуск в симуляторе
+- `./run test` — запуск всех тестов
+- `./run clean` — очистка артефактов сборки
+- `./run logs` — просмотр логов
 
 ## CI/CD
-- GitHub Actions: `.github/workflows/ci.yml`
-- Проверка размера Share Extension (fail > 20MB)
-- Линт, форматирование, тесты, SwiftGen на prebuild
+- Все проверки и сборки автоматизированы через GitHub Actions (`.github/workflows/ci.yml`)
+- Проверка размера Share Extension и покрытие тестами ≥ 80% — обязательны для успешной сборки
 
 ## Архитектура
 - Модули: MainApp, ShareExtension, CraftifyShared (SPM)
@@ -47,8 +52,6 @@ docker run -it craftify
 - Краш-отчёты отправляются только из основного приложения через New Relic SDK (не из расширения).
 
 ## Документация
-- ADR: `documents/adr/0001-modular-architecture.md`
-- Архитектура: `documents/architecture.md`
-- Руководства: `documents/`
+- Подробная документация находится в директории `documents/`
 
 > После завершения этапа 2 все placeholder-файлы и placeholder-тесты удалены. Проект полностью соответствует требованиям линтера и готов к реализации CraftifyShared.

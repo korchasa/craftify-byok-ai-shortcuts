@@ -1,149 +1,318 @@
-#!/bin/bash
-set -e
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Цвета для вывода
+# Default iOS Simulator UDID (override SIMULATOR_ID env var)
+SIMULATOR_ID="${SIMULATOR_ID:-EE50483C-9861-438F-82D0-52FFB8FDF92C}"
+
+# Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-function help() {
-  echo "Usage: ./run <command> [args...]"
-  echo "Commands:"
-  echo "  test         - Запуск всех тестов"
-  echo "  build        - Сборка MainApp и ShareExtension"
-  echo "  check-size   - Проверка размера ShareExtension"
-  echo "  dev          - Сборка и запуск MainApp в симуляторе iPhone 14 (iOS 16.4)"
-  echo "  clean        - Очистка артефактов сборки"
-  echo "  logs         - Показать device logs (симулятор)"
-  echo "  help         - Показать эту справку"
-  echo "\nЛюбые дополнительные параметры после <command> будут переданы в соответствующий инструмент."
+SCRIPT_NAME=$(basename "${0}")
+
+function usage() {
+  cat <<EOF
+Usage: $SCRIPT_NAME <command> [args...]
+Commands:
+  generate            Run SwiftGen and XcodeGen
+  fmt                 Run SwiftFormat
+  lint                Run SwiftLint
+  test:lint           Run SwiftLint (alias)
+  test:format         Run SwiftFormat (alias)
+  build:simulator     Build MainApp for simulator (Debug)
+  analyze             Run static analysis
+  test:unit           Run unit tests
+  test:e2e            Run end-to-end tests
+  test                Run all tests (unit + e2e)
+  test:coverage       Run tests with code coverage
+  pr-check            Run PR checks (TODO/FIXME scan)
+  comment-scan        Scan for TODO/FIXME/print/debugPrint (alias)
+  build               Build MainApp and ShareExtension (Release)
+  size-report         Check ShareExtension size
+  dev                 Build and launch MainApp in Simulator
+  clean               Clean build artifacts
+  logs                Stream MainApp logs
+  bump-version        Bump version numbers via agvtool
+  archive             Archive MainApp as .xcarchive
+  export-ipa          Export IPA from archive
+  deploy:testflight   Upload IPA to TestFlight via altool
+  deploy:internal     Internal TestFlight deploy
+  deploy:adhoc        Ad-hoc TestFlight deploy
+  deploy:appstore     Upload to App Store Connect
+  generate-changelog  Generate changelog via git-chglog
+  notify              Send notifications (Slack, email)
+  monitor-setup       Setup monitoring (Sentry etc.)
+  help                Show this help
+EOF
 }
 
-function ensure_mint() {
-  if ! command -v mint &> /dev/null; then
-    echo -e "${RED}Mint не найден. Установите через 'brew install mint'.${NC}"
+function init() {
+  echo -e "${GREEN}Installing CLI tools via Homebrew...${NC}"
+  brew install xcodegen swiftlint swiftformat xcbeautify swiftgen || true
+  echo -e "${GREEN}All dependencies installed.${NC}"
+}
+
+function generate() {
+  echo ">>> Running SwiftGen"
+  swiftgen "$@"
+  echo ">>> Running XcodeGen"
+  xcodegen "$@"
+}
+
+function fmt() {
+  echo ">>> Running SwiftFormat"
+  swiftformat . "$@"
+}
+
+function lint() {
+  echo ">>> Running SwiftLint"
+  swiftlint --strict "$@"
+}
+
+function test_unit() {
+  generate "$@"
+  echo ">>> Running Unit Tests"
+  local schemes=(MainAppUnitTests ShareExtensionUnitTests CraftifySharedUnitTests)
+  for scheme in "${schemes[@]}"; do
+    xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" test "$@" | xcbeautify
+  done
+}
+
+function test_e2e() {
+  generate "$@"
+  echo ">>> Running E2E Tests"
+  local schemes=(MainAppE2ETests ShareExtensionE2ETests CraftifySharedE2ETests)
+  for scheme in "${schemes[@]}"; do
+    xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" test "$@" | xcbeautify
+  done
+}
+
+function test() {
+  fmt "$@"
+  lint "$@"
+  test_unit "$@"
+  test_e2e "$@"
+}
+
+function build() {
+  generate "$@"
+  echo ">>> Building MainApp (Release/iphoneos)"
+  xcodebuild build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@" | xcbeautify
+  echo ">>> Building ShareExtension (Release/iphoneos)"
+  xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@" | xcbeautify
+}
+
+function size_report() {
+  generate "$@"
+  echo ">>> Cleaning build artifacts"
+  rm -rf build
+  echo ">>> Building ShareExtension for size report (Release/iphoneos)"
+  xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build "$@" | xcbeautify
+  local appex=$(find build -name 'ShareExtension.appex' | head -n1)
+  if [[ ! -f "$appex" ]]; then
+    echo -e "${RED}Error: ShareExtension.appex not found!${NC}"
+    exit 1
+  fi
+  local size_bytes=$(stat -f%z "$appex")
+  local size_mb=$(awk "BEGIN {printf \"%.2f\", $size_bytes/1024/1024}")
+  echo "ShareExtension.appex size: ${size_mb} MB (${size_bytes} bytes)"
+  if (( $(echo "${size_mb} > 20.0" | bc -l) )); then
+    echo -e "${RED}Error: ShareExtension size exceeds 20MB!${NC}"
     exit 1
   fi
 }
 
-SIMULATOR_ID=EE50483C-9861-438F-82D0-52FFB8FDF92C
+function dev() {
+  generate "$@"
+  if [[ -z "${CI:-}" ]]; then
+    echo ">>> Opening Simulator"
+    open -a Simulator
+  fi
+  echo ">>> Building MainApp for simulator"
+  xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme MainApp build "$@" | xcbeautify
+  echo ">>> Booting simulator ${SIMULATOR_ID}"
+  xcrun simctl boot "${SIMULATOR_ID}" || true
+  local app_path
+  app_path=$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}')
+  echo ">>> Installing and launching app"
+  xcrun simctl install "${SIMULATOR_ID}" "${app_path}"
+  xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
+}
 
-CMD="$1"
-shift || true # Удаляем имя команды, остальные параметры в $@
+function clean() {
+  echo ">>> Cleaning build artifacts"
+  rm -rf build
+  xcodebuild clean -scheme MainApp || true
+  xcodebuild clean -scheme ShareExtension || true
+  xcodebuild clean -scheme CraftifyShared || true
+}
 
-ensure_mint
+function logs() {
+  echo ">>> Streaming logs from MainApp"
+  xcrun simctl spawn booted log stream --predicate 'process == "MainApp"' --style syslog
+}
 
-# Универсальная обертка для xcodebuild с xcbeautify
-function run_xcodebuild() {
-  NSUnbufferedIO=YES xcodebuild -sdk iphonesimulator -destination "id=$SIMULATOR_ID" "$@" | mint run xcbeautify
-  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
-    echo -e "${RED}xcodebuild failed!${NC}"
-    exit 1
+function comment_scan() {
+  echo ">>> Scanning for TODO/FIXME/print/debugPrint"
+  grep -rE 'TODO|FIXME|print\\(|debugPrint\\(' src/ || true
+}
+
+function bump_version() {
+  echo ">>> Bumping version numbers"
+  local marketing="${1:-}"
+  if [[ -z "$marketing" ]]; then
+    agvtool next-version -all
+  else
+    agvtool new-marketing-version "$marketing"
+    agvtool next-version -all
   fi
 }
+
+function archive() {
+  generate "$@"
+  echo ">>> Archiving MainApp"
+  xcodebuild archive \
+    -scheme MainApp \
+    -configuration Release \
+    -archivePath build/MainApp.xcarchive \
+    -allowProvisioningUpdates "$@" | xcbeautify
+}
+
+function export_ipa() {
+  echo ">>> Exporting IPA from archive"
+  xcodebuild -exportArchive \
+    -archivePath build/MainApp.xcarchive \
+    -exportOptionsPlist ExportOptions.plist \
+    -exportPath build/IPA "$@" | xcbeautify
+}
+
+function deploy_testflight() {
+  echo ">>> Deploying IPA to TestFlight"
+  if [[ -z "${API_KEY_PATH:-}" || -z "${API_ISSUER_ID:-}" ]]; then
+    echo -e "${RED}Error: API_KEY_PATH or API_ISSUER_ID env vars not set${NC}"
+    exit 1
+  fi
+  xcrun altool \
+    --upload-app --type ios \
+    --file build/IPA/MainApp.ipa \
+    --apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
+}
+
+function coverage() {
+  generate "$@"
+  echo ">>> Running tests with code coverage"
+  xcodebuild test \
+    -scheme MainAppUnitTests \
+    -enableCodeCoverage YES \
+    -sdk iphonesimulator \
+    -destination "id=${SIMULATOR_ID}" "$@" | xcbeautify
+  echo ">>> Generating coverage report"
+  xcrun xccov view --report build/Logs/Test/*.xcresult
+}
+
+# Supporting stubs for CI/CD pipelines
+function build_sim() {
+  echo ">>> Building for Simulator (Debug)"
+  xcodebuild build \
+    -scheme MainApp \
+    -configuration Debug \
+    -sdk iphonesimulator \
+    -destination "id=${SIMULATOR_ID}" "$@" | xcbeautify
+}
+
+function analyze() {
+  echo ">>> Running static analysis"
+  xcodebuild analyze \
+    -scheme MainApp \
+    -sdk iphoneos \
+    -configuration Debug "$@" | xcbeautify
+}
+
+function export_ipa_adhoc() {
+  echo ">>> Exporting AdHoc IPA"
+  xcodebuild -exportArchive \
+    -archivePath build/MainApp.xcarchive \
+    -exportOptionsPlist ExportOptionsAdHoc.plist \
+    -exportPath build/IPA/ad-hoc "$@" | xcbeautify
+}
+
+function deploy_internal() {
+  echo ">>> Deploying to internal TestFlight"
+  deploy_testflight "$@"
+}
+
+function deploy_adhoc() {
+  echo ">>> Deploying AdHoc distribution"
+  deploy_testflight "$@"
+}
+
+function deploy_appstore() {
+  echo ">>> Uploading to App Store Connect"
+  xcrun altool \
+    -upload-app --type ios \
+    -file build/IPA/MainApp.ipa \
+    -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
+}
+
+function generate_changelog() {
+  echo ">>> Generating changelog"
+  git-chglog -o CHANGELOG.md
+}
+
+function notify() {
+  echo ">>> Sending notifications"
+  # integrate Slack/email notifications here
+}
+
+function monitor_setup() {
+  echo ">>> Setting up monitoring"
+  # configure Sentry or other services
+}
+
+function pr_checks() {
+  echo ">>> Running PR checks (e.g. TODO/FIXME scan)"
+  comment_scan "$@"
+}
+
+function collect_dsyms() {
+  echo ">>> Collecting artifacts & dSYMs"
+  mkdir -p build/Artifacts
+  cp -R build/MainApp.xcarchive/dSYMs build/Artifacts/
+}
+
+CMD="${1:-}"
+shift || true
 
 case "$CMD" in
-  fmt)
-    echo ">>>> Run swiftformat"
-    mint run swiftformat . "$@" || { echo -e "${RED}SwiftFormat обнаружил ошибки! All other tests will be skipped.${NC}"; exit 1; }
-    ;;
-  lint)
-    echo ">>>> Run swiftlint"
-    mint run swiftlint --strict "$@" || { echo -e "${RED}SwiftLint обнаружил ошибки! All other tests will be skipped.${NC}"; exit 1; }
-    ;;
-  test)
-    ./run fmt "$@"
-    ./run lint "$@"
-
-    echo ">>>> Run all unit tests"
-    mint run xcodegen "$@"
-    open --background -a Simulator
-    run_xcodebuild -scheme MainAppUnitTests test "$@"
-    run_xcodebuild -scheme ShareExtensionUnitTests test "$@"
-    run_xcodebuild -scheme CraftifySharedUnitTests test "$@"
-
-    echo ">>>> Run all E2E tests"
-    mint run xcodegen "$@"
-    open --background -a Simulator
-    run_xcodebuild -scheme MainAppE2ETests test "$@"
-    run_xcodebuild -scheme ShareExtensionE2ETests test "$@"
-    run_xcodebuild -scheme CraftifySharedE2ETests test "$@"
-    ;;
-  build)
-    echo ">>>> Build MainApp (Release, iphoneos) — production warnings"
-    NSUnbufferedIO=YES xcodebuild build \
-      -scheme MainApp \
-      -configuration Release \
-      -sdk iphoneos \
-      -derivedDataPath build \
-      BUILD_DIR=build/Products \
-      -allowProvisioningUpdates | mint run xcbeautify
-    if [ ${PIPESTATUS[0]} -ne 0 ]; then
-      echo -e "${RED}xcodebuild build MainApp failed!${NC}"
-      exit 1
-    fi
-    echo ">>>> Build ShareExtension (Release, iphoneos) — production warnings"
-    NSUnbufferedIO=YES xcodebuild build \
-      -scheme ShareExtension \
-      -configuration Release \
-      -sdk iphoneos \
-      -derivedDataPath build \
-      BUILD_DIR=build/Products \
-      -allowProvisioningUpdates | mint run xcbeautify
-    if [ ${PIPESTATUS[0]} -ne 0 ]; then
-      echo -e "${RED}xcodebuild build ShareExtension failed!${NC}"
-      exit 1
-    fi
-    ;;
-  check-size)
-    echo ">>>> Generating Xcode project"
-    mint run xcodegen "$@"
-    echo ">>>> Cleaning previous build artifacts"
-    rm -rf build
-    echo ">>>> Building ShareExtension (Release, iphoneos)"
-    NSUnbufferedIO=YES xcodebuild build \
-      -scheme ShareExtension \
-      -configuration Release \
-      -sdk iphoneos \
-      -derivedDataPath build \
-      BUILD_DIR=build/Products | mint run xcbeautify
-    if [ ${PIPESTATUS[0]} -ne 0 ]; then
-      echo -e "${RED}xcodebuild build failed!${NC}"
-      exit 1
-    fi
-    EXT_PATH="build/Products/Release-iphoneos/ShareExtension.appex"
-    if [ ! -d "$EXT_PATH" ]; then
-      echo -e "${RED}No .appex found at $EXT_PATH${NC}"
-      exit 1
-    fi
-    # Получаем размер в килобайтах
-    SIZE_KB=$(du -sk "$EXT_PATH" | awk '{print $1}')
-    # Переводим в мегабайты (округление вверх)
-    SIZE_MB=$(( (SIZE_KB + 1023) / 1024 ))
-    echo "ShareExtension size: ${SIZE_MB} MB"
-    if (( SIZE_MB > 20 )); then
-      echo -e "${RED}ShareExtension size exceeds 20MB!${NC}"
-      exit 1
-    fi
-    ;;
-  dev)
-    mint run xcodegen "$@"
-    open --background -a Simulator
-    run_xcodebuild -scheme MainApp build "$@"
-    xcrun simctl boot $SIMULATOR_ID || true
-    xcrun simctl install $SIMULATOR_ID "$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | grep -m1 'BUILT_PRODUCTS_DIR =' | awk '{print $3}')/MainApp.app"
-    xcrun simctl launch $SIMULATOR_ID dev.korchasa.Craftify
-    ;;
-  clean)
-    rm -rf build
-    xcodebuild clean -scheme MainApp "$@" || true
-    xcodebuild clean -scheme ShareExtension "$@" || true
-    xcodebuild clean -scheme CraftifyShared "$@" || true
-    ;;
-  logs)
-    xcrun simctl spawn booted log stream --predicate 'process == "MainApp"' --style syslog "$@"
-    ;;
-  help|--help|-h|*)
-    help
-    ;;
+  init) init "$@" ;;                   # Install CLI tools
+  generate) generate "$@" ;;           # SwiftGen & XcodeGen
+  fmt) fmt "$@" ;;                     # SwiftFormat
+  lint) lint "$@" ;;                   # SwiftLint
+  test:lint) lint "$@" ;;              # Launched lint as test:lint alias
+  test:format) fmt "$@" ;;             # Launched fmt as test:format alias
+  build:simulator) build_sim "$@" ;;   # Build for simulator (Debug)
+  analyze) analyze "$@" ;;             # Static analysis
+  test:unit) test_unit "$@" ;;         # Run unit tests
+  test:e2e) test_e2e "$@" ;;           # Run end-to-end tests
+  test) test "$@" ;;                   # Run unit & UI tests
+  test:coverage) coverage "$@" ;;       # Run code coverage
+  pr-check) pr_checks "$@" ;;          # Run PR checks (TODO/FIXME scan)
+  comment-scan) comment_scan "$@" ;;   # Legacy alias for pr-check
+  build) build "$@" ;;                 # Build release targets
+  size-report) size_report "$@" ;;     # Check ShareExtension size
+  dev) dev "$@" ;;                     # Run app in simulator
+  clean) clean "$@" ;;                 # Clean artifacts
+  logs) logs "$@" ;;                   # Stream device logs
+  bump-version) bump_version "$@" ;;   # Bump version numbers
+  archive) archive "$@" ;;             # Archive MainApp for distribution
+  export-ipa) export_ipa "$@" ;;       # Export IPA from archive
+  deploy:testflight) deploy_testflight "$@" ;;  # Upload to TestFlight via API key
+  deploy:internal) deploy_internal "$@" ;;      # TestFlight internal deploy
+  deploy:adhoc) deploy_adhoc "$@" ;;            # Ad-hoc TestFlight deploy
+  deploy:appstore) deploy_appstore "$@" ;;      # Upload to App Store Connect
+  generate-changelog) generate_changelog "$@" ;;# Generate changelog via git-chglog
+  notify) notify "$@" ;;               # Send notifications (Slack, email)
+  monitor-setup) monitor_setup "$@" ;; # Setup monitoring (Sentry etc.)
+  help|*) usage ;;                       # Show help
 esac

@@ -79,7 +79,7 @@ Craftify — iOS-приложение (iOS 16+) с расширением Share 
 - **Стандарты кодирования**:
   - SwiftLint (конфигурация по умолчанию).
   - SwiftFormat (конфигурация по умолчанию).
-  - Mintfile + `mint bootstrap` для установки SwiftGen, SwiftLint, SwiftFormat, XcodeGen.
+  - Все CLI-инструменты устанавливаются через `./run init` (brew install xcodegen swiftlint swiftformat xcbeautify swiftgen).
   - Скрипты `./run dev`, `./run test`, `./run clean`, `./run logs`. Генерация проекта через `xcodegen`. Все сборочные и тестовые операции автоматизированы.
 - **Локализация**:
   - Все UI-строки должны храниться в `.strings` файлах; использовать SwiftGen для генерации локализованных строк. Уровни сложности и детализации, а также языки операций — только английские значения, с возможностью дальнейшей локализации.

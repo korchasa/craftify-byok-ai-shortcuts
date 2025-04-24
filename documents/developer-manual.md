@@ -1,24 +1,11 @@
 # Руководство разработчика Craftify
 
 ## Установка зависимостей
-1. Установить Mint (https://github.com/yonaskolb/Mint)
-2. Установить SwiftGen, SwiftLint, SwiftFormat через Mint:
-   - `mint install SwiftGen/SwiftGen`
-   - `mint install realm/SwiftLint`
-   - `mint install nicklockwood/SwiftFormat`
-3. Установить XcodeGen: `mint install yonaskolb/XcodeGen`
-
-### Установка CLI-инструментов через Mint
-
-1. Установите Mint (если не установлен):
+1. Установить все необходимые CLI-инструменты одной командой:
    ```sh
-   brew install mint
+   ./run init
    ```
-2. Установите все инструменты, необходимые проекту:
-   ```sh
-   mint bootstrap
-   ```
-   Mint установит версии CLI-инструментов, указанные в `Mintfile`.
+   Это установит через Homebrew: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen.
 
 ## Сборка проекта
 - Сгенерировать проект: `xcodegen`
