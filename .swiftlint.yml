@@ -134,5 +134,8 @@ excluded:
   - build
   - src/MainApp/Resources/Generated
   - src/CraftifyShared/Generated
+  - "src/**/UnitTests/*.swift"
+  - "src/**/E2ETests/*.swift"
+  - "src/**/UITests/*.swift"
 opt_in_rules:
   - all

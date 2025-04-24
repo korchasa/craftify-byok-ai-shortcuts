@@ -11,6 +11,14 @@ public struct ShareExtensionView: View {
     @State private var isProcessing = false
     @State private var progress: Double = 0.0
 
+    private enum ProgressConstants {
+        static let percentMax: Double = 100
+    }
+
+    private enum ZIndexConstants {
+        static let copiedToast: Double = 2
+    }
+
     public init(viewModel: ShareExtensionViewModel) {
         self.viewModel = viewModel
     }
@@ -56,7 +64,7 @@ public struct ShareExtensionView: View {
         }
         .onReceive(viewModel.$showCopiedToast) { show in
             if show {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + ShareExtensionViewConstants.copiedToastHideDelay) {
                     viewModel.hideCopiedToast()
                 }
             }
@@ -66,6 +74,7 @@ public struct ShareExtensionView: View {
         }
         .padding()
         .background(Color(.systemBackground))
+        .zIndex(ZIndexConstants.copiedToast)
     }
 
     private var operationsGrid: some View {
@@ -100,14 +109,14 @@ public struct ShareExtensionView: View {
             ProgressView(value: progress)
                 .progressViewStyle(.linear)
                 .frame(width: ShareExtensionViewConstants.progressWidth)
-            Text("\(Int(progress * 100))%")
+            Text("\(Int(progress * ProgressConstants.percentMax))%")
                 .font(.subheadline)
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: ShareExtensionViewConstants.overlayCornerRadius).fill(Color(.systemBackground).opacity(ShareExtensionViewConstants.overlayOpacity)))
         .shadow(radius: ShareExtensionViewConstants.overlayShadow)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Обработка, прогресс \(Int(progress * 100))%")
+        .accessibilityLabel("Обработка, прогресс \(Int(progress * ProgressConstants.percentMax))%")
     }
 
     private var copiedToast: some View {
@@ -116,15 +125,19 @@ public struct ShareExtensionView: View {
             HStack {
                 Spacer()
                 Text("Скопировано в буфер")
-                    .font(.headline)
-                    .padding()
-                    .background(RoundedRectangle(cornerRadius: 12).fill(Color(.systemGray6).opacity(0.95)))
-                    .shadow(radius: 4)
+                    .font(ShareExtensionViewConstants.copiedToastFont)
+                    .padding(.vertical, ShareExtensionViewConstants.copiedToastVerticalSpacing)
+                    .padding(.horizontal, ShareExtensionViewConstants.copiedToastHorizontalSpacing)
+                    .background(
+                        RoundedRectangle(cornerRadius: ShareExtensionViewConstants.copiedToastCornerRadius)
+                            .fill(Color(.systemGray6).opacity(ShareExtensionViewConstants.copiedToastBackgroundOpacity))
+                    )
+                    .shadow(radius: ShareExtensionViewConstants.copiedToastShadowRadius)
                 Spacer()
             }
-            Spacer().frame(height: 40)
+            Spacer().frame(height: ShareExtensionViewConstants.copiedToastBottomSpacing)
         }
         .transition(.opacity)
-        .zIndex(2)
+        .zIndex(ZIndexConstants.copiedToast)
     }
 }

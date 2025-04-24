@@ -3,7 +3,7 @@ description:
 globs:
 alwaysApply: true
 ---
-## DOCUMENTATION STRUCTURE
+## DOCUMENTATION
 
 1. `./documents/mvp-roadmap.md`:
 - Roadmap of Product MVP
@@ -51,5 +51,12 @@ alwaysApply: true
 - How to build the project
 - How to deploy the project
 
-9. `./documents/code-style-swift.md`
-- List of swift code style rules
+[project.md](mdc:documents/project.md)
+
+[architecture.md](mdc:documents/architecture.md)
+
+[implementation.md](mdc:documents/implementation.md)
+
+[file_structure.md](mdc:documents/file_structure.md)
+
+[whiteboard.md](mdc:documents/whiteboard.md)

@@ -9,6 +9,11 @@ import XCTest
         private var inventoryStub: InventoryManagerStub?
         private var viewModel: HomeViewModel?
 
+        private enum TestConstants {
+            static let indexFirst = 0
+            static let countOne = 1
+        }
+
         override public func setUp() {
             super.setUp()
             inventoryStub = InventoryManagerStub()
@@ -27,7 +32,7 @@ import XCTest
             if let viewModel {
                 let view = HomeView(viewModel: viewModel)
                 let list = try view.inspect().find(ViewType.List.self)
-                expect(try list.numberOfRows()) == 0
+                expect(try list.numberOfRows()) == TestConstants.indexFirst
             }
         }
 
@@ -41,7 +46,7 @@ import XCTest
                 viewModel.addOperation(operation)
                 let view = HomeView(viewModel: viewModel)
                 let list = try view.inspect().find(ViewType.List.self)
-                expect(try list.numberOfRows()) == 1
+                expect(try list.numberOfRows()) == TestConstants.countOne
                 let text = try list.find(text: "Перевод")
                 expect(try text.string()).to(contain("Перевод"))
             }
@@ -57,7 +62,7 @@ import XCTest
                 viewModel.addOperation(operation)
                 let view = HomeView(viewModel: viewModel)
                 var list = try view.inspect().find(ViewType.List.self)
-                try list.delete(row: 0)
+                try list.delete(row: TestConstants.indexFirst)
                 expect(viewModel.operations).to(beEmpty())
             }
         }

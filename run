@@ -94,6 +94,7 @@ case "$CMD" in
       echo -e "${RED}xcodebuild build ShareExtension failed!${NC}"
       exit 1
     fi
+    ;;
   check-size)
     echo ">>>> Generating Xcode project"
     mint run xcodegen "$@"

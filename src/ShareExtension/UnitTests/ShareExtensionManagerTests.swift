@@ -17,7 +17,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
             authManager: authManager,
             clipboardManager: clipboardManager,
             processingManager: processingManager,
-            consentManager: consentManager
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
         )
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let result = await manager.process(text: "Hello", operation: op)
@@ -37,7 +38,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
             authManager: authManager,
             clipboardManager: clipboardManager,
             processingManager: processingManager,
-            consentManager: consentManager
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
         )
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let result = await manager.process(text: "Hello", operation: op)
@@ -57,7 +59,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
             authManager: authManager,
             clipboardManager: clipboardManager,
             processingManager: processingManager,
-            consentManager: consentManager
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
         )
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let longText = String(repeating: "a", count: 5001)
@@ -78,7 +81,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
             authManager: authManager,
             clipboardManager: clipboardManager,
             processingManager: processingManager,
-            consentManager: consentManager
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
         )
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let atLimitText = String(repeating: "a", count: 5000)

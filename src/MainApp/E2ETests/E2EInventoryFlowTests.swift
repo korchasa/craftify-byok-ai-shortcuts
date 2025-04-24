@@ -9,6 +9,11 @@ import XCTest
     public final class E2EInventoryFlowTests: XCTestCase {
         override public init() { super.init() }
         deinit {}
+        private enum TestConstants {
+            static let indexFirst = 0
+            static let countOne = 1
+        }
+
         public func testAddEditDeleteOperation() throws {
             let inventory = InventoryManagerStub()
             let homeVM = HomeViewModel(inventoryManager: inventory)
@@ -19,15 +24,15 @@ import XCTest
             let op = addVM.makeOperation()
             expect(op) != nil
             homeVM.addOperation(op!)
-            expect(homeVM.operations.count) == 1
+            expect(homeVM.operations.count) == TestConstants.countOne
             // Редактирование операции
-            let editVM = EditOperationViewModel(operation: homeVM.operations[0])
+            let editVM = EditOperationViewModel(operation: homeVM.operations[TestConstants.indexFirst])
             editVM.targetLanguage = "en"
             let updated = editVM.makeOperation()
-            homeVM.updateOperation(at: 0, with: updated!)
-            expect(homeVM.operations[0].operation) == .translate
+            homeVM.updateOperation(at: TestConstants.indexFirst, with: updated!)
+            expect(homeVM.operations[TestConstants.indexFirst].operation) == .translate
             // Удаление операции
-            homeVM.removeOperation(at: 0)
+            homeVM.removeOperation(at: TestConstants.indexFirst)
             expect(homeVM.operations.isEmpty) == true
         }
 

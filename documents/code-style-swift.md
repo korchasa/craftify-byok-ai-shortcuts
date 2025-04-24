@@ -1,14 +1,8 @@
-## Swift code style
+## New code style rules
 
-- All test classes must implement setUp and tearDown (balanced_xctest_lifecycle)
-- All declarations must explicitly specify ACL (explicit_acl)
-- Do not use implicitly unwrapped optionals
-- Use Nimble operator overloads instead of free matcher functions
-- All classes must have an explicit deinit (required_deinit)
-- Do not use magic numbers — extract to constants
-- Closure body must not exceed 30 lines (closure_body_length)
-- Do not use async without await
-- Для сгенерированных SwiftGen файлов локализаций разрешается отсутствие явных ACL и других нарушений, если это требуется для корректной работы SwiftGen и не мешает сборке.
-- Протоколы именуются с суффиксом -ing (например, ClipboardManaging, ProcessingManaging) для DI-friendly архитектуры.
-- Все менеджеры внедряются через протоколы для тестируемости.
-- shorthand_optional_binding: запрещено guard let self или guard let self = self, использовать только guard self != nil
+- async_let_with_taskgroup: не использовать async let внутри withTaskGroup
+- callback_to_async: для callback-based API использовать async-обёртку через withCheckedThrowingContinuation
+- redundant_self_in_closure: в замыканиях не использовать self, если это не требуется
+- self_binding: не использовать guard let self без присваивания
+- async_without_await: не использовать async let без await
+
