@@ -53,6 +53,11 @@ jobs:
       - name: Format (SwiftFormat)
         run: swiftformat . --lint --swiftversion 5.7
 
+      - name: Ensure generated directories exist
+        run: |
+          mkdir -p src/MainApp/Resources/Generated
+          mkdir -p src/CraftifyShared/Generated
+
       - name: Generate localized strings (SwiftGen)
         run: mint run swiftgen
 
