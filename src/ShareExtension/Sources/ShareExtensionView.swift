@@ -1,4 +1,5 @@
 import CraftifyShared
+import Foundation
 import SwiftUI
 
 // swiftlint:disable:next file_name one_declaration_per_file file_types_order no_grouping_extension convenience_type prefer_self_in_static_references
@@ -95,10 +96,10 @@ public struct ShareExtensionView: View {
 
     private func displayName(for type: OperationType) -> String {
         switch type {
-        case .translate: Strings.operationLabelTranslate
-        case .simplify: Strings.operationLabelSimplify
-        case .correct: Strings.operationLabelCorrect
-        case .explain: Strings.operationLabelExplain
+        case .translate: L10n.operationLabelTranslate
+        case .simplify: L10n.operationLabelSimplify
+        case .correct: L10n.operationLabelCorrect
+        case .explain: L10n.operationLabelExplain
         }
     }
 

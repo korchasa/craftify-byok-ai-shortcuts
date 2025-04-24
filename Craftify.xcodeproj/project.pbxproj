@@ -22,8 +22,10 @@
 		0FEB635669D458180FA57820 /* LogManagerSharedNDJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */; };
 		109091340D700DCA34C2476D /* HomeView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68623B28C487D1266385176 /* HomeView+Inspectable.swift */; };
 		151DD39976F29968E1F0404E /* LogManagerSharedInMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */; };
+		159829F4BBBEA94D60C885B7 /* NewRelic in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5495C810A3342DFEBC8A80 /* NewRelic */; };
 		15B7EACE1C756A7303D9B96C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6A7F3E6B445CB91481D061 /* SettingsView.swift */; };
 		17E97A05671963AD0389D393 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
+		17F76D3440474E3E00E181CF /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810426C6D523E6D985CC5F3A /* Strings.swift */; };
 		18C8C87A5817251F36A2F389 /* AddOperationViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387DA2FEC0EBA4371F936F55 /* AddOperationViewConstants.swift */; };
 		1934BF3B1A337ADC2B4AD649 /* CraftifyShared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93A62DE97390770A2717EB11 /* CraftifyShared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		1C72C944FB6F149C87A00FAB /* LogManagerSharedNDJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */; };
@@ -40,6 +42,7 @@
 		26DDD904BF1CF3E4364E95AA /* OperationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8B578BE07845879F3EA6D44 /* OperationType.swift */; };
 		27BD38B544F42A317A689E50 /* EditOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734B7B6FEB4877F290E0804 /* EditOperationView.swift */; };
 		2AB6D30ED405F2DA36EF26E8 /* ConsentManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7755A7340C79F88038BB636E /* ConsentManagerStub.swift */; };
+		2BFC9275829F2B83E59E394B /* LogExportActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */; };
 		2DA26B9AD1F61D7B2A32285B /* ConsentManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B2F999AF2599A9823FBD4 /* ConsentManaging.swift */; };
 		2E212606258D435CFE9862A9 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCD23D25BE28D319831E3 /* Strings.swift */; };
 		2E60BE04465C3E6ED4E640B3 /* ShareExtensionViewModelConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4983E61FB194F87AFC657C /* ShareExtensionViewModelConstants.swift */; };
@@ -62,6 +65,7 @@
 		3FCB1BCD60146888A762A2A2 /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
 		4198A20CC21A17298EA79FD7 /* ProcessingManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE89C634D711B0AB916AF1AB /* ProcessingManagerStub.swift */; };
 		42134D128E08AE712F8A3BD1 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = A54CC23A69075920235C0EB8 /* Nimble */; };
+		4308463488384A605E288A17 /* LogExportActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */; };
 		43D6B2FF803AD0F7CB2135AD /* CraftifyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D28DB3F67CDF5F0E6E146 /* CraftifyApp.swift */; };
 		44CE31CC08F25CCD816A83B0 /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
 		48D1F0495A909931EE83F3F5 /* LogManagerSharedInMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */; };
@@ -102,6 +106,7 @@
 		65D3A931ED6BD7876B35084A /* CwlCatchException in Frameworks */ = {isa = PBXBuildFile; productRef = CBFD6926F03B7DA47969A524 /* CwlCatchException */; };
 		6621DC45CF3DAC9F3567D4C7 /* LLMAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */; };
 		662B43A47CF42F1B7C356BEE /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
+		6A1EEAACC9E65DBEE67265BA /* LogExportActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */; };
 		6A34DD1BE1B11D31193E5258 /* CwlPreconditionTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 8FE6053ECE4453737CC16063 /* CwlPreconditionTesting */; };
 		6A575069FBBAC1CF0726B808 /* InventoryManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967405397B94E4F95FEAB1 /* InventoryManagerStub.swift */; };
 		6B9455310B99F135827C68DC /* ShareExtensionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95961850F197370B633C5C26 /* ShareExtensionViewModelTests.swift */; };
@@ -179,6 +184,7 @@
 		BE38F9E33B3EDC2C041D70A7 /* AddOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6E92D99C5FCDF63EA59AC6 /* AddOperationViewModelTests.swift */; };
 		BE864310DC2CE60BD8621F3F /* URLProtocolStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112FA76673DA4693EE0D7199 /* URLProtocolStub.swift */; };
 		BEE7FCB844479F9999CE8A2C /* ShareExtensionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C3F5768A004A89D5C4DA7B /* ShareExtensionManagerTests.swift */; };
+		BEF0C2A163A642A8DF33D7F6 /* SettingsViewExportConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */; };
 		BEF9B03D8E085EBFFC95F85B /* AuthManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC8DC7B02AB6D71A45D880 /* AuthManagerStub.swift */; };
 		BF991B720B6E35DA60A4C043 /* ShareExtensionViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0CEEE04739F40BFF240C2 /* ShareExtensionViewConstants.swift */; };
 		C152818338CEAEF77D553682 /* ShareExtensionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13CED619410C5EC0872BDE7 /* ShareExtensionViewModel.swift */; };
@@ -203,6 +209,7 @@
 		D1CE8788DC9CC1DF3168E6DD /* ClipboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F336F9499A34785D24BBA695 /* ClipboardManager.swift */; };
 		D2609EDF96C8195A15962C4D /* ShareExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7E73D7A5EDB906DB1D3ABA /* ShareExtensionViewController.swift */; };
 		D32B9F5B12652A058EBD287F /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
+		D79AC8444F0F7DE74A0C8011 /* SettingsViewExportConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */; };
 		DA370DE098753790963C1439 /* HowToUseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */; };
 		DC6BB2D1F5DD1CC9BCC9D39E /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 6BACA1D888825FC6EC624F6C /* Nimble */; };
 		DCAF9C4236D181ABCCC809E4 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCD23D25BE28D319831E3 /* Strings.swift */; };
@@ -226,6 +233,7 @@
 		EF68BA7B72A2A74352AED235 /* ProcessingManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D7A1B93779001A6B2CB015 /* ProcessingManaging.swift */; };
 		EFEE5738E75DBDAAE8E48622 /* MainAppPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */; };
 		F04D9E58366639AED8C3A038 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
+		F088D5668FD49C5A943DE46D /* SettingsViewExportConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */; };
 		F1836AE907BC319C98784D62 /* AuthManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7321C711391C6CA9FB2256 /* AuthManagerTests.swift */; };
 		F5207510BB092286505AE90E /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
 		F6E1DD3CE4E1CAC412215A17 /* HomeView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68623B28C487D1266385176 /* HomeView+Inspectable.swift */; };
@@ -351,6 +359,7 @@
 		2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMAPIClient.swift; sourceTree = "<group>"; };
 		2B9A0B81764D8C1D51D6CC88 /* InventoryOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryOperation.swift; sourceTree = "<group>"; };
 		2C430A79FD666930A008233B /* SettingsViewConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewConstants.swift; sourceTree = "<group>"; };
+		2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewExportConstants.swift; sourceTree = "<group>"; };
 		2D0B2F999AF2599A9823FBD4 /* ConsentManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManaging.swift; sourceTree = "<group>"; };
 		3300990178545D06F20EFB1C /* LogManagerShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerShared.swift; sourceTree = "<group>"; };
 		3734B7B6FEB4877F290E0804 /* EditOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationView.swift; sourceTree = "<group>"; };
@@ -423,6 +432,7 @@
 		EC9A4A38CF4E4F0AE58771FF /* Masking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Masking.swift; sourceTree = "<group>"; };
 		ECFDCD23D25BE28D319831E3 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
 		EE7FC65B8DBEC06CAB05990F /* CraftifySharedUnitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CraftifySharedUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogExportActivityView.swift; sourceTree = "<group>"; };
 		F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		F336F9499A34785D24BBA695 /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
 		F7DAE164D467254CD313DBD7 /* EditOperationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationViewModel.swift; sourceTree = "<group>"; };
@@ -488,6 +498,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				95BC6694F30B74439123CF8B /* CraftifyShared.framework in Frameworks */,
+				159829F4BBBEA94D60C885B7 /* NewRelic in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -531,9 +542,11 @@
 				006838A636CAF1E02EA7A172 /* HomeViewModel.swift */,
 				8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */,
 				47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */,
+				F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */,
 				6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */,
 				0F6A7F3E6B445CB91481D061 /* SettingsView.swift */,
 				2C430A79FD666930A008233B /* SettingsViewConstants.swift */,
+				2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */,
 				F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */,
 			);
 			name = Sources;
@@ -832,6 +845,9 @@
 				7B4699783D22479E09F16D16 /* PBXTargetDependency */,
 			);
 			name = MainApp;
+			packageProductDependencies = (
+				4D5495C810A3342DFEBC8A80 /* NewRelic */,
+			);
 			productName = MainApp;
 			productReference = 8DCCC0B120937EB0F608B6DF /* MainApp.app */;
 			productType = "com.apple.product-type.application";
@@ -979,6 +995,7 @@
 			packageReferences = (
 				F263637543557C8E31114560 /* XCRemoteSwiftPackageReference "CwlCatchException" */,
 				4E992233038F659822BEDAFD /* XCRemoteSwiftPackageReference "CwlPreconditionTesting" */,
+				2CEA48106F6F0ACB92DE5769 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */,
 				E4DCEA553EB892E2E206C009 /* XCRemoteSwiftPackageReference "Nimble" */,
 			);
 			projectDirPath = "";
@@ -1149,6 +1166,7 @@
 				56FABFE455D139106DEA2404 /* ShareExtensionViewController.swift in Sources */,
 				E0306EBC6661B1C48E6D67F3 /* ShareExtensionViewModel.swift in Sources */,
 				2E60BE04465C3E6ED4E640B3 /* ShareExtensionViewModelConstants.swift in Sources */,
+				17F76D3440474E3E00E181CF /* Strings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1169,9 +1187,11 @@
 				4F356153AD72CE11E9BC8994 /* HomeViewModel.swift in Sources */,
 				7DD9490A64C07B3AD071336E /* HowToUseView.swift in Sources */,
 				CC3928782675EAD540B3EE68 /* HowToUseViewModel.swift in Sources */,
+				6A1EEAACC9E65DBEE67265BA /* LogExportActivityView.swift in Sources */,
 				07A88205877E305FC64E0B53 /* MainAppPlaceholder.swift in Sources */,
 				15B7EACE1C756A7303D9B96C /* SettingsView.swift in Sources */,
 				2368DDEBB63A1EC2D8E809F9 /* SettingsViewConstants.swift in Sources */,
+				BEF0C2A163A642A8DF33D7F6 /* SettingsViewExportConstants.swift in Sources */,
 				7409A0430DE7BE46053D33E4 /* SettingsViewModel.swift in Sources */,
 				2E212606258D435CFE9862A9 /* Strings.swift in Sources */,
 			);
@@ -1198,9 +1218,11 @@
 				17E97A05671963AD0389D393 /* HowToUseView.swift in Sources */,
 				DA370DE098753790963C1439 /* HowToUseViewModel.swift in Sources */,
 				CB6C364E89536256357A8C7F /* HowToUseViewModelTests.swift in Sources */,
+				2BFC9275829F2B83E59E394B /* LogExportActivityView.swift in Sources */,
 				EFEE5738E75DBDAAE8E48622 /* MainAppPlaceholder.swift in Sources */,
 				E15B324FE2E856CFDBA6E2B2 /* SettingsView.swift in Sources */,
 				6DF1893F62191B1DCD585650 /* SettingsViewConstants.swift in Sources */,
+				F088D5668FD49C5A943DE46D /* SettingsViewExportConstants.swift in Sources */,
 				E19972CE827CE404EA18328B /* SettingsViewModel.swift in Sources */,
 				5C240444513537A92177EA73 /* SettingsViewModelTests.swift in Sources */,
 				B7B24DC3384D51372A192B20 /* Strings.swift in Sources */,
@@ -1256,9 +1278,11 @@
 				662B43A47CF42F1B7C356BEE /* HowToUseView.swift in Sources */,
 				097C5FEEFA40E008D5357B0A /* HowToUseViewModel.swift in Sources */,
 				621FD5D8337B31A4BCFD3AEA /* HowToUseViewUITests.swift in Sources */,
+				4308463488384A605E288A17 /* LogExportActivityView.swift in Sources */,
 				572ADAEEFDD15568753BA646 /* MainAppPlaceholder.swift in Sources */,
 				CA06778A752245CEAE54FB23 /* SettingsView.swift in Sources */,
 				C97B91DB9C8BCCFF05FDAEC4 /* SettingsViewConstants.swift in Sources */,
+				D79AC8444F0F7DE74A0C8011 /* SettingsViewExportConstants.swift in Sources */,
 				788C3DB10720275A66EF3135 /* SettingsViewModel.swift in Sources */,
 				99504AEB16A43439B5141F86 /* SettingsViewUITests.swift in Sources */,
 				DCAF9C4236D181ABCCC809E4 /* Strings.swift in Sources */,
@@ -1876,6 +1900,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2CEA48106F6F0ACB92DE5769 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/newrelic/newrelic-ios-agent-spm";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.5.5;
+			};
+		};
 		4E992233038F659822BEDAFD /* XCRemoteSwiftPackageReference "CwlPreconditionTesting" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mattgallagher/CwlPreconditionTesting.git";
@@ -1907,6 +1939,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4E992233038F659822BEDAFD /* XCRemoteSwiftPackageReference "CwlPreconditionTesting" */;
 			productName = CwlPreconditionTesting;
+		};
+		4D5495C810A3342DFEBC8A80 /* NewRelic */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2CEA48106F6F0ACB92DE5769 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */;
+			productName = NewRelic;
 		};
 		5F51D1E375F5429BA915ED17 /* Nimble */ = {
 			isa = XCSwiftPackageProductDependency;

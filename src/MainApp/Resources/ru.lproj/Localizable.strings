@@ -27,6 +27,7 @@
 "settings_title" = "Настройки";
 "settings_api_key" = "OpenAI API-ключ";
 "settings_done" = "Готово";
+"settings_export_logs" = "Экспорт логов";
 
 /* Share Extension UI */
 "share_title" = "Craftify — Обработка текста";
