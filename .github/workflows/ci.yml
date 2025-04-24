@@ -53,6 +53,9 @@ jobs:
       - name: Format (SwiftFormat)
         run: swiftformat . --lint --swiftversion 5.7
 
+      - name: Generate localized strings (SwiftGen)
+        run: mint run swiftgen
+
       - name: Generate Xcode project
         run: xcodegen
 
