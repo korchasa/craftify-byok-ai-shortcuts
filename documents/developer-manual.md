@@ -52,3 +52,8 @@ xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iO
 - Все тесты (unit, UI, E2E) для Share Extension проходят успешно.
 - Инструкции по запуску и тестированию актуальны.
 - Покрытие тестами и размер Share Extension контролируются автоматически в CI.
+
+## Тестирование таймаута обработки
+- Таймаут обработки реализован только в ShareExtensionViewModel (по умолчанию 30 секунд).
+- Для unit-тестов ViewModel таймаут можно переопределять через свойство processingTimeoutSeconds.
+- В E2E тестах ShareExtensionManager таймаут не тестируется, только ошибки и успехи обработки.

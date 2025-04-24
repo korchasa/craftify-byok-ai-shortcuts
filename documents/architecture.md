@@ -1,48 +1,48 @@
-# Архитектура Craftify
+## Architecture Craftify
 
-## Общая схема
-- Основное приложение (SwiftUI) и Share Extension используют общий модуль CraftifyShared (SwiftPM).
-- Взаимодействие между модулями через App Group (UserDefaults) и Keychain Sharing.
-- Логирование через LogManagerShared (SPM), хранение логов в App Group контейнере (NDJSON-файл, FIFO, маскирование, экспорт, atomic write, DispatchQueue).
+### General Scheme
+- The main application (SwiftUI) and Share Extension use a common module CraftifyShared (SwiftPM).
+- Interaction between modules through App Group (UserDefaults) and Keychain Sharing.
+- Logging through LogManagerShared (SPM), storing logs in the App Group container (NDJSON file, FIFO, masking, export, atomic write, DispatchQueue).
 
-## Ключевые паттерны
-- MVVM + SwiftUI для UI и бизнес-логики.
-- Dependency Injection для менеджеров.
-- FIFO для логов (ограничение 1000 записей).
+### Key Patterns
+- MVVM + SwiftUI for UI and business logic.
+- Dependency Injection for managers.
+- FIFO for logs (limit of 1000 entries).
 
-## Взаимодействие компонентов
-- ShareExtensionManager читает inventory и API-ключ, вызывает ProcessingManager.
-- ProcessingManager формирует запрос, вызывает LLMAPIClient.
-- LLMAPIClient отправляет HTTP POST к OpenAI, парсит ответ через ResponseParser.
-- ClipboardManager копирует результат в UIPasteboard.
-- Все действия логируются через LogManagerShared.
+### Component Interaction
+- ShareExtensionManager reads inventory and API key, calls ProcessingManager.
+- ProcessingManager forms a request, calls LLMAPIClient.
+- LLMAPIClient sends HTTP POST to OpenAI, parses the response through ResponseParser.
+- ClipboardManager copies the result to UIPasteboard.
+- All actions are logged through LogManagerShared.
 
-## Обработка ошибок
-- Все ошибки (Keychain, сеть, парсинг, буфер обмена) обрабатываются с показом Alert.
-- Повторные попытки при сетевых ошибках (экспоненциальный backoff).
-- Маскирование API-ключа в логах.
-- При ошибках доступа к ключу — предложение открыть Settings.
+### Error Handling
+- All errors (Keychain, network, parsing, clipboard) are handled with an Alert display.
+- Retries on network errors (exponential backoff).
+- Masking of the API key in logs.
+- In case of key access errors — suggestion to open Settings.
 
-## Тестирование
-- Unit-тесты для всех менеджеров.
-- UI/E2E-тесты для основных сценариев (обязательное требование: все ключевые пользовательские сценарии должны быть покрыты end-to-end тестами, включая edge-cases и негативные сценарии).
-- Покрытие ≥ 80% для ключевых модулей.
+### Testing
+- Unit tests for all managers.
+- UI/E2E tests for main scenarios (mandatory requirement: all key user scenarios must be covered by end-to-end tests, including edge cases and negative scenarios).
+- Coverage ≥ 80% for key modules.
 
-## Итоги реализации Share Extension
-- Архитектурные решения (DI, логирование, обработка ошибок, тестируемость) реализованы в полном соответствии с документацией.
-- Все компоненты и взаимодействия соответствуют описанию в данной архитектуре.
+### Results of Share Extension Implementation
+- Architectural solutions (DI, logging, error handling, testability) implemented in full compliance with documentation.
+- All components and interactions correspond to the description in this architecture.
 
-## Share Extension: финальная архитектура
+### Share Extension: Final Architecture
 
-- Все менеджеры внедряются через DI, включая LogManagerSharedNDJSON (App Group).
-- Логирование всех действий и ошибок, маскирование ключа, FIFO, экспорт NDJSON.
-- Лимит текста: 5000 символов, блокировка на UI и в менеджере.
-- Таймауты: 15 с на запрос, 30 с общий лимит (Task.sleep + Task.cancel).
-- Обработка ошибок: все сценарии покрыты (нет текста, лимит, нет согласия, неверный ключ, сеть, парсинг, буфер, отмена).
-- Покрытие unit, UI, E2E тестами (≥80%).
-- В CI/CD реализована автоматическая проверка размера расширения (Archive + size report, fail при >20 MB).
+- All managers are injected through DI, including LogManagerSharedNDJSON (App Group).
+- Logging of all actions and errors, key masking, FIFO, NDJSON export.
+- Text limit: 5000 characters, blocking on UI and in the manager.
+- Timeouts: 15 seconds per request, 30 seconds total limit (Task.sleep + Task.cancel).
+- Error handling: all scenarios covered (no text, limit, no consent, invalid key, network, parsing, buffer, cancellation).
+- Coverage of unit, UI, E2E tests (≥80%).
+- In CI/CD, automatic size check of the extension is implemented (Archive + size report, fail if >20 MB).
 
-### Обновлённая диаграмма взаимодействий
+#### Updated Interaction Diagram
 
 ```mermaid
 graph TD
@@ -55,3 +55,9 @@ graph TD
   end
   ShareExtension & ProcessingManager & LLMAPIClient & UIPasteboard -.-> LogManagerShared
 ```
+
+## Механизм таймаута обработки текста
+- Таймаут обработки реализован только на уровне ShareExtensionViewModel (по умолчанию 30 секунд, можно переопределять в тестах).
+- ShareExtensionManager не реализует таймаут, только бизнес-логику обработки и ошибок.
+- В unit-тестах ViewModel таймаут выставляется через processingTimeoutSeconds.
+- В E2E тестах ShareExtensionManager проверяются только ошибки и успехи обработки, но не таймаут.
