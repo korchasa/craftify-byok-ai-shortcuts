@@ -15,11 +15,11 @@ public final class AuthManager: AuthManaging {
     /// Получить API-ключ (или nil, если не найден)
     public func getAPIKey() async throws -> String? {
         try await withCheckedThrowingContinuation { [weak self] continuation in
+            guard self != nil else {
+                continuation.resume(returning: nil)
+                return
+            }
             DispatchQueue.global(qos: .userInitiated).async {
-                guard self != nil else {
-                    continuation.resume(returning: nil)
-                    return
-                }
                 do {
                     let key = try self!.getAPIKeySync()
                     continuation.resume(returning: key)
@@ -63,11 +63,11 @@ public final class AuthManager: AuthManaging {
     /// Сохранить API-ключ
     public func setAPIKey(_ key: String) async throws {
         try await withCheckedThrowingContinuation { [weak self] continuation in
+            guard self != nil else {
+                continuation.resume()
+                return
+            }
             DispatchQueue.global(qos: .userInitiated).async {
-                guard self != nil else {
-                    continuation.resume()
-                    return
-                }
                 do {
                     try self!.setAPIKeySync(key)
                     continuation.resume()
@@ -106,11 +106,11 @@ public final class AuthManager: AuthManaging {
     /// Удалить API-ключ
     public func deleteAPIKey() async throws {
         try await withCheckedThrowingContinuation { [weak self] continuation in
+            guard self != nil else {
+                continuation.resume()
+                return
+            }
             DispatchQueue.global(qos: .userInitiated).async {
-                guard self != nil else {
-                    continuation.resume()
-                    return
-                }
                 do {
                     try self!.deleteAPIKeySync()
                     continuation.resume()
