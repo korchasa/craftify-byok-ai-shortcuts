@@ -106,11 +106,11 @@ graph TD
 +  ShareExt --- KC
 +```
 +
-+### Flow of `./run dev`
++### Flow of `./run deploy:simulator`
 +
 +```mermaid
 +flowchart TB
-+  A[./run dev] --> B[SwiftGen]
++  A[./run deploy:simulator] --> B[SwiftGen]
 +  B --> C[XcodeGen]
 +  C --> D[Build MainApp for simulator]
 +  D --> E[Boot Simulator (if not running)]

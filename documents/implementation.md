@@ -5,7 +5,7 @@
 | Command         | Description                                           |
 |----------------|------------------------------------------------------|
 | ./run test     | Run tests                                           |
-| ./run dev      | Build and run in iPhone 14 simulator (iOS 16)      |
+| ./run deploy:simulator      | Build and run in iPhone 14 simulator (iOS 16)      |
 | ./run clean    | Clean build artifacts                                |
 | ./run logs     | View logs                                           |
 | ./run init     | Install all CLI dependencies via Homebrew           |
@@ -24,7 +24,7 @@
 1. Clone the repository.
 2. Install dependencies: run `./run init` (installs all CLI tools via Homebrew).
 3. Generate the project: `xcodegen`.
-4. Build and run: `./run dev`.
+4. Build and run: `./run deploy:simulator`.
 5. For tests: `./run test`.
 
 ### CLI Tools
@@ -60,7 +60,7 @@ After completing step 2, all placeholder files and placeholder tests are removed
 
 ### Differences Between Local and CI/CD Builds
 
-- **Locally**, all CLI tools are installed via `./run init` (Homebrew) and wrapper scripts `./run` (e.g., `./run test`, `./run dev`) are used for all operations. This ensures consistency in tool versions and ease of execution.
+- **Locally**, all CLI tools are installed via `./run init` (Homebrew) and wrapper scripts `./run` (e.g., `./run test`, `./run deploy:simulator`) are used for all operations. This ensures consistency in tool versions and ease of execution.
 - **In CI/CD (GitHub Actions)**, all utilities (swiftlint, swiftformat, xcodegen, xcodebuild, etc.) are installed and called directly, without Mint and without using `./run` scripts. This avoids the overhead of running Mint and speeds up execution.
 
 **Example of local run:**

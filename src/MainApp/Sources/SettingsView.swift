@@ -142,10 +142,7 @@ public struct SettingsView: View {
     }
 
     private func exportLogs() {
-        guard let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.korchasa.Craftify") else {
-            return
-        }
-        let logManager = LogManagerSharedNDJSON(appGroupContainerURL: appGroupURL)
+        let logManager = OSLogManagerShared(subsystem: Bundle.main.bundleIdentifier ?? "Craftify", category: "Settings")
         do {
             let data = try logManager.exportLogs()
             exportData = data
