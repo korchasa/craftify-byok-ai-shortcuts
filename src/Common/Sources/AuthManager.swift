@@ -2,7 +2,7 @@ import Foundation
 import Security
 
 /// Production-реализация AuthManaging с поддержкой Keychain Sharing (App Group)
-public final class AuthManager: AuthManaging {
+public final class AuthManager: AuthManaging, @unchecked Sendable {
     private static let validKeyLength = 16
     private static let maskLength = 8
     private static let prefixLength = 3
