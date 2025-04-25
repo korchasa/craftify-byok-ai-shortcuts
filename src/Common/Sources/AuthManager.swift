@@ -8,7 +8,7 @@ public final class AuthManager: AuthManaging {
     private static let prefixLength = 3
     private static let suffixLength = 4
     private let service = "dev.korchasa.Craftify.OpenAIKey"
-    private let accessGroup = "group.dev.korchasa.Craftify"
+    private let accessGroup = "78M3ZDR5UH.group.dev.korchasa.Craftify"
 
     public init() {}
 
