@@ -14,6 +14,9 @@ settings:
     IPHONEOS_DEPLOYMENT_TARGET: 16.0
     ENABLE_BITCODE: NO
     SWIFT_OPTIMIZATION_LEVEL: '-Onone'
+    CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION: YES
+  debug:
+    OTHER_LDFLAGS: "$(inherited) -ObjC"
   release:
     OTHER_LDFLAGS: "$(inherited) -dead_strip -ObjC"
 targets:
@@ -25,16 +28,22 @@ targets:
       - path: src/MainApp/Resources/Generated/Strings.swift
     resources:
       - path: src/MainApp/Resources
+        excludes:
+          - Generated/Strings.swift
     info:
       path: src/MainApp/Config/Info.plist
     entitlements:
       path: src/MainApp/Config/Craftify.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.dev.korchasa.Craftify
+        com.apple.developer.icloud-services:
+          - CloudKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.korchasa.Craftify
         APP_GROUPS: group.dev.korchasa.Craftify
         KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
-        SWIFT_VERSION: 5.9
     dependencies:
       - target: CraftifyShared
       - package: NewRelic
@@ -50,14 +59,12 @@ targets:
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
-    info:
-      path: src/MainApp/Config/Info.plist
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.9
+        GENERATE_INFOPLIST_FILE: YES
   MainAppE2ETests:
-    type: bundle.unit-test
+    type: bundle.ui-testing
     platform: iOS
     sources:
       - path: src/MainApp/E2ETests
@@ -68,12 +75,10 @@ targets:
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
-    info:
-      path: src/MainApp/Config/Info.plist
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.9
+        GENERATE_INFOPLIST_FILE: YES
   ShareExtension:
     type: app-extension
     platform: iOS
@@ -84,17 +89,20 @@ targets:
       - path: src/ShareExtension/Resources
     info:
       path: src/ShareExtension/Config/Info.plist
-    entitlements:
-      path: src/ShareExtension/Config/ShareExtension.entitlements
     dependencies:
       - target: CraftifyShared
+    entitlements:
+      path: src/ShareExtension/Config/ShareExtension.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.dev.korchasa.Craftify
+        com.apple.developer.icloud-services:
+          - CloudKit
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.korchasa.Craftify.ShareExtension
         APP_GROUPS: group.dev.korchasa.Craftify
         KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
-        SWIFT_VERSION: 5.9
-        CODE_SIGN_STYLE: Manual
         CODE_SIGN_IDENTITY: "Apple Development: korchasa@icloud.com (2P55B82U54)"
         PROVISIONING_PROFILE_SPECIFIER: "09d74528-408d-43f1-96bd-259a04739802"
         DEVELOPMENT_TEAM: 78M3ZDR5UH
@@ -104,34 +112,32 @@ targets:
     sources:
       - path: src/ShareExtension/UnitTests
       - path: src/ShareExtension/Sources
+      - path: src/CraftifyShared/Generated/Strings.swift
     dependencies:
       - target: ShareExtension
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
-    info:
-      path: src/ShareExtension/Config/Info.plist
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.9
+        GENERATE_INFOPLIST_FILE: YES
   ShareExtensionE2ETests:
-    type: bundle.unit-test
+    type: bundle.ui-testing
     platform: iOS
     sources:
       - path: src/ShareExtension/E2ETests
       - path: src/ShareExtension/Sources
+      - path: src/CraftifyShared/Generated/Strings.swift
     dependencies:
       - target: ShareExtension
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
-    info:
-      path: src/ShareExtension/Config/Info.plist
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.9
+        GENERATE_INFOPLIST_FILE: YES
   CraftifyShared:
     type: framework
     platform: iOS
@@ -143,7 +149,6 @@ targets:
       path: src/CraftifyShared/Config/Info.plist
     settings:
       base:
-        SWIFT_VERSION: 5.9
         ENABLE_TESTABILITY: YES
   CraftifySharedUnitTests:
     type: bundle.unit-test
@@ -156,14 +161,12 @@ targets:
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
-    info:
-      path: src/CraftifyShared/Config/Info.plist
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.9
+        GENERATE_INFOPLIST_FILE: YES
   CraftifySharedE2ETests:
-    type: bundle.unit-test
+    type: bundle.ui-testing
     platform: iOS
     sources:
       - path: src/CraftifyShared/E2ETests
@@ -173,12 +176,10 @@ targets:
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
-    info:
-      path: src/CraftifyShared/Config/Info.plist
     testTarget: true
     settings:
       base:
-        SWIFT_VERSION: 5.9
+        GENERATE_INFOPLIST_FILE: YES
 packages:
   Nimble:
     url: https://github.com/Quick/Nimble.git
@@ -243,9 +244,12 @@ schemes:
     test:
       targets:
         - name: CraftifySharedE2ETests
-  SizeReport:
+  ShareExtensionSizeReport:
     build:
       targets:
         ShareExtension: all
     run:
       config: Release
+configFiles:
+  Debug: Configs/Debug.xcconfig
+  Release: Configs/Release.xcconfig

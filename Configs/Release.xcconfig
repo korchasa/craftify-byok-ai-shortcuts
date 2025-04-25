@@ -1,0 +1,3 @@
+OTHER_LDFLAGS = $(inherited) -dead_strip -ObjC
+ENABLE_BITCODE = NO
+SWIFT_VERSION = 5.9
