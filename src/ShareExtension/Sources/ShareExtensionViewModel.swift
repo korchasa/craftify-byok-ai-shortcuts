@@ -1,5 +1,5 @@
 import Combine
-import CraftifyShared
+import Common
 import Foundation
 
 public final class ShareExtensionViewModel: ObservableObject {

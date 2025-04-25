@@ -73,7 +73,7 @@ function lint() {
 function test_unit() {
   generate "$@"
   echo ">>> Running Unit Tests"
-  local schemes=(MainAppUnitTests ShareExtensionUnitTests CraftifySharedUnitTests)
+  local schemes=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
   for scheme in "${schemes[@]}"; do
     xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" test "$@" | xcbeautify
   done
@@ -82,7 +82,7 @@ function test_unit() {
 function test_e2e() {
   generate "$@"
   echo ">>> Running E2E Tests"
-  local schemes=(MainAppE2ETests ShareExtensionE2ETests CraftifySharedE2ETests)
+  local schemes=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
   for scheme in "${schemes[@]}"; do
     xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" test "$@" | xcbeautify
   done
@@ -188,7 +188,7 @@ function clean() {
   rm -rf build
   xcodebuild clean -scheme MainApp || true
   xcodebuild clean -scheme ShareExtension || true
-  xcodebuild clean -scheme CraftifyShared || true
+  xcodebuild clean -scheme Common || true
 }
 
 function logs() {

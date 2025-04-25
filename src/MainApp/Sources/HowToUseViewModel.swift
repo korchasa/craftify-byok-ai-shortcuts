@@ -1,4 +1,4 @@
-import CraftifyShared
+import Common
 import Foundation
 import SwiftUI
 

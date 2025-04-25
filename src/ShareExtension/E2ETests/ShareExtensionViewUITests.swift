@@ -1,4 +1,4 @@
-@testable import CraftifyShared
+@testable import Common
 import Nimble
 @testable import ShareExtension
 import SwiftUI

@@ -14,6 +14,6 @@ RUN swiftlint --strict
 RUN swiftformat . --lint
 
 # Сборка и тесты
-RUN xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build test
+RUN xcodebuild -scheme Common -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build test
 
 CMD ["/bin/bash"]

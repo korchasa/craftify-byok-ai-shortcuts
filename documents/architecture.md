@@ -1,7 +1,7 @@
 ## Architecture Craftify
 
 ### General Scheme
-- The main application (SwiftUI) and Share Extension use a common module CraftifyShared (SwiftPM).
+- The main application (SwiftUI) and Share Extension use a common module Common (SwiftPM).
 - Interaction between modules through App Group (UserDefaults) and Keychain Sharing.
 - Logging through LogManagerShared (SPM), storing logs in the App Group container (NDJSON file, FIFO, masking, export, atomic write, DispatchQueue).
 

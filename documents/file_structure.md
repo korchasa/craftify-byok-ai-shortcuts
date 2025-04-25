@@ -25,10 +25,10 @@ src/
       - OperationModelsTests.swift
       - XCTestAsyncHelpers.swift
       - ShareExtensionManagerTests.swift
-  CraftifyShared/
+  Common/
     Sources/      # Исходники общей библиотеки
     Config/       # Info.plist
-    Tests/        # Unit-тесты CraftifyShared
+    Tests/        # Unit-тесты Common
     - UnitTests/
       - AuthManagerTests.swift
       - ConsentManagerTests.swift
@@ -66,7 +66,7 @@ src/
 
 ### Паттерны организации
 - Разделение main app и Share Extension по таргетам
-- Общий код в CraftifyShared (SwiftPM)
+- Общий код в Common (SwiftPM)
 - Документация и спецификации в `documents/`
 - Все настройки и CI/CD — через конфигурационные файлы, без ручных изменений в Xcode GUI
 

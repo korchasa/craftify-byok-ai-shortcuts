@@ -1,4 +1,4 @@
-import CraftifyShared
+import Common
 
 // swiftlint:disable:next explicit_import
 import SwiftUI

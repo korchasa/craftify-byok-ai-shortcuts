@@ -14,7 +14,7 @@
 - Swift 5.7+
 - SwiftUI
 - XcodeGen
-- SwiftPM (CraftifyShared, LogManagerShared)
+- SwiftPM (Common, LogManagerShared)
 - New Relic
 - NDJSON file (FIFO, masking, atomic write, export, DispatchQueue) for logs
 - SwiftGen (localization)
@@ -39,7 +39,7 @@
 
 All dependencies are installed via `./run init` using Homebrew. Mint and Mintfile are no longer used.
 
-After completing step 2, all placeholder files and placeholder tests are removed. The project fully complies with linter requirements and is ready for CraftifyShared implementation.
+After completing step 2, all placeholder files and placeholder tests are removed. The project fully complies with linter requirements and is ready for Common implementation.
 
 ### DevOps and CI/CD
 
@@ -144,20 +144,20 @@ let exported = try logger.exportLogs()
   - FIFO: automatically deletes old entries when exceeding 1000.
   - All operations are thread-safe (DispatchQueue).
   - Key masking, log export, atomic write.
-  - File: `src/CraftifyShared/Sources/LogManagerSharedNDJSON.swift`
+  - File: `src/Common/Sources/LogManagerSharedNDJSON.swift`
 
 - **In-memory Implementation (LogManagerSharedInMemory):**
   - Used for unit tests.
   - FIFO, masking, export similar to production.
-  - File: `src/CraftifyShared/Sources/LogManagerSharedInMemory.swift`
+  - File: `src/Common/Sources/LogManagerSharedInMemory.swift`
 
 - **Protocol LogManagerShared:**
   - Describes a common API for logging, FIFO, export, masking.
-  - File: `src/CraftifyShared/Sources/LogManagerShared.swift`
+  - File: `src/Common/Sources/LogManagerShared.swift`
 
 - **Log Structure:**
   - LogEntry: level, module, message, metadata, timestamp.
-  - File: `src/CraftifyShared/Sources/LogEntry.swift`
+  - File: `src/Common/Sources/LogEntry.swift`
 
 ### Testing AuthManager
 

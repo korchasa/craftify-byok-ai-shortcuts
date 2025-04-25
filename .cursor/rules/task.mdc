@@ -27,7 +27,7 @@ Craftify — iOS-приложение (iOS 16+) с расширением Share 
 - Повысить производительность и удобство пользователя.
 
 #### 3.2. Технические задачи
-- Спроектировать модульную архитектуру с общим кодом через Swift Package (CraftifyShared).
+- Спроектировать модульную архитектуру с общим кодом через Swift Package (Common).
 - Гарантировать безопасное хранение API-ключа только в Keychain с включённым Keychain Sharing (Keychain Access Group = "group.dev.korchasa.Craftify"). Доступ к ключу осуществляется из всех модулей через AuthManager (обёртка над Keychain).
 - Настроить единое логирование в приложении и расширении.
 - Обеспечить настраиваемость операций и языковых параметров.
@@ -56,7 +56,7 @@ Craftify — iOS-приложение (iOS 16+) с расширением Share 
   • Ключ "CraftifyInventory": массив объектов `{ "operation": String, "params": { /* параметры операции */ }, "promptTemplate": String }` (promptTemplate — шаблон промпорта операции).
   • Ключ "CraftifyConsentGiven": булевый флаг согласия пользователя на отправку текста в облако.
 - API-ключ хранится только в Keychain с access group "group.dev.korchasa.Craftify". Для доступа к ключу оба таргета должны иметь одинаковую Keychain Access Group в entitlements.
-- Для работы с ключом используется AuthManager (обёртка над Keychain), реализованный в CraftifyShared.
+- Для работы с ключом используется AuthManager (обёртка над Keychain), реализованный в Common.
 
 ### 5. Нефункциональные требования
 - **Платформа**: iOS 16+ (iPhone; поддержка iPad и других устройств — future work, не реализуется в MVP).
@@ -172,7 +172,7 @@ graph TD
 - **ResponseParser**: разбирает JSON-ответ OpenAI, извлекает `choices[0].message.content` как результат, обрабатывает ошибки парсинга и неизвестные поля, возвращает готовый текст или ошибку.
 
 #### 7.5. Логирование
-- SPM-пакет **CraftifyShared → LogManagerShared**.
+- SPM-пакет **Common → LogManagerShared**.
 - Обёртки LogManager для main app и extension.
 - Для хранения логов использовать SQLite или CoreData в App Group контейнере с автоматическим удалением старых записей при превышении лимита (1000 строк).
 
@@ -493,7 +493,7 @@ SettingsView
 ### 11. DevOps и CI/CD
 - Генерация проекта: **XcodeGen** (`project.yml`), включая:
   • Target main app и Share Extension
-  • SwiftPM зависимость `CraftifyShared` из локального пакета
+  • SwiftPM зависимость `Common` из локального пакета
   • Подключение SPM-пакетов `LogManagerShared`, `Sentry`, `SwiftGen`
 - Конфигурация: `.xcconfig` (Base, Debug, Release).
 - CLI-скрипты:
