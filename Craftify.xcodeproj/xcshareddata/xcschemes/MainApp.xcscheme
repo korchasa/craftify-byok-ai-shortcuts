@@ -21,6 +21,20 @@
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6E99CB366D323D89B45B1DAE"
+               BuildableName = "ShareExtension.appex"
+               BlueprintName = "ShareExtension"
+               ReferencedContainer = "container:Craftify.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

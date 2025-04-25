@@ -11,6 +11,15 @@ NC='\033[0m'
 
 SCRIPT_NAME=$(basename "${0}")
 
+# Add xcb wrapper for xcodebuild with xcbeautify
+function xcb() {
+  xcodebuild "$@" | xcbeautify
+}
+
+# Define arrays for test schemes
+SCHEMES_UNIT=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
+SCHEMES_E2E=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
+
 function usage() {
   cat <<EOF
 Usage: $SCRIPT_NAME <command> [args...]
@@ -48,9 +57,17 @@ EOF
 }
 
 function init() {
-  echo -e "${GREEN}Installing CLI tools via Homebrew...${NC}"
-  brew install xcodegen swiftlint swiftformat xcbeautify swiftgen || true
-  echo -e "${GREEN}All dependencies installed.${NC}"
+  echo -e "${GREEN}Checking CLI tools via Homebrew...${NC}"
+  local tools=(xcodegen swiftlint swiftformat xcbeautify swiftgen)
+  for tool in "${tools[@]}"; do
+    if ! command -v $tool &>/dev/null; then
+      echo "Installing $tool..."
+      brew install $tool
+    else
+      echo "$tool is already installed"
+    fi
+  done
+  echo -e "${GREEN}All dependencies checked.${NC}"
 }
 
 function generate() {
@@ -73,18 +90,18 @@ function lint() {
 function test_unit() {
   generate "$@"
   echo ">>> Running Unit Tests"
-  local schemes=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
-  for scheme in "${schemes[@]}"; do
-    xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" test "$@" | xcbeautify
+  for scheme in "${SCHEMES_UNIT[@]}"; do
+    xcb test -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" \
+      -parallel-testing-enabled YES -retry-tests-on-failure 2 -resultBundlePath "build/Results/${scheme}.xcresult" "$@"
   done
 }
 
 function test_e2e() {
   generate "$@"
   echo ">>> Running E2E Tests"
-  local schemes=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
-  for scheme in "${schemes[@]}"; do
-    xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" test "$@" | xcbeautify
+  for scheme in "${SCHEMES_E2E[@]}"; do
+    xcb test -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" \
+      -parallel-testing-enabled YES -retry-tests-on-failure 2 -resultBundlePath "build/Results/${scheme}.xcresult" "$@"
   done
 }
 
@@ -98,9 +115,9 @@ function test() {
 function build() {
   generate "$@"
   echo ">>> Building MainApp (Release/iphoneos)"
-  xcodebuild build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@" | xcbeautify
+  xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
   echo ">>> Building ShareExtension (Release/iphoneos)"
-  xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@" | xcbeautify
+  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
 }
 
 function size_report() {
@@ -108,7 +125,7 @@ function size_report() {
   echo ">>> Cleaning build artifacts"
   rm -rf build
   echo ">>> Building ShareExtension for size report (Release/iphoneos)"
-  xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build "$@" | xcbeautify
+  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build "$@"
   local appex=$(find build -name 'ShareExtension.appex' | head -n1)
   if [[ ! -f "$appex" ]]; then
     echo -e "${RED}Error: ShareExtension.appex not found!${NC}"
@@ -153,12 +170,13 @@ function install_app_to_simulator() {
   echo ">>> Installing app to simulator: $app_path"
   local install_success=0
   for attempt in {1..5}; do
-    if xcrun simctl install "${SIMULATOR_ID}" "$app_path"; then
+    if xcrun simctl install "${SIMULATOR_ID}" "${app_path}"; then
       install_success=1
       break
     else
-      echo "Install attempt $attempt failed, retrying in 2s..."
-      sleep 2
+      local delay=$((2 ** (attempt - 1)))
+      echo "Install attempt $attempt failed, retrying in ${delay}s..."
+      sleep "${delay}"
     fi
   done
   if [[ $install_success -eq 0 ]]; then
@@ -167,14 +185,14 @@ function install_app_to_simulator() {
   fi
 }
 
-function dev() {
+function deploy_simulator() {
   generate "$@"
   if [[ -z "${CI:-}" ]]; then
     echo ">>> Opening Simulator"
     open -a Simulator
   fi
   echo ">>> Building MainApp for simulator"
-  xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme MainApp build "$@" | xcbeautify
+  xcb build -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme MainApp build "$@"
   boot_and_wait_simulator
   local app_path
   app_path=$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
@@ -215,19 +233,19 @@ function bump_version() {
 function archive() {
   generate "$@"
   echo ">>> Archiving MainApp"
-  xcodebuild archive \
+  xcb archive \
     -scheme MainApp \
     -configuration Release \
     -archivePath build/MainApp.xcarchive \
-    -allowProvisioningUpdates "$@" | xcbeautify
+    -allowProvisioningUpdates "$@"
 }
 
 function export_ipa() {
   echo ">>> Exporting IPA from archive"
-  xcodebuild -exportArchive \
+  xcb -exportArchive \
     -archivePath build/MainApp.xcarchive \
     -exportOptionsPlist ExportOptions.plist \
-    -exportPath build/IPA "$@" | xcbeautify
+    -exportPath build/IPA "$@"
 }
 
 function deploy_testflight() {
@@ -245,11 +263,11 @@ function deploy_testflight() {
 function coverage() {
   generate "$@"
   echo ">>> Running tests with code coverage"
-  xcodebuild test \
+  xcb test \
     -scheme MainAppUnitTests \
     -enableCodeCoverage YES \
     -sdk iphonesimulator \
-    -destination "id=${SIMULATOR_ID}" "$@" | xcbeautify
+    -destination "id=${SIMULATOR_ID}" "$@"
   echo ">>> Generating coverage report"
   xcrun xccov view --report build/Logs/Test/*.xcresult
 }
@@ -257,27 +275,27 @@ function coverage() {
 # Supporting stubs for CI/CD pipelines
 function build_sim() {
   echo ">>> Building for Simulator (Debug)"
-  xcodebuild build \
+  xcb build \
     -scheme MainApp \
     -configuration Debug \
     -sdk iphonesimulator \
-    -destination "id=${SIMULATOR_ID}" "$@" | xcbeautify
+    -destination "id=${SIMULATOR_ID}" "$@"
 }
 
 function analyze() {
   echo ">>> Running static analysis"
-  xcodebuild analyze \
+  xcb analyze \
     -scheme MainApp \
     -sdk iphoneos \
-    -configuration Debug "$@" | xcbeautify
+    -configuration Debug "$@"
 }
 
 function export_ipa_adhoc() {
   echo ">>> Exporting AdHoc IPA"
-  xcodebuild -exportArchive \
+  xcb -exportArchive \
     -archivePath build/MainApp.xcarchive \
     -exportOptionsPlist ExportOptionsAdHoc.plist \
-    -exportPath build/IPA/ad-hoc "$@" | xcbeautify
+    -exportPath build/IPA/ad-hoc "$@"
 }
 
 function deploy_internal() {
@@ -334,28 +352,27 @@ case "$CMD" in
   lint) lint "$@" ;;                   # SwiftLint
   test:lint) lint "$@" ;;              # Launched lint as test:lint alias
   test:format) fmt "$@" ;;             # Launched fmt as test:format alias
-  build:simulator) build_sim "$@" ;;   # Build for simulator (Debug)
   analyze) analyze "$@" ;;             # Static analysis
   test:unit) test_unit "$@" ;;         # Run unit tests
   test:e2e) test_e2e "$@" ;;           # Run end-to-end tests
   test) test "$@" ;;                   # Run unit & UI tests
-  test:coverage) coverage "$@" ;;       # Run code coverage
+  test:coverage) coverage "$@" ;;      # Run code coverage
   pr-check) pr_checks "$@" ;;          # Run PR checks (TODO/FIXME scan)
   comment-scan) comment_scan "$@" ;;   # Legacy alias for pr-check
   build) build "$@" ;;                 # Build release targets
   size-report) size_report "$@" ;;     # Check ShareExtension size
-  dev) dev "$@" ;;                     # Run app in simulator
   clean) clean "$@" ;;                 # Clean artifacts
   logs) logs "$@" ;;                   # Stream device logs
   bump-version) bump_version "$@" ;;   # Bump version numbers
   archive) archive "$@" ;;             # Archive MainApp for distribution
   export-ipa) export_ipa "$@" ;;       # Export IPA from archive
-  deploy:testflight) deploy_testflight "$@" ;;  # Upload to TestFlight via API key
-  deploy:internal) deploy_internal "$@" ;;      # TestFlight internal deploy
-  deploy:adhoc) deploy_adhoc "$@" ;;            # Ad-hoc TestFlight deploy
-  deploy:appstore) deploy_appstore "$@" ;;      # Upload to App Store Connect
-  generate-changelog) generate_changelog "$@" ;;# Generate changelog via git-chglog
+  deploy:testflight) deploy_testflight "$@" ;;   # Upload to TestFlight via API key
+  deploy:internal) deploy_internal "$@" ;;       # TestFlight internal deploy
+  deploy:adhoc) deploy_adhoc "$@" ;;             # Ad-hoc TestFlight deploy
+  deploy:appstore) deploy_appstore "$@" ;;       # Upload to App Store Connect
+  deploy:simulator) deploy_simulator "$@" ;;     # Run app in simulator
+  generate-changelog) generate_changelog "$@" ;; # Generate changelog via git-chglog
   notify) notify "$@" ;;               # Send notifications (Slack, email)
   monitor-setup) monitor_setup "$@" ;; # Setup monitoring (Sentry etc.)
-  help|*) usage ;;                       # Show help
+  help|*) usage ;;                     # Show help
 esac

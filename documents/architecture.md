@@ -82,6 +82,42 @@ graph TD
   ShareExtension & ProcessingManager & LLMAPIClient & UIPasteboard -.-> LogManagerShared
 ```
 
++### Targets and Dependencies
++
++```mermaid
++graph LR
++  subgraph "Modules"
++    Common[Common (SPM Framework)]
++    MainApp[MainApp (iOS App)]
++    ShareExt[ShareExtension (App Extension)]
++  end
++
++  Common --> MainApp
++  Common --> ShareExt
++  MainApp -->|embedAppExtensions| ShareExt
++  subgraph "App Group / Keychain"
++    AG[App Group: group.dev.korchasa.Craftify]
++    KC[Keychain Access Group: group.dev.korchasa.Craftify]
++  end
++
++  MainApp --- AG
++  ShareExt --- AG
++  MainApp --- KC
++  ShareExt --- KC
++```
++
++### Flow of `./run dev`
++
++```mermaid
++flowchart TB
++  A[./run dev] --> B[SwiftGen]
++  B --> C[XcodeGen]
++  C --> D[Build MainApp for simulator]
++  D --> E[Boot Simulator (if not running)]
++  E --> F[simctl install MainApp.app]
++  F --> G[Launch MainApp in Simulator]
++```
+
 ## Механизм таймаута обработки текста
 - Таймаут обработки реализован только на уровне ShareExtensionViewModel (по умолчанию 30 секунд, можно переопределять в тестах).
 - ShareExtensionManager не реализует таймаут, только бизнес-логику обработки и ошибок.

@@ -131,6 +131,7 @@
 		788C3DB10720275A66EF3135 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */; };
 		790C114B7F91EE4E0185B2E7 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15FC1E1416E7FEFEE9927B03 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7D095DB11389F4B8CAB2E53B /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
+		7DC7BC4D007681131D813085 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B703ED98C53835018AA8D449 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7DD9490A64C07B3AD071336E /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
 		7E47795653D31D3D6D04C03B /* ShareExtensionView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E8DE580177603717BFA4AF /* ShareExtensionView+Inspectable.swift */; };
 		80A23578213C3F04C719DD37 /* LLMAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */; };
@@ -291,6 +292,13 @@
 			remoteGlobalIDString = 0BEF0EF3FA38D9FD9FA04AC4;
 			remoteInfo = Common;
 		};
+		CC0404919418739E0EF24065 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18ABFDF18819DFB841A32817 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6E99CB366D323D89B45B1DAE;
+			remoteInfo = ShareExtension;
+		};
 		DDADE3426A5AAB89A7E69EC1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 18ABFDF18819DFB841A32817 /* Project object */;
@@ -328,6 +336,17 @@
 				045A1A2AFD694D98B0291504 /* Common.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C1A1899CC73BC72427BF5E12 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7DC7BC4D007681131D813085 /* ShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C78242802B99C091D79C061D /* Embed Frameworks */ = {
@@ -830,12 +849,14 @@
 			buildPhases = (
 				AC92B5C69B9264A4F9A5CADA /* Sources */,
 				91B63B76527E361E878145D5 /* Frameworks */,
+				C1A1899CC73BC72427BF5E12 /* Embed Foundation Extensions */,
 				48EEC59BC856B67E6A6AAF02 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				C47D5B89E2113BEEFA024ADE /* PBXTargetDependency */,
+				09227324E4ABC756BD28DD74 /* PBXTargetDependency */,
 			);
 			name = MainApp;
 			packageProductDependencies = (
@@ -978,11 +999,11 @@
 					};
 					60B67F859084B6AD1ECAD983 = {
 						DevelopmentTeam = 78M3ZDR5UH;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					6E99CB366D323D89B45B1DAE = {
 						DevelopmentTeam = 78M3ZDR5UH;
-						ProvisioningStyle = Automatic;
+						ProvisioningStyle = Manual;
 					};
 					A280F9CD54BE725A604A330F = {
 						DevelopmentTeam = 78M3ZDR5UH;
@@ -1315,6 +1336,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		09227324E4ABC756BD28DD74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6E99CB366D323D89B45B1DAE /* ShareExtension */;
+			targetProxy = CC0404919418739E0EF24065 /* PBXContainerItemProxy */;
+		};
 		1CF86AD4E502DBF45ABDCB82 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6E99CB366D323D89B45B1DAE /* ShareExtension */;
@@ -1381,13 +1407,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = src/MainApp/Config/Craftify.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = src/MainApp/Config/Info.plist;
-				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				KEYCHAIN_ACCESS_GROUPS = "78M3ZDR5UH.*";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify;
+				PROVISIONING_PROFILE_SPECIFIER = "Craftify MainApp";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1446,17 +1474,16 @@
 			buildSettings = {
 				APP_GROUPS = group.dev.korchasa.Craftify;
 				CODE_SIGN_ENTITLEMENTS = src/ShareExtension/Config/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development: korchasa@icloud.com (2P55B82U54)";
-				DEVELOPMENT_TEAM = 78M3ZDR5UH;
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = src/ShareExtension/Config/Info.plist;
-				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				KEYCHAIN_ACCESS_GROUPS = "78M3ZDR5UH.*";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify.ShareExtension;
-				PROVISIONING_PROFILE_SPECIFIER = "09d74528-408d-43f1-96bd-259a04739802";
+				PROVISIONING_PROFILE_SPECIFIER = "Craftify Share Extension";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1592,13 +1619,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = src/MainApp/Config/Craftify.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = src/MainApp/Config/Info.plist;
-				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				KEYCHAIN_ACCESS_GROUPS = "78M3ZDR5UH.*";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify;
+				PROVISIONING_PROFILE_SPECIFIER = "Craftify MainApp";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1703,17 +1732,16 @@
 			buildSettings = {
 				APP_GROUPS = group.dev.korchasa.Craftify;
 				CODE_SIGN_ENTITLEMENTS = src/ShareExtension/Config/ShareExtension.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development: korchasa@icloud.com (2P55B82U54)";
-				DEVELOPMENT_TEAM = 78M3ZDR5UH;
+				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = src/ShareExtension/Config/Info.plist;
-				KEYCHAIN_ACCESS_GROUPS = group.dev.korchasa.Craftify;
+				KEYCHAIN_ACCESS_GROUPS = "78M3ZDR5UH.*";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Craftify.ShareExtension;
-				PROVISIONING_PROFILE_SPECIFIER = "09d74528-408d-43f1-96bd-259a04739802";
+				PROVISIONING_PROFILE_SPECIFIER = "Craftify Share Extension";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
