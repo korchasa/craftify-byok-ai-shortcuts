@@ -2,7 +2,7 @@ import Nimble
 import SwiftUI
 import XCTest
 #if canImport(ViewInspector)
-    @testable import CraftifyShared
+    @testable import Common
     @testable import MainApp
     import ViewInspector
 

@@ -19,9 +19,9 @@
 ### Важно: запуск тестов для iOS
 Для запуска тестов вручную используйте команду с явным указанием симулятора:
 ```
-xcodebuild -scheme CraftifyShared -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
+xcodebuild -scheme Common -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
 ```
-Это исключает ошибку "CraftifySharedTests does not support My Mac's platform: com.apple.platform.macosx".
+Это исключает ошибку "CommonTests does not support My Mac's platform: com.apple.platform.macosx".
 
 ## Линтинг и форматирование
 - Проверка стиля: `./run lint`

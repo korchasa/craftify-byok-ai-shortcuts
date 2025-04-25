@@ -1,5 +1,5 @@
 import Combine
-import CraftifyShared
+import Common
 @testable import ShareExtension
 import XCTest
 

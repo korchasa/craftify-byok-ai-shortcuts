@@ -133,7 +133,7 @@ disabled_rules:
 excluded:
   - build
   - src/MainApp/Resources/Generated
-  - src/CraftifyShared/Generated
+  - src/Common/Generated
   - "src/**/UnitTests/*.swift"
   - "src/**/E2ETests/*.swift"
   - "src/**/UITests/*.swift"

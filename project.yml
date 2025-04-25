@@ -45,7 +45,7 @@ targets:
         APP_GROUPS: group.dev.korchasa.Craftify
         KEYCHAIN_ACCESS_GROUPS: group.dev.korchasa.Craftify
     dependencies:
-      - target: CraftifyShared
+      - target: Common
       - package: NewRelic
   MainAppUnitTests:
     type: bundle.unit-test
@@ -84,13 +84,13 @@ targets:
     platform: iOS
     sources:
       - path: src/ShareExtension/Sources
-      - path: src/CraftifyShared/Generated/Strings.swift
+      - path: src/Common/Generated/Strings.swift
     resources:
       - path: src/ShareExtension/Resources
     info:
       path: src/ShareExtension/Config/Info.plist
     dependencies:
-      - target: CraftifyShared
+      - target: Common
     entitlements:
       path: src/ShareExtension/Config/ShareExtension.entitlements
       properties:
@@ -112,7 +112,7 @@ targets:
     sources:
       - path: src/ShareExtension/UnitTests
       - path: src/ShareExtension/Sources
-      - path: src/CraftifyShared/Generated/Strings.swift
+      - path: src/Common/Generated/Strings.swift
     dependencies:
       - target: ShareExtension
       - package: Nimble
@@ -128,7 +128,7 @@ targets:
     sources:
       - path: src/ShareExtension/E2ETests
       - path: src/ShareExtension/Sources
-      - path: src/CraftifyShared/Generated/Strings.swift
+      - path: src/Common/Generated/Strings.swift
     dependencies:
       - target: ShareExtension
       - package: Nimble
@@ -138,26 +138,26 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-  CraftifyShared:
+  Common:
     type: framework
     platform: iOS
     sources:
-      - path: src/CraftifyShared/Sources
-      - path: src/CraftifyShared/Generated/Strings.swift
+      - path: src/Common/Sources
+      - path: src/Common/Generated/Strings.swift
     resources: []
     info:
-      path: src/CraftifyShared/Config/Info.plist
+      path: src/Common/Config/Info.plist
     settings:
       base:
         ENABLE_TESTABILITY: YES
-  CraftifySharedUnitTests:
+  CommonUnitTests:
     type: bundle.unit-test
     platform: iOS
     sources:
-      - path: src/CraftifyShared/UnitTests
-      - path: src/CraftifyShared/Sources
+      - path: src/Common/UnitTests
+      - path: src/Common/Sources
     dependencies:
-      - target: CraftifyShared
+      - target: Common
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
@@ -165,14 +165,14 @@ targets:
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-  CraftifySharedE2ETests:
+  CommonE2ETests:
     type: bundle.ui-testing
     platform: iOS
     sources:
-      - path: src/CraftifyShared/E2ETests
-      - path: src/CraftifyShared/Sources
+      - path: src/Common/E2ETests
+      - path: src/Common/Sources
     dependencies:
-      - target: CraftifyShared
+      - target: Common
       - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
@@ -230,20 +230,20 @@ schemes:
     test:
       targets:
         - name: ShareExtensionE2ETests
-  CraftifySharedUnitTests:
+  CommonUnitTests:
     build:
       targets:
-        CraftifyShared: all
+        Common: all
     test:
       targets:
-        - name: CraftifySharedUnitTests
-  CraftifySharedE2ETests:
+        - name: CommonUnitTests
+  CommonE2ETests:
     build:
       targets:
-        CraftifyShared: all
+        Common: all
     test:
       targets:
-        - name: CraftifySharedE2ETests
+        - name: CommonE2ETests
   ShareExtensionSizeReport:
     build:
       targets:

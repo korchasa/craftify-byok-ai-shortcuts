@@ -39,7 +39,7 @@ Craftify — iOS-приложение с расширением Share Extension 
 - Проверка размера Share Extension и покрытие тестами ≥ 80% — обязательны для успешной сборки
 
 ## Архитектура
-- Модули: MainApp, ShareExtension, CraftifyShared (SPM)
+- Модули: MainApp, ShareExtension, Common (SPM)
 - App Group: `group.dev.korchasa.Craftify`
 - Keychain Sharing: `group.dev.korchasa.Craftify`
 
@@ -54,4 +54,4 @@ Craftify — iOS-приложение с расширением Share Extension 
 ## Документация
 - Подробная документация находится в директории `documents/`
 
-> После завершения этапа 2 все placeholder-файлы и placeholder-тесты удалены. Проект полностью соответствует требованиям линтера и готов к реализации CraftifyShared.
+> После завершения этапа 2 все placeholder-файлы и placeholder-тесты удалены. Проект полностью соответствует требованиям линтера и готов к реализации Common.

@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "48A8BE9C0269A32AC58437F5"
-               BuildableName = "CraftifyShared.framework"
-               BlueprintName = "CraftifyShared"
+               BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+               BuildableName = "Common.framework"
+               BlueprintName = "Common"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48A8BE9C0269A32AC58437F5"
-            BuildableName = "CraftifyShared.framework"
-            BlueprintName = "CraftifyShared"
+            BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+            BuildableName = "Common.framework"
+            BlueprintName = "Common"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -43,9 +43,9 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "65FAFADBB04233FA468B6321"
-               BuildableName = "CraftifySharedE2ETests.xctest"
-               BlueprintName = "CraftifySharedE2ETests"
+               BlueprintIdentifier = "A906371E20AA6747B02D1680"
+               BuildableName = "CommonUnitTests.xctest"
+               BlueprintName = "CommonUnitTests"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -66,9 +66,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48A8BE9C0269A32AC58437F5"
-            BuildableName = "CraftifyShared.framework"
-            BlueprintName = "CraftifyShared"
+            BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+            BuildableName = "Common.framework"
+            BlueprintName = "Common"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -82,9 +82,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "48A8BE9C0269A32AC58437F5"
-            BuildableName = "CraftifyShared.framework"
-            BlueprintName = "CraftifyShared"
+            BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+            BuildableName = "Common.framework"
+            BlueprintName = "Common"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

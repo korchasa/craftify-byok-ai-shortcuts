@@ -1,4 +1,4 @@
-import CraftifyShared
+import Common
 import Foundation
 
 /// Менеджер Share Extension: обработка текста, копирование, согласие, ошибки
