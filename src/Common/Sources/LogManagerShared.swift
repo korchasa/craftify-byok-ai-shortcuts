@@ -11,3 +11,7 @@ public protocol LogManagerShared: AnyObject {
     /// Экспортировать логи в Data (JSON)
     func exportLogs() throws -> Data
 }
+
+// Add OSLog manager implementation
+// OSLog-based implementation for system log only
+// Separate implementation provided in OSLogManagerShared.swift

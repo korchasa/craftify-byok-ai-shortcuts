@@ -80,7 +80,7 @@ Craftify — iOS-приложение (iOS 16+) с расширением Share 
   - SwiftLint (конфигурация по умолчанию).
   - SwiftFormat (конфигурация по умолчанию).
   - Все CLI-инструменты устанавливаются через `./run init` (brew install xcodegen swiftlint swiftformat xcbeautify swiftgen).
-  - Скрипты `./run dev`, `./run test`, `./run clean`, `./run logs`. Генерация проекта через `xcodegen`. Все сборочные и тестовые операции автоматизированы.
+  - Скрипты `./run deploy:simulator`, `./run test`, `./run clean`, `./run logs`. Генерация проекта через `xcodegen`. Все сборочные и тестовые операции автоматизированы.
 - **Локализация**:
   - Все UI-строки должны храниться в `.strings` файлах; использовать SwiftGen для генерации локализованных строк. Уровни сложности и детализации, а также языки операций — только английские значения, с возможностью дальнейшей локализации.
   - SwiftGen запускается на этапе сборки (build phase), генерирует `.swift` файлы локализаций, которые подключаются в оба таргета. В Share Extension отсутствует runtime-зависимость от SwiftGen.
@@ -499,7 +499,7 @@ SettingsView
 - CLI-скрипты:
   ```
   ./run test       # (xcodegen, xcodebuild)
-  ./run dev        # (xcodegen, xcodebuild, xcrun, simctl, Simulator)
+  ./run deploy:simulator        # (xcodegen, xcodebuild, xcrun, simctl, Simulator)
   ./run clean      # (xcodebuild)
   ./run logs       # (log)
   ```

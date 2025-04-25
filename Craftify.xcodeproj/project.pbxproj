@@ -41,6 +41,7 @@
 		2361BE89EA5084F47E447ADC /* ExplainParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7568EB39A52FE78B1B9F25 /* ExplainParams.swift */; };
 		2368DDEBB63A1EC2D8E809F9 /* SettingsViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C430A79FD666930A008233B /* SettingsViewConstants.swift */; };
 		2481BBCCA004B14A30BFEAF2 /* ClipboardManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D5AD74D8F325EF20F6982 /* ClipboardManagerStub.swift */; };
+		276E9E0A28059774F1CD0206 /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
 		27BD38B544F42A317A689E50 /* EditOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734B7B6FEB4877F290E0804 /* EditOperationView.swift */; };
 		2BFC9275829F2B83E59E394B /* LogExportActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */; };
 		2E212606258D435CFE9862A9 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCD23D25BE28D319831E3 /* Strings.swift */; };
@@ -145,6 +146,7 @@
 		8B0216FCB722D0E44476F52A /* ShareExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7E73D7A5EDB906DB1D3ABA /* ShareExtensionViewController.swift */; };
 		8BFD82C95A53753D757C52B0 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810426C6D523E6D985CC5F3A /* Strings.swift */; };
 		8C96D6F08CE5F22BD00F424A /* CorrectParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */; };
+		8CD98B3297FB000CC56AAFCA /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
 		8D046A764E024B37FDCC59DF /* EditOperationView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FE65F023516F6D379664E55 /* EditOperationView+Inspectable.swift */; };
 		8DA93F526E8A3FE03593331D /* ConsentManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B2F999AF2599A9823FBD4 /* ConsentManaging.swift */; };
 		8F7618141C1DE8B67DBB5753 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
@@ -185,6 +187,7 @@
 		BEF0C2A163A642A8DF33D7F6 /* SettingsViewExportConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */; };
 		BF991B720B6E35DA60A4C043 /* ShareExtensionViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0CEEE04739F40BFF240C2 /* ShareExtensionViewConstants.swift */; };
 		BFD4FD1CA5E8A059E4A5C123 /* SimplifyParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FF41537084CF100069C265 /* SimplifyParams.swift */; };
+		C01F8D5745A20F9FB671C051 /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
 		C06141D7B70C2F828CB195C5 /* ConsentManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B2F999AF2599A9823FBD4 /* ConsentManaging.swift */; };
 		C152818338CEAEF77D553682 /* ShareExtensionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E13CED619410C5EC0872BDE7 /* ShareExtensionViewModel.swift */; };
 		C210646B608A09AF2F5F93F2 /* AuthManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC8DC7B02AB6D71A45D880 /* AuthManagerStub.swift */; };
@@ -458,6 +461,7 @@
 		F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogExportActivityView.swift; sourceTree = "<group>"; };
 		F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		F336F9499A34785D24BBA695 /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
+		F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSLogManagerShared.swift; sourceTree = "<group>"; };
 		F7DAE164D467254CD313DBD7 /* EditOperationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationViewModel.swift; sourceTree = "<group>"; };
 		F8B578BE07845879F3EA6D44 /* OperationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationType.swift; sourceTree = "<group>"; };
 		F94C23CCFE76BA731C79271B /* ConsentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManager.swift; sourceTree = "<group>"; };
@@ -773,6 +777,7 @@
 				DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */,
 				65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */,
 				EC9A4A38CF4E4F0AE58771FF /* Masking.swift */,
+				F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */,
 				DC7FB160E8F114A3763795D6 /* Models */,
 			);
 			name = Sources;
@@ -1112,6 +1117,7 @@
 				C8950E5E31CC572D9F483010 /* LogManagerSharedInMemory.swift in Sources */,
 				056E6925215DC8BCE42B8CF1 /* LogManagerSharedNDJSON.swift in Sources */,
 				1F1C3CC06E86BBFD8FB88B8B /* Masking.swift in Sources */,
+				8CD98B3297FB000CC56AAFCA /* OSLogManagerShared.swift in Sources */,
 				C50A629A7D788FDA944B96B5 /* OperationType.swift in Sources */,
 				83DDC5A88DDC41F5E9CD2887 /* SimplifyParams.swift in Sources */,
 				6277BD270ADCE6329E76DA75 /* TranslateParams.swift in Sources */,
@@ -1143,6 +1149,7 @@
 				D5814C6A19482B2E66DC2BBF /* LogManagerSharedInMemory.swift in Sources */,
 				481AC489B809F67766452033 /* LogManagerSharedNDJSON.swift in Sources */,
 				8824E352B17AB3AFB555B58B /* Masking.swift in Sources */,
+				276E9E0A28059774F1CD0206 /* OSLogManagerShared.swift in Sources */,
 				C97DDA9745447BAD4731B0D1 /* OperationType.swift in Sources */,
 				BFD4FD1CA5E8A059E4A5C123 /* SimplifyParams.swift in Sources */,
 				8BFD82C95A53753D757C52B0 /* Strings.swift in Sources */,
@@ -1290,6 +1297,7 @@
 				090B2CEAF681E1E47DE7151D /* LogManagerSharedNDJSONTests.swift in Sources */,
 				526F77BCB58BF2AB6A631CAA /* Masking.swift in Sources */,
 				EF0DE54C7567192223EDDCEE /* MaskingTests.swift in Sources */,
+				C01F8D5745A20F9FB671C051 /* OSLogManagerShared.swift in Sources */,
 				1C455B7AE8AF52260903DCE0 /* OperationModelsTests.swift in Sources */,
 				0C029304AE15E6589CEDBD44 /* OperationType.swift in Sources */,
 				4A47216C077CA05EB42406A2 /* SimplifyParams.swift in Sources */,

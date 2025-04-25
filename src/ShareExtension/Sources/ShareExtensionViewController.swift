@@ -1,6 +1,7 @@
 import Common
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 /// NSExtensionPrincipalClass для Share Extension
 public final class ShareExtensionViewController: UIViewController {
@@ -16,7 +17,7 @@ public final class ShareExtensionViewController: UIViewController {
         let processingManager = ProcessingManager()
         let consentManager = ConsentManager(appGroupSuiteName: "group.dev.korchasa.Craftify")
         let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.korchasa.Craftify")!
-        let logManager = LogManagerSharedNDJSON(appGroupContainerURL: appGroupURL)
+        let logManager = OSLogManagerShared(subsystem: Bundle.main.bundleIdentifier ?? "Craftify", category: "ShareExtension")
         let manager = ShareExtensionManager(
             inventoryManager: inventoryManager,
             authManager: authManager,
@@ -39,6 +40,29 @@ public final class ShareExtensionViewController: UIViewController {
         ])
         hosting.didMove(toParent: self)
         self.hostingController = hosting
+        // Load the input text from the extension context
+        loadInputText()
+    }
+
+    /// Loads the shared text from the extension context and updates the view model
+    private func loadInputText() {
+        guard let items = extensionContext?.inputItems as? [NSExtensionItem] else { return }
+        for item in items {
+            let attachments = item.attachments ?? []
+            for provider in attachments {
+                if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
+                    provider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { [weak self] (item, error) in
+                        if let text = item as? String {
+                            DispatchQueue.main.async {
+                                // Update the input text in the view model
+                                self?.hostingController?.rootView.viewModel.updateInputText(text)
+                            }
+                        }
+                    }
+                    return
+                }
+            }
+        }
     }
 
     deinit {}

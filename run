@@ -213,7 +213,7 @@ function clean() {
 
 function logs() {
   echo ">>> Streaming logs from MainApp"
-  xcrun simctl spawn booted log stream --predicate 'process == "Share"' --style syslog
+  xcrun simctl spawn booted log stream --predicate 'process == "Craftify"' --style syslog
 }
 
 function comment_scan() {
