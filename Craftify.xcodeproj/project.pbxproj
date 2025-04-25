@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 63;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -406,7 +406,7 @@
 		65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedNDJSON.swift; sourceTree = "<group>"; };
 		6A7E73D7A5EDB906DB1D3ABA /* ShareExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewController.swift; sourceTree = "<group>"; };
 		6B934B34EBEDC14981E43A8C /* ShareExtensionPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionPlaceholder.swift; sourceTree = "<group>"; };
-		6FC13B62A358C6F700332CA9 /* ShareExtensionUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShareExtensionUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6FC13B62A358C6F700332CA9 /* ShareExtensionUnitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ShareExtensionUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		71E90C38B63C1413D9718BB4 /* HowToUseViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewUITests.swift; sourceTree = "<group>"; };
 		7755A7340C79F88038BB636E /* ConsentManagerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagerStub.swift; sourceTree = "<group>"; };
 		7826956133D04AAEDC5DEFD3 /* E2EShareExtensionFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E2EShareExtensionFlowTests.swift; sourceTree = "<group>"; };
@@ -418,24 +418,24 @@
 		85D4FF188F7007B982574A5E /* SettingsViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewUITests.swift; sourceTree = "<group>"; };
 		8706FC6569F61629E86A4B47 /* AuthManagerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerError.swift; sourceTree = "<group>"; };
 		8A7321C711391C6CA9FB2256 /* AuthManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerTests.swift; sourceTree = "<group>"; };
-		8DCCC0B120937EB0F608B6DF /* MainApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MainApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8DCCC0B120937EB0F608B6DF /* MainApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MainApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E3A3BCF8738E04C3FF6B608 /* InventoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryManager.swift; sourceTree = "<group>"; };
 		8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseView.swift; sourceTree = "<group>"; };
 		9261D496D9E44B905AEBEF07 /* InventoryManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryManagerTests.swift; sourceTree = "<group>"; };
 		9585D656FFE5C1B0ADAD097F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		95961850F197370B633C5C26 /* ShareExtensionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewModelTests.swift; sourceTree = "<group>"; };
 		9E32103F017739E1D10B1E59 /* AuthManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManaging.swift; sourceTree = "<group>"; };
-		A02212F1E46D0D6FACCE12C6 /* MainAppE2ETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MainAppE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A02212F1E46D0D6FACCE12C6 /* MainAppE2ETests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MainAppE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A07D5AD74D8F325EF20F6982 /* ClipboardManagerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManagerStub.swift; sourceTree = "<group>"; };
-		A16B54DCC9C73AF7ACA510DC /* MainAppUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MainAppUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A16B54DCC9C73AF7ACA510DC /* MainAppUnitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MainAppUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A22962EBA46C19F0D2ECE140 /* XCTestAsyncHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestAsyncHelpers.swift; sourceTree = "<group>"; };
-		A31D399AA06EF50D4E22AAE9 /* ShareExtensionE2ETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShareExtensionE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A31D399AA06EF50D4E22AAE9 /* ShareExtensionE2ETests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ShareExtensionE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56A2805031F435E0F7609F2 /* ShareExtensionViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewUITests.swift; sourceTree = "<group>"; };
 		A65EF71509FF130798AC1F71 /* AddOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOperationView.swift; sourceTree = "<group>"; };
 		A73BEEF846398C71F616D891 /* LogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
 		B062906A62F6E08B3A98B75C /* E2ELogManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E2ELogManagerTests.swift; sourceTree = "<group>"; };
-		B703ED98C53835018AA8D449 /* ShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		B75D7402491797A1031AE9EE /* CommonE2ETests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CommonE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B703ED98C53835018AA8D449 /* ShareExtension.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = ShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		B75D7402491797A1031AE9EE /* CommonE2ETests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CommonE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7D7A1B93779001A6B2CB015 /* ProcessingManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingManaging.swift; sourceTree = "<group>"; };
 		B9543E1059C3C102358325D9 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		BA3D1ACD93F81A64448E05A4 /* LogManagerSharedNDJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedNDJSONTests.swift; sourceTree = "<group>"; };
@@ -443,7 +443,7 @@
 		BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorrectParams.swift; sourceTree = "<group>"; };
 		C16E74141F4DB7A757893C9B /* AddOperationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOperationViewModel.swift; sourceTree = "<group>"; };
 		C9E8DE580177603717BFA4AF /* ShareExtensionView+Inspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShareExtensionView+Inspectable.swift"; sourceTree = "<group>"; };
-		CA185C341D41A9EE1A6A952E /* CommonUnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CommonUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA185C341D41A9EE1A6A952E /* CommonUnitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CommonUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF92F9A60ACB81AB329CC034 /* HomeViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewUITests.swift; sourceTree = "<group>"; };
 		D7B2C64D3119253486ACF264 /* EditOperationViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationViewUITests.swift; sourceTree = "<group>"; };
 		DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedInMemory.swift; sourceTree = "<group>"; };
@@ -1039,6 +1039,7 @@
 				2CEA48106F6F0ACB92DE5769 /* XCRemoteSwiftPackageReference "newrelic-ios-agent-spm" */,
 				E4DCEA553EB892E2E206C009 /* XCRemoteSwiftPackageReference "Nimble" */,
 			);
+			preferredProjectObjectVersion = 54;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -1514,16 +1515,25 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = src/Common/Config/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Common;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1755,16 +1765,25 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = src/Common/Config/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++14";
+				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.korchasa.Common;
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
