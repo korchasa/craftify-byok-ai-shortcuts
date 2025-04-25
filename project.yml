@@ -36,7 +36,7 @@ targets:
       path: src/MainApp/Config/Craftify.entitlements
       properties:
         com.apple.security.application-groups:
-          - 78M3ZDR5UH.group.dev.korchasa.Craftify
+          - group.dev.korchasa.Craftify
         keychain-access-groups:
           - 78M3ZDR5UH.group.dev.korchasa.Craftify
     settings:
@@ -100,8 +100,6 @@ targets:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionAttributes:
             NSExtensionActivationSupportsText: true
-            NSExtensionActivationSupportsAttachmentsWithMinCount: 1
-            NSExtensionActivationSupportsWebURLWithMaxCount: 0
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareExtensionViewController
     dependencies:
       - target: Common
@@ -109,7 +107,7 @@ targets:
       path: src/ShareExtension/Config/ShareExtension.entitlements
       properties:
         com.apple.security.application-groups:
-          - 78M3ZDR5UH.group.dev.korchasa.Craftify
+          - group.dev.korchasa.Craftify
         keychain-access-groups:
           - 78M3ZDR5UH.group.dev.korchasa.Craftify
     settings:

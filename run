@@ -90,9 +90,10 @@ function lint() {
 function test_unit() {
   generate "$@"
   echo ">>> Running Unit Tests"
+  rm -rf build/Results
   for scheme in "${SCHEMES_UNIT[@]}"; do
     xcb test -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" \
-      -parallel-testing-enabled YES -retry-tests-on-failure 2 -resultBundlePath "build/Results/${scheme}.xcresult" "$@"
+      -parallel-testing-enabled YES -resultBundlePath "build/Results/${scheme}.xcresult" "$@"
   done
 }
 
@@ -186,6 +187,7 @@ function install_app_to_simulator() {
 }
 
 function deploy_simulator() {
+  clean
   generate "$@"
   if [[ -z "${CI:-}" ]]; then
     echo ">>> Opening Simulator"
@@ -211,7 +213,7 @@ function clean() {
 
 function logs() {
   echo ">>> Streaming logs from MainApp"
-  xcrun simctl spawn booted log stream --predicate 'process == "MainApp"' --style syslog
+  xcrun simctl spawn booted log stream --predicate 'process == "Share"' --style syslog
 }
 
 function comment_scan() {
