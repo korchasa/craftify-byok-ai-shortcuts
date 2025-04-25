@@ -123,6 +123,50 @@ function size_report() {
   fi
 }
 
+function boot_and_wait_simulator() {
+  # Проверяем состояние симулятора через JSON
+  local sim_status
+  sim_status=$(xcrun simctl list -j | jq -r '.devices[] | .[] | select(.udid=="'${SIMULATOR_ID}'") | .state')
+  echo ">>> Simulator ${SIMULATOR_ID} status: $sim_status"
+  if [[ "$sim_status" != "Booted" ]]; then
+    echo ">>> Booting simulator ${SIMULATOR_ID}..."
+    xcrun simctl boot "${SIMULATOR_ID}"
+    # Ждём, пока симулятор не станет Booted
+    for i in {1..20}; do
+      sim_status=$(xcrun simctl list -j | jq -r '.devices[] | .[] | select(.udid=="'${SIMULATOR_ID}'") | .state')
+      if [[ "$sim_status" == "Booted" ]]; then
+        break
+      fi
+      sleep 1
+    done
+  else
+    echo ">>> Simulator already Booted."
+  fi
+}
+
+function install_app_to_simulator() {
+  local app_path="$1"
+  if [[ ! -d "$app_path" ]]; then
+    echo "${RED}MainApp.app not found at $app_path!${NC}"
+    exit 2
+  fi
+  echo ">>> Installing app to simulator: $app_path"
+  local install_success=0
+  for attempt in {1..5}; do
+    if xcrun simctl install "${SIMULATOR_ID}" "$app_path"; then
+      install_success=1
+      break
+    else
+      echo "Install attempt $attempt failed, retrying in 2s..."
+      sleep 2
+    fi
+  done
+  if [[ $install_success -eq 0 ]]; then
+    echo "${RED}Failed to install app after multiple attempts!${NC}"
+    exit 2
+  fi
+}
+
 function dev() {
   generate "$@"
   if [[ -z "${CI:-}" ]]; then
@@ -131,12 +175,11 @@ function dev() {
   fi
   echo ">>> Building MainApp for simulator"
   xcodebuild -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme MainApp build "$@" | xcbeautify
-  echo ">>> Booting simulator ${SIMULATOR_ID}"
-  xcrun simctl boot "${SIMULATOR_ID}" || true
+  boot_and_wait_simulator
   local app_path
-  app_path=$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}')
-  echo ">>> Installing and launching app"
-  xcrun simctl install "${SIMULATOR_ID}" "${app_path}"
+  app_path=$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
+  install_app_to_simulator "$app_path"
+  echo ">>> Launching app: $app_path"
   xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
 }
 

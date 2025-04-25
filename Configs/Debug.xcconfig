@@ -1,0 +1,3 @@
+OTHER_LDFLAGS = $(inherited) -ObjC
+ENABLE_BITCODE = NO
+SWIFT_VERSION = 5.9

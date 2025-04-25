@@ -48,7 +48,10 @@ public final class AuthManager: AuthManaging {
             return key
         case errSecItemNotFound:
             return nil
-        case errSecMissingEntitlement, errSecAuthFailed:
+        case errSecMissingEntitlement:
+            // Treat missing entitlement as no key found to avoid error on initial settings view
+            return nil
+        case errSecAuthFailed:
             throw AuthManagerError.accessDenied
         case errSecInteractionNotAllowed:
             return nil

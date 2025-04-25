@@ -91,7 +91,10 @@ public struct SettingsView: View {
                 .foregroundColor(.red)
                 .font(.footnote)
                 .multilineTextAlignment(.center)
+                .lineLimit(nil)
+                .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
+                .textSelection(.enabled)
         }
     }
 
