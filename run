@@ -81,6 +81,9 @@ function echo_section() {
 }
 
 function generate() {
+  # Ensure output directories exist for SwiftGen
+  mkdir -p src/MainApp/Resources/Generated
+  mkdir -p src/Common/Generated
   echo_section "Running SwiftGen"
   swiftgen "$@"
   echo_section "Running XcodeGen"
@@ -126,6 +129,7 @@ function test() {
 }
 
 function build() {
+
   generate "$@"
   echo_section "Building MainApp (Release/iphoneos)"
   xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
