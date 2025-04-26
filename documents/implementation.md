@@ -245,13 +245,13 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
 | --- | --- |
 | Info.plist and entitlements configuration | Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, which is processed by XcodeGen. |
 
-### Получение логов (Unified Log)
-- Для просмотра логов используйте команду:
+### Receiving Logs (Unified Log)
+- To view the logs, use the command:
   ```sh
   ./run logs
   ```
-- Команда выводит логи из unified log (os_log) за последние сутки, фильтруя по subsystem "dev.korchasa.Craftify" в формате JSON.
-- Для изменения периода используйте опции log show, например:
+- The command outputs logs from the unified log (os_log) for the last day, filtering by the subsystem "dev.korchasa.Craftify" in JSON format.
+- To change the period, use the log show options, for example:
   ```sh
   log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
   ```
