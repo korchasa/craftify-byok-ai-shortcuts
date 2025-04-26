@@ -149,6 +149,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Check cli tools
+        run: ./run init
       - name: Release build
         run: ./run build
       - name: Full test suite
