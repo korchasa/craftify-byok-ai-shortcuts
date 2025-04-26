@@ -27,10 +27,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Remove corrupted Package.resolved file
         run: rm -f **/Package.resolved
-
       - name: Cache SwiftPM
         uses: actions/cache@v4
         with:
@@ -40,10 +38,8 @@ jobs:
           key: ${{ runner.os }}-spm-${{ hashFiles('**/Package.resolved') }}
           restore-keys: |
             ${{ runner.os }}-spm-
-
       - name: Set up Xcode
         run: sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
-
       - name: Cache DerivedData
         uses: actions/cache@v4
         with:
@@ -51,12 +47,6 @@ jobs:
           key: ${{ runner.os }}-deriveddata-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-deriveddata-
-
-      - name: Install tools via brew
-        run: ./run init
-
-      - name: Add Homebrew to PATH
-        run: echo "/opt/homebrew/bin" >> $GITHUB_PATH
 
   feature:
     needs: setup
@@ -67,6 +57,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install CLI tools
+        run: ./run init
       - name: Lint (SwiftLint)
         run: ./run lint
       - name: Format (SwiftFormat)
@@ -87,6 +79,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install CLI tools
+        run: ./run init
       - name: Static analysis
         run: ./run analyze
       - name: Archive build
@@ -107,6 +101,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install CLI tools
+        run: ./run init
       - name: Version bump
         run: ./run bump-version
       - name: Release archive build
@@ -131,6 +127,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install CLI tools
+        run: ./run init
       - name: Emergency build
         run: ./run build
       - name: Minimal test suite
@@ -149,7 +147,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Check cli tools
+      - name: Install CLI tools
         run: ./run init
       - name: Release build
         run: ./run build
