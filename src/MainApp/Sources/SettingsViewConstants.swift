@@ -14,6 +14,4 @@ public enum SettingsViewConstants {
     public static let bottomPadding: CGFloat = 24
     /// Масштаб индикатора загрузки
     public static let loadingScale: CGFloat = 1.5
-    /// Отступ сверху для кнопки экспорта логов
-    public static let exportButtonTopPadding: CGFloat = 8
 }

@@ -7,7 +7,7 @@
 | ./run test     | Run tests                                           |
 | ./run deploy:simulator      | Build and run in iPhone 14 simulator (iOS 16)      |
 | ./run clean    | Clean build artifacts                                |
-| ./run logs     | View logs                                           |
+| ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Craftify) |
 | ./run init     | Install all CLI dependencies via Homebrew           |
 
 ### Technology Stack
@@ -16,7 +16,6 @@
 - XcodeGen
 - SwiftPM (Common, LogManagerShared)
 - New Relic
-- NDJSON file (FIFO, masking, atomic write, export, DispatchQueue) for logs
 - SwiftGen (localization)
 - GitHub Actions (CI/CD)
 
@@ -207,9 +206,8 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
 **Architecture:**
 - LLMAPIClient is used to send requests to the OpenAI API (gpt-4o-mini) via URLSession (ephemeral, 15s timeout).
 - Retry with exponential backoff (1, 2, 5 seconds) is supported for network errors and 429.
-- All requests and responses are logged via LogManagerShared (NDJSON, FIFO 1000 entries, atomic write, thread-safe).
+- All requests and responses are logged via LogManagerShared.
 - The OpenAI API key is always masked in logs (example: sk-****abcd).
-- Logs are available for export by the user (NDJSON/JSON).
 - SLA: average response time ≤ 3 s (up to 1000 characters), ≤ 8 s (up to 5000 characters), total processing limit 30 s.
 - All errors (401, 429, 500, parsing, timeout, cancel) are logged with details and metadata (operation, prompt, text length, maskedKey, status).
 - Example log entry:
@@ -246,3 +244,14 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
 | Requirement | Description |
 | --- | --- |
 | Info.plist and entitlements configuration | Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, which is processed by XcodeGen. |
+
+### Получение логов (Unified Log)
+- Для просмотра логов используйте команду:
+  ```sh
+  ./run logs
+  ```
+- Команда выводит логи из unified log (os_log) за последние сутки, фильтруя по subsystem "dev.korchasa.Craftify" в формате JSON.
+- Для изменения периода используйте опции log show, например:
+  ```sh
+  log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
+  ```

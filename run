@@ -2,7 +2,9 @@
 set -euo pipefail
 
 # Default iOS Simulator UDID (override SIMULATOR_ID env var)
-SIMULATOR_ID="${SIMULATOR_ID:-EE50483C-9861-438F-82D0-52FFB8FDF92C}"
+SIMULATOR_ID="EE50483C-9861-438F-82D0-52FFB8FDF92C"
+# Simulator for tests
+TEST_SIMULATOR_ID="A6CB3FE3-9CF3-458C-AC2E-7307FDF8D816"
 
 # Colors for output
 RED='\033[0;31m'
@@ -100,7 +102,7 @@ function test_unit() {
   echo_section "Running Unit Tests"
   rm -rf build/Results
   for scheme in "${SCHEMES_UNIT[@]}"; do
-    xcb test -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" \
+    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID}" -scheme "${scheme}" \
       -parallel-testing-enabled YES -resultBundlePath "build/Results/${scheme}.xcresult" "$@"
   done
 }
@@ -110,7 +112,7 @@ function test_e2e() {
   echo_section "Running E2E Tests"
   rm -rf build/Results
   for scheme in "${SCHEMES_E2E[@]}"; do
-    xcb test -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" \
+    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID}" -scheme "${scheme}" \
       -parallel-testing-enabled YES -resultBundlePath "build/Results/${scheme}.xcresult"
   done
 }
@@ -223,7 +225,7 @@ function clean() {
 
 function logs() {
   echo_section "Streaming logs from MainApp and ShareExtension"
-  xcrun simctl spawn booted log stream --predicate 'process == "Craftify" || process == "Craftify Share"' --style syslog
+  xcrun simctl spawn booted log stream --predicate 'subsystem == "Craftify"' --style syslog
 }
 
 function comment_scan() {
@@ -279,7 +281,7 @@ function coverage() {
     -scheme MainAppUnitTests \
     -enableCodeCoverage YES \
     -sdk iphonesimulator \
-    -destination "id=${SIMULATOR_ID}" "$@"
+    -destination "id=${TEST_SIMULATOR_ID}" "$@"
   echo_section "Generating coverage report"
   xcrun xccov view --report build/Logs/Test/*.xcresult
 }

@@ -105,15 +105,6 @@ import XCTest
             expect(font?.supportsDynamicType ?? false) == true
         }
 
-        public func testExportLogsButtonAppearsAndWorks() throws {
-            let vm = SettingsViewModel()
-            let view = SettingsView(viewModel: vm)
-            let button = try view.inspect().find(button: L10n.settingsExportLogs)
-            expect(try button.isDisabled()) == false
-            // Проверяем, что кнопка есть и доступна
-            // Для полного теста share sheet потребуется UI-тест с симуляцией экспорта
-        }
-
         deinit {}
     }
 

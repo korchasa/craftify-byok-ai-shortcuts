@@ -12,7 +12,7 @@ public final class ProcessingManager: ProcessingManaging {
 
     public init(
         llmClient: LLMAPIClient = LLMAPIClient(),
-        logManager: LogManagerShared = OSLogManagerShared(subsystem: Bundle.main.bundleIdentifier ?? "Craftify", category: "ProcessingManager"),
+        logManager: LogManagerShared = OSLogManagerShared(category: "ProcessingManager"),
         authManager: AuthManaging = AuthManager()
     ) {
         self.llmClient = llmClient

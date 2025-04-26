@@ -41,7 +41,6 @@
 		2481BBCCA004B14A30BFEAF2 /* ClipboardManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D5AD74D8F325EF20F6982 /* ClipboardManagerStub.swift */; };
 		276E9E0A28059774F1CD0206 /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
 		27BD38B544F42A317A689E50 /* EditOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734B7B6FEB4877F290E0804 /* EditOperationView.swift */; };
-		2BFC9275829F2B83E59E394B /* LogExportActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */; };
 		2E212606258D435CFE9862A9 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCD23D25BE28D319831E3 /* Strings.swift */; };
 		2E60BE04465C3E6ED4E640B3 /* ShareExtensionViewModelConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4983E61FB194F87AFC657C /* ShareExtensionViewModelConstants.swift */; };
 		315A03B8F895AEBCA61EB846 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
@@ -60,7 +59,6 @@
 		3ECB492D6BC3BE94D4AEC490 /* AuthManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8706FC6569F61629E86A4B47 /* AuthManagerError.swift */; };
 		417CFCD02583F281ED5BB8BE /* TranslateParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684129DE2E2AA1ACBFF2D88 /* TranslateParams.swift */; };
 		4198A20CC21A17298EA79FD7 /* ProcessingManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE89C634D711B0AB916AF1AB /* ProcessingManagerStub.swift */; };
-		4308463488384A605E288A17 /* LogExportActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */; };
 		43D6B2FF803AD0F7CB2135AD /* CraftifyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E40D28DB3F67CDF5F0E6E146 /* CraftifyApp.swift */; };
 		44A2ADC9C22D4A2CCF3EF2AB /* CorrectParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */; };
 		44CE31CC08F25CCD816A83B0 /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
@@ -106,7 +104,6 @@
 		6621DC45CF3DAC9F3567D4C7 /* LLMAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */; };
 		662B43A47CF42F1B7C356BEE /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
 		676F0F9E44B7F6FA8AF77DA2 /* ComplexityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BFCE9C55197CC466DC8DCE /* ComplexityLevel.swift */; };
-		6A1EEAACC9E65DBEE67265BA /* LogExportActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */; };
 		6A34DD1BE1B11D31193E5258 /* CwlPreconditionTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 8FE6053ECE4453737CC16063 /* CwlPreconditionTesting */; };
 		6ADED9E35FBA93A7D3407E3E /* ConsentManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7755A7340C79F88038BB636E /* ConsentManagerStub.swift */; };
 		6B9455310B99F135827C68DC /* ShareExtensionViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95961850F197370B633C5C26 /* ShareExtensionViewModelTests.swift */; };
@@ -180,7 +177,6 @@
 		BE38F9E33B3EDC2C041D70A7 /* AddOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6E92D99C5FCDF63EA59AC6 /* AddOperationViewModelTests.swift */; };
 		BE864310DC2CE60BD8621F3F /* URLProtocolStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 112FA76673DA4693EE0D7199 /* URLProtocolStub.swift */; };
 		BEE7FCB844479F9999CE8A2C /* ShareExtensionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C3F5768A004A89D5C4DA7B /* ShareExtensionManagerTests.swift */; };
-		BEF0C2A163A642A8DF33D7F6 /* SettingsViewExportConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */; };
 		BF991B720B6E35DA60A4C043 /* ShareExtensionViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0CEEE04739F40BFF240C2 /* ShareExtensionViewConstants.swift */; };
 		BFD4FD1CA5E8A059E4A5C123 /* SimplifyParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FF41537084CF100069C265 /* SimplifyParams.swift */; };
 		C01F8D5745A20F9FB671C051 /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
@@ -209,7 +205,6 @@
 		D505DEA5CAFDC72B190A8C3B /* AuthManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8706FC6569F61629E86A4B47 /* AuthManagerError.swift */; };
 		D54891F3F84A97461E13C517 /* CwlPreconditionTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 6EF7D7E834AE68AA3A53A46A /* CwlPreconditionTesting */; };
 		D5814C6A19482B2E66DC2BBF /* LogManagerSharedInMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */; };
-		D79AC8444F0F7DE74A0C8011 /* SettingsViewExportConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */; };
 		D88EF214ACB5C4118E13D3D7 /* LogManagerSharedInMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */; };
 		D94814DFF2B9F03B71DDEF50 /* InventoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3A3BCF8738E04C3FF6B608 /* InventoryManager.swift */; };
 		DA370DE098753790963C1439 /* HowToUseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */; };
@@ -235,7 +230,6 @@
 		EF0DE54C7567192223EDDCEE /* MaskingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B986DB4B42C475355A045A8 /* MaskingTests.swift */; };
 		EF68BA7B72A2A74352AED235 /* ProcessingManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D7A1B93779001A6B2CB015 /* ProcessingManaging.swift */; };
 		EFEE5738E75DBDAAE8E48622 /* MainAppPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */; };
-		F088D5668FD49C5A943DE46D /* SettingsViewExportConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */; };
 		F5207510BB092286505AE90E /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
 		F6E1DD3CE4E1CAC412215A17 /* HomeView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68623B28C487D1266385176 /* HomeView+Inspectable.swift */; };
 		F84110F8820456B3F72ECB17 /* InventoryManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967405397B94E4F95FEAB1 /* InventoryManagerStub.swift */; };
@@ -380,7 +374,6 @@
 		2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMAPIClient.swift; sourceTree = "<group>"; };
 		2B9A0B81764D8C1D51D6CC88 /* InventoryOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryOperation.swift; sourceTree = "<group>"; };
 		2C430A79FD666930A008233B /* SettingsViewConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewConstants.swift; sourceTree = "<group>"; };
-		2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewExportConstants.swift; sourceTree = "<group>"; };
 		2D0B2F999AF2599A9823FBD4 /* ConsentManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManaging.swift; sourceTree = "<group>"; };
 		3300990178545D06F20EFB1C /* LogManagerShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerShared.swift; sourceTree = "<group>"; };
 		3734B7B6FEB4877F290E0804 /* EditOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationView.swift; sourceTree = "<group>"; };
@@ -452,7 +445,6 @@
 		E68623B28C487D1266385176 /* HomeView+Inspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeView+Inspectable.swift"; sourceTree = "<group>"; };
 		EC9A4A38CF4E4F0AE58771FF /* Masking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Masking.swift; sourceTree = "<group>"; };
 		ECFDCD23D25BE28D319831E3 /* Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strings.swift; sourceTree = "<group>"; };
-		F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogExportActivityView.swift; sourceTree = "<group>"; };
 		F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		F336F9499A34785D24BBA695 /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
 		F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OSLogManagerShared.swift; sourceTree = "<group>"; };
@@ -563,11 +555,9 @@
 				006838A636CAF1E02EA7A172 /* HomeViewModel.swift */,
 				8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */,
 				47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */,
-				F1AF433B3036A1B35BFB0B7A /* LogExportActivityView.swift */,
 				6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */,
 				0F6A7F3E6B445CB91481D061 /* SettingsView.swift */,
 				2C430A79FD666930A008233B /* SettingsViewConstants.swift */,
-				2C5E71E93444730081AF92D2 /* SettingsViewExportConstants.swift */,
 				F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */,
 			);
 			name = Sources;
@@ -1188,11 +1178,9 @@
 				4F356153AD72CE11E9BC8994 /* HomeViewModel.swift in Sources */,
 				7DD9490A64C07B3AD071336E /* HowToUseView.swift in Sources */,
 				CC3928782675EAD540B3EE68 /* HowToUseViewModel.swift in Sources */,
-				6A1EEAACC9E65DBEE67265BA /* LogExportActivityView.swift in Sources */,
 				07A88205877E305FC64E0B53 /* MainAppPlaceholder.swift in Sources */,
 				15B7EACE1C756A7303D9B96C /* SettingsView.swift in Sources */,
 				2368DDEBB63A1EC2D8E809F9 /* SettingsViewConstants.swift in Sources */,
-				BEF0C2A163A642A8DF33D7F6 /* SettingsViewExportConstants.swift in Sources */,
 				7409A0430DE7BE46053D33E4 /* SettingsViewModel.swift in Sources */,
 				2E212606258D435CFE9862A9 /* Strings.swift in Sources */,
 			);
@@ -1219,11 +1207,9 @@
 				17E97A05671963AD0389D393 /* HowToUseView.swift in Sources */,
 				DA370DE098753790963C1439 /* HowToUseViewModel.swift in Sources */,
 				CB6C364E89536256357A8C7F /* HowToUseViewModelTests.swift in Sources */,
-				2BFC9275829F2B83E59E394B /* LogExportActivityView.swift in Sources */,
 				EFEE5738E75DBDAAE8E48622 /* MainAppPlaceholder.swift in Sources */,
 				E15B324FE2E856CFDBA6E2B2 /* SettingsView.swift in Sources */,
 				6DF1893F62191B1DCD585650 /* SettingsViewConstants.swift in Sources */,
-				F088D5668FD49C5A943DE46D /* SettingsViewExportConstants.swift in Sources */,
 				E19972CE827CE404EA18328B /* SettingsViewModel.swift in Sources */,
 				5C240444513537A92177EA73 /* SettingsViewModelTests.swift in Sources */,
 				B7B24DC3384D51372A192B20 /* Strings.swift in Sources */,
@@ -1318,11 +1304,9 @@
 				662B43A47CF42F1B7C356BEE /* HowToUseView.swift in Sources */,
 				097C5FEEFA40E008D5357B0A /* HowToUseViewModel.swift in Sources */,
 				621FD5D8337B31A4BCFD3AEA /* HowToUseViewUITests.swift in Sources */,
-				4308463488384A605E288A17 /* LogExportActivityView.swift in Sources */,
 				572ADAEEFDD15568753BA646 /* MainAppPlaceholder.swift in Sources */,
 				CA06778A752245CEAE54FB23 /* SettingsView.swift in Sources */,
 				C97B91DB9C8BCCFF05FDAEC4 /* SettingsViewConstants.swift in Sources */,
-				D79AC8444F0F7DE74A0C8011 /* SettingsViewExportConstants.swift in Sources */,
 				788C3DB10720275A66EF3135 /* SettingsViewModel.swift in Sources */,
 				99504AEB16A43439B5141F86 /* SettingsViewUITests.swift in Sources */,
 				DCAF9C4236D181ABCCC809E4 /* Strings.swift in Sources */,
