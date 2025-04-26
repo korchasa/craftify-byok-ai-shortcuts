@@ -9,6 +9,18 @@ public struct EditOperationView: View {
     @ObservedObject public var viewModel: EditOperationViewModel
     @Environment(\.dismiss) private var dismiss
 
+    private let supportedLanguages: [(name: String, code: String)] = [
+        ("български", "bg"),
+        ("deutsch", "de"),
+        ("english", "en"),
+        ("español", "es"),
+        ("français", "fr"),
+        ("日本語", "ja"),
+        ("русский", "ru"),
+        ("українська", "uk"),
+        ("中文", "zh")
+    ]
+
     public init(viewModel: EditOperationViewModel) {
         self.viewModel = viewModel
     }
@@ -43,10 +55,14 @@ public struct EditOperationView: View {
     private var formFields: some View {
         switch viewModel.selectedType {
         case .translate:
-            TextField(L10n.operationParamTargetLanguage, text: $viewModel.targetLanguage)
-                .textFieldStyle(.roundedBorder)
-                .accessibilityLabel(L10n.operationParamTargetLanguage)
-                .padding(.horizontal)
+            Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
+                ForEach(supportedLanguages, id: \ .code) { lang in
+                    Text(lang.name).tag(lang.code)
+                }
+            }
+            .pickerStyle(.menu)
+            .accessibilityLabel(L10n.operationParamTargetLanguage)
+            .padding(.horizontal)
         case .simplify:
             Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
                 Text(L10n.operationValueBeginner).tag(ComplexityLevel.beginner)
