@@ -52,3 +52,12 @@
 "operation_label_simplify" = "Simplify";
 "operation_label_correct" = "Correct";
 "operation_label_explain" = "Explain";
+
+/* Language Names */
+"language_russian" = "Russian";
+"language_english" = "English";
+"language_spanish" = "Spanish";
+"language_french" = "French";
+"language_german" = "German";
+"language_chinese" = "Chinese";
+"language_japanese" = "Japanese";

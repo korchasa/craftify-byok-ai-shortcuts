@@ -129,7 +129,6 @@ function test() {
 }
 
 function build() {
-
   generate "$@"
   echo_section "Building MainApp (Release/iphoneos)"
   xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
