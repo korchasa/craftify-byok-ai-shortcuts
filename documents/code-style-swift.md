@@ -1,8 +1,24 @@
-## New code style rules
+## Swift Code Style Rules
 
-- async_let_with_taskgroup: не использовать async let внутри withTaskGroup
-- callback_to_async: для callback-based API использовать async-обёртку через withCheckedThrowingContinuation
-- redundant_self_in_closure: в замыканиях не использовать self, если это не требуется
-- self_binding: не использовать guard let self без присваивания
-- async_without_await: не использовать async let без await
+- Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, processed by XcodeGen.
+- All test classes must implement setUp and tearDown (balanced_xctest_lifecycle).
+- All declarations must explicitly specify access control level (explicit_acl).
+- Do not use implicitly unwrapped optionals.
+- Prefer Nimble operator overloads over free matcher functions and XCTAssert (prefer_nimble).
+- All classes must have an explicit deinit (required_deinit).
+- Do not use magic numbers—extract them to named constants (no_magic_numbers).
+- Closure bodies must not exceed 30 lines (closure_body_length).
+- Do not use async without await (async_without_await).
+- For generated SwiftGen localization files, missing explicit ACL and other violations are allowed if required for correct SwiftGen operation and do not break the build.
+- Protocols should be named with the -ing suffix (e.g., ClipboardManaging, ProcessingManaging) for DI-friendly architecture.
+- All managers must be injected via protocols for testability.
+- Do not use guard let self or guard let self = self; use only guard self != nil (shorthand_optional_binding).
+- Public declarations must have documentation comments (missing_docs).
+- Only one declaration per file (one_declaration_per_file).
+- Unused parameters must be removed or replaced with _ (unused_parameter).
+- Use static instead of class in final classes (static_over_final_class).
+- Prefer non-optional Data(_:) for String-to-Data conversion (non_optional_string_data_conversion).
+- Do not use async let inside withTaskGroup (async_let_with_taskgroup).
+- For callback-based APIs, provide async wrappers using withCheckedThrowingContinuation (callback_to_async).
+- Do not use self in closures unless required (redundant_self_in_closure).
 

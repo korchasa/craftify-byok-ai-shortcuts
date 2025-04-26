@@ -12,9 +12,7 @@
 		029CCD06C6A4AE16550EC940 /* AddOperationViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387DA2FEC0EBA4371F936F55 /* AddOperationViewConstants.swift */; };
 		045A1A2AFD694D98B0291504 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15FC1E1416E7FEFEE9927B03 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		049A84F319019D12B9C99745 /* ShareExtensionViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0CEEE04739F40BFF240C2 /* ShareExtensionViewConstants.swift */; };
-		056E6925215DC8BCE42B8CF1 /* LogManagerSharedNDJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */; };
 		07A88205877E305FC64E0B53 /* MainAppPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */; };
-		090B2CEAF681E1E47DE7151D /* LogManagerSharedNDJSONTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA3D1ACD93F81A64448E05A4 /* LogManagerSharedNDJSONTests.swift */; };
 		097C5FEEFA40E008D5357B0A /* HowToUseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */; };
 		09AEFF7D87C62216318CD15D /* XCTestAsyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22962EBA46C19F0D2ECE140 /* XCTestAsyncHelpers.swift */; };
 		0B20545A6939E28DEFEA43BA /* ShareExtensionPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B934B34EBEDC14981E43A8C /* ShareExtensionPlaceholder.swift */; };
@@ -70,7 +68,6 @@
 		456661DDAA34D91366FD0DF4 /* ConsentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F94C23CCFE76BA731C79271B /* ConsentManager.swift */; };
 		46A8880F35E7428B089FF190 /* CwlCatchException in Frameworks */ = {isa = PBXBuildFile; productRef = 4C8D409779E357BE2096BAD8 /* CwlCatchException */; };
 		47504BE811D3FC6D9B84AE42 /* InventoryManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4A751EF9EC4A8D7CAFB1F7 /* InventoryManaging.swift */; };
-		481AC489B809F67766452033 /* LogManagerSharedNDJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */; };
 		48428FB81A693430FE231817 /* LogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3300990178545D06F20EFB1C /* LogManagerShared.swift */; };
 		48F946E7B92590BB76696554 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15FC1E1416E7FEFEE9927B03 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4A47216C077CA05EB42406A2 /* SimplifyParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FF41537084CF100069C265 /* SimplifyParams.swift */; };
@@ -161,7 +158,6 @@
 		9EB7914EF9C1BF8C03AA275E /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
 		A0591C8DFD2BC14599543FAC /* InventoryOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9A0B81764D8C1D51D6CC88 /* InventoryOperation.swift */; };
 		A413BFC3BF48FEB2604C0E4F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9585D656FFE5C1B0ADAD097F /* HomeView.swift */; };
-		A49D0BD00CD683DCC829A4AC /* LogManagerSharedNDJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */; };
 		A50A0F9162EF13C6415F29D5 /* LogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3300990178545D06F20EFB1C /* LogManagerShared.swift */; };
 		A994195B53FE383289F6CD3D /* E2ELogManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B062906A62F6E08B3A98B75C /* E2ELogManagerTests.swift */; };
 		AB4AC1BAE46AD9B81AC4A599 /* LogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 121BC52402A5A5F85C716752 /* LogEntry.swift */; };
@@ -406,7 +402,6 @@
 		6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppPlaceholder.swift; sourceTree = "<group>"; };
 		632739DB47B2B2F30FD2C5EA /* E2ESettingsFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E2ESettingsFlowTests.swift; sourceTree = "<group>"; };
 		63611641A94E5EAA7AE49EB0 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
-		65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedNDJSON.swift; sourceTree = "<group>"; };
 		6A7E73D7A5EDB906DB1D3ABA /* ShareExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewController.swift; sourceTree = "<group>"; };
 		6B934B34EBEDC14981E43A8C /* ShareExtensionPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionPlaceholder.swift; sourceTree = "<group>"; };
 		6FC13B62A358C6F700332CA9 /* ShareExtensionUnitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ShareExtensionUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -441,7 +436,6 @@
 		B75D7402491797A1031AE9EE /* CommonE2ETests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CommonE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7D7A1B93779001A6B2CB015 /* ProcessingManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingManaging.swift; sourceTree = "<group>"; };
 		B9543E1059C3C102358325D9 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
-		BA3D1ACD93F81A64448E05A4 /* LogManagerSharedNDJSONTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedNDJSONTests.swift; sourceTree = "<group>"; };
 		BA719083BA21A6299039A78D /* AddOperationViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOperationViewUITests.swift; sourceTree = "<group>"; };
 		BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorrectParams.swift; sourceTree = "<group>"; };
 		C16E74141F4DB7A757893C9B /* AddOperationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOperationViewModel.swift; sourceTree = "<group>"; };
@@ -624,7 +618,6 @@
 				5EFA9E1579B01537E823FF8D /* ConsentManagerTests.swift */,
 				9261D496D9E44B905AEBEF07 /* InventoryManagerTests.swift */,
 				7835443570CDEE6AB1ACFB05 /* LogManagerSharedInMemoryTests.swift */,
-				BA3D1ACD93F81A64448E05A4 /* LogManagerSharedNDJSONTests.swift */,
 				5B986DB4B42C475355A045A8 /* MaskingTests.swift */,
 				076E533CF19947AC86647DF5 /* OperationModelsTests.swift */,
 				A22962EBA46C19F0D2ECE140 /* XCTestAsyncHelpers.swift */,
@@ -775,7 +768,6 @@
 				A73BEEF846398C71F616D891 /* LogLevel.swift */,
 				3300990178545D06F20EFB1C /* LogManagerShared.swift */,
 				DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */,
-				65738E23A25FBDBD1C5D2D71 /* LogManagerSharedNDJSON.swift */,
 				EC9A4A38CF4E4F0AE58771FF /* Masking.swift */,
 				F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */,
 				DC7FB160E8F114A3763795D6 /* Models */,
@@ -1115,7 +1107,6 @@
 				6558A88609A031D751754CC3 /* LogLevel.swift in Sources */,
 				48428FB81A693430FE231817 /* LogManagerShared.swift in Sources */,
 				C8950E5E31CC572D9F483010 /* LogManagerSharedInMemory.swift in Sources */,
-				056E6925215DC8BCE42B8CF1 /* LogManagerSharedNDJSON.swift in Sources */,
 				1F1C3CC06E86BBFD8FB88B8B /* Masking.swift in Sources */,
 				8CD98B3297FB000CC56AAFCA /* OSLogManagerShared.swift in Sources */,
 				C50A629A7D788FDA944B96B5 /* OperationType.swift in Sources */,
@@ -1147,7 +1138,6 @@
 				6479CE28BEDDA9A5D1B098BC /* LogLevel.swift in Sources */,
 				A50A0F9162EF13C6415F29D5 /* LogManagerShared.swift in Sources */,
 				D5814C6A19482B2E66DC2BBF /* LogManagerSharedInMemory.swift in Sources */,
-				481AC489B809F67766452033 /* LogManagerSharedNDJSON.swift in Sources */,
 				8824E352B17AB3AFB555B58B /* Masking.swift in Sources */,
 				276E9E0A28059774F1CD0206 /* OSLogManagerShared.swift in Sources */,
 				C97DDA9745447BAD4731B0D1 /* OperationType.swift in Sources */,
@@ -1293,8 +1283,6 @@
 				44EF78CE48693C3137EAB8D6 /* LogManagerShared.swift in Sources */,
 				D88EF214ACB5C4118E13D3D7 /* LogManagerSharedInMemory.swift in Sources */,
 				C73C2E82C599AD3472873187 /* LogManagerSharedInMemoryTests.swift in Sources */,
-				A49D0BD00CD683DCC829A4AC /* LogManagerSharedNDJSON.swift in Sources */,
-				090B2CEAF681E1E47DE7151D /* LogManagerSharedNDJSONTests.swift in Sources */,
 				526F77BCB58BF2AB6A631CAA /* Masking.swift in Sources */,
 				EF0DE54C7567192223EDDCEE /* MaskingTests.swift in Sources */,
 				C01F8D5745A20F9FB671C051 /* OSLogManagerShared.swift in Sources */,

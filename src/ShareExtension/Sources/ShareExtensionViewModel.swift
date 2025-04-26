@@ -9,6 +9,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public var errorMessage: String? = nil
     @Published public var isInputTextTooLong: Bool = false
     @Published public var showCopiedToast: Bool = false
+    @Published public var shouldCloseExtension: Bool = false
 
     public let manager: ShareExtensionManager
     public var processingTask: Task<Void, Never>? = nil
@@ -89,6 +90,7 @@ public final class ShareExtensionViewModel: ObservableObject {
             errorMessage = error
         } else if result?.success == true {
             showCopiedToast = true
+            shouldCloseExtension = true
         }
     }
 
@@ -107,6 +109,7 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     public func hideCopiedToast() {
         showCopiedToast = false
+        shouldCloseExtension = true
     }
 
     deinit {

@@ -1,5 +1,5 @@
-import os
 import Foundation
+import os
 
 /// Implementation of LogManagerShared that writes logs to the unified iOS log using OSLog
 public final class OSLogManagerShared: LogManagerShared {
@@ -15,7 +15,7 @@ public final class OSLogManagerShared: LogManagerShared {
 
     /// Write a log entry to the unified log
     public func log(_ entry: LogEntry) {
-        let message = "[\(entry.level)] [\(entry.module)] \(entry.message) \(entry.metadata)"
+        let message = "[Craftify][\(entry.level)] [\(entry.module)] \(entry.message) \(entry.metadata)"
         os_log("%{public}@", log: logger, type: .info, message)
     }
 

@@ -13,28 +13,22 @@
 ### Logging and Analytics
 
 #### Log Architecture
-- Все логи пишутся в формате NDJSON в файл в контейнере App Group через LogManagerShared.
+- Все логи пишутся через системный лог (Unified Logging, os_log) через OSLogManagerShared. Экспорт логов не поддерживается, просмотр через Console.app или log stream.
 - LogManagerShared поддерживает уровни: debug, info, warning, error.
-- Лог-файл ограничен 1000 записями (FIFO), при превышении лимита старые записи удаляются автоматически.
-- Все операции записи потокобезопасны (DispatchQueue), запись атомарная.
 - Ключи API всегда маскируются (видны только первые и последние 4 символа).
-- Экспорт логов доступен через SettingsView (share sheet), файл в формате JSON.
-- Логи доступны только внутри контейнера App Group и не передаются третьим лицам.
 - Краш-репортинг реализован через New Relic SDK, интегрирован только в основное приложение (не в Share Extension).
 - New Relic App Token хранится в Info.plist и подставляется в рантайме.
 - В Share Extension не используются сторонние SDK для аналитики или crash reporting (минимальный размер, соответствие App Store).
 
 #### Log Export and Retention Policy
-- Пользователь может экспортировать логи через SettingsView.
-- Логи содержат максимум 1000 последних записей (FIFO), все ключи API маскированы.
-- Логи доступны только внутри контейнера App Group.
+- Экспорт логов не поддерживается (ограничение системного лога). Просмотр логов — через Console.app или log stream.
 - Краш-отчёты отправляются только из основного приложения через New Relic SDK.
 
 #### Consequences
-- Логи всегда доступны для экспорта и диагностики.
+- Логи доступны для диагностики только через системные средства.
 - Краш-аналитика доступна только для основного приложения через New Relic.
 - Share Extension остаётся лёгким и соответствует требованиям приватности.
-- Политика хранения и маскирования логов реализована на уровне кода.
+- Политика маскирования логов реализована на уровне кода.
 
 ### Component Interaction
 - ShareExtensionManager reads inventory and API key, calls ProcessingManager.
@@ -60,7 +54,7 @@
 
 ### Share Extension: Final Architecture
 
-- All managers are injected through DI, including LogManagerSharedNDJSON (App Group).
+- All managers are injected through DI, including OSLogManagerShared (Unified Logging, system log).
 - Logging of all actions and errors, key masking, FIFO, NDJSON export.
 - Text limit: 5000 characters, blocking on UI and in the manager.
 - Timeouts: 15 seconds per request, 30 seconds total limit (Task.sleep + Task.cancel).

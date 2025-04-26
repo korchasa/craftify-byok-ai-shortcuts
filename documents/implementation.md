@@ -51,12 +51,12 @@ After completing step 2, all placeholder files and placeholder tests are removed
 - Caching SwiftPM avoids re-downloading and rebuilding dependencies, speeding up the pipeline.
 - Remove corrupted Package.resolved | rm -f **/Package.resolved | Removes all Package.resolved files before SPM caching and building, preventing errors due to corrupted files.
 
-#### CI/CD: Автоматизация нефункциональных требований
+#### CI/CD: Non-functional Requirements Automation
 
-- **Size report**: автоматическая проверка размера ShareExtension через `./run size-report` (фейл при >20MB, артефакт size-report.txt).
-- **Comment scan**: автоматический grep по src/ на TODO, FIXME, print, debugPrint (warning в CI).
-- **Build-time metrics**: сбор времени сборки и размера .appex в metrics.json (артефакт build-metrics).
-- Все проверки интегрированы в workflow `.github/workflows/ci.yml`.
+- **Size report**: automatic check of ShareExtension size via `./run size-report` (fail if >20MB, artifact size-report.txt).
+- **Comment scan**: automatic grep in src/ for TODO, FIXME, print, debugPrint (warning in CI).
+- **Build-time metrics**: collection of build time and .appex size in metrics.json (artifact build-metrics).
+- All checks are integrated into the workflow `.github/workflows/ci.yml`.
 
 ### Differences Between Local and CI/CD Builds
 
@@ -112,39 +112,36 @@ let masked = authManager.maskedAPIKey(key)
 
 **Purpose:**
 - Centralized logging for the application and extension.
-- FIFO log storage in NDJSON format (App Group container), supports in-memory stub for tests.
-- Key masking, log export, atomic write.
+- In production, only OSLogManagerShared is used (Unified Logging, os_log, without FIFO and export).
+- For tests — in-memory stub (LogManagerSharedInMemory).
+- Key masking.
 
 **Public Methods:**
 | Method | Description |
 |--------|-------------|
-| `log(_ entry: LogEntry)` | Write log (FIFO, NDJSON, atomic write) |
-| `getLogs() -> [LogEntry]` | Retrieve all logs (FIFO) |
-| `clearLogs()` | Clear all logs |
-| `exportLogs() throws -> Data` | Export logs to JSON |
+| `log(_ entry: LogEntry)` | Write log (system log, os_log) |
+| `getLogs() -> [LogEntry]` | No-op in production, only for tests |
+| `clearLogs()` | No-op in production, only for tests |
+| `exportLogs() throws -> Data` | No-op in production, only for tests |
 
 **Features:**
-- NDJSON file in App Group (maximum 1000 entries, old ones automatically deleted).
+- In production: only system log (os_log), export and FIFO are not supported.
+- For tests — in-memory implementation with FIFO and export.
 - Key masking similar to AuthManager.
-- For tests — in-memory implementation (LogManagerSharedInMemory).
-- All operations are thread-safe (DispatchQueue).
 
 **Example Usage:**
 ```swift
-let logger: LogManagerShared = LogManagerSharedNDJSON(appGroupContainerURL: ...)
+let logger: LogManagerShared = OSLogManagerShared(subsystem: ..., category: ...)
 logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metadata: [:]))
-let logs = logger.getLogs()
-let exported = try logger.exportLogs()
 ```
 
 ### LogManagerShared: Implementation
 
-- **NDJSON Implementation (LogManagerSharedNDJSON):**
-  - Stores logs in NDJSON file in App Group container.
-  - FIFO: automatically deletes old entries when exceeding 1000.
-  - All operations are thread-safe (DispatchQueue).
-  - Key masking, log export, atomic write.
-  - File: `src/Common/Sources/LogManagerSharedNDJSON.swift`
+- **Unified Logging Implementation (OSLogManagerShared):**
+  - Stores logs in the system log (Unified Logging, os_log).
+  - No FIFO or export, logs are available via Console.app or log stream.
+  - Key masking is preserved in log messages.
+  - File: `src/Common/Sources/OSLogManagerShared.swift`
 
 - **In-memory Implementation (LogManagerSharedInMemory):**
   - Used for unit tests.
@@ -192,7 +189,7 @@ let exported = try logger.exportLogs()
 - Text limit: 5000 characters, operation buttons blocked when exceeding the limit.
 - Timeout handling: 15s per request, 30s total limit (Task.sleep + Task.cancel).
 - Display toast/notification upon successful result copy.
-- Integration with LogManagerSharedNDJSON: all actions and errors are logged, key masking.
+- Integration with OSLogManagerShared: all actions and errors are logged, key masking.
 - Coverage with unit, UI, and E2E tests (errors, timeouts, edge cases).
 - In CI/CD, automatic size check for the extension is implemented (Archive + size report, fail if >20 MB).
 
@@ -207,20 +204,20 @@ let exported = try logger.exportLogs()
 
 ### OpenAI Integration
 
-**Архитектура:**
-- Используется LLMAPIClient для отправки запросов к OpenAI API (gpt-4o-mini) через URLSession (ephemeral, timeout 15 сек).
-- Поддерживается retry с экспоненциальным backoff (1, 2, 5 сек) при сетевых ошибках и 429.
-- Все запросы и ответы логируются через LogManagerShared (NDJSON, FIFO 1000 записей, atomic write, потокобезопасно).
-- Ключ OpenAI API всегда маскируется в логах (пример: sk-****abcd).
-- Логи доступны для экспорта пользователем (NDJSON/JSON).
-- SLA: среднее время ответа ≤ 3 с (до 1000 символов), ≤ 8 с (до 5000 символов), общий лимит обработки 30 с.
-- Все ошибки (401, 429, 500, parsing, timeout, cancel) логируются с деталями и метаданными (operation, prompt, длина текста, maskedKey, статус).
-- Пример записи лога:
+**Architecture:**
+- LLMAPIClient is used to send requests to the OpenAI API (gpt-4o-mini) via URLSession (ephemeral, 15s timeout).
+- Retry with exponential backoff (1, 2, 5 seconds) is supported for network errors and 429.
+- All requests and responses are logged via LogManagerShared (NDJSON, FIFO 1000 entries, atomic write, thread-safe).
+- The OpenAI API key is always masked in logs (example: sk-****abcd).
+- Logs are available for export by the user (NDJSON/JSON).
+- SLA: average response time ≤ 3 s (up to 1000 characters), ≤ 8 s (up to 5000 characters), total processing limit 30 s.
+- All errors (401, 429, 500, parsing, timeout, cancel) are logged with details and metadata (operation, prompt, text length, maskedKey, status).
+- Example log entry:
 ```json
 {
   "level": "info",
   "module": "LLMAPIClient",
-  "message": "Запрос к OpenAI отправлен",
+  "message": "Request to OpenAI sent",
   "metadata": {
     "operation": "translate",
     "prompt": "Translate: {text}",
@@ -230,18 +227,22 @@ let exported = try logger.exportLogs()
   "timestamp": "2024-06-10T12:34:56Z"
 }
 ```
-- Для unit- и интеграционных тестов используется in-memory логгер (LogManagerSharedInMemory).
-- Нагрузочное тестирование проводится с помощью скриптов и CI, SLA проверяется автоматически.
-- Все параметры запроса (model, temperature, max_tokens, promptTemplate) фиксированы и логируются.
-- В случае ошибки логируется тип ошибки, maskedKey, статус ответа, сообщение OpenAI.
+- For unit and integration tests, an in-memory logger (LogManagerSharedInMemory) is used.
+- Load testing is performed using scripts and CI, SLA is checked automatically.
+- All request parameters (model, temperature, max_tokens, promptTemplate) are fixed and logged.
+- In case of error, the error type, maskedKey, response status, and OpenAI message are logged.
 
-**Тестирование:**
-- Покрытие unit-тестами: успешный ответ, 401, 429, 500, cancel, retry, parsing error.
-- Интеграционный тест: проверка тела запроса, заголовков, парсинга ответа, логирования.
-- Нагрузочный тест: ≥ 80% запросов укладываются в SLA.
+**Testing:**
+- Unit test coverage: successful response, 401, 429, 500, cancel, retry, parsing error.
+- Integration test: check request body, headers, response parsing, logging.
+- Load test: ≥ 80% of requests meet the SLA.
 
-## Особенности реализации таймаута
-- Таймаут обработки текста реализован только в ShareExtensionViewModel (по умолчанию 30 секунд, можно переопределять в тестах через processingTimeoutSeconds).
-- В ShareExtensionManager таймаут не реализован, только бизнес-логика обработки и ошибок.
-- В unit-тестах ViewModel таймаут выставляется через processingTimeoutSeconds.
-- В E2E тестах ShareExtensionManager проверяются только ошибки и успехи обработки, но не таймаут.
+## Timeout Implementation Details
+- Text processing timeout is implemented only in ShareExtensionViewModel (default 30 seconds, can be overridden in tests via processingTimeoutSeconds).
+- ShareExtensionManager does not implement a timeout, only business logic for processing and errors.
+- In unit tests, the ViewModel timeout is set via processingTimeoutSeconds.
+- In E2E tests, ShareExtensionManager only checks for processing errors and successes, not timeout.
+
+| Requirement | Description |
+| --- | --- |
+| Info.plist and entitlements configuration | Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, which is processed by XcodeGen. |

@@ -6,6 +6,7 @@ SIMULATOR_ID="${SIMULATOR_ID:-EE50483C-9861-438F-82D0-52FFB8FDF92C}"
 
 # Colors for output
 RED='\033[0;31m'
+PURPLE='\033[0;35m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
@@ -70,26 +71,33 @@ function init() {
   echo -e "${GREEN}All dependencies checked.${NC}"
 }
 
+function echo_section() {
+  echo -e "\n\n"
+  echo -e "${PURPLE}----------------------------------------${NC}"
+  echo -e "${PURPLE}>>> $1${NC}"
+  echo -e "${PURPLE}----------------------------------------${NC}"
+}
+
 function generate() {
-  echo ">>> Running SwiftGen"
+  echo_section "Running SwiftGen"
   swiftgen "$@"
-  echo ">>> Running XcodeGen"
+  echo_section "Running XcodeGen"
   xcodegen "$@"
 }
 
 function fmt() {
-  echo ">>> Running SwiftFormat"
+  echo_section "Running SwiftFormat"
   swiftformat . "$@"
 }
 
 function lint() {
-  echo ">>> Running SwiftLint"
+  echo_section "Running SwiftLint"
   swiftlint --strict "$@"
 }
 
 function test_unit() {
   generate "$@"
-  echo ">>> Running Unit Tests"
+  echo_section "Running Unit Tests"
   rm -rf build/Results
   for scheme in "${SCHEMES_UNIT[@]}"; do
     xcb test -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" \
@@ -99,33 +107,35 @@ function test_unit() {
 
 function test_e2e() {
   generate "$@"
-  echo ">>> Running E2E Tests"
+  echo_section "Running E2E Tests"
+  rm -rf build/Results
   for scheme in "${SCHEMES_E2E[@]}"; do
     xcb test -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme "${scheme}" \
-      -parallel-testing-enabled YES -retry-tests-on-failure 2 -resultBundlePath "build/Results/${scheme}.xcresult" "$@"
+      -parallel-testing-enabled YES -resultBundlePath "build/Results/${scheme}.xcresult"
   done
 }
 
 function test() {
   fmt "$@"
   lint "$@"
+  analyze "$@"
   test_unit "$@"
   test_e2e "$@"
 }
 
 function build() {
   generate "$@"
-  echo ">>> Building MainApp (Release/iphoneos)"
+  echo_section "Building MainApp (Release/iphoneos)"
   xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
-  echo ">>> Building ShareExtension (Release/iphoneos)"
+  echo_section "Building ShareExtension (Release/iphoneos)"
   xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
 }
 
 function size_report() {
   generate "$@"
-  echo ">>> Cleaning build artifacts"
+  echo_section "Cleaning build artifacts"
   rm -rf build
-  echo ">>> Building ShareExtension for size report (Release/iphoneos)"
+  echo_section "Building ShareExtension for size report (Release/iphoneos)"
   xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build "$@"
   local appex=$(find build -name 'ShareExtension.appex' | head -n1)
   if [[ ! -f "$appex" ]]; then
@@ -145,9 +155,9 @@ function boot_and_wait_simulator() {
   # Проверяем состояние симулятора через JSON
   local sim_status
   sim_status=$(xcrun simctl list -j | jq -r '.devices[] | .[] | select(.udid=="'${SIMULATOR_ID}'") | .state')
-  echo ">>> Simulator ${SIMULATOR_ID} status: $sim_status"
+  echo_section "Simulator ${SIMULATOR_ID} status: $sim_status"
   if [[ "$sim_status" != "Booted" ]]; then
-    echo ">>> Booting simulator ${SIMULATOR_ID}..."
+    echo_section "Booting simulator ${SIMULATOR_ID}..."
     xcrun simctl boot "${SIMULATOR_ID}"
     # Ждём, пока симулятор не станет Booted
     for i in {1..20}; do
@@ -158,7 +168,7 @@ function boot_and_wait_simulator() {
       sleep 1
     done
   else
-    echo ">>> Simulator already Booted."
+    echo_section "Simulator already Booted."
   fi
 }
 
@@ -168,7 +178,7 @@ function install_app_to_simulator() {
     echo "${RED}MainApp.app not found at $app_path!${NC}"
     exit 2
   fi
-  echo ">>> Installing app to simulator: $app_path"
+  echo_section "Installing app to simulator: $app_path"
   local install_success=0
   for attempt in {1..5}; do
     if xcrun simctl install "${SIMULATOR_ID}" "${app_path}"; then
@@ -190,21 +200,21 @@ function deploy_simulator() {
   clean
   generate "$@"
   if [[ -z "${CI:-}" ]]; then
-    echo ">>> Opening Simulator"
+    echo_section "Opening Simulator"
     open -a Simulator
   fi
-  echo ">>> Building MainApp for simulator"
+  echo_section "Building MainApp for simulator"
   xcb build -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme MainApp build "$@"
   boot_and_wait_simulator
   local app_path
   app_path=$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
   install_app_to_simulator "$app_path"
-  echo ">>> Launching app: $app_path"
+  echo_section "Launching app: $app_path"
   xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
 }
 
 function clean() {
-  echo ">>> Cleaning build artifacts"
+  echo_section "Cleaning build artifacts"
   rm -rf build
   xcodebuild clean -scheme MainApp || true
   xcodebuild clean -scheme ShareExtension || true
@@ -212,17 +222,17 @@ function clean() {
 }
 
 function logs() {
-  echo ">>> Streaming logs from MainApp"
-  xcrun simctl spawn booted log stream --predicate 'process == "Craftify"' --style syslog
+  echo_section "Streaming logs from MainApp and ShareExtension"
+  xcrun simctl spawn booted log stream --predicate 'process == "Craftify" || process == "Craftify Share"' --style syslog
 }
 
 function comment_scan() {
-  echo ">>> Scanning for TODO/FIXME/print/debugPrint"
+  echo_section "Scanning for TODO/FIXME/print/debugPrint"
   grep -rE 'TODO|FIXME|print\\(|debugPrint\\(' src/ || true
 }
 
 function bump_version() {
-  echo ">>> Bumping version numbers"
+  echo_section "Bumping version numbers"
   local marketing="${1:-}"
   if [[ -z "$marketing" ]]; then
     agvtool next-version -all
@@ -234,7 +244,7 @@ function bump_version() {
 
 function archive() {
   generate "$@"
-  echo ">>> Archiving MainApp"
+  echo_section "Archiving MainApp"
   xcb archive \
     -scheme MainApp \
     -configuration Release \
@@ -243,7 +253,7 @@ function archive() {
 }
 
 function export_ipa() {
-  echo ">>> Exporting IPA from archive"
+  echo_section "Exporting IPA from archive"
   xcb -exportArchive \
     -archivePath build/MainApp.xcarchive \
     -exportOptionsPlist ExportOptions.plist \
@@ -251,7 +261,7 @@ function export_ipa() {
 }
 
 function deploy_testflight() {
-  echo ">>> Deploying IPA to TestFlight"
+  echo_section "Deploying IPA to TestFlight"
   if [[ -z "${API_KEY_PATH:-}" || -z "${API_ISSUER_ID:-}" ]]; then
     echo -e "${RED}Error: API_KEY_PATH or API_ISSUER_ID env vars not set${NC}"
     exit 1
@@ -264,19 +274,19 @@ function deploy_testflight() {
 
 function coverage() {
   generate "$@"
-  echo ">>> Running tests with code coverage"
+  echo_section "Running tests with code coverage"
   xcb test \
     -scheme MainAppUnitTests \
     -enableCodeCoverage YES \
     -sdk iphonesimulator \
     -destination "id=${SIMULATOR_ID}" "$@"
-  echo ">>> Generating coverage report"
+  echo_section "Generating coverage report"
   xcrun xccov view --report build/Logs/Test/*.xcresult
 }
 
 # Supporting stubs for CI/CD pipelines
 function build_sim() {
-  echo ">>> Building for Simulator (Debug)"
+  echo_section "Building for Simulator (Debug)"
   xcb build \
     -scheme MainApp \
     -configuration Debug \
@@ -285,7 +295,7 @@ function build_sim() {
 }
 
 function analyze() {
-  echo ">>> Running static analysis"
+  echo_section "Running static analysis"
   xcb analyze \
     -scheme MainApp \
     -sdk iphoneos \
@@ -293,7 +303,7 @@ function analyze() {
 }
 
 function export_ipa_adhoc() {
-  echo ">>> Exporting AdHoc IPA"
+  echo_section "Exporting AdHoc IPA"
   xcb -exportArchive \
     -archivePath build/MainApp.xcarchive \
     -exportOptionsPlist ExportOptionsAdHoc.plist \
@@ -301,17 +311,17 @@ function export_ipa_adhoc() {
 }
 
 function deploy_internal() {
-  echo ">>> Deploying to internal TestFlight"
+  echo_section "Deploying to internal TestFlight"
   deploy_testflight "$@"
 }
 
 function deploy_adhoc() {
-  echo ">>> Deploying AdHoc distribution"
+  echo_section "Deploying AdHoc distribution"
   deploy_testflight "$@"
 }
 
 function deploy_appstore() {
-  echo ">>> Uploading to App Store Connect"
+  echo_section "Uploading to App Store Connect"
   xcrun altool \
     -upload-app --type ios \
     -file build/IPA/MainApp.ipa \
@@ -319,27 +329,27 @@ function deploy_appstore() {
 }
 
 function generate_changelog() {
-  echo ">>> Generating changelog"
+  echo_section "Generating changelog"
   git-chglog -o CHANGELOG.md
 }
 
 function notify() {
-  echo ">>> Sending notifications"
+  echo_section "Sending notifications"
   # integrate Slack/email notifications here
 }
 
 function monitor_setup() {
-  echo ">>> Setting up monitoring"
+  echo_section "Setting up monitoring"
   # configure Sentry or other services
 }
 
 function pr_checks() {
-  echo ">>> Running PR checks (e.g. TODO/FIXME scan)"
+  echo_section "Running PR checks (e.g. TODO/FIXME scan)"
   comment_scan "$@"
 }
 
 function collect_dsyms() {
-  echo ">>> Collecting artifacts & dSYMs"
+  echo_section "Collecting artifacts & dSYMs"
   mkdir -p build/Artifacts
   cp -R build/MainApp.xcarchive/dSYMs build/Artifacts/
 }

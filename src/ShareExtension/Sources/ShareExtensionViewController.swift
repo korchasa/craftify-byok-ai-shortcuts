@@ -14,10 +14,14 @@ public final class ShareExtensionViewController: UIViewController {
         let inventoryManager = InventoryManager(userDefaults: userDefaults)
         let authManager = AuthManager()
         let clipboardManager = ClipboardManager()
-        let processingManager = ProcessingManager()
+        let logManager = OSLogManagerShared(subsystem: Bundle.main.bundleIdentifier ?? "Craftify", category: "ShareExtension")
+        let processingManager = ProcessingManager(
+            llmClient: LLMAPIClient(),
+            logManager: logManager,
+            authManager: authManager
+        )
         let consentManager = ConsentManager(appGroupSuiteName: "group.dev.korchasa.Craftify")
         let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.korchasa.Craftify")!
-        let logManager = OSLogManagerShared(subsystem: Bundle.main.bundleIdentifier ?? "Craftify", category: "ShareExtension")
         let manager = ShareExtensionManager(
             inventoryManager: inventoryManager,
             authManager: authManager,
@@ -42,6 +46,8 @@ public final class ShareExtensionViewController: UIViewController {
         self.hostingController = hosting
         // Load the input text from the extension context
         loadInputText()
+        // Подписка на закрытие
+        NotificationCenter.default.addObserver(self, selector: #selector(closeExtension), name: .closeShareExtension, object: nil)
     }
 
     /// Loads the shared text from the extension context and updates the view model
@@ -51,7 +57,7 @@ public final class ShareExtensionViewController: UIViewController {
             let attachments = item.attachments ?? []
             for provider in attachments {
                 if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
-                    provider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { [weak self] (item, error) in
+                    provider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { [weak self] item, _ in
                         if let text = item as? String {
                             DispatchQueue.main.async {
                                 // Update the input text in the view model
@@ -66,4 +72,9 @@ public final class ShareExtensionViewController: UIViewController {
     }
 
     deinit {}
+
+    @objc private func closeExtension() {
+        // Завершаем работу расширения
+        extensionContext?.completeRequest(returningItems: nil, completionHandler: nil)
+    }
 }

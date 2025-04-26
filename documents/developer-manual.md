@@ -1,46 +1,48 @@
-# Руководство разработчика Craftify
+# Craftify Developer Manual
 
-## Установка зависимостей
-1. Установить все необходимые CLI-инструменты одной командой:
+## Installing Dependencies
+1. Install all required CLI tools with a single command:
    ```sh
    ./run init
    ```
-   Это установит через Homebrew: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen.
+   This will install via Homebrew: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen.
 
-## Сборка проекта
-- Сгенерировать проект: `xcodegen`
-- Собрать: `./run build`
+## Building the Project
+- Generate the project: `xcodegen`
+- Build: `./run build`
 
-## Запуск тестов
-- Unit и UI тесты: `./run test`
-- Проверка покрытия: отчёт формируется автоматически в CI
-- Обязательное требование: все ключевые пользовательские сценарии должны быть покрыты end-to-end тестами (E2E), включая edge-cases и негативные сценарии.
+## Running Tests
+- Unit and UI tests: `./run test`
+- Coverage report: generated automatically in CI
+- Mandatory requirement: all key user scenarios must be covered by end-to-end tests (E2E), including edge cases and negative scenarios.
 
-### Важно: запуск тестов для iOS
-Для запуска тестов вручную используйте команду с явным указанием симулятора:
+### Important: Running Tests for iOS
+To run tests manually, use the command with an explicit simulator:
 ```
 xcodebuild -scheme Common -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
 ```
-Это исключает ошибку "CommonTests does not support My Mac's platform: com.apple.platform.macosx".
+This avoids the error "CommonTests does not support My Mac's platform: com.apple.platform.macosx".
 
-## Линтинг и форматирование
-- Проверка стиля: `./run lint`
-- Форматирование: `./run format`
+## Linting and Formatting
+- Style check: `./run lint`
+- Formatting: `./run format`
 
 ## CI/CD
-- Все проверки и сборки автоматизированы через GitHub Actions (`.github/workflows/ci.yml`)
-- Проверка размера Share Extension и покрытие тестами ≥ 80% — обязательны для успешной сборки
+- All checks and builds are automated via GitHub Actions (`.github/workflows/ci.yml`)
+- Share Extension size check and test coverage ≥ 80% are required for a successful build
 
-## Деплой
-- Release-сборка и публикация через Fastlane (см. инструкции в репозитории)
-- Подписание и provisioning автоматизированы через Fastlane `match`
+## Deployment
+- Release build and publishing via Fastlane (see repository instructions)
+- Code signing and provisioning are automated via Fastlane `match`
 
-## Итоги тестирования и CI
-- Все тесты (unit, UI, E2E) для Share Extension проходят успешно.
-- Инструкции по запуску и тестированию актуальны.
-- Покрытие тестами и размер Share Extension контролируются автоматически в CI.
+## Testing and CI Results
+- All tests (unit, UI, E2E) for Share Extension pass successfully.
+- Instructions for running and testing are up to date.
+- Test coverage and Share Extension size are automatically controlled in CI.
 
-## Тестирование таймаута обработки
-- Таймаут обработки реализован только в ShareExtensionViewModel (по умолчанию 30 секунд).
-- Для unit-тестов ViewModel таймаут можно переопределять через свойство processingTimeoutSeconds.
-- В E2E тестах ShareExtensionManager таймаут не тестируется, только ошибки и успехи обработки.
+## Processing Timeout Testing
+- Processing timeout is implemented only in ShareExtensionViewModel (default 30 seconds).
+- For unit tests, the ViewModel timeout can be overridden via the processingTimeoutSeconds property.
+- In E2E tests, ShareExtensionManager does not test timeout, only processing errors and successes.
+
+- Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, which is processed by XcodeGen.

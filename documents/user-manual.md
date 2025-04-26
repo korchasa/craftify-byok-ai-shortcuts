@@ -1,44 +1,44 @@
-# Руководство пользователя Craftify
+# Craftify User Manual
 
-## Как использовать приложение
-1. Откройте Craftify после установки.
-2. На первом запуске ознакомьтесь с инструкцией и дайте согласие на обработку текста (чекбокс).
-3. Добавьте нужные операции (перевод, упрощение, коррекция, объяснение) через HomeView.
-4. Введите OpenAI API-ключ в SettingsView.
-5. Для обработки текста:
-   - Выделите текст в любом приложении.
-   - Вызовите Craftify через меню Share.
-   - Выберите нужную операцию.
-   - Получите результат — он автоматически скопируется в буфер обмена.
+## How to Use the Application
+1. Open Craftify after installation.
+2. On first launch, review the instructions and give consent for text processing (checkbox).
+3. Add the required operations (translation, simplification, correction, explanation) via HomeView.
+4. Enter your OpenAI API key in SettingsView.
+5. To process text:
+   - Select text in any application.
+   - Invoke Craftify via the Share menu.
+   - Choose the desired operation.
+   - Receive the result—it will be automatically copied to the clipboard.
 
-## Тестирование
-- Все основные сценарии протестированы автоматически (обязательное требование: все ключевые пользовательские сценарии покрыты end-to-end тестами, включая edge-cases и негативные сценарии).
-- Для ручной проверки: используйте Share Extension с разными типами текста и параметрами.
+## Testing
+- All main scenarios are tested automatically (mandatory requirement: all key user scenarios are covered by end-to-end tests, including edge cases and negative scenarios).
+- For manual testing: use the Share Extension with different types of text and parameters.
 
-## Сборка и деплой
-- Для самостоятельной сборки: следуйте инструкциям из developer-manual.md.
-- Для обновления: используйте App Store или TestFlight (если доступно).
+## Build and Deployment
+- For self-building: follow the instructions in developer-manual.md.
+- For updates: use the App Store or TestFlight (if available).
 
-## Примечания
-- Все данные (ключ, inventory) хранятся только на устройстве.
-- Для работы требуется действующий OpenAI API-ключ.
-- Приложение не сохраняет историю запросов и не анализирует содержимое буфера обмена.
+## Notes
+- All data (key, inventory) is stored only on the device.
+- A valid OpenAI API key is required for operation.
+- The app does not save request history and does not analyze clipboard contents.
 
-## Итоги пользовательского тестирования
-- Все пользовательские сценарии для Share Extension протестированы и работают согласно документации.
-- Edge-case сценарии (нет текста, слишком длинный текст, ошибки сети, неверный ключ и др.) корректно обрабатываются.
+## User Testing Results
+- All user scenarios for the Share Extension have been tested and work according to the documentation.
+- Edge-case scenarios (no text, text too long, network errors, invalid key, etc.) are handled correctly.
 
-## Новое в Share Extension
-- Поддержка всех основных операций (перевод, упрощение, коррекция, объяснение) с параметрами.
-- Автоматическая проверка длины текста и блокировка обработки при превышении лимита.
-- Все ошибки (нет текста, слишком длинный текст, ошибки сети, неверный ключ, ошибки буфера обмена) обрабатываются с понятными сообщениями.
-- Результат всегда копируется в буфер обмена, подтверждается уведомлением.
-- Все действия и ошибки логируются (FIFO, экспорт логов доступен в основном приложении).
+## What's New in Share Extension
+- Support for all main operations (translation, simplification, correction, explanation) with parameters.
+- Automatic text length check and blocking processing if the limit is exceeded.
+- All errors (no text, text too long, network errors, invalid key, clipboard errors) are handled with clear messages.
+- The result is always copied to the clipboard and confirmed by a notification.
+- All actions and errors are logged (FIFO, log export available in the main app).
 
-## Актуальность инструкций
-- Инструкции по сборке, тестированию и обновлению всегда актуальны в developer-manual.md.
-- Структура приложения и документации полностью соответствует текущему состоянию проекта.
+## Instruction Relevance
+- Instructions for building, testing, and updating are always up to date in developer-manual.md.
+- The structure of the app and documentation fully matches the current state of the project.
 
-## Ограничение по времени обработки
-- Если обработка текста занимает слишком много времени (более 30 секунд), появится сообщение об истечении времени.
-- Таймаут реализован только в расширении Share Extension. В основном приложении ограничение по времени не применяется.
+## Processing Time Limit
+- If text processing takes too long (over 30 seconds), a timeout message will appear.
+- The timeout is implemented only in the Share Extension. The main app does not apply a time limit.
