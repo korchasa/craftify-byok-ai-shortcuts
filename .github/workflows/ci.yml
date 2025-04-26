@@ -53,7 +53,10 @@ jobs:
             ${{ runner.os }}-deriveddata-
 
       - name: Install tools via brew
-        run: brew install xcodegen swiftlint swiftformat xcbeautify swiftgen || true
+        run: ./run init
+
+      - name: Add Homebrew to PATH
+        run: echo "/opt/homebrew/bin" >> $GITHUB_PATH
 
   feature:
     needs: setup
