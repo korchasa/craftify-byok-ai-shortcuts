@@ -70,6 +70,11 @@ public struct ShareExtensionView: View {
                 }
             }
         }
+        .onReceive(viewModel.$shouldCloseExtension) { shouldClose in
+            if shouldClose {
+                NotificationCenter.default.post(name: .closeShareExtension, object: nil)
+            }
+        }
         .alert(isPresented: $showAlert) {
             Alert(title: Text("Ошибка"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
@@ -142,3 +147,11 @@ public struct ShareExtensionView: View {
         .zIndex(ZIndexConstants.copiedToast)
     }
 }
+
+// swiftlint:disable explicit_acl
+extension Notification.Name {
+    /// Уведомление для закрытия Share Extension после копирования результата
+    static let closeShareExtension = Notification.Name("closeShareExtension")
+}
+
+// swiftlint:enable explicit_acl

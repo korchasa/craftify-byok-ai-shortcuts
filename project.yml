@@ -32,6 +32,13 @@ targets:
           - Generated/Strings.swift
     info:
       path: src/MainApp/Config/Info.plist
+      properties:
+        UILaunchStoryboardName: LaunchScreen
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UIRequiresFullScreen: true
     entitlements:
       path: src/MainApp/Config/Craftify.entitlements
       properties:

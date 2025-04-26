@@ -1,32 +1,32 @@
-## Обзор проекта Craftify
+## Craftify Project Overview
 
-### Назначение
-Craftify — iOS-приложение (iOS 16+) с расширением Share Extension для контекстной обработки текста (перевод, упрощение, корректировка, объяснение) через OpenAI API. Позволяет пользователю быстро обрабатывать текст из любого приложения без переключения между сервисами.
+### Purpose
+Craftify is an iOS application (iOS 16+) with a Share Extension for contextual text processing (translation, simplification, correction, explanation) via the OpenAI API. It allows users to quickly process text from any app without switching between services.
 
-### Проблема
-Пользователи тратят время на копирование текста между приложениями для перевода, упрощения или корректировки. Craftify устраняет необходимость в этих действиях, ускоряя рабочий процесс.
+### Problem
+Users spend time copying text between apps for translation, simplification, or correction. Craftify eliminates the need for these actions, speeding up the workflow.
 
-### Решение
-Реализовано кэширование Mint, DerivedData и SwiftPM зависимостей для ускорения pipeline.
+### Solution
+Implemented caching for Mint, DerivedData, and SwiftPM dependencies to speed up the pipeline.
 
-### Цели и задачи
-- Бесшовная интеграция обработки текста.
-- Повышение продуктивности и удобства пользователя.
-- Модульная архитектура с общим кодом через Swift Package (Common).
-- Безопасное хранение API-ключа только в Keychain с Keychain Sharing.
-- Единое логирование.
-- Гибкая настройка операций и языков.
-- Обязательное требование: все ключевые пользовательские сценарии должны быть покрыты end-to-end тестами (E2E), включая edge-cases и негативные сценарии.
+### Goals and Objectives
+- Seamless integration of text processing.
+- Increased productivity and user convenience.
+- Modular architecture with shared code via Swift Package (Common).
+- Secure storage of the API key only in Keychain with Keychain Sharing.
+- Unified logging.
+- Flexible configuration of operations and languages.
+- Mandatory requirement: all key user scenarios must be covered by end-to-end tests (E2E), including edge cases and negative scenarios.
 
-### Целевая аудитория
-- Многоязычные пользователи.
-- Студенты и профессионалы.
-- Все, кому нужно быстро объяснить или упростить текст.
+### Target Audience
+- Multilingual users.
+- Students and professionals.
+- Anyone who needs to quickly explain or simplify text.
 
-### Критерии успеха
-- Среднее время отклика ≤ 3 с для коротких текстов (до 1000 символов).
-- Размер Share Extension ≤ 20 MB.
-- Покрытие тестами ≥ 80%.
-- Все ключевые пользовательские сценарии покрыты end-to-end тестами (E2E).
-- Удобство и простота использования.
-- Соответствие требованиям безопасности и приватности.
+### Success Criteria
+- Average response time ≤ 3 s for short texts (up to 1000 characters).
+- Share Extension size ≤ 20 MB.
+- Test coverage ≥ 80%.
+- All key user scenarios are covered by end-to-end tests (E2E).
+- Ease and simplicity of use.
+- Compliance with security and privacy requirements.

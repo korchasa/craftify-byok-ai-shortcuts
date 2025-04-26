@@ -1,6 +1,8 @@
 import Foundation
 
 /// Протокол для менеджера логов, поддерживающего FIFO, экспорт и маскирование ключей
+/// В production используется только OSLogManagerShared (системный лог, без FIFO и экспорта),
+/// FIFO и экспорт поддерживаются только в LogManagerSharedInMemory для тестов.
 public protocol LogManagerShared: AnyObject {
     /// Записать лог
     func log(_ entry: LogEntry)
