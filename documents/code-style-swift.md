@@ -1,6 +1,5 @@
 ## Swift Code Style Rules
 
-- Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, processed by XcodeGen.
 - All test classes must implement setUp and tearDown (balanced_xctest_lifecycle).
 - All declarations must explicitly specify access control level (explicit_acl).
 - Do not use implicitly unwrapped optionals.

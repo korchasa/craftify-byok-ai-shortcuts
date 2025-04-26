@@ -3,7 +3,7 @@
 ### General Scheme
 - The main application (SwiftUI) and Share Extension use a common module Common (SwiftPM).
 - Interaction between modules through App Group (UserDefaults) and Keychain Sharing.
-- Logging through LogManagerShared (SPM), storing logs in the App Group container (NDJSON file, FIFO, masking, export, atomic write, DispatchQueue).
+- Logging through LogManagerShared (SPM), storing logs in the os log.
 
 ### Key Patterns
 - MVVM + SwiftUI for UI and business logic.
@@ -55,7 +55,7 @@
 ### Share Extension: Final Architecture
 
 - All managers are injected through DI, including OSLogManagerShared (Unified Logging, system log).
-- Logging of all actions and errors, key masking, FIFO, NDJSON export.
+- Logging of all actions and errors, key masking.
 - Text limit: 5000 characters, blocking on UI and in the manager.
 - Timeouts: 15 seconds per request, 30 seconds total limit (Task.sleep + Task.cancel).
 - Error handling: all scenarios covered (no text, limit, no consent, invalid key, network, parsing, buffer, cancellation).

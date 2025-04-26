@@ -46,3 +46,18 @@ This avoids the error "CommonTests does not support My Mac's platform: com.apple
 - In E2E tests, ShareExtensionManager does not test timeout, only processing errors and successes.
 
 - Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, which is processed by XcodeGen.
+
+## Получение логов
+
+Для просмотра логов приложения и расширения используйте unified log (os_log):
+
+```sh
+./run logs
+```
+
+Команда выводит логи из unified log (os_log) за последние сутки, фильтруя по subsystem "dev.korchasa.Craftify" в формате JSON.
+
+Для изменения периода используйте опции log show, например:
+```sh
+log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
+```

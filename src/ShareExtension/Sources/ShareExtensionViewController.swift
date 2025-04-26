@@ -14,7 +14,7 @@ public final class ShareExtensionViewController: UIViewController {
         let inventoryManager = InventoryManager(userDefaults: userDefaults)
         let authManager = AuthManager()
         let clipboardManager = ClipboardManager()
-        let logManager = OSLogManagerShared(subsystem: Bundle.main.bundleIdentifier ?? "Craftify", category: "ShareExtension")
+        let logManager = OSLogManagerShared(category: "ShareExtension")
         let processingManager = ProcessingManager(
             llmClient: LLMAPIClient(),
             logManager: logManager,

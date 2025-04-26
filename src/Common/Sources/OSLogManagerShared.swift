@@ -9,8 +9,8 @@ public final class OSLogManagerShared: LogManagerShared {
     /// - Parameters:
     ///   - subsystem: The subsystem identifier, defaults to the app bundle identifier
     ///   - category: The log category, defaults to "Default"
-    public init(subsystem: String = Bundle.main.bundleIdentifier ?? "Craftify", category: String = "Default") {
-        logger = OSLog(subsystem: subsystem, category: category)
+    public init(category: String = "Default") {
+        logger = OSLog(subsystem: "Craftify", category: category)
     }
 
     /// Write a log entry to the unified log

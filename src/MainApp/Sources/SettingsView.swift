@@ -8,8 +8,6 @@ public struct SettingsView: View {
     @ObservedObject public var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isTextFieldFocused: Bool
-    @State private var showExportSheet = false
-    @State private var exportData: Data? = nil
 
     /// Инициализация с ViewModel
     /// - Parameter viewModel: ViewModel настроек
@@ -23,7 +21,6 @@ public struct SettingsView: View {
             apiKeySection
             consentSection
             errorSection
-            exportLogsButton
             Spacer()
             buttonsSection
         }
@@ -31,11 +28,6 @@ public struct SettingsView: View {
         .disabled(viewModel.isLoading)
         .overlay(loadingOverlay)
         .accessibilityElement(children: .contain)
-        .sheet(isPresented: $showExportSheet) {
-            if let data = exportData {
-                LogExportActivityView(data: data, fileName: SettingsViewExportConstants.exportFileName)
-            }
-        }
     }
 
     @ViewBuilder
@@ -99,18 +91,6 @@ public struct SettingsView: View {
     }
 
     @ViewBuilder
-    private var exportLogsButton: some View {
-        Button(action: exportLogs) {
-            Text(L10n.settingsExportLogs)
-                .frame(maxWidth: .infinity)
-        }
-        .accessibilityLabel(L10n.settingsExportLogs)
-        .buttonStyle(.bordered)
-        .padding(.horizontal)
-        .padding(.top, SettingsViewConstants.exportButtonTopPadding)
-    }
-
-    @ViewBuilder
     private var buttonsSection: some View {
         HStack(spacing: SettingsViewConstants.buttonSpacing) {
             Button(action: { dismiss() }) {
@@ -138,17 +118,6 @@ public struct SettingsView: View {
             ProgressView()
                 .progressViewStyle(.circular)
                 .scaleEffect(SettingsViewConstants.loadingScale)
-        }
-    }
-
-    private func exportLogs() {
-        let logManager = OSLogManagerShared(subsystem: Bundle.main.bundleIdentifier ?? "Craftify", category: "Settings")
-        do {
-            let data = try logManager.exportLogs()
-            exportData = data
-            showExportSheet = true
-        } catch {
-            // Можно добавить отображение ошибки пользователю
         }
     }
 }

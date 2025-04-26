@@ -7,3 +7,10 @@ alwaysApply: true
 
 - It is necessary to always use ready-made libraries if they exist on the internet.
 - For all strings displayed to the user, internationalization should be used.
+- Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, processed by XcodeGen.
+- ALWAYS USE DEVOPS-FRIENDLY FLOW:
+    - NO MANUAL WORK IN XCODE GUI.
+    - ALL CONFIGURATION THROUGH FILES (`project.yml`, `.xcconfig`, `plist`, ETC.).
+    - REPRODUCIBLE BUILDS VIA `xcodegen`, `xcodebuild`.
+    - SIGNING, PROVISIONING, AND VERSIONING AUTOMATED.
+    - ALL TOOLS CLI-BASED, INTEGRATED WITH CI/CD.

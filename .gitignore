@@ -27,9 +27,6 @@ DerivedData/
 src/**/Resources/Generated/
 src/**/Generated/
 
-# Logs and NDJSON (App Group logs, not in repo)
-logs.ndjson
-
 # User/IDE settings
 .idea/
 *.swp

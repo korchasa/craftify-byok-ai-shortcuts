@@ -1,7 +1,7 @@
 ---
 description:
 globs:
-alwaysApply: true
+alwaysApply: false
 ---
 ## TECHNICAL SPECIFICATION
 
@@ -74,7 +74,7 @@ Craftify — iOS-приложение (iOS 16+) с расширением Share 
 - **Логирование**:
   - LogManagerShared с уровнями debug/info/warning/error.
   - Маскирование API‑ключа (первые/последние 4 символа).
-  - Логи пишутся в файл NDJSON (например, `Logs/craftify_logs.ndjson`) в контейнере App Group. FIFO-ограничение 1000 записей, atomic write, потокобезопасно через DispatchQueue. CoreData/SQLite и другие БД не используются.
+  - Логи пишутся в сиситемный лог. CoreData/SQLite и другие БД не используются.
   - Экспорт логов пользователем — обязателен (UI/CLI).
 - **Стандарты кодирования**:
   - SwiftLint (конфигурация по умолчанию).
