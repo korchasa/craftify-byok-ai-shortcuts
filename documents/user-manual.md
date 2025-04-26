@@ -43,9 +43,9 @@
 - If text processing takes too long (over 30 seconds), a timeout message will appear.
 - The timeout is implemented only in the Share Extension. The main app does not apply a time limit.
 
-## Просмотр логов
-Все действия и ошибки приложения логируются через unified log (os_log). Для просмотра логов используйте команду:
+## Log Viewing
+All actions and errors of the application are logged through the unified log (os_log). To view the logs, use the command:
 ```sh
 ./run logs
 ```
-Экспорт логов не поддерживается. Логи доступны только через системные средства (Console.app, log stream).
+Log export is not supported. Logs are only available through system tools (Console.app, log stream).

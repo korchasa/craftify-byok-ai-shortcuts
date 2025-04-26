@@ -13,22 +13,22 @@
 ### Logging and Analytics
 
 #### Log Architecture
-- Все логи пишутся через системный лог (Unified Logging, os_log) через OSLogManagerShared. Экспорт логов не поддерживается, просмотр через Console.app или log stream.
-- LogManagerShared поддерживает уровни: debug, info, warning, error.
-- Ключи API всегда маскируются (видны только первые и последние 4 символа).
-- Краш-репортинг реализован через New Relic SDK, интегрирован только в основное приложение (не в Share Extension).
-- New Relic App Token хранится в Info.plist и подставляется в рантайме.
-- В Share Extension не используются сторонние SDK для аналитики или crash reporting (минимальный размер, соответствие App Store).
+- All logs are written through the system log (Unified Logging, os_log) via OSLogManagerShared. Log export is not supported, viewing is done through Console.app or log stream.
+- LogManagerShared supports levels: debug, info, warning, error.
+- API keys are always masked (only the first and last 4 characters are visible).
+- Crash reporting is implemented through the New Relic SDK, integrated only into the main application (not in the Share Extension).
+- The New Relic App Token is stored in Info.plist and is injected at runtime.
+- No third-party SDKs for analytics or crash reporting are used in the Share Extension (minimum size, compliance with App Store).
 
 #### Log Export and Retention Policy
-- Экспорт логов не поддерживается (ограничение системного лога). Просмотр логов — через Console.app или log stream.
-- Краш-отчёты отправляются только из основного приложения через New Relic SDK.
+- Log export is not supported (system log limitation). Logs can be viewed through Console.app or log stream.
+- Crash reports are sent only from the main application via New Relic SDK.
 
 #### Consequences
-- Логи доступны для диагностики только через системные средства.
-- Краш-аналитика доступна только для основного приложения через New Relic.
-- Share Extension остаётся лёгким и соответствует требованиям приватности.
-- Политика маскирования логов реализована на уровне кода.
+- Logs are available for diagnostics only through system tools.
+- Crash analytics is available only for the main application through New Relic.
+- Share Extension remains lightweight and meets privacy requirements.
+- Log masking policy is implemented at the code level.
 
 ### Component Interaction
 - ShareExtensionManager reads inventory and API key, calls ProcessingManager.
@@ -112,8 +112,8 @@ graph TD
 +  F --> G[Launch MainApp in Simulator]
 +```
 
-## Механизм таймаута обработки текста
-- Таймаут обработки реализован только на уровне ShareExtensionViewModel (по умолчанию 30 секунд, можно переопределять в тестах).
-- ShareExtensionManager не реализует таймаут, только бизнес-логику обработки и ошибок.
-- В unit-тестах ViewModel таймаут выставляется через processingTimeoutSeconds.
-- В E2E тестах ShareExtensionManager проверяются только ошибки и успехи обработки, но не таймаут.
+## Timeout Mechanism for Text Processing
+- The processing timeout is implemented only at the ShareExtensionViewModel level (default 30 seconds, can be overridden in tests).
+- ShareExtensionManager does not implement a timeout, only the business logic for processing and errors.
+- In unit tests, the ViewModel timeout is set through processingTimeoutSeconds.
+- In E2E tests, ShareExtensionManager only checks for errors and successes in processing, but not the timeout.

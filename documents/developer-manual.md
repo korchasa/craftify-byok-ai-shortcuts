@@ -47,17 +47,17 @@ This avoids the error "CommonTests does not support My Mac's platform: com.apple
 
 - Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, which is processed by XcodeGen.
 
-## Получение логов
+## Retrieving Logs
 
-Для просмотра логов приложения и расширения используйте unified log (os_log):
+To view the application and extension logs, use the unified log (os_log):
 
 ```sh
 ./run logs
 ```
 
-Команда выводит логи из unified log (os_log) за последние сутки, фильтруя по subsystem "dev.korchasa.Craftify" в формате JSON.
+The command outputs logs from the unified log (os_log) for the last 24 hours, filtering by the subsystem "dev.korchasa.Craftify" in JSON format.
 
-Для изменения периода используйте опции log show, например:
+To change the period, use the log show options, for example:
 ```sh
 log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
 ```
