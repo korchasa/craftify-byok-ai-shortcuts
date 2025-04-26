@@ -20,6 +20,18 @@ public struct ShareExtensionView: View {
         static let copiedToast: Double = 2
     }
 
+    private let supportedLanguages: [(name: String, code: String)] = [
+        ("български", "bg"),
+        ("deutsch", "de"),
+        ("english", "en"),
+        ("español", "es"),
+        ("français", "fr"),
+        ("日本語", "ja"),
+        ("русский", "ru"),
+        ("українська", "uk"),
+        ("中文", "zh")
+    ]
+
     public init(viewModel: ShareExtensionViewModel) {
         self.viewModel = viewModel
     }
@@ -85,13 +97,13 @@ public struct ShareExtensionView: View {
 
     private var operationsGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: ShareExtensionViewConstants.gridSpacing) {
-            ForEach(viewModel.operations, id: \.id) { op in
+            ForEach(viewModel.operations, id: \ .id) { op in
                 Button(action: { viewModel.process(operation: op) }) {
-                    Text(displayName(for: op.operation))
+                    Text(operationDisplayName(for: op))
                         .frame(maxWidth: .infinity)
                         .padding()
                 }
-                .accessibilityLabel(displayName(for: op.operation))
+                .accessibilityLabel(operationDisplayName(for: op))
                 .buttonStyle(.borderedProminent)
                 .disabled(isProcessing || viewModel.isInputTextTooLong)
             }
@@ -99,12 +111,39 @@ public struct ShareExtensionView: View {
         .padding(.horizontal)
     }
 
-    private func displayName(for type: OperationType) -> String {
-        switch type {
-        case .translate: L10n.operationLabelTranslate
-        case .simplify: L10n.operationLabelSimplify
-        case .correct: L10n.operationLabelCorrect
-        case .explain: L10n.operationLabelExplain
+    private func operationDisplayName(for op: InventoryOperation) -> String {
+        switch op.operation {
+        case .translate:
+            if let params = try? JSONDecoder().decode(TranslateParams.self, from: op.params) {
+                let langName = supportedLanguages.first(where: { $0.code == params.targetLanguage })?.name ?? params.targetLanguage
+                return "\(L10n.operationLabelTranslate) → \(langName)"
+            }
+            return L10n.operationLabelTranslate
+        case .simplify:
+            if let params = try? JSONDecoder().decode(SimplifyParams.self, from: op.params) {
+                let level: String = switch params.complexityLevel {
+                case .beginner: L10n.operationValueBeginner
+                case .intermediate: L10n.operationValueIntermediate
+                case .advanced: L10n.operationValueAdvanced
+                }
+                return "\(L10n.operationLabelSimplify) \(level)"
+            }
+            return L10n.operationLabelSimplify
+        case .correct:
+            if let params = try? JSONDecoder().decode(CorrectParams.self, from: op.params) {
+                return "\(L10n.operationLabelCorrect) \(L10n.operationParamStylePreservation): \(params.stylePreservationLevel)/3"
+            }
+            return L10n.operationLabelCorrect
+        case .explain:
+            if let params = try? JSONDecoder().decode(ExplainParams.self, from: op.params) {
+                let level: String = switch params.detailLevel {
+                case .beginner: L10n.operationValueBeginner
+                case .intermediate: L10n.operationValueIntermediate
+                case .advanced: L10n.operationValueAdvanced
+                }
+                return "\(L10n.operationLabelExplain) \(level)"
+            }
+            return L10n.operationLabelExplain
         }
     }
 
