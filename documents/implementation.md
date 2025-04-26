@@ -255,3 +255,5 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
   ```sh
   log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
   ```
+
+| `ci` (GitHub Actions) | Автоматический запуск lint, форматирования, тестов, сборки и деплоя через актуальные команды `./run`. Все шаги workflow используют только существующие команды из скрипта. Ручная работа в Xcode не требуется. |

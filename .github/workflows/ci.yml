@@ -65,11 +65,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: Lint (SwiftLint)
-        run: ./run test:lint
+        run: ./run lint
       - name: Format (SwiftFormat)
-        run: ./run test:format
+        run: ./run fmt
       - name: Build (simulator)
-        run: ./run build:simulator
+        run: ./run build
       - name: Unit tests
         run: ./run test:unit
       - name: Coverage
