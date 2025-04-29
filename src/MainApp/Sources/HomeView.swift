@@ -75,6 +75,12 @@ public struct HomeView: View {
                         Text(L10n.homeEdit)
                     }
                     .tint(.blue)
+                    Button(role: .destructive) {
+                        viewModel.removeOperation(at: idx)
+                    } label: {
+                        Text(L10n.homeDelete)
+                    }
+                    .tint(.red)
                 }
             }
             .onDelete { indices in
