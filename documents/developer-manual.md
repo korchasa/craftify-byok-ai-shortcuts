@@ -61,3 +61,9 @@ To change the period, use the log show options, for example:
 ```sh
 log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
 ```
+
+## Operation Color: Developer Notes
+- InventoryOperation расширена свойством colorHex (hex-код цвета).
+- Для тестов: InventoryManagerStub поддерживает colorHex.
+- Покрытие: unit-тесты (InventoryOperation, InventoryManager), UI-тесты (Add/EditOperationView), e2e-тесты (ShareExtensionView).
+- Для проверки UI: используйте ShareExtensionViewUITests.swift.

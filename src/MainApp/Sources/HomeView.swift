@@ -59,29 +59,16 @@ public struct HomeView: View {
     private var operationsList: some View {
         List {
             ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
-                HStack {
-                    Text(operationLabel(for: operation.operation))
-                        .font(.headline)
-                    Spacer()
-                    Text(operationParamsDescription(for: operation))
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                }
-                .swipeActions(edge: .trailing) {
-                    Button {
+                OperationRowView(
+                    operation: operation,
+                    onEdit: {
                         editOperationViewModel = EditOperationViewModel(operation: operation)
                         editingIndex = idx
-                    } label: {
-                        Text(L10n.homeEdit)
-                    }
-                    .tint(.blue)
-                    Button(role: .destructive) {
+                    },
+                    onDelete: {
                         viewModel.removeOperation(at: idx)
-                    } label: {
-                        Text(L10n.homeDelete)
                     }
-                    .tint(.red)
-                }
+                )
             }
             .onDelete { indices in
                 for index in indices {
@@ -94,34 +81,69 @@ public struct HomeView: View {
 
     private let settingsSheet: AnyView = .init(Text("SettingsView"))
 
-    private func operationLabel(for type: OperationType) -> String {
-        switch type {
-        case .translate: L10n.operationLabelTranslate
-        case .simplify: L10n.operationLabelSimplify
-        case .correct: L10n.operationLabelCorrect
-        case .explain: L10n.operationLabelExplain
-        }
-    }
+    private struct OperationRowView: View {
+        let operation: InventoryOperation
+        let onEdit: () -> Void
+        let onDelete: () -> Void
 
-    private func operationParamsDescription(for operation: InventoryOperation) -> String {
-        switch operation.operation {
-        case .translate:
-            if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
-                return "→ \(params.targetLanguage)"
+        var body: some View {
+            HStack {
+                Circle()
+                    .fill(Color(hex: operation.colorHex))
+                    .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
+                    .accessibilityLabel("Цвет операции")
+                Text(operationLabel(for: operation.operation))
+                    .font(.headline)
+                Spacer()
+                Text(operationParamsDescription(for: operation))
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
             }
-        case .simplify:
-            if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {
-                return "\(params.complexityLevel.rawValue.capitalized)"
-            }
-        case .correct:
-            if let params = try? JSONDecoder().decode(CorrectParams.self, from: operation.params) {
-                return "\(params.stylePreservationLevel)/3"
-            }
-        case .explain:
-            if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
-                return "\(params.detailLevel.rawValue.capitalized)"
+            .swipeActions(edge: .trailing) {
+                Button {
+                    onEdit()
+                } label: {
+                    Text(L10n.homeEdit)
+                }
+                .tint(.blue)
+                Button(role: .destructive) {
+                    onDelete()
+                } label: {
+                    Text(L10n.homeDelete)
+                }
+                .tint(.red)
             }
         }
-        return ""
+
+        private func operationLabel(for type: OperationType) -> String {
+            switch type {
+            case .translate: L10n.operationLabelTranslate
+            case .simplify: L10n.operationLabelSimplify
+            case .correct: L10n.operationLabelCorrect
+            case .explain: L10n.operationLabelExplain
+            }
+        }
+
+        private func operationParamsDescription(for operation: InventoryOperation) -> String {
+            switch operation.operation {
+            case .translate:
+                if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
+                    return "→ \(params.targetLanguage)"
+                }
+            case .simplify:
+                if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {
+                    return "\(params.complexityLevel.rawValue.capitalized)"
+                }
+            case .correct:
+                if let params = try? JSONDecoder().decode(CorrectParams.self, from: operation.params) {
+                    return "\(params.stylePreservationLevel)/3"
+                }
+            case .explain:
+                if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
+                    return "\(params.detailLevel.rawValue.capitalized)"
+                }
+            }
+            return ""
+        }
     }
 }

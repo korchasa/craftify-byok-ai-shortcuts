@@ -21,14 +21,14 @@ import XCTest
             // Добавление операции
             addVM.selectedType = .translate
             addVM.targetLanguage = "ru"
-            let op = addVM.makeOperation()
+            let op = addVM.makeOperation()?.copyWithColor("3288bd")
             expect(op) != nil
             homeVM.addOperation(op!)
             expect(homeVM.operations.count) == TestConstants.countOne
             // Редактирование операции
             let editVM = EditOperationViewModel(operation: homeVM.operations[TestConstants.indexFirst])
             editVM.targetLanguage = "en"
-            let updated = editVM.makeOperation()
+            let updated = editVM.makeOperation()?.copyWithColor("d53e4f")
             homeVM.updateOperation(at: TestConstants.indexFirst, with: updated!)
             expect(homeVM.operations[TestConstants.indexFirst].operation) == .translate
             // Удаление операции
@@ -43,6 +43,13 @@ import XCTest
             expect(addVM.isValid) == false
             let op = addVM.makeOperation()
             expect(op) == nil
+        }
+    }
+
+    // Вспомогательный extension для копирования операции с цветом
+    extension InventoryOperation {
+        func copyWithColor(_ color: String) -> InventoryOperation {
+            InventoryOperation(operation: self.operation, params: self.params, promptTemplate: self.promptTemplate, colorHex: color)
         }
     }
 #endif

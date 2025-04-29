@@ -29,7 +29,7 @@
 "settings_done" = "Готово";
 
 /* Share Extension UI */
-"share_title" = "Craftify — Обработка текста";
+"share_title" = "Craftify";
 "share_cancel" = "Отмена";
 "share_copied" = "Скопировано в буфер";
 

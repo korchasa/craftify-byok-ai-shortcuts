@@ -30,3 +30,8 @@ Implemented caching for Mint, DerivedData, and SwiftPM dependencies to speed up 
 - All key user scenarios are covered by end-to-end tests (E2E).
 - Ease and simplicity of use.
 - Compliance with security and privacy requirements.
+
+### Новые возможности
+- Поддержка выбора цвета для каждой операции из палитры (9e0142, d53e4f, f46d43, fdae61, fee08b, e6f598, abdda4, 66c2a5, 3288bd, 5e4fa2).
+- Цвет операции сохраняется и отображается на главном экране и в Share Extension.
+- Покрыто unit, UI и e2e тестами.

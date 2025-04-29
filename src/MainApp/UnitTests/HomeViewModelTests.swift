@@ -28,7 +28,8 @@ public final class HomeViewModelTests: XCTestCase {
         let operation = InventoryOperation(
             operation: .translate,
             params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")),
-            promptTemplate: "Translate the following text to Russian: {text}"
+            promptTemplate: "Translate the following text to Russian: {text}",
+            colorHex: "3288bd"
         )
         inventoryStub?.saveInventory([operation])
         viewModel?.loadInventory()
@@ -39,7 +40,8 @@ public final class HomeViewModelTests: XCTestCase {
         let operation = InventoryOperation(
             operation: .simplify,
             params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .beginner)),
-            promptTemplate: "Simplify the following text for a beginner reader: {text}"
+            promptTemplate: "Simplify the following text for a beginner reader: {text}",
+            colorHex: "fdae61"
         )
         viewModel?.addOperation(operation)
         expect(self.viewModel?.operations).to(contain(operation))
@@ -50,7 +52,8 @@ public final class HomeViewModelTests: XCTestCase {
         let operation = InventoryOperation(
             operation: .correct,
             params: try! JSONEncoder().encode(CorrectParams(stylePreservationLevel: 2)),
-            promptTemplate: "Correct grammar and spelling, preserve style level 2: {text}"
+            promptTemplate: "Correct grammar and spelling, preserve style level 2: {text}",
+            colorHex: "d53e4f"
         )
         inventoryStub?.saveInventory([operation])
         viewModel?.loadInventory()
@@ -63,12 +66,14 @@ public final class HomeViewModelTests: XCTestCase {
         let operation1 = InventoryOperation(
             operation: .explain,
             params: try! JSONEncoder().encode(ExplainParams(detailLevel: .beginner)),
-            promptTemplate: "Explain the following concept at beginner level: {text}"
+            promptTemplate: "Explain the following concept at beginner level: {text}",
+            colorHex: "abdda4"
         )
         let operation2 = InventoryOperation(
             operation: .explain,
             params: try! JSONEncoder().encode(ExplainParams(detailLevel: .advanced)),
-            promptTemplate: "Explain the following concept at advanced level: {text}"
+            promptTemplate: "Explain the following concept at advanced level: {text}",
+            colorHex: "5e4fa2"
         )
         inventoryStub?.saveInventory([operation1])
         viewModel?.loadInventory()

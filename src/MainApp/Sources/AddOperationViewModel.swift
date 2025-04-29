@@ -10,6 +10,7 @@ public final class AddOperationViewModel: ObservableObject {
     @Published public var complexityLevel: ComplexityLevel = .beginner
     @Published public var stylePreservationLevel: Int = minStylePreservationLevel
     @Published public var detailLevel: DetailLevel = .beginner
+    @Published public var selectedColorHex: String = AddOperationViewModel.palette.first!
 
     public var isValid: Bool {
         switch selectedType {
@@ -34,19 +35,19 @@ public final class AddOperationViewModel: ObservableObject {
         case .translate:
             let params = TranslateParams(targetLanguage: targetLanguage)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .translate, params: data, promptTemplate: "Translate the following text to \(targetLanguage): {text}")
+            return InventoryOperation(operation: .translate, params: data, promptTemplate: "Translate the following text to \(targetLanguage): {text}", colorHex: selectedColorHex)
         case .simplify:
             let params = SimplifyParams(complexityLevel: complexityLevel)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .simplify, params: data, promptTemplate: "Simplify the following text for a \(complexityLevel.rawValue) reader: {text}")
+            return InventoryOperation(operation: .simplify, params: data, promptTemplate: "Simplify the following text for a \(complexityLevel.rawValue) reader: {text}", colorHex: selectedColorHex)
         case .correct:
             let params = CorrectParams(stylePreservationLevel: stylePreservationLevel)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .correct, params: data, promptTemplate: "Correct grammar and spelling, preserve style level \(stylePreservationLevel): {text}")
+            return InventoryOperation(operation: .correct, params: data, promptTemplate: "Correct grammar and spelling, preserve style level \(stylePreservationLevel): {text}", colorHex: selectedColorHex)
         case .explain:
             let params = ExplainParams(detailLevel: detailLevel)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .explain, params: data, promptTemplate: "Explain the following concept at \(detailLevel.rawValue) level: {text}")
+            return InventoryOperation(operation: .explain, params: data, promptTemplate: "Explain the following concept at \(detailLevel.rawValue) level: {text}", colorHex: selectedColorHex)
         }
     }
 
@@ -56,7 +57,12 @@ public final class AddOperationViewModel: ObservableObject {
         complexityLevel = .beginner
         stylePreservationLevel = Self.minStylePreservationLevel
         detailLevel = .beginner
+        selectedColorHex = AddOperationViewModel.palette.first!
     }
 
     deinit {}
+
+    public static let palette: [String] = [
+        "9e0142", "d53e4f", "f46d43", "fdae61", "fee08b", "e6f598", "abdda4", "66c2a5", "3288bd", "5e4fa2"
+    ]
 }

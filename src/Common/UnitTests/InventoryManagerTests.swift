@@ -7,7 +7,7 @@ public final class InventoryManagerTests: XCTestCase {
     /// Проверяет добавление и загрузку операции
     public func testAddAndLoadOperation() {
         let manager = InventoryManagerStub()
-        let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "template")
+        let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "template", colorHex: "3288bd")
         manager.addOperation(operation)
         expect(manager.inventory.count) == 1
         expect(manager.loadInventory().first?.operation) == .translate
@@ -16,8 +16,8 @@ public final class InventoryManagerTests: XCTestCase {
     /// Проверяет обновление операции
     public func testUpdateOperation() {
         let manager = InventoryManagerStub()
-        let operation1 = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t1")
-        let operation2 = InventoryOperation(operation: .simplify, params: Data(), promptTemplate: "t2")
+        let operation1 = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t1", colorHex: "3288bd")
+        let operation2 = InventoryOperation(operation: .simplify, params: Data(), promptTemplate: "t2", colorHex: "d53e4f")
         manager.addOperation(operation1)
         manager.updateOperation(at: 0, with: operation2)
         expect(manager.inventory.first?.operation) == .simplify
@@ -26,7 +26,7 @@ public final class InventoryManagerTests: XCTestCase {
     /// Проверяет удаление операции
     public func testRemoveOperation() {
         let manager = InventoryManagerStub()
-        let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t")
+        let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t", colorHex: "3288bd")
         manager.addOperation(operation)
         manager.removeOperation(at: 0)
         expect(manager.inventory.isEmpty) == true
@@ -35,7 +35,7 @@ public final class InventoryManagerTests: XCTestCase {
     /// Проверяет очистку инвентаря
     public func testClearInventory() {
         let manager = InventoryManagerStub()
-        manager.addOperation(InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t"))
+        manager.addOperation(InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t", colorHex: "3288bd"))
         manager.clearInventory()
         expect(manager.inventory.isEmpty) == true
     }
@@ -43,7 +43,7 @@ public final class InventoryManagerTests: XCTestCase {
     /// Проверяет сохранение и загрузку инвентаря
     public func testSaveAndLoadInventory() {
         let manager = InventoryManagerStub()
-        let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t")
+        let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t", colorHex: "3288bd")
         manager.saveInventory([operation])
         let loaded = manager.loadInventory()
         expect(loaded.count) == 1

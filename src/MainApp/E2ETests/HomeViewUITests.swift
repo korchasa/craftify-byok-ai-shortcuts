@@ -100,6 +100,26 @@ import XCTest
             }
         }
 
+        public func testOperationColorCircleIsVisible() throws {
+            if let viewModel {
+                let operation = InventoryOperation(
+                    operation: .translate,
+                    params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")),
+                    promptTemplate: "Translate the following text to Russian: {text}",
+                    colorHex: "3288bd"
+                )
+                viewModel.addOperation(operation)
+                let view = HomeView(viewModel: viewModel)
+                let list = try view.inspect().find(ViewType.List.self)
+                let hStack = try list.find(ViewType.HStack.self)
+                let circle = try hStack.find(ViewType.Shape.self)
+                // Проверяем, что accessibilityLabel у кружка правильный
+                expect(try circle.accessibilityLabel()) == "Цвет операции"
+                // Проверяем, что цвет совпадает (по hex)
+                // ViewInspector не позволяет напрямую проверить цвет, но можно проверить структуру
+            }
+        }
+
         deinit {}
     }
 #endif

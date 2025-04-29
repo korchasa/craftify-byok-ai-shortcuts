@@ -26,9 +26,13 @@ src/
       LogManagerShared.swift    # Centralized logging
       Masking.swift            # Key masking utilities
       Models/                  # Shared data models
+      InventoryOperation.swift      # Модель операции, теперь с colorHex
+      InventoryManager.swift        # Управление инвентарём, поддержка colorHex
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests
+      InventoryOperationTests.swift # Unit-тесты для модели с colorHex
+      InventoryManagerTests.swift   # Unit-тесты сериализации colorHex
     Config/
       Info.plist               # SPM target configuration
     Resources/
@@ -49,12 +53,17 @@ src/
       HowToUseView.swift        # Onboarding UI
       AddOperationView.swift    # Add operation UI
       EditOperationView.swift   # Edit operation UI
+      InventoryOperation.swift      # Модель операции, теперь с colorHex
+      InventoryManager.swift        # Управление инвентарём, поддержка colorHex
     UnitTests/
       HomeViewModelTests.swift  # Inventory logic tests
       SettingsViewModelTests.swift # Settings logic tests
+      InventoryOperationTests.swift # Unit-тесты для модели с colorHex
+      InventoryManagerTests.swift   # Unit-тесты сериализации colorHex
     E2ETests/
       HomeViewUITests.swift     # UI tests for inventory
       SettingsViewUITests.swift # UI tests for settings
+      ShareExtensionViewUITests.swift # E2E/UI тесты отображения цвета
     Config/
       Info.plist                # App configuration
       Craftify.entitlements      # App entitlements
