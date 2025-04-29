@@ -6,6 +6,11 @@ import UniformTypeIdentifiers
 /// NSExtensionPrincipalClass для Share Extension
 public final class ShareExtensionViewController: UIViewController {
     private var hostingController: UIHostingController<ShareExtensionView>?
+    private var contentHeightObservation: NSKeyValueObservation?
+    private enum Constants {
+        static let minHeight: CGFloat = 220
+        static let maxHeightMultiplier: CGFloat = 0.7
+    }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +36,10 @@ public final class ShareExtensionViewController: UIViewController {
             logManager: logManager
         )
         let viewModel = ShareExtensionViewModel(manager: manager)
+        let operationsCount = viewModel.operations.count
+        let initialHeight = ShareExtensionViewHeight.calculate(count: operationsCount)
+        // self.preferredContentSize = CGSize(width: self.view.bounds.width, height: initialHeight)
+        self.preferredContentSize = CGSize(width: self.view.bounds.width, height: 300)
         let rootView = ShareExtensionView(viewModel: viewModel)
         let hosting = UIHostingController(rootView: rootView)
         addChild(hosting)

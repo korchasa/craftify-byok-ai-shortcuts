@@ -130,6 +130,7 @@ disabled_rules:
   - sorted_enum_cases
   - type_contents_order
   - nimble_operator
+  - no_extension_access_modifier
 excluded:
   - build
   - "src/**/UnitTests/*.swift"

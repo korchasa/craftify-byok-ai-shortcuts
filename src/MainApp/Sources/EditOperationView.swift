@@ -96,10 +96,6 @@ public struct EditOperationView: View {
 
     private var colorPalette: some View {
         VStack(alignment: .leading, spacing: ColorPaletteConstants.verticalSpacing) {
-            Text("Цвет операции")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-                .accessibilityAddTraits(.isHeader)
             HStack(spacing: ColorPaletteConstants.circleSpacing) {
                 ForEach(EditOperationViewModel.palette, id: \ .self) { hex in
                     Circle()

@@ -20,4 +20,20 @@
 - Do not use async let inside withTaskGroup (async_let_with_taskgroup).
 - For callback-based APIs, provide async wrappers using withCheckedThrowingContinuation (callback_to_async).
 - Do not use self in closures unless required (redundant_self_in_closure).
+- explicit_acl — все объявления должны явно указывать уровень доступа (например, public/private/internal/fileprivate).
+- no_magic_numbers — магические числа должны быть заменены на именованные константы.
 
+## Правило: Access Control для расширений
+
+### extension_access_modifier
+- Предпочитайте указывать модификатор доступа на самом `extension` вместо повторного указания его для каждого члена.
+- В расширении с модификатором доступа (`public`/`internal`/`private`/`fileprivate`) не дублируйте тот же модификатор у членов — они наследуют уровень доступа расширения.
+- Если только отдельные члены требуют иного уровня доступа, явно укажите модификатор только для них.
+
+Пример:
+```swift
+public extension MyType {
+    func foo() {}        // наследует public
+    private func bar() {} // приватный член
+}
+```
