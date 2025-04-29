@@ -49,3 +49,6 @@ All actions and errors of the application are logged through the unified log (os
 ./run logs
 ```
 Log export is not supported. Logs are only available through system tools (Console.app, log stream).
+
+## Выбор цвета операции
+- При добавлении или редактировании операции вы можете выбрать цвет из палитры. Цвет будет отображаться на карточке операции на главном экране и в Share Extension.

@@ -46,6 +46,8 @@ public struct EditOperationView: View {
 
             formFields
 
+            colorPalette
+
             buttons
         }
         .padding()
@@ -90,6 +92,33 @@ public struct EditOperationView: View {
         case .none:
             EmptyView()
         }
+    }
+
+    private var colorPalette: some View {
+        VStack(alignment: .leading, spacing: ColorPaletteConstants.verticalSpacing) {
+            Text("Цвет операции")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .accessibilityAddTraits(.isHeader)
+            HStack(spacing: ColorPaletteConstants.circleSpacing) {
+                ForEach(EditOperationViewModel.palette, id: \ .self) { hex in
+                    Circle()
+                        .fill(Color(hex: hex))
+                        .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
+                        .overlay(
+                            Circle()
+                                .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: ColorPaletteConstants.borderWidth)
+                        )
+                        .onTapGesture {
+                            viewModel.selectedColorHex = hex
+                        }
+                        .accessibilityLabel("Цвет #\(hex)")
+                        .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
+                }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.bottom, ColorPaletteConstants.bottomPadding)
     }
 
     private var buttons: some View {

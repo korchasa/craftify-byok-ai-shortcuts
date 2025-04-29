@@ -8,12 +8,14 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     @Published public var complexityLevel: ComplexityLevel = .beginner
     @Published public var stylePreservationLevel: Int = EditOperationViewModel.minStylePreservationLevel
     @Published public var detailLevel: DetailLevel = .beginner
+    @Published public var selectedColorHex: String
 
     private let originalOperation: InventoryOperation
     private let originalTargetLanguage: String
     private let originalComplexityLevel: ComplexityLevel
     private let originalStylePreservationLevel: Int
     private let originalDetailLevel: DetailLevel
+    private let originalColorHex: String
 
     public static let minStylePreservationLevel = 1
     public static let maxStylePreservationLevel = 3
@@ -36,6 +38,8 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     public init(operation: InventoryOperation) {
         self.originalOperation = operation
         self.selectedType = operation.operation
+        self.selectedColorHex = operation.colorHex
+        self.originalColorHex = operation.colorHex
         switch operation.operation {
         case .translate:
             let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params)
@@ -90,19 +94,19 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         case .translate:
             let params = TranslateParams(targetLanguage: targetLanguage)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .translate, params: data, promptTemplate: "Translate the following text to \(targetLanguage): {text}")
+            return InventoryOperation(operation: .translate, params: data, promptTemplate: "Translate the following text to \(targetLanguage): {text}", colorHex: selectedColorHex)
         case .simplify:
             let params = SimplifyParams(complexityLevel: complexityLevel)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .simplify, params: data, promptTemplate: "Simplify the following text for a \(complexityLevel.rawValue) reader: {text}")
+            return InventoryOperation(operation: .simplify, params: data, promptTemplate: "Simplify the following text for a \(complexityLevel.rawValue) reader: {text}", colorHex: selectedColorHex)
         case .correct:
             let params = CorrectParams(stylePreservationLevel: stylePreservationLevel)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .correct, params: data, promptTemplate: "Correct grammar and spelling, preserve style level \(stylePreservationLevel): {text}")
+            return InventoryOperation(operation: .correct, params: data, promptTemplate: "Correct grammar and spelling, preserve style level \(stylePreservationLevel): {text}", colorHex: selectedColorHex)
         case .explain:
             let params = ExplainParams(detailLevel: detailLevel)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .explain, params: data, promptTemplate: "Explain the following concept at \(detailLevel.rawValue) level: {text}")
+            return InventoryOperation(operation: .explain, params: data, promptTemplate: "Explain the following concept at \(detailLevel.rawValue) level: {text}", colorHex: selectedColorHex)
         }
     }
 
@@ -112,7 +116,12 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         self.complexityLevel = originalComplexityLevel
         self.stylePreservationLevel = originalStylePreservationLevel
         self.detailLevel = originalDetailLevel
+        self.selectedColorHex = originalColorHex
     }
 
     deinit {}
+
+    public static let palette: [String] = [
+        "9e0142", "d53e4f", "f46d43", "fdae61", "fee08b", "e6f598", "abdda4", "66c2a5", "3288bd", "5e4fa2"
+    ]
 }

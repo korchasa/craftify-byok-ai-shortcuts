@@ -58,6 +58,17 @@ public final class OperationModelsTests: XCTestCase {
         expect(decodedParams) == params
     }
 
+    /// Проверяет сериализацию/десериализацию colorHex в InventoryOperation
+    public func testInventoryOperationColorHexCodable() throws {
+        let params = TranslateParams(targetLanguage: "fr")
+        let paramsData = try JSONEncoder().encode(params)
+        let colorHex = "3288bd"
+        let operation = InventoryOperation(operation: .translate, params: paramsData, promptTemplate: "Translate: {text}", colorHex: colorHex)
+        let data = try JSONEncoder().encode(operation)
+        let decoded = try JSONDecoder().decode(InventoryOperation.self, from: data)
+        expect(decoded.colorHex) == colorHex
+    }
+
     /// Очистка ресурсов (stub)
     deinit { /* nothing to cleanup */ }
 }

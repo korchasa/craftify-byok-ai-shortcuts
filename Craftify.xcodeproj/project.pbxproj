@@ -8,10 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		0136E7B8817667E92036C085 /* AuthManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7321C711391C6CA9FB2256 /* AuthManagerTests.swift */; };
+		01530D16C8DA90D9766915DC /* ColorPaletteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63E8243A75BA42F250805BD /* ColorPaletteConstants.swift */; };
 		0164366EEC053F65E63DDF71 /* ComplexityLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51BFCE9C55197CC466DC8DCE /* ComplexityLevel.swift */; };
 		029CCD06C6A4AE16550EC940 /* AddOperationViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387DA2FEC0EBA4371F936F55 /* AddOperationViewConstants.swift */; };
 		045A1A2AFD694D98B0291504 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15FC1E1416E7FEFEE9927B03 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		049A84F319019D12B9C99745 /* ShareExtensionViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0CEEE04739F40BFF240C2 /* ShareExtensionViewConstants.swift */; };
+		04BF98343DB3120F781F0CC0 /* ColorPaletteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2C43C26EE6EF75899DF219 /* ColorPaletteConstants.swift */; };
 		07A88205877E305FC64E0B53 /* MainAppPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */; };
 		097C5FEEFA40E008D5357B0A /* HowToUseViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */; };
 		09AEFF7D87C62216318CD15D /* XCTestAsyncHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = A22962EBA46C19F0D2ECE140 /* XCTestAsyncHelpers.swift */; };
@@ -22,6 +24,9 @@
 		0F62430829094604AD13CA5F /* AddOperationView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8149E0CEF072EDDADB00BE /* AddOperationView+Inspectable.swift */; };
 		0F79817DDC902BCCDDE4E763 /* CwlPreconditionTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 462B18212618518038167214 /* CwlPreconditionTesting */; };
 		109091340D700DCA34C2476D /* HomeView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68623B28C487D1266385176 /* HomeView+Inspectable.swift */; };
+		10BA501821E71EEB6468CC18 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB252053A9AB38F2FDBA5BF0 /* Color+Hex.swift */; };
+		13E3883F2F25D6CD59FB9B05 /* ContentHeightKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561B0A33C008D454C8D75698 /* ContentHeightKey.swift */; };
+		13FC2A4DC36A6097AB1D5D6C /* ColorPaletteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63E8243A75BA42F250805BD /* ColorPaletteConstants.swift */; };
 		159829F4BBBEA94D60C885B7 /* NewRelic in Frameworks */ = {isa = PBXBuildFile; productRef = 4D5495C810A3342DFEBC8A80 /* NewRelic */; };
 		15B7EACE1C756A7303D9B96C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F6A7F3E6B445CB91481D061 /* SettingsView.swift */; };
 		17E97A05671963AD0389D393 /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
@@ -35,6 +40,7 @@
 		20F10F943FD2F6F3A2326ECE /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
 		210E5ADB89BBD4C3BCA904AA /* ProcessingManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D7A1B93779001A6B2CB015 /* ProcessingManaging.swift */; };
 		223CBA8AA391AA3CF39EC1AB /* LLMAPIClientError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 407A38276A23D06965404A90 /* LLMAPIClientError.swift */; };
+		2249C77C2453F21D8737B857 /* ColorPaletteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2C43C26EE6EF75899DF219 /* ColorPaletteConstants.swift */; };
 		225BA812882D3D1A13E6ADD6 /* ProcessingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADA53D955B10A190FBAE956 /* ProcessingManager.swift */; };
 		2361BE89EA5084F47E447ADC /* ExplainParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7568EB39A52FE78B1B9F25 /* ExplainParams.swift */; };
 		2368DDEBB63A1EC2D8E809F9 /* SettingsViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C430A79FD666930A008233B /* SettingsViewConstants.swift */; };
@@ -147,6 +153,7 @@
 		90672C1CD058FAFB7348901F /* InventoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3A3BCF8738E04C3FF6B608 /* InventoryManager.swift */; };
 		932BB0E018C603837D24349F /* AddOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65EF71509FF130798AC1F71 /* AddOperationView.swift */; };
 		94D6532B41920E9BFC0875D2 /* CorrectParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */; };
+		987D810E7C5C713D81E32843 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB252053A9AB38F2FDBA5BF0 /* Color+Hex.swift */; };
 		989076FEFF00CFDAEC699FF9 /* E2EShareExtensionFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7826956133D04AAEDC5DEFD3 /* E2EShareExtensionFlowTests.swift */; };
 		99504AEB16A43439B5141F86 /* SettingsViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85D4FF188F7007B982574A5E /* SettingsViewUITests.swift */; };
 		9983FF4C1F1B7A419549ED22 /* HomeView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68623B28C487D1266385176 /* HomeView+Inspectable.swift */; };
@@ -154,6 +161,7 @@
 		9D57E1F06867C5FB7A7F701A /* AddOperationView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8149E0CEF072EDDADB00BE /* AddOperationView+Inspectable.swift */; };
 		9EB7914EF9C1BF8C03AA275E /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
 		A0591C8DFD2BC14599543FAC /* InventoryOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9A0B81764D8C1D51D6CC88 /* InventoryOperation.swift */; };
+		A06A55798A78FC95C7EFB26B /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB252053A9AB38F2FDBA5BF0 /* Color+Hex.swift */; };
 		A413BFC3BF48FEB2604C0E4F /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9585D656FFE5C1B0ADAD097F /* HomeView.swift */; };
 		A50A0F9162EF13C6415F29D5 /* LogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3300990178545D06F20EFB1C /* LogManagerShared.swift */; };
 		A994195B53FE383289F6CD3D /* E2ELogManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B062906A62F6E08B3A98B75C /* E2ELogManagerTests.swift */; };
@@ -170,8 +178,10 @@
 		B4B82DE81DE52EB510071356 /* TranslateParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684129DE2E2AA1ACBFF2D88 /* TranslateParams.swift */; };
 		B7B24DC3384D51372A192B20 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCD23D25BE28D319831E3 /* Strings.swift */; };
 		B7DEC937FC43D3D0607557CE /* ExplainParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7568EB39A52FE78B1B9F25 /* ExplainParams.swift */; };
+		B869B03E07D05912099C1398 /* ContentHeightKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561B0A33C008D454C8D75698 /* ContentHeightKey.swift */; };
 		BA39AD52CA663A339B7ED116 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = B01FF16CD936F2690C7BC7B6 /* Nimble */; };
 		BA61E1148E0717499274AB57 /* InventoryManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967405397B94E4F95FEAB1 /* InventoryManagerStub.swift */; };
+		BBDB295444D6F217867809CC /* ColorPaletteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE2C43C26EE6EF75899DF219 /* ColorPaletteConstants.swift */; };
 		BD4B4BAD5A4130B8A081FC70 /* ClipboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F336F9499A34785D24BBA695 /* ClipboardManager.swift */; };
 		BDF90D8E90BE2A5FE6A17397 /* EditOperationViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B2C64D3119253486ACF264 /* EditOperationViewUITests.swift */; };
 		BE38F9E33B3EDC2C041D70A7 /* AddOperationViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C6E92D99C5FCDF63EA59AC6 /* AddOperationViewModelTests.swift */; };
@@ -212,6 +222,7 @@
 		DAE6CE81457F29E07AC58FCF /* DetailLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0DFF03BAEF851D6598A5BD /* DetailLevel.swift */; };
 		DC6BB2D1F5DD1CC9BCC9D39E /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 6BACA1D888825FC6EC624F6C /* Nimble */; };
 		DCAF9C4236D181ABCCC809E4 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCD23D25BE28D319831E3 /* Strings.swift */; };
+		DD02642699935ED0DEDB838A /* ContentHeightKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561B0A33C008D454C8D75698 /* ContentHeightKey.swift */; };
 		DE65F4F974FC77F0C7848434 /* ConsentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EFA9E1579B01537E823FF8D /* ConsentManagerTests.swift */; };
 		DF6E62CFEEBB1D54B38D7CB2 /* Common.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15FC1E1416E7FEFEE9927B03 /* Common.framework */; };
 		E020BE601822EB99DF16C978 /* ShareExtensionView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9E8DE580177603717BFA4AF /* ShareExtensionView+Inspectable.swift */; };
@@ -230,6 +241,7 @@
 		EF0DE54C7567192223EDDCEE /* MaskingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B986DB4B42C475355A045A8 /* MaskingTests.swift */; };
 		EF68BA7B72A2A74352AED235 /* ProcessingManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D7A1B93779001A6B2CB015 /* ProcessingManaging.swift */; };
 		EFEE5738E75DBDAAE8E48622 /* MainAppPlaceholder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */; };
+		F4F75011220F047373D1C4B0 /* ColorPaletteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63E8243A75BA42F250805BD /* ColorPaletteConstants.swift */; };
 		F5207510BB092286505AE90E /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
 		F6E1DD3CE4E1CAC412215A17 /* HomeView+Inspectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E68623B28C487D1266385176 /* HomeView+Inspectable.swift */; };
 		F84110F8820456B3F72ECB17 /* InventoryManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967405397B94E4F95FEAB1 /* InventoryManagerStub.swift */; };
@@ -390,6 +402,7 @@
 		46C3F5768A004A89D5C4DA7B /* ShareExtensionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionManagerTests.swift; sourceTree = "<group>"; };
 		47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewModel.swift; sourceTree = "<group>"; };
 		51BFCE9C55197CC466DC8DCE /* ComplexityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplexityLevel.swift; sourceTree = "<group>"; };
+		561B0A33C008D454C8D75698 /* ContentHeightKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentHeightKey.swift; sourceTree = "<group>"; };
 		5B986DB4B42C475355A045A8 /* MaskingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskingTests.swift; sourceTree = "<group>"; };
 		5EFA9E1579B01537E823FF8D /* ConsentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagerTests.swift; sourceTree = "<group>"; };
 		6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppPlaceholder.swift; sourceTree = "<group>"; };
@@ -422,6 +435,7 @@
 		A22962EBA46C19F0D2ECE140 /* XCTestAsyncHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestAsyncHelpers.swift; sourceTree = "<group>"; };
 		A31D399AA06EF50D4E22AAE9 /* ShareExtensionE2ETests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ShareExtensionE2ETests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A56A2805031F435E0F7609F2 /* ShareExtensionViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewUITests.swift; sourceTree = "<group>"; };
+		A63E8243A75BA42F250805BD /* ColorPaletteConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPaletteConstants.swift; sourceTree = "<group>"; };
 		A65EF71509FF130798AC1F71 /* AddOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOperationView.swift; sourceTree = "<group>"; };
 		A73BEEF846398C71F616D891 /* LogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
 		B062906A62F6E08B3A98B75C /* E2ELogManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E2ELogManagerTests.swift; sourceTree = "<group>"; };
@@ -431,12 +445,14 @@
 		B9543E1059C3C102358325D9 /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		BA719083BA21A6299039A78D /* AddOperationViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOperationViewUITests.swift; sourceTree = "<group>"; };
 		BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CorrectParams.swift; sourceTree = "<group>"; };
+		BB252053A9AB38F2FDBA5BF0 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		C16E74141F4DB7A757893C9B /* AddOperationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOperationViewModel.swift; sourceTree = "<group>"; };
 		C9E8DE580177603717BFA4AF /* ShareExtensionView+Inspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ShareExtensionView+Inspectable.swift"; sourceTree = "<group>"; };
 		CA185C341D41A9EE1A6A952E /* CommonUnitTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CommonUnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CF92F9A60ACB81AB329CC034 /* HomeViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewUITests.swift; sourceTree = "<group>"; };
 		D7B2C64D3119253486ACF264 /* EditOperationViewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditOperationViewUITests.swift; sourceTree = "<group>"; };
 		DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedInMemory.swift; sourceTree = "<group>"; };
+		DE2C43C26EE6EF75899DF219 /* ColorPaletteConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPaletteConstants.swift; sourceTree = "<group>"; };
 		DE89C634D711B0AB916AF1AB /* ProcessingManagerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingManagerStub.swift; sourceTree = "<group>"; };
 		DF0292538F0FE6189D748FF8 /* ClipboardManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManaging.swift; sourceTree = "<group>"; };
 		E129DB753DFF5EAA84F64141 /* LLMAPIClientIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMAPIClientIntegrationTests.swift; sourceTree = "<group>"; };
@@ -546,6 +562,7 @@
 				7F8149E0CEF072EDDADB00BE /* AddOperationView+Inspectable.swift */,
 				387DA2FEC0EBA4371F936F55 /* AddOperationViewConstants.swift */,
 				C16E74141F4DB7A757893C9B /* AddOperationViewModel.swift */,
+				DE2C43C26EE6EF75899DF219 /* ColorPaletteConstants.swift */,
 				E40D28DB3F67CDF5F0E6E146 /* CraftifyApp.swift */,
 				3734B7B6FEB4877F290E0804 /* EditOperationView.swift */,
 				3FE65F023516F6D379664E55 /* EditOperationView+Inspectable.swift */,
@@ -631,6 +648,7 @@
 				F336F9499A34785D24BBA695 /* ClipboardManager.swift */,
 				A07D5AD74D8F325EF20F6982 /* ClipboardManagerStub.swift */,
 				DF0292538F0FE6189D748FF8 /* ClipboardManaging.swift */,
+				561B0A33C008D454C8D75698 /* ContentHeightKey.swift */,
 				2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */,
 				407A38276A23D06965404A90 /* LLMAPIClientError.swift */,
 				7ADA53D955B10A190FBAE956 /* ProcessingManager.swift */,
@@ -754,6 +772,8 @@
 				63611641A94E5EAA7AE49EB0 /* AuthManager.swift */,
 				8706FC6569F61629E86A4B47 /* AuthManagerError.swift */,
 				9E32103F017739E1D10B1E59 /* AuthManaging.swift */,
+				BB252053A9AB38F2FDBA5BF0 /* Color+Hex.swift */,
+				A63E8243A75BA42F250805BD /* ColorPaletteConstants.swift */,
 				121BC52402A5A5F85C716752 /* LogEntry.swift */,
 				A73BEEF846398C71F616D891 /* LogLevel.swift */,
 				3300990178545D06F20EFB1C /* LogManagerShared.swift */,
@@ -1051,6 +1071,7 @@
 				336B4E0FA20ADFC664649DCD /* ClipboardManager.swift in Sources */,
 				35BFC7833A26C489EAF0B0B5 /* ClipboardManagerStub.swift in Sources */,
 				6FC032E387680C2E13212F96 /* ClipboardManaging.swift in Sources */,
+				13E3883F2F25D6CD59FB9B05 /* ContentHeightKey.swift in Sources */,
 				C9B333F4E788C32DBDC419E4 /* LLMAPIClient.swift in Sources */,
 				C46035C6F327ECB50EE58DCC /* LLMAPIClientError.swift in Sources */,
 				4F6450CCC3A848C648746A14 /* LLMAPIClientIntegrationTests.swift in Sources */,
@@ -1081,6 +1102,8 @@
 				3ECB492D6BC3BE94D4AEC490 /* AuthManagerError.swift in Sources */,
 				C210646B608A09AF2F5F93F2 /* AuthManagerStub.swift in Sources */,
 				20F10F943FD2F6F3A2326ECE /* AuthManaging.swift in Sources */,
+				A06A55798A78FC95C7EFB26B /* Color+Hex.swift in Sources */,
+				01530D16C8DA90D9766915DC /* ColorPaletteConstants.swift in Sources */,
 				33999466F06141AAE7201547 /* ComplexityLevel.swift in Sources */,
 				62C38D3DB03617E9794FC7DC /* ConsentManager.swift in Sources */,
 				17EBB69ABAF0122E9ADCE6D8 /* ConsentManagerStub.swift in Sources */,
@@ -1113,6 +1136,8 @@
 				D505DEA5CAFDC72B190A8C3B /* AuthManagerError.swift in Sources */,
 				AB6797C18CC0D274EFDAC12F /* AuthManagerStub.swift in Sources */,
 				7D095DB11389F4B8CAB2E53B /* AuthManaging.swift in Sources */,
+				987D810E7C5C713D81E32843 /* Color+Hex.swift in Sources */,
+				13FC2A4DC36A6097AB1D5D6C /* ColorPaletteConstants.swift in Sources */,
 				676F0F9E44B7F6FA8AF77DA2 /* ComplexityLevel.swift in Sources */,
 				456661DDAA34D91366FD0DF4 /* ConsentManager.swift in Sources */,
 				6DBE960793253FDF0C5B10C0 /* ConsentManagerStub.swift in Sources */,
@@ -1144,6 +1169,7 @@
 				D1CE8788DC9CC1DF3168E6DD /* ClipboardManager.swift in Sources */,
 				2481BBCCA004B14A30BFEAF2 /* ClipboardManagerStub.swift in Sources */,
 				783266C0441A9EA5E760FFEA /* ClipboardManaging.swift in Sources */,
+				B869B03E07D05912099C1398 /* ContentHeightKey.swift in Sources */,
 				6621DC45CF3DAC9F3567D4C7 /* LLMAPIClient.swift in Sources */,
 				223CBA8AA391AA3CF39EC1AB /* LLMAPIClientError.swift in Sources */,
 				6C6349024EFD047A52C05472 /* ProcessingManager.swift in Sources */,
@@ -1169,6 +1195,7 @@
 				932BB0E018C603837D24349F /* AddOperationView.swift in Sources */,
 				029CCD06C6A4AE16550EC940 /* AddOperationViewConstants.swift in Sources */,
 				3DBEFB00FD7E2C8CE9211C5D /* AddOperationViewModel.swift in Sources */,
+				04BF98343DB3120F781F0CC0 /* ColorPaletteConstants.swift in Sources */,
 				EEC63FAAA52A9E8376E001B9 /* CraftifyApp.swift in Sources */,
 				50EBA466C37F6F957227BE57 /* EditOperationView+Inspectable.swift in Sources */,
 				E371ADA6EC74AC5C352EAA39 /* EditOperationView.swift in Sources */,
@@ -1195,6 +1222,7 @@
 				18C8C87A5817251F36A2F389 /* AddOperationViewConstants.swift in Sources */,
 				AFACD1713C54FFE885640F37 /* AddOperationViewModel.swift in Sources */,
 				BE38F9E33B3EDC2C041D70A7 /* AddOperationViewModelTests.swift in Sources */,
+				2249C77C2453F21D8737B857 /* ColorPaletteConstants.swift in Sources */,
 				43D6B2FF803AD0F7CB2135AD /* CraftifyApp.swift in Sources */,
 				E48BEB5A13610CDAB8E071A4 /* EditOperationView+Inspectable.swift in Sources */,
 				AC3BC29DAEDDFF3320D70ABC /* EditOperationView.swift in Sources */,
@@ -1223,6 +1251,7 @@
 				BD4B4BAD5A4130B8A081FC70 /* ClipboardManager.swift in Sources */,
 				ECB8BEDE6F438B887C32D6BB /* ClipboardManagerStub.swift in Sources */,
 				895BBA145D6C60819FDC2041 /* ClipboardManaging.swift in Sources */,
+				DD02642699935ED0DEDB838A /* ContentHeightKey.swift in Sources */,
 				989076FEFF00CFDAEC699FF9 /* E2EShareExtensionFlowTests.swift in Sources */,
 				80A23578213C3F04C719DD37 /* LLMAPIClient.swift in Sources */,
 				FB4BE7D9FD05FA50F02E99F0 /* LLMAPIClientError.swift in Sources */,
@@ -1251,6 +1280,8 @@
 				57D81E1A401C0DE099A5CF61 /* AuthManagerStub.swift in Sources */,
 				0136E7B8817667E92036C085 /* AuthManagerTests.swift in Sources */,
 				B371C2986B356543B096C313 /* AuthManaging.swift in Sources */,
+				10BA501821E71EEB6468CC18 /* Color+Hex.swift in Sources */,
+				F4F75011220F047373D1C4B0 /* ColorPaletteConstants.swift in Sources */,
 				0164366EEC053F65E63DDF71 /* ComplexityLevel.swift in Sources */,
 				0C9BB2AAF4D3D7CB0B6E33BB /* ConsentManager.swift in Sources */,
 				6ADED9E35FBA93A7D3407E3E /* ConsentManagerStub.swift in Sources */,
@@ -1289,6 +1320,7 @@
 				770181409F196BE087FFE222 /* AddOperationViewConstants.swift in Sources */,
 				B2942F62A64456A618922BF8 /* AddOperationViewModel.swift in Sources */,
 				50BE439FA34D36721EFE123C /* AddOperationViewUITests.swift in Sources */,
+				BBDB295444D6F217867809CC /* ColorPaletteConstants.swift in Sources */,
 				F92B70FBABF1B2C2173F619E /* CraftifyApp.swift in Sources */,
 				4D4D22E1A1926A49DA53CA3E /* E2EInventoryFlowTests.swift in Sources */,
 				33AE52095E1FD5BC0230D374 /* E2EOnboardingFlowTests.swift in Sources */,

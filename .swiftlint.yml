@@ -132,10 +132,9 @@ disabled_rules:
   - nimble_operator
 excluded:
   - build
-  - src/MainApp/Resources/Generated
-  - src/Common/Generated
   - "src/**/UnitTests/*.swift"
   - "src/**/E2ETests/*.swift"
   - "src/**/UITests/*.swift"
+  - "src/**/Generated/**/*.swift"
 opt_in_rules:
   - all

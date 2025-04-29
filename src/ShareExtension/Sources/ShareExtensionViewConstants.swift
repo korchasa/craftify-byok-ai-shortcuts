@@ -37,3 +37,7 @@ public enum ShareExtensionViewConstants {
     /// Задержка скрытия copiedToast (секунды)
     public static let copiedToastHideDelay: TimeInterval = 2
 }
+
+extension Notification.Name {
+    static let closeShareExtension = Notification.Name("closeShareExtension")
+}

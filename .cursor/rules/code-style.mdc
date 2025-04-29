@@ -1,0 +1,7 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+explicit_acl — все объявления должны явно указывать уровень доступа (например, public/private/internal/fileprivate).
+no_magic_numbers — магические числа должны быть заменены на именованные константы.

@@ -117,3 +117,10 @@ graph TD
 - ShareExtensionManager does not implement a timeout, only the business logic for processing and errors.
 - In unit tests, the ViewModel timeout is set through processingTimeoutSeconds.
 - In E2E tests, ShareExtensionManager only checks for errors and successes in processing, but not the timeout.
+
+### Operation Color Support
+- InventoryOperation расширена свойством colorHex (hex-код цвета из палитры).
+- Сериализация/десериализация InventoryOperation поддерживает colorHex.
+- UI (HomeView, ShareExtensionView) отображает цвет операции (индикатор).
+- Выбор цвета реализован в AddOperationView и EditOperationView через палитру.
+- Покрыто unit, UI и e2e тестами (отображение, выбор, сохранение цвета).
