@@ -9,8 +9,6 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var apiKey: String = ""
     /// Маскированный API-ключ для отображения
     @Published public var maskedApiKey: String = ""
-    /// Флаг согласия пользователя
-    @Published public var consentGiven: Bool = false
     /// Сообщение об ошибке
     @Published public var errorMessage: String? = nil
     /// Индикатор загрузки
@@ -19,19 +17,16 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var isKeyPresent: Bool = false
 
     private let authManager: AuthManaging
-    private let consentManager: ConsentManaging
 
-    /// Инициализация с менеджерами
+    /// Инициализация с менеджером
     /// - Parameters:
     ///   - authManager: Менеджер API-ключа
-    ///   - consentManager: Менеджер согласия
-    public init(authManager: AuthManaging = AuthManager(), consentManager: ConsentManaging = ConsentManager()) {
+    public init(authManager: AuthManaging = AuthManager()) {
         self.authManager = authManager
-        self.consentManager = consentManager
         Task { await load() }
     }
 
-    /// Загрузка состояния (ключ, согласие)
+    /// Загрузка состояния (ключ)
     public func load() async {
         isLoading = true
         defer { isLoading = false }
@@ -46,7 +41,6 @@ public final class SettingsViewModel: ObservableObject {
             isKeyPresent = false
             errorMessage = error.localizedDescription
         }
-        consentGiven = consentManager.getConsent()
     }
 
     /// Сохранить API-ключ
@@ -76,13 +70,6 @@ public final class SettingsViewModel: ObservableObject {
         } catch {
             errorMessage = error.localizedDescription
         }
-    }
-
-    /// Установить согласие пользователя
-    /// - Parameter value: Новое значение согласия
-    public func setConsent(_ value: Bool) {
-        consentManager.setConsent(value)
-        consentGiven = value
     }
 
     deinit {}
