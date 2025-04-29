@@ -107,19 +107,19 @@ public struct HomeView: View {
         switch operation.operation {
         case .translate:
             if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
-                return "\(L10n.operationParamTargetLanguage): → \(params.targetLanguage)"
+                return "→ \(params.targetLanguage)"
             }
         case .simplify:
             if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {
-                return "\(L10n.operationParamComplexityLevel): \(params.complexityLevel.rawValue)"
+                return "\(params.complexityLevel.rawValue.capitalized)"
             }
         case .correct:
             if let params = try? JSONDecoder().decode(CorrectParams.self, from: operation.params) {
-                return "\(L10n.operationParamStylePreservation): \(params.stylePreservationLevel)/3"
+                return "\(params.stylePreservationLevel)/3"
             }
         case .explain:
             if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
-                return "\(L10n.operationParamDetailLevel): \(params.detailLevel.rawValue)"
+                return "\(params.detailLevel.rawValue.capitalized)"
             }
         }
         return ""
