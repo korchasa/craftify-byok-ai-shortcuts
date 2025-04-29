@@ -19,7 +19,6 @@ public struct SettingsView: View {
         VStack(spacing: SettingsViewConstants.verticalSpacing) {
             titleSection
             apiKeySection
-            consentSection
             errorSection
             Spacer()
             buttonsSection
@@ -62,18 +61,6 @@ public struct SettingsView: View {
             }
         }
         .padding(.horizontal)
-    }
-
-    @ViewBuilder
-    private var consentSection: some View {
-        Toggle(isOn: $viewModel.consentGiven) {
-            Text(L10n.howtouseConsent)
-        }
-        .onChange(of: viewModel.consentGiven) { newValue in
-            viewModel.setConsent(newValue)
-        }
-        .padding(.horizontal)
-        .accessibilityLabel(L10n.howtouseConsent)
     }
 
     @ViewBuilder

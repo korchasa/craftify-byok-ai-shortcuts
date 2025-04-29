@@ -6,19 +6,16 @@ import XCTest
 @MainActor
 public final class SettingsViewModelTests: XCTestCase {
     private var authManager: AuthManagerStub?
-    private var consentManager: ConsentManagerStub?
     private var viewModel: SettingsViewModel?
 
     override public func setUp() {
         super.setUp()
         authManager = AuthManagerStub(key: nil)
-        consentManager = ConsentManagerStub()
-        viewModel = SettingsViewModel(authManager: authManager!, consentManager: consentManager!)
+        viewModel = SettingsViewModel(authManager: authManager!)
     }
 
     override public func tearDown() {
         authManager = nil
-        consentManager = nil
         viewModel = nil
         super.tearDown()
     }
@@ -66,16 +63,6 @@ public final class SettingsViewModelTests: XCTestCase {
         expect(authManager.savedKey == nil) == true
         await expect { try await viewModel.isKeyPresent } == false
         await expect { try await viewModel.apiKey } == ""
-    }
-
-    public func testConsent() async {
-        guard let viewModel, let consentManager else { XCTFail("viewModel is nil")
-            return
-        }
-        await expect { try await viewModel.consentGiven } == false
-        await MainActor.run { viewModel.setConsent(true) }
-        expect(consentManager.getConsent()) == true
-        await expect { try await viewModel.consentGiven } == true
     }
 
     deinit {}
