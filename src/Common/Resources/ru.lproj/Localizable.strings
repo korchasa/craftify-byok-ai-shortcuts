@@ -61,3 +61,9 @@
 "language_german" = "Немецкий";
 "language_chinese" = "Китайский";
 "language_japanese" = "Японский";
+
+"processing" = "Обработка...";
+"error" = "Ошибка";
+"save" = "Сохранить";
+"delete" = "Удалить";
+"copied_to_clipboard" = "Скопировано в буфер";

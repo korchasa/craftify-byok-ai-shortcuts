@@ -39,7 +39,7 @@ public struct ShareExtensionView: View {
     public var body: some View {
         ZStack {
             VStack(spacing: ShareExtensionViewConstants.verticalSpacing) {
-                Text("Craftify — Обработка текста")
+                Text(L10n.shareTitle)
                     .font(.title2)
                     .bold()
                     .accessibilityAddTraits(.isHeader)
@@ -47,10 +47,10 @@ public struct ShareExtensionView: View {
                 operationsGrid
                 Spacer()
                 Button(action: { viewModel.cancel() }) {
-                    Text("Отмена")
+                    Text(L10n.shareCancel)
                         .frame(maxWidth: .infinity)
                 }
-                .accessibilityLabel("Отмена")
+                .accessibilityLabel(L10n.shareCancel)
                 .buttonStyle(.bordered)
                 .padding(.horizontal)
                 .padding(.bottom, ShareExtensionViewConstants.bottomPadding)
@@ -88,7 +88,7 @@ public struct ShareExtensionView: View {
             }
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text("Ошибка"), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            Alert(title: Text(L10n.error), message: Text(alertMessage), dismissButton: .default(Text("OK")))
         }
         .padding()
         .background(Color(.systemBackground))
@@ -149,7 +149,7 @@ public struct ShareExtensionView: View {
 
     private var progressOverlay: some View {
         VStack(spacing: ShareExtensionViewConstants.verticalSpacing) {
-            Text("Обработка...")
+            Text(L10n.processing)
                 .font(.headline)
             ProgressView(value: progress)
                 .progressViewStyle(.linear)
@@ -161,7 +161,7 @@ public struct ShareExtensionView: View {
         .background(RoundedRectangle(cornerRadius: ShareExtensionViewConstants.overlayCornerRadius).fill(Color(.systemBackground).opacity(ShareExtensionViewConstants.overlayOpacity)))
         .shadow(radius: ShareExtensionViewConstants.overlayShadow)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("Обработка, прогресс \(Int(progress * ProgressConstants.percentMax))%")
+        .accessibilityLabel("\(L10n.processing), progress \(Int(progress * ProgressConstants.percentMax))%")
     }
 
     private var copiedToast: some View {
@@ -169,7 +169,7 @@ public struct ShareExtensionView: View {
             Spacer()
             HStack {
                 Spacer()
-                Text("Скопировано в буфер")
+                Text(L10n.copiedToClipboard)
                     .font(ShareExtensionViewConstants.copiedToastFont)
                     .padding(.vertical, ShareExtensionViewConstants.copiedToastVerticalSpacing)
                     .padding(.horizontal, ShareExtensionViewConstants.copiedToastHorizontalSpacing)

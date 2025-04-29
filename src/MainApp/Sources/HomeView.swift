@@ -96,10 +96,10 @@ public struct HomeView: View {
 
     private func operationLabel(for type: OperationType) -> String {
         switch type {
-        case .translate: "Перевод"
-        case .simplify: "Упрощение"
-        case .correct: "Коррекция"
-        case .explain: "Объяснение"
+        case .translate: L10n.operationLabelTranslate
+        case .simplify: L10n.operationLabelSimplify
+        case .correct: L10n.operationLabelCorrect
+        case .explain: L10n.operationLabelExplain
         }
     }
 
@@ -107,19 +107,19 @@ public struct HomeView: View {
         switch operation.operation {
         case .translate:
             if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
-                return "Язык: → \(params.targetLanguage)"
+                return "\(L10n.operationParamTargetLanguage): → \(params.targetLanguage)"
             }
         case .simplify:
             if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {
-                return "Уровень: \(params.complexityLevel.rawValue)"
+                return "\(L10n.operationParamComplexityLevel): \(params.complexityLevel.rawValue)"
             }
         case .correct:
             if let params = try? JSONDecoder().decode(CorrectParams.self, from: operation.params) {
-                return "Сохранение стиля: \(params.stylePreservationLevel)/3"
+                return "\(L10n.operationParamStylePreservation): \(params.stylePreservationLevel)/3"
             }
         case .explain:
             if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
-                return "Детализация: \(params.detailLevel.rawValue)"
+                return "\(L10n.operationParamDetailLevel): \(params.detailLevel.rawValue)"
             }
         }
         return ""

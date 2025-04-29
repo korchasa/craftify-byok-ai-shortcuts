@@ -54,9 +54,9 @@ public struct SettingsView: View {
                         .foregroundColor(.secondary)
                     Spacer()
                     Button(role: .destructive, action: { Task { await viewModel.deleteKey() } }) {
-                        Text("Удалить")
+                        Text(L10n.homeDelete)
                     }
-                    .accessibilityLabel("Удалить ключ")
+                    .accessibilityLabel(L10n.homeDelete + " ключ")
                 }
             }
         }
@@ -88,10 +88,10 @@ public struct SettingsView: View {
             .buttonStyle(.bordered)
 
             Button(action: { Task { await viewModel.saveKey() } }) {
-                Text("Сохранить")
+                Text(L10n.addOperationSave)
                     .frame(maxWidth: .infinity)
             }
-            .accessibilityLabel("Сохранить ключ")
+            .accessibilityLabel(L10n.addOperationSave + " ключ")
             .buttonStyle(.borderedProminent)
             .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
         }
