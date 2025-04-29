@@ -11,6 +11,8 @@ public struct ShareExtensionView: View {
     @State private var alertMessage = ""
     @State private var isProcessing = false
     @State private var progress: Double = 0.0
+    @State private var contentHeight: CGFloat = 0
+    public var onContentHeightChange: ((CGFloat) -> Void)? = nil
 
     private enum ProgressConstants {
         static let percentMax: Double = 100
@@ -44,7 +46,7 @@ public struct ShareExtensionView: View {
 
     public var body: some View {
         ZStack {
-            ShareExtensionMainContent(viewModel: viewModel)
+            mainContent
             Button(action: { viewModel.shouldCloseExtension = true }) {
                 Image(systemName: "xmark")
                     .imageScale(.large)
@@ -94,78 +96,78 @@ public struct ShareExtensionView: View {
         .zIndex(ZIndexConstants.copiedToast)
     }
 
-    private struct ShareExtensionMainContent: View {
-        @ObservedObject var viewModel: ShareExtensionViewModel
-        var body: some View {
-            VStack(spacing: ShareExtensionViewConstants.verticalSpacing) {
-                Text(L10n.shareTitle)
-                    .font(.title2)
-                    .bold()
-                    .accessibilityAddTraits(.isHeader)
-                    .padding(.top, ShareExtensionViewConstants.topPadding)
-                operationsGrid
-            }
-            .frame(maxWidth: .infinity, alignment: .top)
-            .background(GeometryReader { geo in
-                Color.clear.preference(key: ContentHeightKey.self, value: geo.size.height)
-            })
+    private var mainContent: some View {
+        VStack(spacing: 0) {
+            Spacer()
+            // Заголовок
+            Text(L10n.shareTitle)
+                .font(.title2)
+                .bold()
+                .accessibilityAddTraits(.isHeader)
+                .padding(.top, ShareExtensionViewConstants.topPadding)
+            Rectangle()
+                .fill(Color.clear)
+                .frame(height: 12)
+            // Операции внизу
+            operationsGrid
+                .padding(.bottom, ShareExtensionViewConstants.bottomPadding)
         }
+    }
 
-        private var operationsGrid: some View {
-            let cardCornerRadius: CGFloat = 12
-            return LazyVGrid(columns: ShareExtensionViewLocalConstants.gridColumns, spacing: ShareExtensionViewConstants.gridSpacing) {
-                ForEach(viewModel.operations, id: \ .id) { op in
-                    let color = Color(hex: op.colorHex)
-                    Button(action: { viewModel.process(operation: op) }) {
-                        Text(operationDisplayName(for: op))
-                            .frame(maxWidth: .infinity, minHeight: ShareExtensionViewLocalConstants.operationMinHeight)
-                            .padding()
-                            .background(color)
-                            .foregroundColor(color.isDarkColor ? .white : .black)
-                            .cornerRadius(cardCornerRadius)
-                    }
-                    .accessibilityLabel(operationDisplayName(for: op))
-                    .buttonStyle(.plain)
-                    .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
+    private var operationsGrid: some View {
+        let cardCornerRadius: CGFloat = 12
+        return LazyVGrid(columns: ShareExtensionViewLocalConstants.gridColumns, spacing: ShareExtensionViewConstants.gridSpacing) {
+            ForEach(viewModel.operations, id: \ .id) { op in
+                let color = Color(hex: op.colorHex)
+                Button(action: { viewModel.process(operation: op) }) {
+                    Text(operationDisplayName(for: op))
+                        .frame(maxWidth: .infinity, minHeight: ShareExtensionViewLocalConstants.operationMinHeight)
+                        .padding()
+                        .background(color)
+                        .foregroundColor(color.isDarkColor ? .white : .black)
+                        .cornerRadius(cardCornerRadius)
                 }
+                .accessibilityLabel(operationDisplayName(for: op))
+                .buttonStyle(.plain)
+                .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
             }
-            .padding(.horizontal)
         }
+        .padding(.horizontal)
+    }
 
-        private func operationDisplayName(for op: InventoryOperation) -> String {
-            switch op.operation {
-            case .translate:
-                if let params = try? JSONDecoder().decode(TranslateParams.self, from: op.params) {
-                    let langName = ShareExtensionView.supportedLanguages.first(where: { $0.code == params.targetLanguage })?.name ?? params.targetLanguage
-                    return "\(L10n.operationLabelTranslate) → \(langName)"
-                }
-                return L10n.operationLabelTranslate
-            case .simplify:
-                if let params = try? JSONDecoder().decode(SimplifyParams.self, from: op.params) {
-                    let level: String = switch params.complexityLevel {
-                    case .beginner: L10n.operationValueBeginner
-                    case .intermediate: L10n.operationValueIntermediate
-                    case .advanced: L10n.operationValueAdvanced
-                    }
-                    return "\(L10n.operationLabelSimplify) \(level)"
-                }
-                return L10n.operationLabelSimplify
-            case .correct:
-                if let params = try? JSONDecoder().decode(CorrectParams.self, from: op.params) {
-                    return "\(L10n.operationLabelCorrect) \(params.stylePreservationLevel)/3"
-                }
-                return L10n.operationLabelCorrect
-            case .explain:
-                if let params = try? JSONDecoder().decode(ExplainParams.self, from: op.params) {
-                    let level: String = switch params.detailLevel {
-                    case .beginner: L10n.operationValueBeginner
-                    case .intermediate: L10n.operationValueIntermediate
-                    case .advanced: L10n.operationValueAdvanced
-                    }
-                    return "\(L10n.operationLabelExplain) \(level)"
-                }
-                return L10n.operationLabelExplain
+    private func operationDisplayName(for op: InventoryOperation) -> String {
+        switch op.operation {
+        case .translate:
+            if let params = try? JSONDecoder().decode(TranslateParams.self, from: op.params) {
+                let langName = ShareExtensionView.supportedLanguages.first(where: { $0.code == params.targetLanguage })?.name ?? params.targetLanguage
+                return "\(L10n.operationLabelTranslate) → \(langName)"
             }
+            return L10n.operationLabelTranslate
+        case .simplify:
+            if let params = try? JSONDecoder().decode(SimplifyParams.self, from: op.params) {
+                let level: String = switch params.complexityLevel {
+                case .beginner: L10n.operationValueBeginner
+                case .intermediate: L10n.operationValueIntermediate
+                case .advanced: L10n.operationValueAdvanced
+                }
+                return "\(L10n.operationLabelSimplify) \(level)"
+            }
+            return L10n.operationLabelSimplify
+        case .correct:
+            if let params = try? JSONDecoder().decode(CorrectParams.self, from: op.params) {
+                return "\(L10n.operationLabelCorrect) \(params.stylePreservationLevel)/3"
+            }
+            return L10n.operationLabelCorrect
+        case .explain:
+            if let params = try? JSONDecoder().decode(ExplainParams.self, from: op.params) {
+                let level: String = switch params.detailLevel {
+                case .beginner: L10n.operationValueBeginner
+                case .intermediate: L10n.operationValueIntermediate
+                case .advanced: L10n.operationValueAdvanced
+                }
+                return "\(L10n.operationLabelExplain) \(level)"
+            }
+            return L10n.operationLabelExplain
         }
     }
 

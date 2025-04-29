@@ -45,8 +45,10 @@
 		2361BE89EA5084F47E447ADC /* ExplainParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7568EB39A52FE78B1B9F25 /* ExplainParams.swift */; };
 		2368DDEBB63A1EC2D8E809F9 /* SettingsViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C430A79FD666930A008233B /* SettingsViewConstants.swift */; };
 		2481BBCCA004B14A30BFEAF2 /* ClipboardManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07D5AD74D8F325EF20F6982 /* ClipboardManagerStub.swift */; };
+		26EB4000E370CD360DC8D794 /* ShareExtensionViewHeightTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C1B640D60D9477EED3564D /* ShareExtensionViewHeightTests.swift */; };
 		276E9E0A28059774F1CD0206 /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
 		27BD38B544F42A317A689E50 /* EditOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734B7B6FEB4877F290E0804 /* EditOperationView.swift */; };
+		28E2ED180337F5922B910F8F /* ShareExtensionViewHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C20E0145E376547F060889 /* ShareExtensionViewHeight.swift */; };
 		2E212606258D435CFE9862A9 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFDCD23D25BE28D319831E3 /* Strings.swift */; };
 		2E60BE04465C3E6ED4E640B3 /* ShareExtensionViewModelConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4983E61FB194F87AFC657C /* ShareExtensionViewModelConstants.swift */; };
 		315A03B8F895AEBCA61EB846 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
@@ -94,6 +96,7 @@
 		57D81E1A401C0DE099A5CF61 /* AuthManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC8DC7B02AB6D71A45D880 /* AuthManagerStub.swift */; };
 		5A37BD05C56C8AB038D22B5C /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006838A636CAF1E02EA7A172 /* HomeViewModel.swift */; };
 		5A7BC0EA4E625EA6199D6C7E /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
+		5B43311399D26AD611329BA1 /* ShareExtensionViewHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C20E0145E376547F060889 /* ShareExtensionViewHeight.swift */; };
 		5C240444513537A92177EA73 /* SettingsViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4235A0826B7E21F2C8CD9AD6 /* SettingsViewModelTests.swift */; };
 		5C2D2A3AD8AE115A69D3905A /* E2ESettingsFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632739DB47B2B2F30FD2C5EA /* E2ESettingsFlowTests.swift */; };
 		5DC1CA295C839B1469C143EB /* EditOperationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DAE164D467254CD313DBD7 /* EditOperationViewModel.swift */; };
@@ -212,6 +215,7 @@
 		D0B4FC0A089B16E411C44611 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 5EF0FB2A856C611ABA0585EF /* Nimble */; };
 		D1CE8788DC9CC1DF3168E6DD /* ClipboardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F336F9499A34785D24BBA695 /* ClipboardManager.swift */; };
 		D2609EDF96C8195A15962C4D /* ShareExtensionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A7E73D7A5EDB906DB1D3ABA /* ShareExtensionViewController.swift */; };
+		D3B39C8A1C4C71D54AA13998 /* ShareExtensionViewHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78C20E0145E376547F060889 /* ShareExtensionViewHeight.swift */; };
 		D505DEA5CAFDC72B190A8C3B /* AuthManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8706FC6569F61629E86A4B47 /* AuthManagerError.swift */; };
 		D54891F3F84A97461E13C517 /* CwlPreconditionTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 6EF7D7E834AE68AA3A53A46A /* CwlPreconditionTesting */; };
 		D5814C6A19482B2E66DC2BBF /* LogManagerSharedInMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */; };
@@ -406,6 +410,7 @@
 		5B986DB4B42C475355A045A8 /* MaskingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskingTests.swift; sourceTree = "<group>"; };
 		5EFA9E1579B01537E823FF8D /* ConsentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagerTests.swift; sourceTree = "<group>"; };
 		6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppPlaceholder.swift; sourceTree = "<group>"; };
+		62C1B640D60D9477EED3564D /* ShareExtensionViewHeightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewHeightTests.swift; sourceTree = "<group>"; };
 		632739DB47B2B2F30FD2C5EA /* E2ESettingsFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E2ESettingsFlowTests.swift; sourceTree = "<group>"; };
 		63611641A94E5EAA7AE49EB0 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		6A7E73D7A5EDB906DB1D3ABA /* ShareExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewController.swift; sourceTree = "<group>"; };
@@ -415,6 +420,7 @@
 		7755A7340C79F88038BB636E /* ConsentManagerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagerStub.swift; sourceTree = "<group>"; };
 		7826956133D04AAEDC5DEFD3 /* E2EShareExtensionFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = E2EShareExtensionFlowTests.swift; sourceTree = "<group>"; };
 		7835443570CDEE6AB1ACFB05 /* LogManagerSharedInMemoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedInMemoryTests.swift; sourceTree = "<group>"; };
+		78C20E0145E376547F060889 /* ShareExtensionViewHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewHeight.swift; sourceTree = "<group>"; };
 		7ADA53D955B10A190FBAE956 /* ProcessingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingManager.swift; sourceTree = "<group>"; };
 		7F8149E0CEF072EDDADB00BE /* AddOperationView+Inspectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AddOperationView+Inspectable.swift"; sourceTree = "<group>"; };
 		7F967405397B94E4F95FEAB1 /* InventoryManagerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InventoryManagerStub.swift; sourceTree = "<group>"; };
@@ -660,6 +666,7 @@
 				C9E8DE580177603717BFA4AF /* ShareExtensionView+Inspectable.swift */,
 				40B0CEEE04739F40BFF240C2 /* ShareExtensionViewConstants.swift */,
 				6A7E73D7A5EDB906DB1D3ABA /* ShareExtensionViewController.swift */,
+				78C20E0145E376547F060889 /* ShareExtensionViewHeight.swift */,
 				E13CED619410C5EC0872BDE7 /* ShareExtensionViewModel.swift */,
 				3C4983E61FB194F87AFC657C /* ShareExtensionViewModelConstants.swift */,
 			);
@@ -673,6 +680,7 @@
 				E129DB753DFF5EAA84F64141 /* LLMAPIClientIntegrationTests.swift */,
 				01F48598F4F782A4FFFC3F38 /* LLMAPIClientTests.swift */,
 				46C3F5768A004A89D5C4DA7B /* ShareExtensionManagerTests.swift */,
+				62C1B640D60D9477EED3564D /* ShareExtensionViewHeightTests.swift */,
 				95961850F197370B633C5C26 /* ShareExtensionViewModelTests.swift */,
 				112FA76673DA4693EE0D7199 /* URLProtocolStub.swift */,
 			);
@@ -1086,6 +1094,8 @@
 				52338326A04047623E9A823E /* ShareExtensionView.swift in Sources */,
 				FD3476E2CC0D6E625AAE6FBC /* ShareExtensionViewConstants.swift in Sources */,
 				D2609EDF96C8195A15962C4D /* ShareExtensionViewController.swift in Sources */,
+				D3B39C8A1C4C71D54AA13998 /* ShareExtensionViewHeight.swift in Sources */,
+				26EB4000E370CD360DC8D794 /* ShareExtensionViewHeightTests.swift in Sources */,
 				C152818338CEAEF77D553682 /* ShareExtensionViewModel.swift in Sources */,
 				AD2E31FDE4C9C565B929A4D7 /* ShareExtensionViewModelConstants.swift in Sources */,
 				6B9455310B99F135827C68DC /* ShareExtensionViewModelTests.swift in Sources */,
@@ -1181,6 +1191,7 @@
 				31837405842D6ECEB62BB026 /* ShareExtensionView.swift in Sources */,
 				049A84F319019D12B9C99745 /* ShareExtensionViewConstants.swift in Sources */,
 				56FABFE455D139106DEA2404 /* ShareExtensionViewController.swift in Sources */,
+				5B43311399D26AD611329BA1 /* ShareExtensionViewHeight.swift in Sources */,
 				E0306EBC6661B1C48E6D67F3 /* ShareExtensionViewModel.swift in Sources */,
 				2E60BE04465C3E6ED4E640B3 /* ShareExtensionViewModelConstants.swift in Sources */,
 				17F76D3440474E3E00E181CF /* Strings.swift in Sources */,
@@ -1264,6 +1275,7 @@
 				E9359C3861A020CF94F1E364 /* ShareExtensionView.swift in Sources */,
 				BF991B720B6E35DA60A4C043 /* ShareExtensionViewConstants.swift in Sources */,
 				8B0216FCB722D0E44476F52A /* ShareExtensionViewController.swift in Sources */,
+				28E2ED180337F5922B910F8F /* ShareExtensionViewHeight.swift in Sources */,
 				E71D7AE674B97D77C235C3D4 /* ShareExtensionViewModel.swift in Sources */,
 				854317C24A7F6966E0D3785A /* ShareExtensionViewModelConstants.swift in Sources */,
 				6E4E32C25B0B547841438AA6 /* ShareExtensionViewUITests.swift in Sources */,
