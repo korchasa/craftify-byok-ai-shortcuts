@@ -131,7 +131,7 @@ public struct ShareExtensionView: View {
             return L10n.operationLabelSimplify
         case .correct:
             if let params = try? JSONDecoder().decode(CorrectParams.self, from: op.params) {
-                return "\(L10n.operationLabelCorrect) \(L10n.operationParamStylePreservation): \(params.stylePreservationLevel)/3"
+                return "\(L10n.operationLabelCorrect) \(params.stylePreservationLevel)/3"
             }
             return L10n.operationLabelCorrect
         case .explain:
