@@ -61,3 +61,9 @@
 "language_german" = "German";
 "language_chinese" = "Chinese";
 "language_japanese" = "Japanese";
+
+"processing" = "Processing...";
+"error" = "Error";
+"save" = "Save";
+"delete" = "Delete";
+"copied_to_clipboard" = "Copied to clipboard";
