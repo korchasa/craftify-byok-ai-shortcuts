@@ -38,8 +38,7 @@ public final class ShareExtensionViewController: UIViewController {
         let viewModel = ShareExtensionViewModel(manager: manager)
         let operationsCount = viewModel.operations.count
         let initialHeight = ShareExtensionViewHeight.calculate(count: operationsCount)
-        // self.preferredContentSize = CGSize(width: self.view.bounds.width, height: initialHeight)
-        self.preferredContentSize = CGSize(width: self.view.bounds.width, height: 300)
+        self.preferredContentSize = CGSize(width: self.view.bounds.width, height: initialHeight)
         let rootView = ShareExtensionView(viewModel: viewModel)
         let hosting = UIHostingController(rootView: rootView)
         addChild(hosting)
