@@ -104,5 +104,28 @@ import XCTest
                 // Проверить hex напрямую нельзя, но структура есть
             }
         }
+
+        public func testSheetDetentOrPopoverHeightIsSet() throws {
+            // Проверяем, что высота ограничивается через detents или preferredContentSize
+            let viewController = ShareExtensionViewController()
+            viewController.loadViewIfNeeded()
+            let operationsCount = viewController.hostingController?.rootView.viewModel.operations.count ?? 0
+            let expectedHeight = ShareExtensionViewHeight.calculate(count: operationsCount)
+            if #available(iOS 16.0, *) {
+                if let sheet = viewController.sheetPresentationController {
+                    let detents = sheet.detents
+                    XCTAssertEqual(detents.count, 1)
+                    if case let .custom(identifier, resolver) = detents.first! {
+                        XCTAssertEqual(identifier.rawValue, "fixedHeight")
+                        XCTAssertEqual(resolver(nil), expectedHeight)
+                    }
+                }
+            } else if UIDevice.current.userInterfaceIdiom == .pad {
+                XCTAssertEqual(viewController.preferredContentSize.height, expectedHeight)
+            } else {
+                // Для iPhone < iOS 15 — preferredContentSize выставлен, но система может игнорировать
+                XCTAssertEqual(viewController.preferredContentSize.height, expectedHeight)
+            }
+        }
     }
 #endif

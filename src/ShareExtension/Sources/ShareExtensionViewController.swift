@@ -10,6 +10,8 @@ public final class ShareExtensionViewController: UIViewController {
     private enum Constants {
         static let minHeight: CGFloat = 220
         static let maxHeightMultiplier: CGFloat = 0.7
+        static let sheetCornerRadius: CGFloat = 16
+        static let popoverWidth: CGFloat = 400
     }
 
     override public func viewDidLoad() {
@@ -38,7 +40,6 @@ public final class ShareExtensionViewController: UIViewController {
         let viewModel = ShareExtensionViewModel(manager: manager)
         let operationsCount = viewModel.operations.count
         let initialHeight = ShareExtensionViewHeight.calculate(count: operationsCount)
-        self.preferredContentSize = CGSize(width: self.view.bounds.width, height: initialHeight)
         let rootView = ShareExtensionView(viewModel: viewModel)
         let hosting = UIHostingController(rootView: rootView)
         addChild(hosting)
@@ -52,6 +53,29 @@ public final class ShareExtensionViewController: UIViewController {
         ])
         hosting.didMove(toParent: self)
         self.hostingController = hosting
+        // Ограничение высоты через sheet detents (iOS 15+)
+        if let sheet = self.sheetPresentationController {
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = Constants.sheetCornerRadius
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            let customDetent = UISheetPresentationController.Detent.custom(identifier: .init("fixedHeight")) { _ in
+                return initialHeight
+            }
+            sheet.detents = [customDetent]
+            sheet.largestUndimmedDetentIdentifier = customDetent.identifier
+        } else if traitCollection.userInterfaceIdiom == .pad {
+            // Для iPad — popover
+            self.modalPresentationStyle = .popover
+            self.preferredContentSize = CGSize(width: Constants.popoverWidth, height: initialHeight)
+            if let pop = self.popoverPresentationController {
+                pop.sourceView = view
+                pop.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)
+                pop.permittedArrowDirections = []
+            }
+        } else {
+            // Для iPhone < iOS 15 — ничего не делаем (система сама решает высоту)
+            self.preferredContentSize = CGSize(width: view.bounds.width, height: initialHeight)
+        }
         // Load the input text from the extension context
         loadInputText()
         // Подписка на закрытие
