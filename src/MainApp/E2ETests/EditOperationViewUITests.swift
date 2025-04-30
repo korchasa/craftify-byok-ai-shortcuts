@@ -121,6 +121,25 @@ import XCTest
             expect(font?.supportsDynamicType ?? false) == true
         }
 
+        public func testOnSaveCalledWithCorrectOperation() throws {
+            let op = InventoryOperation(
+                operation: .translate,
+                params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "fr")),
+                promptTemplate: "Translate the following text to French: {text}",
+                colorHex: "3288bd"
+            )
+            let vm = EditOperationViewModel(operation: op)
+            var savedOperation: InventoryOperation? = nil
+            let view = EditOperationView(viewModel: vm, onSave: { savedOperation = $0 })
+            let button = try view.inspect().find(button: L10n.editOperationSave)
+            try button.tap()
+            expect(savedOperation).toNot(beNil())
+            expect(savedOperation?.operation) == .translate
+            expect(savedOperation?.colorHex) == "3288bd"
+            let params = try JSONDecoder().decode(TranslateParams.self, from: savedOperation!.params)
+            expect(params.targetLanguage) == "fr"
+        }
+
         deinit {}
     }
 

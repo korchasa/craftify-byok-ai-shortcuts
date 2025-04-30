@@ -43,13 +43,12 @@ public struct HomeView: View {
         .sheet(item: $editOperationViewModel, onDismiss: {
             editingIndex = nil
         }, content: { vm in
-            EditOperationView(viewModel: vm)
-                .onDisappear {
-                    if let idx = editingIndex, let updated = vm.makeOperation() {
-                        viewModel.updateOperation(at: idx, with: updated)
-                    }
-                    editingIndex = nil
+            EditOperationView(viewModel: vm, onSave: { updatedOperation in
+                if let idx = editingIndex {
+                    viewModel.updateOperation(at: idx, with: updatedOperation)
                 }
+                editingIndex = nil
+            })
         })
         .sheet(isPresented: $showSettings, onDismiss: nil, content: {
             SettingsView(viewModel: SettingsViewModel())

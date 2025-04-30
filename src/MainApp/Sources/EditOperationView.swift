@@ -7,6 +7,7 @@ import SwiftUI
 
 public struct EditOperationView: View {
     @ObservedObject public var viewModel: EditOperationViewModel
+    private let onSave: (InventoryOperation) -> Void
     @Environment(\.dismiss) private var dismiss
 
     private let supportedLanguages: [(name: String, code: String)] = [
@@ -21,8 +22,9 @@ public struct EditOperationView: View {
         ("中文", "zh")
     ]
 
-    public init(viewModel: EditOperationViewModel) {
+    public init(viewModel: EditOperationViewModel, onSave: @escaping (InventoryOperation) -> Void) {
         self.viewModel = viewModel
+        self.onSave = onSave
     }
 
     public var body: some View {
@@ -130,7 +132,8 @@ public struct EditOperationView: View {
             .buttonStyle(.bordered)
 
             Button(action: {
-                if let _ = viewModel.makeOperation() {
+                if let op = viewModel.makeOperation() {
+                    onSave(op)
                     dismiss()
                 }
             }) {

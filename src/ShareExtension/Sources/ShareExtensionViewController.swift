@@ -59,7 +59,7 @@ public final class ShareExtensionViewController: UIViewController {
             sheet.preferredCornerRadius = Constants.sheetCornerRadius
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             let customDetent = UISheetPresentationController.Detent.custom(identifier: .init("fixedHeight")) { _ in
-                return initialHeight
+                initialHeight
             }
             sheet.detents = [customDetent]
             sheet.largestUndimmedDetentIdentifier = customDetent.identifier
