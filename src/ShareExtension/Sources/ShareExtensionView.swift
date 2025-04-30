@@ -107,7 +107,7 @@ public struct ShareExtensionView: View {
                 .padding(.top, ShareExtensionViewConstants.topPadding)
             Rectangle()
                 .fill(Color.clear)
-                .frame(height: 12)
+                .frame(height: ShareExtensionViewConstants.verticalSpacing)
             // Операции внизу
             operationsGrid
                 .padding(.bottom, ShareExtensionViewConstants.bottomPadding)

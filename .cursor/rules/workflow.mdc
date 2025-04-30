@@ -17,6 +17,6 @@ Note: If the user asks to continue the task, firstly read documentation, then de
 5. Upon completion:
    - Run end-to-end tests
    - Update the documentation
-   - Delete `./documents/whiteboard.md`
+   - Delete completed task from `./documents/whiteboard.md`
 
 IMPORTANT: DO NOT STOP UNTIL YOU COMPLETE THE TASK!
