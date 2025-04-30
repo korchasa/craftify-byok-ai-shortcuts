@@ -98,8 +98,9 @@ public struct ShareExtensionView: View {
 
     private var mainContent: some View {
         VStack(spacing: 0) {
-            Spacer()
-            // Заголовок
+            Rectangle()
+                .fill(Color.clear)
+                .frame(height: 12)
             Text(L10n.shareTitle)
                 .font(.title2)
                 .bold()
@@ -108,7 +109,6 @@ public struct ShareExtensionView: View {
             Rectangle()
                 .fill(Color.clear)
                 .frame(height: ShareExtensionViewConstants.verticalSpacing)
-            // Операции внизу
             operationsGrid
                 .padding(.bottom, ShareExtensionViewConstants.bottomPadding)
         }
@@ -190,9 +190,13 @@ public struct ShareExtensionView: View {
 
     private var copiedToast: some View {
         VStack {
-            Spacer()
+            Rectangle()
+                .fill(Color.clear)
+                .frame(height: 8)
             HStack {
-                Spacer()
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(width: 8)
                 Text(L10n.copiedToClipboard)
                     .font(ShareExtensionViewConstants.copiedToastFont)
                     .padding(.vertical, ShareExtensionViewConstants.copiedToastVerticalSpacing)
@@ -202,9 +206,13 @@ public struct ShareExtensionView: View {
                             .fill(Color(.systemGray6).opacity(ShareExtensionViewConstants.copiedToastBackgroundOpacity))
                     )
                     .shadow(radius: ShareExtensionViewConstants.copiedToastShadowRadius)
-                Spacer()
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(width: 8)
             }
-            Spacer().frame(height: ShareExtensionViewConstants.copiedToastBottomSpacing)
+            Rectangle()
+                .fill(Color.clear)
+                .frame(height: ShareExtensionViewConstants.copiedToastBottomSpacing)
         }
         .transition(.opacity)
         .zIndex(ZIndexConstants.copiedToast)
