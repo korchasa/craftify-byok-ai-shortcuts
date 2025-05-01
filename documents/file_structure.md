@@ -93,3 +93,19 @@ src/
     Resources/
       Assets.xcassets/           # Extension assets
       Placeholder.txt            # Placeholder resource
+
+## Targets and Schemes
+- MainApp
+- MainAppUnitTests
+- MainAppE2ETests
+- ShareExtension
+- ShareExtensionUnitTests
+- ShareExtensionE2ETests
+- CommonUnitTests
+- CommonE2ETests
+- ShareExtensionSizeReport
+
+## Logging
+- Все логи пишутся через Unified Log (os_log, subsystem: Internal, только message + metadata).
+- Просмотр логов: ./run logs (фильтрация по subsystem Internal, MainApp и ShareExtension, все уровни).
+- Экспорт логов не поддерживается.
