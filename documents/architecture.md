@@ -13,8 +13,8 @@
 ### Logging and Analytics
 
 #### Log Architecture
-- All logs are written through the system log (Unified Logging, os_log) via OSLogManagerShared. Log export is not supported, viewing is done through Console.app or log stream.
-- LogManagerShared supports levels: debug, info, warning, error.
+- All logs are written through the system log (Unified Logging, os_log, subsystem: Internal, only message + metadata) via OSLogManagerShared. Log export is not supported, viewing is done through Console.app or log stream, or ./run logs.
+- LogManagerShared supports levels: debug, info, warning, error. In production, only message + metadata are logged (no level/module in output).
 - API keys are always masked (only the first and last 4 characters are visible).
 - Crash reporting is implemented through the New Relic SDK, integrated only into the main application (not in the Share Extension).
 - The New Relic App Token is stored in Info.plist and is injected at runtime.
@@ -25,7 +25,7 @@
 - Crash reports are sent only from the main application via New Relic SDK.
 
 #### Consequences
-- Logs are available for diagnostics only through system tools.
+- Logs are available for diagnostics only through system tools or ./run logs (filtered by subsystem Internal, all levels, MainApp и ShareExtension).
 - Crash analytics is available only for the main application through New Relic.
 - Share Extension remains lightweight and meets privacy requirements.
 - Log masking policy is implemented at the code level.
@@ -76,41 +76,19 @@ graph TD
   ShareExtension & ProcessingManager & LLMAPIClient & UIPasteboard -.-> LogManagerShared
 ```
 
-+### Targets and Dependencies
-+
-+```mermaid
-+graph LR
-+  subgraph "Modules"
-+    Common[Common (SPM Framework)]
-+    MainApp[MainApp (iOS App)]
-+    ShareExt[ShareExtension (App Extension)]
-+  end
-+
-+  Common --> MainApp
-+  Common --> ShareExt
-+  MainApp -->|embedAppExtensions| ShareExt
-+  subgraph "App Group / Keychain"
-+    AG[App Group: group.dev.korchasa.Craftify]
-+    KC[Keychain Access Group: group.dev.korchasa.Craftify]
-+  end
-+
-+  MainApp --- AG
-+  ShareExt --- AG
-+  MainApp --- KC
-+  ShareExt --- KC
-+```
-+
-+### Flow of `./run deploy:simulator`
-+
-+```mermaid
-+flowchart TB
-+  A[./run deploy:simulator] --> B[SwiftGen]
-+  B --> C[XcodeGen]
-+  C --> D[Build MainApp for simulator]
-+  D --> E[Boot Simulator (if not running)]
-+  E --> F[simctl install MainApp.app]
-+  F --> G[Launch MainApp in Simulator]
-+```
+### Targets and Schemes
+
+- MainApp
+- MainAppUnitTests
+- MainAppE2ETests
+- ShareExtension
+- ShareExtensionUnitTests
+- ShareExtensionE2ETests
+- CommonUnitTests
+- CommonE2ETests
+- ShareExtensionSizeReport
+
+**Подробные описания операций и промптов см. в user-manual.md и developer-manual.md.**
 
 ## Timeout Mechanism for Text Processing
 - The processing timeout is implemented only at the ShareExtensionViewModel level (default 30 seconds, can be overridden in tests).

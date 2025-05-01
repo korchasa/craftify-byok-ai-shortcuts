@@ -7,7 +7,7 @@
 | ./run test     | Run tests                                           |
 | ./run deploy:simulator      | Build and run in iPhone 14 simulator (iOS 16)      |
 | ./run clean    | Clean build artifacts                                |
-| ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Craftify) |
+| ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Internal, all levels, MainApp и ShareExtension) |
 | ./run init     | Install all CLI dependencies via Homebrew           |
 | add-operation-color | Позволяет выбрать цвет из палитры для операции. Цвет сохраняется в InventoryOperation и отображается в UI (главный экран, экран шаринга). Покрыто unit, UI и e2e тестами. |
 | correct   | Исправление грамматики и орфографии, стиль всегда сохраняется максимально | {text} | - |
@@ -113,7 +113,7 @@ let masked = authManager.maskedAPIKey(key)
 
 **Purpose:**
 - Centralized logging for the application and extension.
-- In production, only OSLogManagerShared is used (Unified Logging, os_log, without FIFO and export).
+- In production, only OSLogManagerShared is used (Unified Logging, os_log, subsystem: Internal, only message + metadata).
 - For tests — in-memory stub (LogManagerSharedInMemory).
 - Key masking.
 
@@ -126,20 +126,20 @@ let masked = authManager.maskedAPIKey(key)
 | `exportLogs() throws -> Data` | No-op in production, only for tests |
 
 **Features:**
-- In production: only system log (os_log), export and FIFO are not supported.
+- In production: only system log (os_log, subsystem: Internal, only message + metadata), export and FIFO are not supported.
 - For tests — in-memory implementation with FIFO and export.
 - Key masking similar to AuthManager.
 
 **Example Usage:**
 ```swift
-let logger: LogManagerShared = OSLogManagerShared(subsystem: ..., category: ...)
+let logger: LogManagerShared = OSLogManagerShared(category: ...)
 logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metadata: [:]))
 ```
 
 ### LogManagerShared: Implementation
 
 - **Unified Logging Implementation (OSLogManagerShared):**
-  - Stores logs in the system log (Unified Logging, os_log).
+  - Stores logs in the system log (Unified Logging, os_log, subsystem: Internal, only message + metadata).
   - No FIFO or export, logs are available via Console.app or log stream.
   - Key masking is preserved in log messages.
   - File: `src/Common/Sources/OSLogManagerShared.swift`
@@ -276,3 +276,28 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
 - После согласия — автоматический переход на HomeView.
 - Согласие хранится через ConsentManager (UserDefaults App Group).
 - Покрыто e2e-тестом на полный flow.
+
+## Project Schemas
+
+- MainApp
+- MainAppUnitTests
+- MainAppE2ETests
+- ShareExtension
+- ShareExtensionUnitTests
+- ShareExtensionE2ETests
+- CommonUnitTests
+- CommonE2ETests
+- ShareExtensionSizeReport
+
+- ### Описание операций и промптов
+-
+-#### CorrectOperation
+- ...
+-#### ExplainOperation
+- ...
+-#### SimplifyOperation
+- ...
+-#### TranslateOperation
+- ...
+
+**Подробные описания схем, операций и промптов см. в architecture.md, user-manual.md, developer-manual.md.**
