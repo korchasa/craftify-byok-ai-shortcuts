@@ -1,0 +1,8 @@
+[
+  {
+    "operation": "translate",
+    "params": "eyJ0YXJnZXRMYW5ndWFnZSI6InJ1In0=",
+    "promptTemplate": "Translate the following text to ru: {text}",
+    "colorHex": "3288bd"
+  }
+]

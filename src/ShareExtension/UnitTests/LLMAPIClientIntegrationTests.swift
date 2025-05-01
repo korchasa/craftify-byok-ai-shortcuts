@@ -40,11 +40,6 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
         expect(result) == expectedText
         expect(capturedRequest).notTo(beNil())
         if let request = capturedRequest {
-            print("[DEBUG] request.url =", request.url?.absoluteString ?? "nil")
-            print("[DEBUG] request.httpMethod =", request.httpMethod ?? "nil")
-            print("[DEBUG] request.allHTTPHeaderFields =", request.allHTTPHeaderFields ?? [:])
-            print("[DEBUG] request.httpBody =", request.httpBody as Any)
-            print("[DEBUG] request.httpBodyStream =", request.httpBodyStream as Any)
             expect(request.url?.absoluteString) == "https://api.openai.com/v1/chat/completions"
             expect(request.httpMethod) == "POST"
             expect(request.value(forHTTPHeaderField: "Authorization")) == "Bearer sk-integration-key"

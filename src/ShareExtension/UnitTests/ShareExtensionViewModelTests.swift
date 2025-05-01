@@ -33,7 +33,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
                 cancellable?.cancel()
             }
         }
-        await viewModel.process(operation: op)
+        viewModel.process(operation: op)
         await fulfillment(of: [exp], timeout: 1.0)
         // Assert: Должна быть ошибка таймаута
         XCTAssertEqual(viewModel.errorMessage, "Время обработки истекло")
@@ -68,7 +68,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
                 cancellable?.cancel()
             }
         }
-        await viewModel.process(operation: op)
+        viewModel.process(operation: op)
         await fulfillment(of: [exp], timeout: 1.0)
         // Assert: showCopiedToast должен быть true (сразу после успешной обработки)
         XCTAssertTrue(viewModel.showCopiedToast)

@@ -173,6 +173,7 @@
 		8DA93F526E8A3FE03593331D /* ConsentManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B2F999AF2599A9823FBD4 /* ConsentManaging.swift */; };
 		8F7618141C1DE8B67DBB5753 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
 		90672C1CD058FAFB7348901F /* InventoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E3A3BCF8738E04C3FF6B608 /* InventoryManager.swift */; };
+		908DE6AA72B88682A0D3241E /* inventory_stub.json in Resources */ = {isa = PBXBuildFile; fileRef = 0DF0E5F7A8A8E8C6FE64E875 /* inventory_stub.json */; };
 		932BB0E018C603837D24349F /* AddOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65EF71509FF130798AC1F71 /* AddOperationView.swift */; };
 		94D6532B41920E9BFC0875D2 /* CorrectParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */; };
 		94FBC4DF7FE34B2F55C0A668 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E24C5EDAB7E1A794353A31 /* RoundedCorner.swift */; };
@@ -406,6 +407,7 @@
 		076E533CF19947AC86647DF5 /* OperationModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationModelsTests.swift; sourceTree = "<group>"; };
 		08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionManager.swift; sourceTree = "<group>"; };
 		0D8AD8C40B8A3C4F57E5FD41 /* ProcessingManagerLLMIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingManagerLLMIntegrationTests.swift; sourceTree = "<group>"; };
+		0DF0E5F7A8A8E8C6FE64E875 /* inventory_stub.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = inventory_stub.json; sourceTree = "<group>"; };
 		0E0DFF03BAEF851D6598A5BD /* DetailLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailLevel.swift; sourceTree = "<group>"; };
 		0F6A7F3E6B445CB91481D061 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		112FA76673DA4693EE0D7199 /* URLProtocolStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLProtocolStub.swift; sourceTree = "<group>"; };
@@ -816,6 +818,7 @@
 				D7B2C64D3119253486ACF264 /* EditOperationViewUITests.swift */,
 				CF92F9A60ACB81AB329CC034 /* HomeViewUITests.swift */,
 				71E90C38B63C1413D9718BB4 /* HowToUseViewUITests.swift */,
+				0DF0E5F7A8A8E8C6FE64E875 /* inventory_stub.json */,
 				85D4FF188F7007B982574A5E /* SettingsViewUITests.swift */,
 			);
 			name = E2ETests;
@@ -889,6 +892,7 @@
 			buildConfigurationList = DA483257AF5965D14E87576B /* Build configuration list for PBXNativeTarget "MainAppE2ETests" */;
 			buildPhases = (
 				D56C2E14F3734CA1270010A0 /* Sources */,
+				11A2D21F13DC4534FE1EFA96 /* Resources */,
 				B1518DF506BFBA317880222C /* Frameworks */,
 			);
 			buildRules = (
@@ -1118,6 +1122,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		11A2D21F13DC4534FE1EFA96 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				908DE6AA72B88682A0D3241E /* inventory_stub.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		11D2EC32653571905323DBED /* Sources */ = {
@@ -1799,6 +1814,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
@@ -1953,6 +1969,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;

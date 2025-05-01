@@ -24,7 +24,6 @@ public final class E2ELogManagerTests: XCTestCase {
         guard let exportedString = String(data: exported, encoding: .utf8) else { fail("exportedString is nil")
             return
         }
-        print("[DEBUG] Exported logs string:\n\(exportedString)")
         expect(exportedString).to(contain("***************cdef")) // маскирование
     }
 }

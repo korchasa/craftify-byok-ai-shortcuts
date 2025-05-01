@@ -22,6 +22,7 @@
 - Do not use self in closures unless required (redundant_self_in_closure).
 - explicit_acl — все объявления должны явно указывать уровень доступа (например, public/private/internal/fileprivate).
 - no_magic_numbers — магические числа должны быть заменены на именованные константы.
+- All SwiftLint and compiler warnings are treated as errors: tests and builds fail if any warning is present (warnings_as_errors).
 
 ## Правило: Access Control для расширений
 

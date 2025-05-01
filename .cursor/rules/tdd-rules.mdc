@@ -3,22 +3,23 @@ description:
 globs:
 alwaysApply: true
 ---
-## TDD Rules
-
-### TDD Flow
+## TDD Flow
 1.	Red:
 - Write a minimal, isolated test for new behavior or error reproduce.
-- Run `./run test`.
+- Run tests.
 2.	Green:
 - Implement just enough code to make the test pass.
 - Run the full suite to ensure everything is green.
 3.	Refactor:
 - Clean up code and tests without changing behavior.
 - Eliminate duplication and improve readability.
-- Run `./run test` to confirm the correctness of the refactoring.
+- Run tests to confirm the correctness of the refactoring.
+4.  Final check:
+- Run `./run test` to finally ensure that everything is working fine. Fix all found issues, including linting errors and warnings.
 
-### Tests rules
+## Tests rules
 
-- place tests in the tested packages and don't be afraid to use private methods for testing.
-- don't introduce code changes solely to pass tests without fixing underlying errors.
-- don't use code stubs; ensure all code is complete and functional.
+- Place tests in the tested packages and don't be afraid to use private methods for testing.
+- Don't introduce code changes solely to pass tests without fixing underlying errors.
+- Don't use code stubs; ensure all code is complete and functional.
+- Trying to restart individual tests to speed up testing, but in the final check, run all tests

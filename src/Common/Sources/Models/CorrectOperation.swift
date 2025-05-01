@@ -7,7 +7,7 @@ public struct CorrectOperation: OperationType {
     public init() {}
 
     public func isValid(input _: OperationInput) -> Bool {
-        // always valid
+        // Для коррекции нет специфических параметров, всегда валидно
         true
     }
 
@@ -19,7 +19,6 @@ public struct CorrectOperation: OperationType {
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
-        // TODO: use LLMAPIClient
         URLRequest(url: URL(string: "")!)
     }
 
