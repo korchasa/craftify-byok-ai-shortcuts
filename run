@@ -20,8 +20,10 @@ function xcb() {
 }
 
 # Define arrays for test schemes
+SCHEMES_PROD=(MainApp ShareExtension Common)
 SCHEMES_UNIT=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
 SCHEMES_E2E=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
+SCHEMES_ALL=("${SCHEMES_PROD[@]}" "${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}")
 
 # Default parallel testing worker count
 WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}
@@ -84,9 +86,7 @@ function echo_section() {
 function clean() {
   echo_section "Cleaning build artifacts"
   rm -rf build
-  xcb clean -scheme MainApp || true
-  xcb clean -scheme ShareExtension || true
-  xcb clean -scheme Common || true
+  xcb clean || true
 }
 
 function generate() {
@@ -123,7 +123,14 @@ function test_unit() {
       "${ONLY_TEST_FLAGS[@]}" "$@" &
     pids+=("$!")
   done
-  wait "${pids[@]}"
+  local exit_code=0
+  for pid in "${pids[@]}"; do
+    wait "$pid" || exit_code=1
+  done
+  if [[ $exit_code -ne 0 ]]; then
+    echo -e "${RED}One or more unit test schemes failed!${NC}"
+    exit 1
+  fi
 }
 
 function test_e2e() {
@@ -139,7 +146,14 @@ function test_e2e() {
       "${ONLY_TEST_FLAGS[@]}" "$@" &
     pids+=("$!")
   done
-  wait "${pids[@]}"
+  local exit_code=0
+  for pid in "${pids[@]}"; do
+    wait "$pid" || exit_code=1
+  done
+  if [[ $exit_code -ne 0 ]]; then
+    echo -e "${RED}One or more E2E test schemes failed!${NC}"
+    exit 1
+  fi
 }
 
 function test_single() {
