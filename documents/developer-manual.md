@@ -18,7 +18,7 @@
 
 ### Important: Running Tests for iOS
 To run tests manually, use the command with an explicit simulator:
-```
+```sh
 xcodebuild -scheme Common -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
 ```
 This avoids the error "CommonTests does not support My Mac's platform: com.apple.platform.macosx".
@@ -49,17 +49,17 @@ This avoids the error "CommonTests does not support My Mac's platform: com.apple
 
 ## Retrieving Logs
 
-To view the application and extension logs, use the unified log (os_log):
+Для просмотра логов приложения и расширения используйте Unified Log (os_log, subsystem: Internal, только message + metadata):
 
 ```sh
 ./run logs
 ```
 
-The command outputs logs from the unified log (os_log) for the last 24 hours, filtering by the subsystem "dev.korchasa.Craftify" in JSON format.
+Команда выводит логи из Unified Log (os_log) за последние 24 часа, фильтруя по subsystem Internal, MainApp и ShareExtension, все уровни. Экспорт логов не поддерживается.
 
-To change the period, use the log show options, for example:
+Для изменения периода используйте опции log show, например:
 ```sh
-log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
+log show --predicate 'subsystem == "Internal"' --style syslog --last 2h
 ```
 
 ## Operation Color: Developer Notes
@@ -69,3 +69,5 @@ log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 
 - Для проверки UI: используйте ShareExtensionViewUITests.swift.
 
 - Операция correct всегда сохраняет стиль максимально, параметр stylePreservationLevel удалён из моделей, UI и тестов.
+
+**Подробные пользовательские инструкции см. в user-manual.md.**

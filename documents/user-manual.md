@@ -44,11 +44,11 @@
 - The timeout is implemented only in the Share Extension. The main app does not apply a time limit.
 
 ## Log Viewing
-All actions and errors of the application are logged through the unified log (os_log). To view the logs, use the command:
+Все действия и ошибки приложения логируются через Unified Log (os_log, subsystem: Internal, только message + metadata). Для просмотра логов используйте команду:
 ```sh
 ./run logs
 ```
-Log export is not supported. Logs are only available through system tools (Console.app, log stream).
+Логи фильтруются по subsystem Internal, отображаются все уровни, MainApp и ShareExtension. Экспорт логов не поддерживается, просмотр только через системные средства (Console.app, log stream) или ./run logs.
 
 ## Выбор цвета операции
 - При добавлении или редактировании операции вы можете выбрать цвет из палитры. Цвет будет отображаться на карточке операции на главном экране и в Share Extension.
@@ -58,3 +58,5 @@ Log export is not supported. Logs are only available through system tools (Conso
 ## Приветственный экран и согласие
 
 При первом запуске приложения Craftify отображается приветственный экран с инструкцией и чекбоксом согласия на обработку текста. Пока пользователь не поставит галочку и не нажмёт "Готово", доступ к функциям приложения невозможен. После согласия автоматически открывается основной экран. Согласие сохраняется и не запрашивается повторно при последующих запусках.
+
+**Подробные описания схем и операций см. в developer-manual.md.**
