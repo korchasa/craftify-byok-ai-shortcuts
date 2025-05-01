@@ -16,45 +16,46 @@ SCRIPT_NAME=$(basename "${0}")
 
 # Add xcb wrapper for xcodebuild with xcbeautify
 function xcb() {
-  xcodebuild "$@" | xcbeautify
+  xcodebuild -showBuildTimingSummary "$@" 2>&1 | grep -v 'DVTDeviceOperation: Encountered a build number' | xcbeautify --quiet --disable-logging
 }
 
 # Define arrays for test schemes
 SCHEMES_UNIT=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
 SCHEMES_E2E=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
 
+# Default parallel testing worker count
+WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}
+# Runtime test filters
+ONLY_TEST_FLAGS=()
+if [[ -n "${ONLY_TESTING:-}" ]]; then
+  ONLY_TEST_FLAGS+=("-only-testing" "${ONLY_TESTING}")
+fi
+
 function usage() {
   cat <<EOF
 Usage: $SCRIPT_NAME <command> [args...]
 Commands:
-  generate            Run SwiftGen and XcodeGen
-  fmt                 Run SwiftFormat
-  lint                Run SwiftLint
-  test:lint           Run SwiftLint (alias)
-  test:format         Run SwiftFormat (alias)
-  build:simulator     Build MainApp for simulator (Debug)
   analyze             Run static analysis
-  test:unit           Run unit tests
-  test:e2e            Run end-to-end tests
-  test                Run all tests (unit + e2e)
-  test:coverage       Run tests with code coverage
-  pr-check            Run PR checks (TODO/FIXME scan)
-  comment-scan        Scan for TODO/FIXME/print/debugPrint (alias)
-  build               Build MainApp and ShareExtension (Release)
-  size-report         Check ShareExtension size
-  dev                 Build and launch MainApp in Simulator
-  clean               Clean build artifacts
-  logs                Stream MainApp logs
-  bump-version        Bump version numbers via agvtool
   archive             Archive MainApp as .xcarchive
-  export-ipa          Export IPA from archive
-  deploy:testflight   Upload IPA to TestFlight via altool
-  deploy:internal     Internal TestFlight deploy
+  build               Build MainApp and ShareExtension (Release)
+  bump-version        Bump version numbers via agvtool
+  clean               Clean build artifacts
+  comment-scan        Scan for TODO/FIXME/print/debugPrint
   deploy:adhoc        Ad-hoc TestFlight deploy
   deploy:appstore     Upload to App Store Connect
-  generate-changelog  Generate changelog via git-chglog
-  notify              Send notifications (Slack, email)
+  deploy:internal     Internal TestFlight deploy
+  deploy:simulator    Build MainApp for simulator
+  deploy:testflight   Upload IPA to TestFlight via altool
+  export-ipa          Export IPA from archive
+  generate            Run SwiftGen and XcodeGen
+  init                Install CLI tools
+  logs                Stream MainApp logs
   monitor-setup       Setup monitoring (Sentry etc.)
+  notify              Send notifications (Slack, email)
+  size-report         Check ShareExtension size
+  test                Run all tests (unit + e2e)
+  test:coverage       Run tests with code coverage
+  test:single         Run a single test or class (unit or e2e), for example: $SCRIPT_NAME test:single MainAppUnitTests MainAppUnitTests/AddOperationViewModelTests
   help                Show this help
 EOF
 }
@@ -80,6 +81,14 @@ function echo_section() {
   echo -e "${PURPLE}----------------------------------------${NC}"
 }
 
+function clean() {
+  echo_section "Cleaning build artifacts"
+  rm -rf build
+  xcb clean -scheme MainApp || true
+  xcb clean -scheme ShareExtension || true
+  xcb clean -scheme Common || true
+}
+
 function generate() {
   # Ensure output directories exist for SwiftGen
   mkdir -p src/MainApp/Resources/Generated
@@ -92,41 +101,68 @@ function generate() {
 
 function fmt() {
   echo_section "Running SwiftFormat"
-  swiftformat . "$@"
+  swiftformat . --quiet "$@"
 }
 
 function lint() {
   echo_section "Running SwiftLint"
-  swiftlint --strict "$@"
+  swiftlint lint --fix --quiet
+  swiftlint lint --strict --quiet
 }
 
 function test_unit() {
-  generate "$@"
   echo_section "Running Unit Tests"
   rm -rf build/Results
+  local pids=()
   for scheme in "${SCHEMES_UNIT[@]}"; do
-    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID}" -scheme "${scheme}" \
-      -parallel-testing-enabled YES -resultBundlePath "build/Results/${scheme}.xcresult" "$@"
+    echo_section "Testing scheme $scheme"
+    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID},arch=arm64" -scheme "${scheme}" \
+      -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
+      -resultBundlePath "build/Results/${scheme}.xcresult" \
+      -collect-test-diagnostics on-failure \
+      "${ONLY_TEST_FLAGS[@]}" "$@" &
+    pids+=("$!")
   done
+  wait "${pids[@]}"
 }
 
 function test_e2e() {
-  generate "$@"
   echo_section "Running E2E Tests"
   rm -rf build/Results
+  local pids=()
   for scheme in "${SCHEMES_E2E[@]}"; do
-    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID}" -scheme "${scheme}" \
-      -parallel-testing-enabled YES -resultBundlePath "build/Results/${scheme}.xcresult"
+    echo_section "Testing scheme $scheme"
+    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID},arch=arm64" -scheme "${scheme}" \
+      -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
+      -resultBundlePath "build/Results/${scheme}.xcresult" \
+      -collect-test-diagnostics on-failure \
+      "${ONLY_TEST_FLAGS[@]}" "$@" &
+    pids+=("$!")
   done
+  wait "${pids[@]}"
+}
+
+function test_single() {
+  local scheme="$1"; shift
+  local test_id="$1"; shift
+  echo_section "Running single test: $test_id in scheme $scheme"
+  rm -rf build/Results
+  xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID}" -scheme "$scheme" \
+    -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
+    -resultBundlePath "build/Results/${scheme}.xcresult" \
+    -collect-test-diagnostics on-failure \
+    -only-testing "$test_id" "$@"
 }
 
 function test() {
-  comment_scan "$@"
-  fmt "$@"
-  lint "$@"
-  analyze "$@"
-  test_unit "$@"
-  test_e2e "$@"
+  clean
+  generate
+  comment_scan
+  fmt
+  lint
+  analyze
+  test_unit
+  test_e2e
 }
 
 function build() {
@@ -219,14 +255,6 @@ function deploy_simulator() {
   xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
 }
 
-function clean() {
-  echo_section "Cleaning build artifacts"
-  rm -rf build
-  xcodebuild clean -scheme MainApp || true
-  xcodebuild clean -scheme ShareExtension || true
-  xcodebuild clean -scheme Common || true
-}
-
 function logs() {
   echo_section "Streaming logs from MainApp and ShareExtension"
   xcrun simctl spawn booted log stream --predicate 'subsystem == "Craftify"' --style syslog
@@ -234,7 +262,10 @@ function logs() {
 
 function comment_scan() {
   echo_section "Scanning for TODO/FIXME/print/debugPrint"
-  grep -rE 'TODO|FIXME|print\\(|debugPrint\\(' src/ || true
+  if grep -rE 'TODO|FIXME|print\(|debugPrint\(' src/; then
+    echo -e "${RED}Error: TODO/FIXME/print/debugPrint found!${NC}"
+    exit 1
+  fi
 }
 
 function bump_version() {
@@ -297,7 +328,7 @@ function build_sim() {
     -scheme MainApp \
     -configuration Debug \
     -sdk iphonesimulator \
-    -destination "id=${SIMULATOR_ID}" "$@"
+    -destination "id=${SIMULATOR_ID},arch=arm64" "$@"
 }
 
 function analyze() {
@@ -305,6 +336,7 @@ function analyze() {
   xcb analyze \
     -scheme MainApp \
     -sdk iphoneos \
+    -destination "id=${SIMULATOR_ID},arch=arm64" \
     -configuration Debug "$@"
 }
 
@@ -334,11 +366,6 @@ function deploy_appstore() {
     -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
 }
 
-function generate_changelog() {
-  echo_section "Generating changelog"
-  git-chglog -o CHANGELOG.md
-}
-
 function notify() {
   echo_section "Sending notifications"
   # integrate Slack/email notifications here
@@ -364,33 +391,26 @@ CMD="${1:-}"
 shift || true
 
 case "$CMD" in
-  init) init "$@" ;;                   # Install CLI tools
-  generate) generate "$@" ;;           # SwiftGen & XcodeGen
-  fmt) fmt "$@" ;;                     # SwiftFormat
-  lint) lint "$@" ;;                   # SwiftLint
-  test:lint) lint "$@" ;;              # Launched lint as test:lint alias
-  test:format) fmt "$@" ;;             # Launched fmt as test:format alias
   analyze) analyze "$@" ;;             # Static analysis
-  test:unit) test_unit "$@" ;;         # Run unit tests
-  test:e2e) test_e2e "$@" ;;           # Run end-to-end tests
-  test) test "$@" ;;                   # Run unit & UI tests
-  test:coverage) coverage "$@" ;;      # Run code coverage
-  pr-check) pr_checks "$@" ;;          # Run PR checks (TODO/FIXME scan)
-  comment-scan) comment_scan "$@" ;;   # Legacy alias for pr-check
-  build) build "$@" ;;                 # Build release targets
-  size-report) size_report "$@" ;;     # Check ShareExtension size
-  clean) clean "$@" ;;                 # Clean artifacts
-  logs) logs "$@" ;;                   # Stream device logs
-  bump-version) bump_version "$@" ;;   # Bump version numbers
   archive) archive "$@" ;;             # Archive MainApp for distribution
-  export-ipa) export_ipa "$@" ;;       # Export IPA from archive
-  deploy:testflight) deploy_testflight "$@" ;;   # Upload to TestFlight via API key
-  deploy:internal) deploy_internal "$@" ;;       # TestFlight internal deploy
+  build) build "$@" ;;                 # Build release targets
+  bump-version) bump_version "$@" ;;   # Bump version numbers
+  clean) clean "$@" ;;                 # Clean artifacts
+  comment-scan) comment_scan "$@" ;;   # TODO/FIXME scan
   deploy:adhoc) deploy_adhoc "$@" ;;             # Ad-hoc TestFlight deploy
   deploy:appstore) deploy_appstore "$@" ;;       # Upload to App Store Connect
+  deploy:internal) deploy_internal "$@" ;;       # TestFlight internal deploy
   deploy:simulator) deploy_simulator "$@" ;;     # Run app in simulator
-  generate-changelog) generate_changelog "$@" ;; # Generate changelog via git-chglog
-  notify) notify "$@" ;;               # Send notifications (Slack, email)
+  deploy:testflight) deploy_testflight "$@" ;;   # Upload to TestFlight via API key
+  export-ipa) export_ipa "$@" ;;       # Export IPA from archive
+  generate) generate "$@" ;;           # SwiftGen & XcodeGen
+  init) init "$@" ;;                   # Install CLI tools
+  logs) logs "$@" ;;                   # Stream device logs
   monitor-setup) monitor_setup "$@" ;; # Setup monitoring (Sentry etc.)
+  notify) notify "$@" ;;               # Send notifications (Slack, email)
+  size-report) size_report "$@" ;;     # Check ShareExtension size
+  test:coverage) coverage "$@" ;;      # Run code coverage
+  test:single) test_single "$@" ;;     # Run a single test or class
+  test) test "$@" ;;                   # Run unit & UI tests
   help|*) usage ;;                     # Show help
 esac

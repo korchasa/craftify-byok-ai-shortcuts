@@ -19,7 +19,6 @@ public struct ExplainOperation: OperationType {
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
-        // TODO: delegate to LLMAPIClient
         URLRequest(url: URL(string: "")!)
     }
 

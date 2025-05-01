@@ -80,7 +80,6 @@ public final class ProcessingManager: ProcessingManaging {
             completion(.success(result))
         } catch {
             logError(error: error)
-            print("DEBUG: completion(.failure: \(error))")
             if let llmError = error as? LLMAPIClientError {
                 completion(.failure(llmError))
             } else {

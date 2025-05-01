@@ -7,26 +7,26 @@ alwaysApply: true
 
 Usage: ./run <command> [args...]
 Commands:
-  generate            Run SwiftGen and XcodeGen
-  fmt                 Run SwiftFormat
   analyze             Run static analysis
-  test                Run all tests (unit + e2e)
-  test:coverage       Run tests with code coverage
-  pr-check            Run PR checks (TODO/FIXME scan)
-  comment-scan        Scan for TODO/FIXME/print/debugPrint (alias)
-  build               Build MainApp and ShareExtension (Release)
-  size-report         Check ShareExtension size
-  clean               Clean build artifacts
-  logs                Stream MainApp logs
-  bump-version        Bump version numbers via agvtool
   archive             Archive MainApp as .xcarchive
-  export-ipa          Export IPA from archive
-  deploy:simulator    Build and launch MainApp in Simulator
-  deploy:testflight   Upload IPA to TestFlight via altool
-  deploy:internal     Internal TestFlight deploy
+  build               Build MainApp and ShareExtension (Release)
+  bump-version        Bump version numbers via agvtool
+  clean               Clean build artifacts
+  comment-scan        Scan for TODO/FIXME/print/debugPrint
   deploy:adhoc        Ad-hoc TestFlight deploy
   deploy:appstore     Upload to App Store Connect
+  deploy:internal     Internal TestFlight deploy
+  deploy:simulator    Build MainApp for simulator
+  deploy:testflight   Upload IPA to TestFlight via altool
+  export-ipa          Export IPA from archive
+  generate            Run SwiftGen and XcodeGen
   generate-changelog  Generate changelog via git-chglog
-  notify              Send notifications (Slack, email)
+  init                Install CLI tools
+  logs                Stream MainApp logs
   monitor-setup       Setup monitoring (Sentry etc.)
+  notify              Send notifications (Slack, email)
+  size-report         Check ShareExtension size
+  test                Run all tests (unit + e2e)
+  test:coverage       Run tests with code coverage
+  test:single         Run a single test or class (unit or e2e), for example: run test:single MainAppUnitTests MainAppUnitTests/AddOperationViewModelTests
   help                Show this help
