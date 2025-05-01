@@ -14,7 +14,7 @@ public struct CorrectOperation: OperationType {
     public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = CorrectParams()
         guard let data = try? JSONEncoder().encode(params) else { return nil }
-        let prompt = "Correct grammar and spelling: {text}"
+        let prompt = "Correct grammar and spelling in the following text: {text}"
         return InventoryOperation(operation: .correct, params: data, promptTemplate: prompt, colorHex: colorHex)
     }
 

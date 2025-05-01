@@ -268,3 +268,11 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
 - Покрытие: unit-тесты (InventoryOperation, InventoryManager), UI-тесты (Add/EditOperationView), e2e-тесты (ShareExtensionView).
 
 - В моделях и UI убран параметр stylePreservationLevel для correct-операции, всегда используется максимальный стиль.
+
+### Onboarding Flow (Welcome Screen)
+- AppState (ObservableObject) с Published-флагом согласия пользователя.
+- Используется через @StateObject в CraftifyApp.
+- HowToUseView принимает onConsent callback, который вызывается после согласия.
+- После согласия — автоматический переход на HomeView.
+- Согласие хранится через ConsentManager (UserDefaults App Group).
+- Покрыто e2e-тестом на полный flow.

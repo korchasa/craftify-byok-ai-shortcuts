@@ -56,7 +56,7 @@ import XCTest
             if let viewModel {
                 let operation = InventoryOperation(
                     operation: .simplify,
-                    params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .beginner)),
+                    params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .schoolchild)),
                     promptTemplate: "Simplify the following text for a beginner reader: {text}"
                 )
                 viewModel.addOperation(operation)

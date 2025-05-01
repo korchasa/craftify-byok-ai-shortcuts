@@ -12,7 +12,7 @@ import XCTest
         private func makeViewModel() -> ShareExtensionViewModel {
             let inventory = InventoryManagerStub()
             let op1 = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
-            let op2 = InventoryOperation(operation: .simplify, params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .beginner)), promptTemplate: "S: {text}")
+            let op2 = InventoryOperation(operation: .simplify, params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .schoolchild)), promptTemplate: "S: {text}")
             inventory.saveInventory([op1, op2])
             let manager = ShareExtensionManager(
                 inventoryManager: inventory,
@@ -93,7 +93,7 @@ import XCTest
             let vm = makeViewModel()
             // Присваиваем разный цвет операциям
             vm.operations[0] = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}", colorHex: "3288bd")
-            vm.operations[1] = InventoryOperation(operation: .simplify, params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .beginner)), promptTemplate: "S: {text}", colorHex: "d53e4f")
+            vm.operations[1] = InventoryOperation(operation: .simplify, params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .schoolchild)), promptTemplate: "S: {text}", colorHex: "d53e4f")
             let view = ShareExtensionView(viewModel: vm)
             let grid = try view.inspect().find(ViewType.LazyVGrid.self)
             let buttons = try grid.findAll(ViewType.Button.self)

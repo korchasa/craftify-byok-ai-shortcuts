@@ -44,7 +44,10 @@
 "operation_value_intermediate" = "Intermediate";
 "operation_value_advanced" = "Advanced";
 "operation_value_school" = "School";
+"operation_value_schoolchild" = "Schoolchild";
+"operation_value_teenager" = "Teenager";
 "operation_value_student" = "Student";
+"operation_value_adult" = "Adult";
 "operation_value_expert" = "Expert";
 
 /* Operation Labels */

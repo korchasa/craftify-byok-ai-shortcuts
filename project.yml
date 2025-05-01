@@ -26,7 +26,8 @@ targets:
     platform: iOS
     sources:
       - path: src/MainApp/Sources
-      - path: src/MainApp/Resources/Generated/Strings.swift
+      - path: src/Common/Generated/Strings.swift
+      - path: src/Common/Sources/ColorPaletteConstants.swift
     resources:
       - path: src/MainApp/Resources
         excludes:
@@ -66,7 +67,7 @@ targets:
     sources:
       - path: src/MainApp/UnitTests
       - path: src/MainApp/Sources
-      - path: src/MainApp/Resources/Generated/Strings.swift
+      - path: src/Common/Generated/Strings.swift
     dependencies:
       - target: MainApp
       - package: Nimble
@@ -82,7 +83,7 @@ targets:
     sources:
       - path: src/MainApp/E2ETests
       - path: src/MainApp/Sources
-      - path: src/MainApp/Resources/Generated/Strings.swift
+      - path: src/Common/Generated/Strings.swift
     dependencies:
       - target: MainApp
       - package: Nimble

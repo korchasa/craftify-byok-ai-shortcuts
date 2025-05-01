@@ -68,9 +68,10 @@ public struct EditOperationView: View {
             .padding(.horizontal)
         case .simplify:
             Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
-                Text(L10n.operationValueBeginner).tag(ComplexityLevel.beginner)
-                Text(L10n.operationValueIntermediate).tag(ComplexityLevel.intermediate)
-                Text(L10n.operationValueAdvanced).tag(ComplexityLevel.advanced)
+                Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
+                Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
+                Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
+                Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
             }
             .pickerStyle(.segmented)
             .accessibilityLabel(L10n.operationParamComplexityLevel)
@@ -79,9 +80,10 @@ public struct EditOperationView: View {
             EmptyView()
         case .explain:
             Picker(L10n.operationParamDetailLevel, selection: $viewModel.detailLevel) {
-                Text(L10n.operationValueBeginner).tag(DetailLevel.beginner)
-                Text(L10n.operationValueIntermediate).tag(DetailLevel.intermediate)
-                Text(L10n.operationValueAdvanced).tag(DetailLevel.advanced)
+                Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
+                Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
+                Text(L10n.operationValueStudent).tag(DetailLevel.student)
+                Text(L10n.operationValueAdult).tag(DetailLevel.adult)
             }
             .pickerStyle(.segmented)
             .accessibilityLabel(L10n.operationParamDetailLevel)

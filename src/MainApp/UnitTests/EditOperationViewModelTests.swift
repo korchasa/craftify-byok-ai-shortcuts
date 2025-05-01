@@ -20,13 +20,13 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithSimplifyOperationFillsFields() {
         let op = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .advanced)),
-            promptTemplate: "Simplify the following text for an advanced reader: {text}",
+            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .adult)),
+            promptTemplate: "Simplify the following text for an adult reader: {text}",
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
         expect(vm.selectedKind) == OperationKind.simplify
-        expect(vm.complexityLevel) == .advanced
+        expect(vm.complexityLevel) == .adult
         expect(vm.isValid) == true
     }
 
@@ -45,13 +45,13 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithExplainOperationFillsFields() {
         let op = InventoryOperation(
             operation: .explain,
-            params: try! JSONEncoder().encode(ExplainParams(detailLevel: .intermediate)),
-            promptTemplate: "Explain the following concept at intermediate level: {text}",
+            params: try! JSONEncoder().encode(ExplainParams(detailLevel: .teenager)),
+            promptTemplate: "Explain the following concept at teenager level: {text}",
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
         expect(vm.selectedKind) == OperationKind.explain
-        expect(vm.detailLevel) == .intermediate
+        expect(vm.detailLevel) == .teenager
         expect(vm.isValid) == true
     }
 
