@@ -12,7 +12,7 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "3288bd"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedType) == .translate
+        expect(vm.selectedKind) == OperationKind.translate
         expect(vm.targetLanguage) == "fr"
         expect(vm.isValid) == true
     }
@@ -25,7 +25,7 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedType) == .simplify
+        expect(vm.selectedKind) == OperationKind.simplify
         expect(vm.complexityLevel) == .advanced
         expect(vm.isValid) == true
     }
@@ -38,7 +38,7 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedType) == .correct
+        expect(vm.selectedKind) == OperationKind.correct
         expect(vm.isValid) == true
     }
 
@@ -50,7 +50,7 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedType) == .explain
+        expect(vm.selectedKind) == OperationKind.explain
         expect(vm.detailLevel) == .intermediate
         expect(vm.isValid) == true
     }

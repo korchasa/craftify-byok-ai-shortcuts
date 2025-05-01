@@ -35,11 +35,10 @@ public struct EditOperationView: View {
                 .accessibilityAddTraits(.isHeader)
                 .padding(.top, AddOperationViewConstants.topPadding)
 
-            Picker(L10n.addOperationType, selection: $viewModel.selectedType) {
-                Text(L10n.operationLabelTranslate).tag(OperationType?.some(.translate))
-                Text(L10n.operationLabelSimplify).tag(OperationType?.some(.simplify))
-                Text(L10n.operationLabelCorrect).tag(OperationType?.some(.correct))
-                Text(L10n.operationLabelExplain).tag(OperationType?.some(.explain))
+            Picker(L10n.addOperationType, selection: $viewModel.selectedKind) {
+                ForEach(OperationFactory.allKinds, id: \ .self) { kind in
+                    Text(label(for: kind)).tag(Optional(kind))
+                }
             }
             .pickerStyle(.segmented)
             .accessibilityLabel(L10n.addOperationType)
@@ -57,7 +56,7 @@ public struct EditOperationView: View {
 
     @ViewBuilder
     private var formFields: some View {
-        switch viewModel.selectedType {
+        switch viewModel.selectedKind {
         case .translate:
             Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
                 ForEach(supportedLanguages, id: \ .code) { lang in
@@ -142,6 +141,15 @@ public struct EditOperationView: View {
         }
         .padding(.horizontal)
         .padding(.bottom, AddOperationViewConstants.bottomPadding)
+    }
+
+    private func label(for kind: OperationKind) -> String {
+        switch kind {
+        case .translate: L10n.operationLabelTranslate
+        case .simplify: L10n.operationLabelSimplify
+        case .correct: L10n.operationLabelCorrect
+        case .explain: L10n.operationLabelExplain
+        }
     }
 }
 

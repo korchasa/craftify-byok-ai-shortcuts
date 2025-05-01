@@ -114,7 +114,7 @@ public struct HomeView: View {
             }
         }
 
-        private func operationLabel(for type: OperationType) -> String {
+        private func operationLabel(for type: OperationKind) -> String {
             switch type {
             case .translate: L10n.operationLabelTranslate
             case .simplify: L10n.operationLabelSimplify

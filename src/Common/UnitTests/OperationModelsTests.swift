@@ -6,10 +6,10 @@ import XCTest
 public final class OperationModelsTests: XCTestCase {
     /// Проверяет rawValue у OperationType
     public func testOperationTypeRawValues() {
-        expect(OperationType.translate.rawValue) == "translate"
-        expect(OperationType.simplify.rawValue) == "simplify"
-        expect(OperationType.correct.rawValue) == "correct"
-        expect(OperationType.explain.rawValue) == "explain"
+        expect(OperationKind.translate.rawValue) == "translate"
+        expect(OperationKind.simplify.rawValue) == "simplify"
+        expect(OperationKind.correct.rawValue) == "correct"
+        expect(OperationKind.explain.rawValue) == "explain"
     }
 
     /// Проверяет Codable для TranslateParams
