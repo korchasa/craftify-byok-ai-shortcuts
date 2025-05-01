@@ -22,7 +22,7 @@ public final class OperationModelsTests: XCTestCase {
 
     /// Проверяет Codable для SimplifyParams
     public func testSimplifyParamsCodable() throws {
-        let params = SimplifyParams(complexityLevel: .beginner)
+        let params = SimplifyParams(complexityLevel: .schoolchild)
         let data = try JSONEncoder().encode(params)
         let decoded = try JSONDecoder().decode(SimplifyParams.self, from: data)
         expect(decoded) == params
@@ -38,7 +38,7 @@ public final class OperationModelsTests: XCTestCase {
 
     /// Проверяет Codable для ExplainParams
     public func testExplainParamsCodable() throws {
-        let params = ExplainParams(detailLevel: .advanced)
+        let params = ExplainParams(detailLevel: .adult)
         let data = try JSONEncoder().encode(params)
         let decoded = try JSONDecoder().decode(ExplainParams.self, from: data)
         expect(decoded) == params

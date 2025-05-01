@@ -149,9 +149,10 @@ public struct ShareExtensionView: View {
         case .simplify:
             if let params = try? JSONDecoder().decode(SimplifyParams.self, from: op.params) {
                 let level: String = switch params.complexityLevel {
-                case .beginner: L10n.operationValueBeginner
-                case .intermediate: L10n.operationValueIntermediate
-                case .advanced: L10n.operationValueAdvanced
+                case .schoolchild: L10n.operationValueSchoolchild
+                case .teenager: L10n.operationValueTeenager
+                case .student: L10n.operationValueStudent
+                case .adult: L10n.operationValueAdult
                 }
                 return "\(L10n.operationLabelSimplify) \(level)"
             }
@@ -161,9 +162,10 @@ public struct ShareExtensionView: View {
         case .explain:
             if let params = try? JSONDecoder().decode(ExplainParams.self, from: op.params) {
                 let level: String = switch params.detailLevel {
-                case .beginner: L10n.operationValueBeginner
-                case .intermediate: L10n.operationValueIntermediate
-                case .advanced: L10n.operationValueAdvanced
+                case .schoolchild: L10n.operationValueSchoolchild
+                case .teenager: L10n.operationValueTeenager
+                case .student: L10n.operationValueStudent
+                case .adult: L10n.operationValueAdult
                 }
                 return "\(L10n.operationLabelExplain) \(level)"
             }

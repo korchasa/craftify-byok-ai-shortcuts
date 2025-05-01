@@ -10,6 +10,7 @@ public struct HowToUseView: View {
     private static let bottomPadding: CGFloat = 32
 
     @ObservedObject private var viewModel: HowToUseViewModel
+    private var onConsent: (() -> Void)?
 
     public var body: some View {
         VStack(spacing: Self.verticalSpacing) {
@@ -31,7 +32,7 @@ public struct HowToUseView: View {
                 .font(.footnote)
                 .foregroundColor(.blue)
             Spacer()
-            Button(action: viewModel.saveConsent) {
+            Button(action: handleDoneTapped) {
                 Text(L10n.howtouseDone)
                     .frame(maxWidth: .infinity)
             }
@@ -46,7 +47,15 @@ public struct HowToUseView: View {
 
     /// Инициализация с менеджером согласия
     /// - Parameter consentManager: Менеджер согласия (по умолчанию — production)
-    public init(consentManager: ConsentManaging = ConsentManager()) {
+    public init(consentManager: ConsentManaging = ConsentManager(), onConsent: (() -> Void)? = nil) {
         self._viewModel = ObservedObject(wrappedValue: HowToUseViewModel(consentManager: consentManager))
+        self.onConsent = onConsent
+    }
+
+    private func handleDoneTapped() {
+        viewModel.saveConsent()
+        if viewModel.consentGiven {
+            onConsent?()
+        }
     }
 }

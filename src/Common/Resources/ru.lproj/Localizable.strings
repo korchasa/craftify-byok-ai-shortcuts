@@ -44,8 +44,11 @@
 "operation_value_intermediate" = "Студент";
 "operation_value_advanced" = "Эксперт";
 "operation_value_school" = "Школьник";
+"operation_value_schoolchild" = "Школьник";
+"operation_value_teenager" = "Подросток";
 "operation_value_student" = "Студент";
 "operation_value_expert" = "Эксперт";
+"operation_value_adult" = "Взрослый";
 
 /* Operation Labels */
 "operation_label_translate" = "Перевод";

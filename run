@@ -234,7 +234,6 @@ function install_app_to_simulator() {
     echo "${RED}MainApp.app not found at $app_path!${NC}"
     exit 2
   fi
-  echo_section "Installing app to simulator: $app_path"
   local install_success=0
   for attempt in {1..5}; do
     if xcrun simctl install "${SIMULATOR_ID}" "${app_path}"; then
@@ -260,12 +259,13 @@ function deploy_simulator() {
     open -a Simulator
   fi
   echo_section "Building MainApp for simulator"
-  xcb build -sdk iphonesimulator -destination "id=${SIMULATOR_ID}" -scheme MainApp build "$@"
+  xcb build -sdk iphonesimulator -destination "id=${SIMULATOR_ID},arch=arm64" -scheme MainApp build "$@"
   boot_and_wait_simulator
   local app_path
-  app_path=$(xcodebuild -scheme MainApp -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
+  app_path=$(xcodebuild -scheme MainApp -destination "id=${SIMULATOR_ID},arch=arm64" -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
+  echo_section "Installing app to simulator: $app_path"
   install_app_to_simulator "$app_path"
-  echo_section "Launching app: $app_path"
+  echo_section "Launching app in simulator: $app_path"
   xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
 }
 

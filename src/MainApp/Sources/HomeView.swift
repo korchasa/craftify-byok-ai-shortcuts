@@ -131,16 +131,34 @@ public struct HomeView: View {
                 }
             case .simplify:
                 if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {
-                    return "\(params.complexityLevel.rawValue.capitalized)"
+                    return labelForComplexityLevel(params.complexityLevel)
                 }
             case .correct:
                 return ""
             case .explain:
                 if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
-                    return "\(params.detailLevel.rawValue.capitalized)"
+                    return labelForDetailLevel(params.detailLevel)
                 }
             }
             return ""
+        }
+
+        private func labelForComplexityLevel(_ level: ComplexityLevel) -> String {
+            switch level {
+            case .schoolchild: L10n.operationValueSchoolchild
+            case .teenager: L10n.operationValueTeenager
+            case .student: L10n.operationValueStudent
+            case .adult: L10n.operationValueAdult
+            }
+        }
+
+        private func labelForDetailLevel(_ level: DetailLevel) -> String {
+            switch level {
+            case .schoolchild: L10n.operationValueSchoolchild
+            case .teenager: L10n.operationValueTeenager
+            case .student: L10n.operationValueStudent
+            case .adult: L10n.operationValueAdult
+            }
         }
     }
 }

@@ -22,8 +22,8 @@ import XCTest
         public func testFieldsAppearForSimplify() throws {
             let op = InventoryOperation(
                 operation: .simplify,
-                params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .intermediate)),
-                promptTemplate: "Simplify the following text for an intermediate reader: {text}"
+                params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .teenager)),
+                promptTemplate: "Simplify the following text for a teenager reader: {text}"
             )
             let vm = EditOperationViewModel(operation: op)
             let view = EditOperationView(viewModel: vm)
@@ -46,8 +46,8 @@ import XCTest
         public func testFieldsAppearForExplain() throws {
             let op = InventoryOperation(
                 operation: .explain,
-                params: try! JSONEncoder().encode(ExplainParams(detailLevel: .advanced)),
-                promptTemplate: "Explain the following concept at advanced level: {text}"
+                params: try! JSONEncoder().encode(ExplainParams(detailLevel: .adult)),
+                promptTemplate: "Explain the following concept at adult level: {text}"
             )
             let vm = EditOperationViewModel(operation: op)
             let view = EditOperationView(viewModel: vm)

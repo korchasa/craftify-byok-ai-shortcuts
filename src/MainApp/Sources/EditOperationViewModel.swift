@@ -5,8 +5,8 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     public let id = UUID()
     @Published public var selectedKind: OperationKind?
     @Published public var targetLanguage: String = ""
-    @Published public var complexityLevel: ComplexityLevel = .beginner
-    @Published public var detailLevel: DetailLevel = .beginner
+    @Published public var complexityLevel: ComplexityLevel = .schoolchild
+    @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String
 
     private let originalOperation: InventoryOperation
@@ -29,35 +29,35 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             let lang = params?.targetLanguage ?? ""
             self.targetLanguage = lang
             self.originalTargetLanguage = lang
-            self.complexityLevel = .beginner
-            self.originalComplexityLevel = .beginner
-            self.detailLevel = .beginner
-            self.originalDetailLevel = .beginner
+            self.complexityLevel = .schoolchild
+            self.originalComplexityLevel = .schoolchild
+            self.detailLevel = .schoolchild
+            self.originalDetailLevel = .schoolchild
         case .simplify:
             let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params)
-            let level = params?.complexityLevel ?? .beginner
+            let level = params?.complexityLevel ?? .schoolchild
             self.complexityLevel = level
             self.originalComplexityLevel = level
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
-            self.detailLevel = .beginner
-            self.originalDetailLevel = .beginner
+            self.detailLevel = .schoolchild
+            self.originalDetailLevel = .schoolchild
         case .correct:
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
-            self.complexityLevel = .beginner
-            self.originalComplexityLevel = .beginner
-            self.detailLevel = .beginner
-            self.originalDetailLevel = .beginner
+            self.complexityLevel = .schoolchild
+            self.originalComplexityLevel = .schoolchild
+            self.detailLevel = .schoolchild
+            self.originalDetailLevel = .schoolchild
         case .explain:
             let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params)
-            let detail = params?.detailLevel ?? .beginner
+            let detail = params?.detailLevel ?? .schoolchild
             self.detailLevel = detail
             self.originalDetailLevel = detail
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
-            self.complexityLevel = .beginner
-            self.originalComplexityLevel = .beginner
+            self.complexityLevel = .schoolchild
+            self.originalComplexityLevel = .schoolchild
         }
     }
 

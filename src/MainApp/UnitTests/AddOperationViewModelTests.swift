@@ -34,7 +34,7 @@ public final class AddOperationViewModelTests: XCTestCase {
     public func testSaveEmitsValidOperation() {
         let vm = AddOperationViewModel()
         vm.selectedKind = .simplify
-        vm.complexityLevel = .beginner
+        vm.complexityLevel = .schoolchild
         expect(vm.isValid) == true
         let op = vm.makeOperation()
         expect(op != nil) == true

@@ -45,7 +45,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
 
     func test_simplifyOperation_success() async {
         let manager = makeProcessingManager()
-        let input = OperationInput(complexityLevel: .beginner)
+        let input = OperationInput(complexityLevel: .schoolchild)
         let op = SimplifyOperation().makeInventoryOperation(input: input, colorHex: "fdae61")!
         let expected = "Упрощённый текст"
         URLProtocolStub.data = Data("""
@@ -81,7 +81,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
 
     func test_explainOperation_success() async {
         let manager = makeProcessingManager()
-        let input = OperationInput(detailLevel: .advanced)
+        let input = OperationInput(detailLevel: .adult)
         let op = ExplainOperation().makeInventoryOperation(input: input, colorHex: "abdda4")!
         let expected = "Объяснение для эксперта"
         URLProtocolStub.data = Data("""

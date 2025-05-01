@@ -4,8 +4,8 @@ import Foundation
 public final class AddOperationViewModel: ObservableObject {
     @Published public var selectedKind: OperationKind?
     @Published public var targetLanguage: String = ""
-    @Published public var complexityLevel: ComplexityLevel = .beginner
-    @Published public var detailLevel: DetailLevel = .beginner
+    @Published public var complexityLevel: ComplexityLevel = .schoolchild
+    @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String = AddOperationViewModel.palette.first!
 
     /// Проверяет, могут ли данные создать операцию
@@ -38,8 +38,8 @@ public final class AddOperationViewModel: ObservableObject {
     public func cancel() {
         selectedKind = nil
         targetLanguage = ""
-        complexityLevel = .beginner
-        detailLevel = .beginner
+        complexityLevel = .schoolchild
+        detailLevel = .schoolchild
         selectedColorHex = AddOperationViewModel.palette.first!
     }
 

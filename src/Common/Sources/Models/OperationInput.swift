@@ -12,9 +12,9 @@ public struct OperationInput {
     /// Инициализатор контейнера параметров.
     /// - Parameters:
     ///   - targetLanguage: Целевой язык (по умолчанию пустая строка).
-    ///   - complexityLevel: Уровень сложности (по умолчанию .beginner).
-    ///   - detailLevel: Уровень детализации (по умолчанию .beginner).
-    public init(targetLanguage: String = "", complexityLevel: ComplexityLevel = .beginner, detailLevel: DetailLevel = .beginner) {
+    ///   - complexityLevel: Уровень сложности (по умолчанию .schoolchild).
+    ///   - detailLevel: Уровень детализации (по умолчанию .schoolchild).
+    public init(targetLanguage: String = "", complexityLevel: ComplexityLevel = .schoolchild, detailLevel: DetailLevel = .schoolchild) {
         self.targetLanguage = targetLanguage
         self.complexityLevel = complexityLevel
         self.detailLevel = detailLevel
