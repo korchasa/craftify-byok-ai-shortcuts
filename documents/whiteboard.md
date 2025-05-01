@@ -1,26 +1,35 @@
-# Текущая задача
+# Whiteboard
 
-**Запрос:** убрать из операции correct свойство style preservation. Пусть всегда стиль сохраняется (максимально).
+## Проверка реализации и тестирования операций Craftify
 
-## Анализ
-- В коде операции correct был параметр stylePreservationLevel, который пользователь мог выбирать (Stepper в UI, поле в ViewModel, сериализация в CorrectParams).
-- Требуется: убрать возможность выбора, всегда использовать максимальный стиль (3).
-- Необходимо:
-  - Убрать Stepper из AddOperationView и EditOperationView.
-  - В ViewModel всегда выставлять stylePreservationLevel = max.
-  - Везде, где создаётся correct-операция, жёстко подставлять максимальный стиль.
-  - Обновить тесты (unit, e2e), убрать проверки изменения этого параметра.
+### Запрос пользователя
+Проверь операции, что они полностью реализованы. Напиши тесты на их работу с llm
 
-## Шаги
-- [x] Удалён Stepper из AddOperationView и EditOperationView.
-- [x] В AddOperationViewModel и EditOperationViewModel stylePreservationLevel всегда = max.
-- [x] В makeOperation для correct всегда подставляется максимальный стиль.
-- [x] Тесты обновлены: убраны проверки изменения stylePreservationLevel, корректно проверяется только максимальный стиль.
-- [x] Прогнал unit и e2e тесты — всё зелёное.
+### Анализ
+- Все 4 операции (translate, simplify, correct, explain) реализованы как структуры, соответствующие протоколу OperationType.
+- Для каждой операции реализованы методы isValid, makeInventoryOperation, buildRequest (заглушка), parse.
+- Генерация InventoryOperation корректна для всех типов.
+- Вся обработка текста через LLM происходит через ProcessingManager → LLMAPIClient.
+- Покрытие тестами:
+  - Есть unit-тесты на параметры и сериализацию (OperationModelsTests).
+  - Есть unit/e2e тесты на ViewModel'и, создание/валидацию/редактирование операций.
+  - Есть интеграционные тесты LLMAPIClient (LLMAPIClientTests, LLMAPIClientIntegrationTests).
+  - ✅ Добавлены unit-тесты, проверяющие интеграцию OperationType с LLMAPIClient (сквозной путь: OperationType → InventoryOperation → ProcessingManager → LLMAPIClient).
+  - ⚠️ Edge-case: при пробросе ошибки через completion теряется конкретный тип enum (type-erasure), из-за чего pattern matching в XCTest не всегда работает. Требует дальнейшего анализа (возможно, баг XCTest или нюанс bridging).
 
-## Итог
-- Операция correct всегда сохраняет стиль максимально.
-- UI не предлагает пользователю выбирать уровень сохранения стиля.
-- Все тесты проходят, проект в рабочем состоянии.
+### План
+1. Для каждого OperationType (translate, simplify, correct, explain) добавить unit-тест:
+   - Создать InventoryOperation через makeInventoryOperation.
+   - Передать в ProcessingManager с мок-LLMAPIClient (или stub-сессию).
+   - Проверить, что результат соответствует ожидаемому (ответ LLM).
+2. Проверить edge-cases: невалидные параметры, ошибки LLM, отмена запроса.
+3. Обновить документацию по тестированию операций.
 
----
+### Прогресс
+- [x] Проверить существующие реализации и тесты
+- [x] Добавить unit-тесты на интеграцию OperationType с LLM
+- [ ] Проверить edge-cases
+- [ ] Обновить документацию
+
+// Edge-case: см. выше — требуется дополнительное исследование type-erasure ошибок в XCTest.
+

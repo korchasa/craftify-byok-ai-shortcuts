@@ -121,6 +121,7 @@ function test_e2e() {
 }
 
 function test() {
+  comment_scan "$@"
   fmt "$@"
   lint "$@"
   analyze "$@"

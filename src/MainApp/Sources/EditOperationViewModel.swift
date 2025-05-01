@@ -3,7 +3,7 @@ import Foundation
 
 public final class EditOperationViewModel: ObservableObject, Identifiable {
     public let id = UUID()
-    @Published public var selectedType: OperationType?
+    @Published public var selectedKind: OperationKind?
     @Published public var targetLanguage: String = ""
     @Published public var complexityLevel: ComplexityLevel = .beginner
     @Published public var detailLevel: DetailLevel = .beginner
@@ -14,12 +14,15 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     private let originalComplexityLevel: ComplexityLevel
     private let originalDetailLevel: DetailLevel
     private let originalColorHex: String
+    private let originalKind: OperationKind
 
     public init(operation: InventoryOperation) {
         self.originalOperation = operation
-        self.selectedType = operation.operation
+        self.selectedKind = operation.operation
         self.selectedColorHex = operation.colorHex
         self.originalColorHex = operation.colorHex
+        self.originalKind = operation.operation
+        // Десериализация параметров
         switch operation.operation {
         case .translate:
             let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params)
@@ -59,29 +62,18 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     }
 
     public func makeOperation() -> InventoryOperation? {
-        guard let type = selectedType, isValid else { return nil }
-        switch type {
-        case .translate:
-            let params = TranslateParams(targetLanguage: targetLanguage)
-            guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .translate, params: data, promptTemplate: "Translate the following text to \(targetLanguage): {text}", colorHex: selectedColorHex)
-        case .simplify:
-            let params = SimplifyParams(complexityLevel: complexityLevel)
-            guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .simplify, params: data, promptTemplate: "Simplify the following text for a \(complexityLevel.rawValue) reader: {text}", colorHex: selectedColorHex)
-        case .correct:
-            let params = CorrectParams()
-            guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .correct, params: data, promptTemplate: "Correct grammar and spelling: {text}", colorHex: selectedColorHex)
-        case .explain:
-            let params = ExplainParams(detailLevel: detailLevel)
-            guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .explain, params: data, promptTemplate: "Explain the following concept at \(detailLevel.rawValue) level: {text}", colorHex: selectedColorHex)
-        }
+        guard let kind = selectedKind else { return nil }
+        let input = OperationInput(
+            targetLanguage: targetLanguage,
+            complexityLevel: complexityLevel,
+            detailLevel: detailLevel
+        )
+        let operation = OperationFactory.make(kind: kind)
+        return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
     }
 
     public func cancel() {
-        self.selectedType = originalOperation.operation
+        self.selectedKind = originalKind
         self.targetLanguage = originalTargetLanguage
         self.complexityLevel = originalComplexityLevel
         self.detailLevel = originalDetailLevel
@@ -95,17 +87,13 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     ]
 
     public var isValid: Bool {
-        switch selectedType {
-        case .translate:
-            !targetLanguage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-        case .simplify:
-            true
-        case .correct:
-            true
-        case .explain:
-            true
-        case .none:
-            false
-        }
+        guard let kind = selectedKind else { return false }
+        let input = OperationInput(
+            targetLanguage: targetLanguage,
+            complexityLevel: complexityLevel,
+            detailLevel: detailLevel
+        )
+        let operation = OperationFactory.make(kind: kind)
+        return operation.isValid(input: input)
     }
 }

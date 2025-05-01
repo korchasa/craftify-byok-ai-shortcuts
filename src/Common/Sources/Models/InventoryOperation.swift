@@ -3,7 +3,7 @@ import Foundation
 /// Операция инвентаря Craftify (тип, параметры, шаблон промпта)
 public struct InventoryOperation: Codable, Equatable, Hashable {
     /// Тип операции (translate, simplify, correct, explain)
-    public let operation: OperationType
+    public let operation: OperationKind
     /// Сериализованные параметры операции
     public let params: Data // Encoded params (type depends on operation)
     /// Шаблон промпта для LLM
@@ -24,7 +24,7 @@ public struct InventoryOperation: Codable, Equatable, Hashable {
     ///   - params: Сериализованные параметры
     ///   - promptTemplate: Шаблон промпта
     ///   - colorHex: Цвет операции (hex)
-    public init(operation: OperationType, params: Data, promptTemplate: String, colorHex: String = "3288bd") {
+    public init(operation: OperationKind, params: Data, promptTemplate: String, colorHex: String = "3288bd") {
         self.operation = operation
         self.params = params
         self.promptTemplate = promptTemplate
