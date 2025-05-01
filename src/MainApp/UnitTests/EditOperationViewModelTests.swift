@@ -4,11 +4,6 @@ import Nimble
 import XCTest
 
 public final class EditOperationViewModelTests: XCTestCase {
-    private enum TestConstants {
-        static let levelTwo = 2
-        static let levelThree = 3
-    }
-
     public func testInitWithTranslateOperationFillsFields() {
         let op = InventoryOperation(
             operation: .translate,
@@ -38,13 +33,12 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithCorrectOperationFillsFields() {
         let op = InventoryOperation(
             operation: .correct,
-            params: try! JSONEncoder().encode(CorrectParams(stylePreservationLevel: TestConstants.levelTwo)),
-            promptTemplate: "Correct grammar and spelling, preserve style level \(TestConstants.levelTwo): {text}",
+            params: try! JSONEncoder().encode(CorrectParams()),
+            promptTemplate: "Correct grammar and spelling: {text}",
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
         expect(vm.selectedType) == .correct
-        expect(vm.stylePreservationLevel) == TestConstants.levelTwo
         expect(vm.isValid) == true
     }
 
@@ -85,20 +79,6 @@ public final class EditOperationViewModelTests: XCTestCase {
         expect(updated?.operation) == .translate
         let params = try? JSONDecoder().decode(TranslateParams.self, from: updated!.params)
         expect(params?.targetLanguage) == "de"
-    }
-
-    public func testCancelResetsFields() {
-        let op = InventoryOperation(
-            operation: .correct,
-            params: try! JSONEncoder().encode(CorrectParams(stylePreservationLevel: TestConstants.levelTwo)),
-            promptTemplate: "Correct grammar and spelling, preserve style level \(TestConstants.levelTwo): {text}",
-            colorHex: "abdda4"
-        )
-        let vm = EditOperationViewModel(operation: op)
-        vm.stylePreservationLevel = TestConstants.levelThree
-        vm.cancel()
-        expect(vm.selectedType) == .correct
-        expect(vm.stylePreservationLevel) == TestConstants.levelTwo // возвращается к исходному значению
     }
 
     deinit {}

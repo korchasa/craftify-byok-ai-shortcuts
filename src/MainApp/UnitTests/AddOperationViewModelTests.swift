@@ -44,7 +44,6 @@ public final class AddOperationViewModelTests: XCTestCase {
     public func testCancelResetsState() {
         let vm = AddOperationViewModel()
         vm.selectedType = .correct
-        vm.stylePreservationLevel = 2
         vm.cancel()
         expect(vm.selectedType) == nil
         expect(vm.isValid) == false

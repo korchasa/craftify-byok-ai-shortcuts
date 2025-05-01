@@ -38,6 +38,9 @@ public struct ShareExtensionView: View {
         static let operationHeightMultiplier: CGFloat = 1.5
         static let operationMinHeight: CGFloat = ColorPaletteConstants.circleSize * operationHeightMultiplier
         static let gridColumns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible())]
+        static let toastPadding: CGFloat = 8
+        static let mainContentTopSpacer: CGFloat = 12
+        static let cardCornerRadius: CGFloat = 12
     }
 
     public init(viewModel: ShareExtensionViewModel) {
@@ -100,7 +103,7 @@ public struct ShareExtensionView: View {
         VStack(spacing: 0) {
             Rectangle()
                 .fill(Color.clear)
-                .frame(height: 12)
+                .frame(height: ShareExtensionViewLocalConstants.mainContentTopSpacer)
             Text(L10n.shareTitle)
                 .font(.title2)
                 .bold()
@@ -115,7 +118,7 @@ public struct ShareExtensionView: View {
     }
 
     private var operationsGrid: some View {
-        let cardCornerRadius: CGFloat = 12
+        let cardCornerRadius: CGFloat = ShareExtensionViewLocalConstants.cardCornerRadius
         return LazyVGrid(columns: ShareExtensionViewLocalConstants.gridColumns, spacing: ShareExtensionViewConstants.gridSpacing) {
             ForEach(viewModel.operations, id: \ .id) { op in
                 let color = Color(hex: op.colorHex)
@@ -154,9 +157,6 @@ public struct ShareExtensionView: View {
             }
             return L10n.operationLabelSimplify
         case .correct:
-            if let params = try? JSONDecoder().decode(CorrectParams.self, from: op.params) {
-                return "\(L10n.operationLabelCorrect) \(params.stylePreservationLevel)/3"
-            }
             return L10n.operationLabelCorrect
         case .explain:
             if let params = try? JSONDecoder().decode(ExplainParams.self, from: op.params) {
@@ -192,11 +192,11 @@ public struct ShareExtensionView: View {
         VStack {
             Rectangle()
                 .fill(Color.clear)
-                .frame(height: 8)
+                .frame(height: ShareExtensionViewLocalConstants.toastPadding)
             HStack {
                 Rectangle()
                     .fill(Color.clear)
-                    .frame(width: 8)
+                    .frame(width: ShareExtensionViewLocalConstants.toastPadding)
                 Text(L10n.copiedToClipboard)
                     .font(ShareExtensionViewConstants.copiedToastFont)
                     .padding(.vertical, ShareExtensionViewConstants.copiedToastVerticalSpacing)
@@ -208,7 +208,7 @@ public struct ShareExtensionView: View {
                     .shadow(radius: ShareExtensionViewConstants.copiedToastShadowRadius)
                 Rectangle()
                     .fill(Color.clear)
-                    .frame(width: 8)
+                    .frame(width: ShareExtensionViewLocalConstants.toastPadding)
             }
             Rectangle()
                 .fill(Color.clear)

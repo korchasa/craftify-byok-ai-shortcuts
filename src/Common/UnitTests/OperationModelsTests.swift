@@ -30,8 +30,7 @@ public final class OperationModelsTests: XCTestCase {
 
     /// Проверяет Codable для CorrectParams
     public func testCorrectParamsCodable() throws {
-        let styleLevel = 2
-        let params = CorrectParams(stylePreservationLevel: styleLevel)
+        let params = CorrectParams()
         let data = try JSONEncoder().encode(params)
         let decoded = try JSONDecoder().decode(CorrectParams.self, from: data)
         expect(decoded) == params

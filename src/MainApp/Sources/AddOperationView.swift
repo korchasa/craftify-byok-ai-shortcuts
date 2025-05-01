@@ -75,11 +75,7 @@ public struct AddOperationView: View {
             .accessibilityLabel(L10n.operationParamComplexityLevel)
             .padding(.horizontal)
         case .correct:
-            Stepper(value: $viewModel.stylePreservationLevel, in: AddOperationViewConstants.styleMin ... AddOperationViewConstants.styleMax) {
-                Text("\(L10n.operationParamStylePreservation): \(viewModel.stylePreservationLevel)/\(AddOperationViewConstants.styleMax)")
-            }
-            .accessibilityLabel(L10n.operationParamStylePreservation)
-            .padding(.horizontal)
+            EmptyView()
         case .explain:
             Picker(L10n.operationParamDetailLevel, selection: $viewModel.detailLevel) {
                 Text(L10n.operationValueBeginner).tag(DetailLevel.beginner)
