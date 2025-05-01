@@ -267,11 +267,15 @@ function deploy_simulator() {
   install_app_to_simulator "$app_path"
   echo_section "Launching app in simulator: $app_path"
   xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
+  echo_section "Starting log stream to emulator.log (background)"
+  xcrun simctl spawn booted log stream --predicate '(subsystem == "Internal") && (process == "MainApp" OR process == "ShareExtension")' --style syslog --level=debug > emulator.log 2>&1 &
+  LOG_STREAM_PID=$!
+  tail -f emulator.log
 }
 
 function logs() {
-  echo_section "Streaming logs from MainApp and ShareExtension"
-  xcrun simctl spawn booted log stream --predicate 'subsystem == "Craftify"' --style syslog
+  echo_section "Streaming logs from MainApp и ShareExtension (все уровни, включая debug)"
+  xcrun simctl spawn booted log stream --predicate '(subsystem == "Internal") && (process == "MainApp" OR process == "ShareExtension")' --style syslog --level=debug
 }
 
 function comment_scan() {

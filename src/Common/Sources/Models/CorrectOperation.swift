@@ -14,7 +14,29 @@ public struct CorrectOperation: OperationType {
     public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = CorrectParams()
         guard let data = try? JSONEncoder().encode(params) else { return nil }
-        let prompt = "Correct grammar and spelling in the following text: {text}"
+        let prompt = """
+        I want you to act as an expert editor.
+
+        <instructions>
+        - Read user message
+        - Correct any spelling, grammar, and punctuation errors.
+        - Respect the original text language, structure, and formatting.
+        - Return ONLY the corrected text without any additional formatting.
+        </instructions>
+
+        <examples>
+        User message:
+        Hi tis is a mesage with `markdown` and <b>tegs</b>
+        Your answer:
+        Hi, this is a message with `markdown` and <b>tags</b>
+
+        User message:
+        Привит это саобщение с \\`markdown\\`, и <b>тегими</b>
+        Your answer:
+        Привет, это сообщение с \\`markdown\\` и <b>тегами</b>
+        </examples>
+        """
+
         return InventoryOperation(operation: .correct, params: data, promptTemplate: prompt, colorHex: colorHex)
     }
 

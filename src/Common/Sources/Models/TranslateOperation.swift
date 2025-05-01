@@ -14,7 +14,16 @@ public struct TranslateOperation: OperationType {
         guard isValid(input: input) else { return nil }
         let params = TranslateParams(targetLanguage: input.targetLanguage)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
-        let prompt = "Translate the following text to \(input.targetLanguage): {text}"
+        let prompt = """
+        I want you to act as an expert translator.
+
+        <instructions>
+        - Read user message
+        - Translate the text to the target language: \(input.targetLanguage)
+        - Preserve the original meaning, tone, and formatting (including markdown and HTML tags).
+        - Return ONLY the translated text without any additional formatting.
+        </instructions>
+        """
         return InventoryOperation(operation: .translate, params: data, promptTemplate: prompt, colorHex: colorHex)
     }
 
