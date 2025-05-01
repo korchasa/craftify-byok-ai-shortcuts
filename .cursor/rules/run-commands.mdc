@@ -20,7 +20,6 @@ Commands:
   deploy:testflight   Upload IPA to TestFlight via altool
   export-ipa          Export IPA from archive
   generate            Run SwiftGen and XcodeGen
-  generate-changelog  Generate changelog via git-chglog
   init                Install CLI tools
   logs                Stream MainApp logs
   monitor-setup       Setup monitoring (Sentry etc.)
