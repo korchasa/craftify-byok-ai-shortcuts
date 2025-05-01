@@ -10,6 +10,7 @@
 | ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Craftify) |
 | ./run init     | Install all CLI dependencies via Homebrew           |
 | add-operation-color | Позволяет выбрать цвет из палитры для операции. Цвет сохраняется в InventoryOperation и отображается в UI (главный экран, экран шаринга). Покрыто unit, UI и e2e тестами. |
+| correct   | Исправление грамматики и орфографии, стиль всегда сохраняется максимально | {text} | - |
 
 ### Technology Stack
 - Swift 5.7+
@@ -265,3 +266,5 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
 - AddOperationView/EditOperationView: UI-палитра для выбора цвета.
 - HomeView/ShareExtensionView: отображение цвета операции (индикатор).
 - Покрытие: unit-тесты (InventoryOperation, InventoryManager), UI-тесты (Add/EditOperationView), e2e-тесты (ShareExtensionView).
+
+- В моделях и UI убран параметр stylePreservationLevel для correct-операции, всегда используется максимальный стиль.

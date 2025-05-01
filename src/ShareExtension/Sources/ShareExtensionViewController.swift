@@ -28,7 +28,6 @@ public final class ShareExtensionViewController: UIViewController {
             authManager: authManager
         )
         let consentManager = ConsentManager(appGroupSuiteName: "group.dev.korchasa.Craftify")
-        let appGroupURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.dev.korchasa.Craftify")!
         let manager = ShareExtensionManager(
             inventoryManager: inventoryManager,
             authManager: authManager,

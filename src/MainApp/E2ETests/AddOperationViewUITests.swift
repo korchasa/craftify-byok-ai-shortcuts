@@ -55,7 +55,6 @@ import XCTest
         public func testCancelButtonResetsForm() throws {
             let viewModel = AddOperationViewModel()
             viewModel.selectedType = .correct
-            viewModel.stylePreservationLevel = TestConstants.levelTwo
             let view = AddOperationView(viewModel: viewModel)
             let button = try view.inspect().find(button: L10n.addOperationCancel)
             try button.tap()

@@ -67,3 +67,5 @@ log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 
 - Для тестов: InventoryManagerStub поддерживает colorHex.
 - Покрытие: unit-тесты (InventoryOperation, InventoryManager), UI-тесты (Add/EditOperationView), e2e-тесты (ShareExtensionView).
 - Для проверки UI: используйте ShareExtensionViewUITests.swift.
+
+- Операция correct всегда сохраняет стиль максимально, параметр stylePreservationLevel удалён из моделей, UI и тестов.

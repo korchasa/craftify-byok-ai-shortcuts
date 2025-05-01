@@ -134,9 +134,7 @@ public struct HomeView: View {
                     return "\(params.complexityLevel.rawValue.capitalized)"
                 }
             case .correct:
-                if let params = try? JSONDecoder().decode(CorrectParams.self, from: operation.params) {
-                    return "\(params.stylePreservationLevel)/3"
-                }
+                return ""
             case .explain:
                 if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
                     return "\(params.detailLevel.rawValue.capitalized)"

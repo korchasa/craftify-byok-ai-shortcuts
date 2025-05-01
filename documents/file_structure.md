@@ -28,6 +28,7 @@ src/
       Models/                  # Shared data models
       InventoryOperation.swift      # Модель операции, теперь с colorHex
       InventoryManager.swift        # Управление инвентарём, поддержка colorHex
+      CorrectParams.swift          # Параметры операции correct (теперь без stylePreservationLevel)
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests

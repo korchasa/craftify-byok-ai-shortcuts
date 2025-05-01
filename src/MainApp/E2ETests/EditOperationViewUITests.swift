@@ -7,12 +7,6 @@ import XCTest
     import ViewInspector
 
     public final class EditOperationViewUITests: XCTestCase {
-        private enum TestConstants {
-            static let levelOne = 1
-            static let levelTwo = 2
-            static let levelThree = 3
-        }
-
         public func testFieldsAppearForTranslate() throws {
             let op = InventoryOperation(
                 operation: .translate,
@@ -41,14 +35,12 @@ import XCTest
         public func testFieldsAppearForCorrect() throws {
             let op = InventoryOperation(
                 operation: .correct,
-                params: try! JSONEncoder().encode(CorrectParams(stylePreservationLevel: TestConstants.levelThree)),
-                promptTemplate: "Correct grammar and spelling, preserve style level \(TestConstants.levelThree): {text}"
+                params: try! JSONEncoder().encode(CorrectParams()),
+                promptTemplate: "Correct grammar and spelling: {text}"
             )
             let vm = EditOperationViewModel(operation: op)
             let view = EditOperationView(viewModel: vm)
-            let stepper = try view.inspect().find(ViewType.Stepper.self)
-            let label = try stepper.labelView().text().string()
-            expect(label).to(contain("\(TestConstants.levelThree)/\(TestConstants.levelThree)"))
+            // Stepper больше не отображается, проверка не требуется
         }
 
         public func testFieldsAppearForExplain() throws {
@@ -91,15 +83,14 @@ import XCTest
         public func testCancelButtonResetsForm() throws {
             let op = InventoryOperation(
                 operation: .correct,
-                params: try! JSONEncoder().encode(CorrectParams(stylePreservationLevel: TestConstants.levelTwo)),
-                promptTemplate: "Correct grammar and spelling, preserve style level \(TestConstants.levelTwo): {text}"
+                params: try! JSONEncoder().encode(CorrectParams()),
+                promptTemplate: "Correct grammar and spelling: {text}"
             )
             let vm = EditOperationViewModel(operation: op)
-            vm.stylePreservationLevel = TestConstants.levelOne
             let view = EditOperationView(viewModel: vm)
             let button = try view.inspect().find(button: L10n.editOperationCancel)
             try button.tap()
-            expect(vm.stylePreservationLevel) == TestConstants.levelTwo
+            // Проверка stylePreservationLevel больше не требуется
         }
 
         public func testAccessibilityLabelsAndDynamicType() throws {

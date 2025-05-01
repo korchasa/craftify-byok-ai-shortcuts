@@ -2,13 +2,9 @@ import Common
 import Foundation
 
 public final class AddOperationViewModel: ObservableObject {
-    public static let minStylePreservationLevel = 1
-    public static let maxStylePreservationLevel = 3
-
     @Published public var selectedType: OperationType?
     @Published public var targetLanguage: String = ""
     @Published public var complexityLevel: ComplexityLevel = .beginner
-    @Published public var stylePreservationLevel: Int = minStylePreservationLevel
     @Published public var detailLevel: DetailLevel = .beginner
     @Published public var selectedColorHex: String = AddOperationViewModel.palette.first!
 
@@ -19,7 +15,7 @@ public final class AddOperationViewModel: ObservableObject {
         case .simplify:
             true // complexityLevel всегда валиден
         case .correct:
-            (Self.minStylePreservationLevel ... Self.maxStylePreservationLevel).contains(stylePreservationLevel)
+            true
         case .explain:
             true // detailLevel всегда валиден
         case .none:
@@ -41,9 +37,9 @@ public final class AddOperationViewModel: ObservableObject {
             guard let data = try? JSONEncoder().encode(params) else { return nil }
             return InventoryOperation(operation: .simplify, params: data, promptTemplate: "Simplify the following text for a \(complexityLevel.rawValue) reader: {text}", colorHex: selectedColorHex)
         case .correct:
-            let params = CorrectParams(stylePreservationLevel: stylePreservationLevel)
+            let params = CorrectParams()
             guard let data = try? JSONEncoder().encode(params) else { return nil }
-            return InventoryOperation(operation: .correct, params: data, promptTemplate: "Correct grammar and spelling, preserve style level \(stylePreservationLevel): {text}", colorHex: selectedColorHex)
+            return InventoryOperation(operation: .correct, params: data, promptTemplate: "Correct grammar and spelling: {text}", colorHex: selectedColorHex)
         case .explain:
             let params = ExplainParams(detailLevel: detailLevel)
             guard let data = try? JSONEncoder().encode(params) else { return nil }
@@ -55,7 +51,6 @@ public final class AddOperationViewModel: ObservableObject {
         selectedType = nil
         targetLanguage = ""
         complexityLevel = .beginner
-        stylePreservationLevel = Self.minStylePreservationLevel
         detailLevel = .beginner
         selectedColorHex = AddOperationViewModel.palette.first!
     }

@@ -51,8 +51,8 @@ public final class HomeViewModelTests: XCTestCase {
     public func testRemoveOperationRemovesFromInventory() {
         let operation = InventoryOperation(
             operation: .correct,
-            params: try! JSONEncoder().encode(CorrectParams(stylePreservationLevel: 2)),
-            promptTemplate: "Correct grammar and spelling, preserve style level 2: {text}",
+            params: try! JSONEncoder().encode(CorrectParams()),
+            promptTemplate: "Correct grammar and spelling: {text}",
             colorHex: "d53e4f"
         )
         inventoryStub?.saveInventory([operation])
