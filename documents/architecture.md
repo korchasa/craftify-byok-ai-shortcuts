@@ -156,3 +156,10 @@ graph TD
       public var displayName: String { L10n.operationValueSchoolchild } // do not do this!
       ```
 - **Recommendation**: If you need to get a string for an enum/model, always do it via a function/mapping in the UI layer.
+
+### Share Extension Activation Rules
+- Share Extension активируется для типов данных: текст (public.text) и URL (public.url).
+- Это задаётся через NSExtensionActivationRule в project.yml (XcodeGen):
+  - SUBQUERY (... ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url")
+- Позволяет отправлять как текст, так и ссылки через меню "Поделиться".
+- Оба типа обрабатываются как обычный текст, приоритет у текста.

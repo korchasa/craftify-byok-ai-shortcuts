@@ -97,6 +97,8 @@ src/
     Resources/
       Assets.xcassets/           # Extension assets
       Placeholder.txt            # Placeholder resource
+    # Важно: поддержка активации по тексту и URL (public.text, public.url) задаётся через NSExtensionActivationRule в project.yml (XcodeGen)
+    # Оба типа обрабатываются как текст, приоритет у текста.
 
 ## Targets and Schemes
 - MainApp

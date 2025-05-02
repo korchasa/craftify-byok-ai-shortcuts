@@ -141,6 +141,32 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
         expect(error).to(contain("Сетевая ошибка"))
     }
 
+    public func testProcess_URLAsText_E2E() async {
+        let inventory = InventoryManagerStub()
+        let auth = AuthManagerStub()
+        let clipboard = ClipboardManagerStub()
+        let processing = ProcessingManagerStub()
+        let consent = ConsentManagerStub()
+        consent.setConsent(true)
+        let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "Translate: {text}")
+        inventory.saveInventory([op])
+        let manager = ShareExtensionManager(
+            inventoryManager: inventory,
+            authManager: auth,
+            clipboardManager: clipboard,
+            processingManager: processing,
+            consentManager: consent,
+            logManager: LogManagerSharedInMemory()
+        )
+        let urlString = "https://test.craftify.dev/path?q=42"
+        let result = await manager.process(text: urlString, operation: op)
+        guard let success = result?.success else { fail("success is nil")
+            return
+        }
+        expect(success) == true
+        expect(clipboard.copiedText) == "Processed: https://test.craftify.dev/path?q=42"
+    }
+
     // MARK: - Helpers
 
     public func makeManager(consent: Bool, apiKey: String = "sk-valid-key-1234567890", simulateNetworkError: Bool = false, simulateParsingError: Bool = false, simulateClipboardError: Bool = false) -> ShareExtensionManager {

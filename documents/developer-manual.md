@@ -82,3 +82,11 @@ log show --predicate 'subsystem == "Internal"' --style syslog --last 2h
 - Весь остальной контент находится в ScrollView
 - Все изменения покрыты unit- и e2e-тестами
 - Линтер и форматтер проходят без ошибок
+
+## Share Extension Activation for URLs
+- Share Extension активируется для типов данных: текст (public.text) и URL (public.url).
+- Это задаётся через NSExtensionActivationRule в project.yml (XcodeGen):
+  - SUBQUERY (... ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url")
+- После генерации проекта через ./run generate расширение будет доступно для шаринга ссылок и текста.
+- Оба типа обрабатываются как обычный текст, приоритет у текста.
+- Покрыто unit- и e2e-тестами.

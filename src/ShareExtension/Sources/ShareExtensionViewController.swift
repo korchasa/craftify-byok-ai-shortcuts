@@ -81,23 +81,40 @@ public final class ShareExtensionViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(closeExtension), name: .closeShareExtension, object: nil)
     }
 
-    /// Loads the shared text from the extension context and updates the view model
+    /// Loads the shared text or URL from the extension context and updates the view model
     private func loadInputText() {
         guard let items = extensionContext?.inputItems as? [NSExtensionItem] else { return }
+        var foundText: String?
+        var foundURL: String?
+        let group = DispatchGroup()
         for item in items {
             let attachments = item.attachments ?? []
             for provider in attachments {
                 if provider.hasItemConformingToTypeIdentifier(UTType.plainText.identifier) {
-                    provider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { [weak self] item, _ in
+                    group.enter()
+                    provider.loadItem(forTypeIdentifier: UTType.plainText.identifier, options: nil) { item, _ in
                         if let text = item as? String {
-                            DispatchQueue.main.async {
-                                // Update the input text in the view model
-                                self?.hostingController?.rootView.viewModel.updateInputText(text)
-                            }
+                            foundText = text
                         }
+                        group.leave()
                     }
-                    return
+                } else if provider.hasItemConformingToTypeIdentifier(UTType.url.identifier) {
+                    group.enter()
+                    provider.loadItem(forTypeIdentifier: UTType.url.identifier, options: nil) { item, _ in
+                        if let url = item as? URL {
+                            foundURL = url.absoluteString
+                        } else if let urlString = item as? String {
+                            foundURL = urlString
+                        }
+                        group.leave()
+                    }
                 }
+            }
+        }
+        group.notify(queue: .main) { [weak self] in
+            let textToUse = foundText ?? foundURL
+            if let text = textToUse {
+                self?.hostingController?.rootView.viewModel.updateInputText(text)
             }
         }
     }
