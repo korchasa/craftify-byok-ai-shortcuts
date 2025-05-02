@@ -21,6 +21,11 @@ public final class ProcessingManager: ProcessingManaging {
     }
 
     public func process(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+        // if operation.operation == .summarize {
+        //     // Временно: возвращаем исходный текст без LLM
+        //     completion(.success(text))
+        //     return
+        // }
         Task {
             await self.processAsync(text: text, operation: operation, completion: completion)
         }

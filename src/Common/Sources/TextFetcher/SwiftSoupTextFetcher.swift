@@ -50,7 +50,8 @@ public final class SwiftSoupTextFetcher: TextFetching {
                 metadata: [
                     "url": urlString,
                     "duration": String(format: "%.3f", afterParse.timeIntervalSince(parseStart)),
-                    "size": "\(text.count)"
+                    "size": "\(text.count)",
+                    "text": text
                 ],
                 timestamp: afterParse
             ))

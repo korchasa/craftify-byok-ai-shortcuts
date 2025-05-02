@@ -14,7 +14,9 @@ public final class ShareExtensionManager {
     private var isCancelled = false
     /// Последний результат обработки, используется для режима отображения
     public private(set) var lastResult: String?
-    private static let maxTextLength = 5000
+    /// Тип последней выполненной операции
+    public private(set) var lastOperationKind: OperationKind?
+    private static let maxTextLength = 20000
     /// Входной текст для обработки (устанавливается из UI)
     public var inputText: String = ""
     private enum Constants {
@@ -54,37 +56,38 @@ public final class ShareExtensionManager {
     public func process(text: String, operation: InventoryOperation?) async -> (success: Bool, error: String?)? {
         if isCancelled {
             isCancelled = false
-            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Операция отменена", metadata: [:]))
-            return (false, "Операция отменена")
+            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
+            return (false, "Operation cancelled")
         }
         guard !text.isEmpty else {
-            logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "Нет текста для обработки", metadata: [:]))
-            return (false, "Нет текста для обработки")
+            logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "No text to process", metadata: [:]))
+            return (false, "No text to process")
         }
         if text.count > Self.maxTextLength {
-            logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "Текст слишком длинный для обработки", metadata: ["length": "\(text.count)"]))
-            return (false, "Текст слишком длинный для обработки")
+            logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "Text too long to process", metadata: ["length": "\(text.count)"]))
+            return (false, "Text too long to process")
         }
         if !consentManager.getConsent() {
-            logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "Требуется согласие пользователя", metadata: [:]))
-            return (false, "Требуется согласие пользователя")
+            logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "User consent required", metadata: [:]))
+            return (false, "User consent required")
         }
         let apiKey: String?
         do {
             apiKey = try await authManager.getAPIKey()
         } catch {
-            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка доступа к API-ключу", metadata: ["error": "\(error)"]))
-            return (false, "Ошибка доступа к API-ключу")
+            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "API key access error", metadata: ["error": "\(error)"]))
+            return (false, "API key access error")
         }
         guard let key = apiKey, key.starts(with: "sk-") else {
-            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Неверный API-ключ", metadata: ["key": authManager.maskedAPIKey(apiKey)]))
-            return (false, "Неверный API-ключ")
+            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Invalid API key", metadata: ["key": authManager.maskedAPIKey(apiKey)]))
+            return (false, "Invalid API key")
         }
         guard let op = operation else {
-            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Нет операции для обработки", metadata: [:]))
-            return (false, "Нет операции для обработки")
+            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "No operation to process", metadata: [:]))
+            return (false, "No operation to process")
         }
-        logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Старт обработки", metadata: ["operation": "\(op.operation)"]))
+        self.lastOperationKind = op.operation
+        logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Start processing", metadata: ["operation": "\(op.operation)"]))
         // Вызов менеджера обработки
         var processedText = ""
         if let pm = processingManager as? ProcessingManagerStub {
@@ -99,7 +102,7 @@ public final class ShareExtensionManager {
             }
             switch result {
             case let .failure(err):
-                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка обработки", metadata: ["error": err.localizedDescription]))
+                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: ["error": err.localizedDescription]))
                 return (false, err.localizedDescription)
             case let .success(str):
                 processedText = str
@@ -109,7 +112,7 @@ public final class ShareExtensionManager {
             do {
                 processedText = try await processAsync(pm: pm, text: text, operation: op)
             } catch {
-                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка обработки", metadata: ["error": error.localizedDescription]))
+                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: ["error": error.localizedDescription]))
                 return (false, error.localizedDescription)
             }
         } else {
@@ -118,32 +121,32 @@ public final class ShareExtensionManager {
         }
         if isCancelled {
             isCancelled = false
-            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Операция отменена", metadata: [:]))
-            return (false, "Операция отменена")
+            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
+            return (false, "Operation cancelled")
         }
         // Настройка режима обработки результата и сохранение результата
         let mode = OperationFactory.make(kind: op.operation).resultMode
         self.lastResult = processedText
         if mode == .display {
-            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Режим отображения результата: отображаем результат", metadata: [:]))
+            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Result mode: display result", metadata: [:]))
             return (true, nil)
         }
         // Копирование в буфер обмена
         if let cb = clipboardManager as? ClipboardManagerStub {
             if !cb.copy(text: processedText) {
-                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка доступа к буферу", metadata: [:]))
-                return (false, "Ошибка доступа к буферу")
+                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
+                return (false, "Clipboard access error")
             }
         } else if let cb = clipboardManager as? ClipboardManaging {
             if !cb.copy(text: processedText) {
-                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка доступа к буферу", metadata: [:]))
-                return (false, "Ошибка доступа к буферу")
+                logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
+                return (false, "Clipboard access error")
             }
         } else {
-            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Ошибка доступа к буферу (тип)", metadata: [:]))
-            return (false, "Ошибка доступа к буферу")
+            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error (type)", metadata: [:]))
+            return (false, "Clipboard access error")
         }
-        logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Успешное копирование результата", metadata: [:]))
+        logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Result copied to clipboard successfully", metadata: [:]))
         return (true, nil)
     }
 
