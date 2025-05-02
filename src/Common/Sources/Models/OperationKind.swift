@@ -6,4 +6,5 @@ public enum OperationKind: String, Codable, CaseIterable, Equatable {
     case explain = "explain"
     case simplify = "simplify"
     case translate = "translate"
+    case summarize = "summarize"
 }

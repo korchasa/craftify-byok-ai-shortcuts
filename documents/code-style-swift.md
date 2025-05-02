@@ -23,6 +23,7 @@
 - explicit_acl — все объявления должны явно указывать уровень доступа (например, public/private/internal/fileprivate).
 - no_magic_numbers — магические числа должны быть заменены на именованные константы.
 - All SwiftLint and compiler warnings are treated as errors: tests and builds fail if any warning is present (warnings_as_errors).
+- Для NSLocalizedString всегда указывать bundle (nslocalizedstring_require_bundle)
 
 ## Правило: Access Control для расширений
 

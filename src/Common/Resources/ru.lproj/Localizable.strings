@@ -56,6 +56,7 @@
 "operation_label_simplify" = "Упрощение";
 "operation_label_correct" = "Коррекция";
 "operation_label_explain" = "Объяснение";
+"operation_label_summarize" = "Суммаризация";
 
 /* Language Names */
 "language_russian" = "Русский";
@@ -71,3 +72,7 @@
 "save" = "Сохранить";
 "delete" = "Удалить";
 "copied_to_clipboard" = "Скопировано в буфер";
+
+"sentence_count_2_3" = "2–3 предложения";
+"sentence_count_5_6" = "5–6 предложений";
+"sentence_count_9_10" = "9–10 предложений";

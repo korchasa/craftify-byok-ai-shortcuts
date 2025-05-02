@@ -120,6 +120,7 @@ public struct HomeView: View {
             case .simplify: L10n.operationLabelSimplify
             case .correct: L10n.operationLabelCorrect
             case .explain: L10n.operationLabelExplain
+            case .summarize: L10n.operationLabelSummarize
             }
         }
 
@@ -138,6 +139,10 @@ public struct HomeView: View {
             case .explain:
                 if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
                     return labelForDetailLevel(params.detailLevel)
+                }
+            case .summarize:
+                if let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params) {
+                    return sentenceCountRangeLabel(params.sentenceCountRange)
                 }
             }
             return ""
@@ -158,6 +163,14 @@ public struct HomeView: View {
             case .teenager: L10n.operationValueTeenager
             case .student: L10n.operationValueStudent
             case .adult: L10n.operationValueAdult
+            }
+        }
+
+        private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
+            switch range {
+            case .twoToThree: L10n.sentenceCount23
+            case .fiveToSix: L10n.sentenceCount56
+            case .nineToTen: L10n.sentenceCount910
             }
         }
     }
