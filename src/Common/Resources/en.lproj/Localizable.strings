@@ -32,6 +32,7 @@
 "share_title" = "Craftify";
 "share_cancel" = "Cancel";
 "share_copied" = "Copied to clipboard";
+"share_close" = "Close";
 
 /* Operation Params Labels */
 "operation_param_target_language" = "Target language";

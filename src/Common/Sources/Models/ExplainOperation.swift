@@ -30,7 +30,7 @@ public struct ExplainOperation: OperationType {
         User message:
         What is mitochondria?
         Your answer for adult level:
-        Mitochondria are membrane-bound cell organelles (mitochondrion, singular) that generate most of the chemical energy needed to power the cell's biochemical reactions. Chemical energy produced by the mitochondria is stored in a small molecule called adenosine triphosphate (ATP). Mitochondria contain their own small chromosomes. Generally, mitochondria, and therefore mitochondrial DNA, are inherited only from the mother.
+        Mitochondria are membrane-bound cell organelles that generate most of the chemical energy needed to power the cell's biochemical reactions. Chemical energy produced by the mitochondria is stored in a small molecule called adenosine triphosphate (ATP). Mitochondria contain their own small chromosomes. Generally, mitochondria, and therefore mitochondrial DNA, are inherited only from the mother.
 
         User message:
         Что такое гравитация?
@@ -51,4 +51,7 @@ public struct ExplainOperation: OperationType {
         }
         return str
     }
+
+    /// Режим обработки результата операции: отображать результат во всплывающем окне
+    public var resultMode: ResultMode { .display }
 }

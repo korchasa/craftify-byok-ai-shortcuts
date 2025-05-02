@@ -15,4 +15,13 @@ public protocol OperationType {
     func buildRequest(text: String, operation: InventoryOperation) -> URLRequest
     /// Парсит ответ от LLM
     func parse(responseData: Data) throws -> String
+
+    /// Режим обработки результата операции: копировать в буфер обмена или отображать во всплывающем окне
+    var resultMode: ResultMode { get }
+}
+
+/// Дефолтная реализация resultMode: результат копируется в буфер обмена
+public extension OperationType {
+    /// Режим обработки результата по умолчанию: копировать в буфер обмена
+    var resultMode: ResultMode { .clipboard }
 }

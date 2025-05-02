@@ -73,7 +73,6 @@ public struct SettingsView: View {
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal)
-                .textSelection(.enabled)
         }
     }
 

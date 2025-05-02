@@ -41,44 +41,87 @@ public struct ShareExtensionView: View {
         static let toastPadding: CGFloat = 8
         static let mainContentTopSpacer: CGFloat = 12
         static let cardCornerRadius: CGFloat = 12
+        static let closeButtonTopPadding: CGFloat = 12
+        static let closeButtonBottomPadding: CGFloat = 24
+        static let vStackSpacing: CGFloat = 0
+        static let closeButtonBackgroundOpacity: CGFloat = 0.15
     }
 
     public init(viewModel: ShareExtensionViewModel) {
         self.viewModel = viewModel
     }
 
+    // Add a helper property for the main content
+    private var mainContentVStack: some View {
+        VStack(spacing: ShareExtensionViewLocalConstants.vStackSpacing) {
+            Rectangle()
+                .fill(Color.clear)
+                .frame(height: ShareExtensionViewLocalConstants.mainContentTopSpacer)
+
+            if viewModel.displayResult != nil {
+                Text(displayOperationTitle())
+                    .font(.title2)
+                    .bold()
+                    .accessibilityAddTraits(.isHeader)
+                    .padding(.top, ShareExtensionViewConstants.topPadding)
+            } else {
+                Text(L10n.shareTitle)
+                    .font(.title2)
+                    .bold()
+                    .accessibilityAddTraits(.isHeader)
+                    .padding(.top, ShareExtensionViewConstants.topPadding)
+            }
+
+            Rectangle()
+                .fill(Color.clear)
+                .frame(height: ShareExtensionViewConstants.verticalSpacing)
+
+            if viewModel.displayResult != nil {
+                DisplayResultView(
+                    text: viewModel.displayResult ?? "",
+                    onClose: { viewModel.shouldCloseExtension = true }
+                )
+            } else {
+                operationsGrid
+            }
+        }
+        .padding([.leading, .trailing])
+    }
+
     public var body: some View {
         ZStack {
-            mainContent
-            Button(action: { viewModel.shouldCloseExtension = true }) {
-                Image(systemName: "xmark")
-                    .imageScale(.large)
-                    .accessibilityLabel("Закрыть")
+            // Scrollable header + content
+            ScrollView {
+                mainContentVStack
             }
-            .accessibilityIdentifier("closeButton")
-            .buttonStyle(.plain)
-            .padding()
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-            .allowsHitTesting(!isProcessing)
+            // Processing overlay
             if isProcessing {
                 progressOverlay
             }
+            // Copied toast overlay
             if viewModel.showCopiedToast {
                 copiedToast
             }
         }
+        // Pin the close button above the bottom safe area with fixed padding
+        .safeAreaInset(edge: .bottom) {
+            closeButton
+                .padding(.horizontal)
+                .padding(.bottom, ShareExtensionViewLocalConstants.closeButtonBottomPadding)
+                .background(Color(.systemBackground))
+        }
+        .background(Color(.systemBackground))
+        .ignoresSafeArea(edges: .bottom)
+        .zIndex(ZIndexConstants.copiedToast)
+        // ViewModel subscriptions & alerts
         .onReceive(viewModel.$errorMessage) { msg in
             if let msg {
                 alertMessage = msg
                 showAlert = true
             }
         }
-        .onReceive(viewModel.$isProcessing) { val in
-            isProcessing = val
-        }
-        .onReceive(viewModel.$progress) { val in
-            progress = val
-        }
+        .onReceive(viewModel.$isProcessing) { isProcessing = $0 }
+        .onReceive(viewModel.$progress) { progress = $0 }
         .onReceive(viewModel.$showCopiedToast) { show in
             if show {
                 DispatchQueue.main.asyncAfter(deadline: .now() + ShareExtensionViewConstants.copiedToastHideDelay) {
@@ -93,27 +136,6 @@ public struct ShareExtensionView: View {
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text(L10n.error), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-        }
-        .padding()
-        .background(Color(.systemBackground))
-        .zIndex(ZIndexConstants.copiedToast)
-    }
-
-    private var mainContent: some View {
-        VStack(spacing: 0) {
-            Rectangle()
-                .fill(Color.clear)
-                .frame(height: ShareExtensionViewLocalConstants.mainContentTopSpacer)
-            Text(L10n.shareTitle)
-                .font(.title2)
-                .bold()
-                .accessibilityAddTraits(.isHeader)
-                .padding(.top, ShareExtensionViewConstants.topPadding)
-            Rectangle()
-                .fill(Color.clear)
-                .frame(height: ShareExtensionViewConstants.verticalSpacing)
-            operationsGrid
-                .padding(.bottom, ShareExtensionViewConstants.bottomPadding)
         }
     }
 
@@ -218,5 +240,37 @@ public struct ShareExtensionView: View {
         }
         .transition(.opacity)
         .zIndex(ZIndexConstants.copiedToast)
+    }
+
+    /// Возвращает локализованное название текущей операции для заголовка окна
+    private func displayOperationTitle() -> String {
+        guard let op = viewModel.operations.first(where: { $0.operation == .explain }) else {
+            return L10n.shareTitle
+        }
+        return operationDisplayName(for: op)
+    }
+
+    /// View для отображения результата и кнопки закрытия
+    private struct DisplayResultView: View {
+        let text: String
+        let onClose: () -> Void
+        var body: some View {
+            Text(text)
+                .frame(maxWidth: .infinity, alignment: .topLeading)
+                .padding()
+        }
+    }
+
+    private var closeButton: some View {
+        Button(action: { viewModel.shouldCloseExtension = true }) {
+            Text(L10n.shareClose)
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.accentColor.opacity(ShareExtensionViewLocalConstants.closeButtonBackgroundOpacity))
+                .cornerRadius(ShareExtensionViewLocalConstants.cardCornerRadius)
+        }
+        .padding(.horizontal)
+        .padding(.bottom, ShareExtensionViewLocalConstants.closeButtonBottomPadding)
     }
 }

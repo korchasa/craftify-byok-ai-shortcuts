@@ -86,6 +86,9 @@ function echo_section() {
 function clean() {
   echo_section "Cleaning build artifacts"
   rm -rf build
+  rm -rf .build
+  rm -rf .swiftpm
+  rm -rf ~/Library/Developer/Xcode/DerivedData
   xcb clean || true
 }
 

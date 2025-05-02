@@ -11,9 +11,14 @@ public final class ShareExtensionManager {
     private let consentManager: ConsentManaging
     private let logManager: LogManagerShared
     private var isCancelled = false
+    /// Последний результат обработки, используется для режима отображения
+    public private(set) var lastResult: String?
     private static let maxTextLength = 5000
     /// Входной текст для обработки (устанавливается из UI)
     public var inputText: String = ""
+    private enum Constants {
+        static let resultPreviewLength = 128
+    }
 
     /// Инициализация менеджера Share Extension
     /// - Parameters:
@@ -114,6 +119,13 @@ public final class ShareExtensionManager {
             isCancelled = false
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Операция отменена", metadata: [:]))
             return (false, "Операция отменена")
+        }
+        // Настройка режима обработки результата и сохранение результата
+        let mode = OperationFactory.make(kind: op.operation).resultMode
+        self.lastResult = processedText
+        if mode == .display {
+            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Режим отображения результата: отображаем результат", metadata: [:]))
+            return (true, nil)
         }
         // Копирование в буфер обмена
         if let cb = clipboardManager as? ClipboardManagerStub {

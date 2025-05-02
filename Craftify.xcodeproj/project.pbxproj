@@ -112,6 +112,7 @@
 		5C2D2A3AD8AE115A69D3905A /* E2ESettingsFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632739DB47B2B2F30FD2C5EA /* E2ESettingsFlowTests.swift */; };
 		5CA563FE865785159A702257 /* OperationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431706693D7F029E9774D4B /* OperationFactory.swift */; };
 		5DC1CA295C839B1469C143EB /* EditOperationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DAE164D467254CD313DBD7 /* EditOperationViewModel.swift */; };
+		5ECC7F25CA21264A497D195B /* ResultMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB28402DE83D4B97C8EDB4A /* ResultMode.swift */; };
 		606033F2FDA30D2655865735 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7844378BE20480EBE4A87152 /* AppState.swift */; };
 		6063324E3C579F5831B178C8 /* DetailLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0DFF03BAEF851D6598A5BD /* DetailLevel.swift */; };
 		621FD5D8337B31A4BCFD3AEA /* HowToUseViewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E90C38B63C1413D9718BB4 /* HowToUseViewUITests.swift */; };
@@ -152,6 +153,7 @@
 		783266C0441A9EA5E760FFEA /* ClipboardManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0292538F0FE6189D748FF8 /* ClipboardManaging.swift */; };
 		788C3DB10720275A66EF3135 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */; };
 		790C114B7F91EE4E0185B2E7 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15FC1E1416E7FEFEE9927B03 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		7CB10F1881111E53906D7AD8 /* ResultMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB28402DE83D4B97C8EDB4A /* ResultMode.swift */; };
 		7D095DB11389F4B8CAB2E53B /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
 		7D32699119345FA1A5253AA0 /* CorrectOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65D017795CDE883040E300F /* CorrectOperation.swift */; };
 		7DC7BC4D007681131D813085 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B703ED98C53835018AA8D449 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -207,6 +209,7 @@
 		B31CDB5E414B789003F102A2 /* OperationKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2F2902624AC5893F93F5A08 /* OperationKind.swift */; };
 		B371C2986B356543B096C313 /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
 		B4B82DE81DE52EB510071356 /* TranslateParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684129DE2E2AA1ACBFF2D88 /* TranslateParams.swift */; };
+		B67EFD5A04CA775DA4BF7301 /* ResultMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB28402DE83D4B97C8EDB4A /* ResultMode.swift */; };
 		B7DEC937FC43D3D0607557CE /* ExplainParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7568EB39A52FE78B1B9F25 /* ExplainParams.swift */; };
 		B869B03E07D05912099C1398 /* ContentHeightKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 561B0A33C008D454C8D75698 /* ContentHeightKey.swift */; };
 		BA39AD52CA663A339B7ED116 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = B01FF16CD936F2690C7BC7B6 /* Nimble */; };
@@ -500,6 +503,7 @@
 		DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogManagerSharedInMemory.swift; sourceTree = "<group>"; };
 		DE89C634D711B0AB916AF1AB /* ProcessingManagerStub.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessingManagerStub.swift; sourceTree = "<group>"; };
 		DF0292538F0FE6189D748FF8 /* ClipboardManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManaging.swift; sourceTree = "<group>"; };
+		DFB28402DE83D4B97C8EDB4A /* ResultMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultMode.swift; sourceTree = "<group>"; };
 		E129DB753DFF5EAA84F64141 /* LLMAPIClientIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMAPIClientIntegrationTests.swift; sourceTree = "<group>"; };
 		E13CED619410C5EC0872BDE7 /* ShareExtensionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewModel.swift; sourceTree = "<group>"; };
 		E40D28DB3F67CDF5F0E6E146 /* CraftifyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftifyApp.swift; sourceTree = "<group>"; };
@@ -790,6 +794,7 @@
 				585FE9EAAFCAFF8E6C61F8B8 /* OperationInput.swift */,
 				C2F2902624AC5893F93F5A08 /* OperationKind.swift */,
 				F8B578BE07845879F3EA6D44 /* OperationType.swift */,
+				DFB28402DE83D4B97C8EDB4A /* ResultMode.swift */,
 				99B571888520A7F3FA5E78FC /* SimplifyOperation.swift */,
 				43FF41537084CF100069C265 /* SimplifyParams.swift */,
 				8B353C768F09100832BB29ED /* TranslateOperation.swift */,
@@ -1194,6 +1199,7 @@
 				9A61F0EA2515E9D90EAA840D /* OperationInput.swift in Sources */,
 				097BE4EAEB557D51234331AD /* OperationKind.swift in Sources */,
 				C50A629A7D788FDA944B96B5 /* OperationType.swift in Sources */,
+				7CB10F1881111E53906D7AD8 /* ResultMode.swift in Sources */,
 				E4E6713D4201F31B02448DF3 /* SimplifyOperation.swift in Sources */,
 				83DDC5A88DDC41F5E9CD2887 /* SimplifyParams.swift in Sources */,
 				14B536E93B63A4D7FC18A396 /* TranslateOperation.swift in Sources */,
@@ -1234,6 +1240,7 @@
 				AA18D35F89B7B2B1752671C8 /* OperationInput.swift in Sources */,
 				B31CDB5E414B789003F102A2 /* OperationKind.swift in Sources */,
 				C97DDA9745447BAD4731B0D1 /* OperationType.swift in Sources */,
+				5ECC7F25CA21264A497D195B /* ResultMode.swift in Sources */,
 				7083EE22AE22F553A34B85D1 /* SimplifyOperation.swift in Sources */,
 				BFD4FD1CA5E8A059E4A5C123 /* SimplifyParams.swift in Sources */,
 				8BFD82C95A53753D757C52B0 /* Strings.swift in Sources */,
@@ -1397,6 +1404,7 @@
 				719961C82825E1C02410C987 /* OperationKind.swift in Sources */,
 				1C455B7AE8AF52260903DCE0 /* OperationModelsTests.swift in Sources */,
 				0C029304AE15E6589CEDBD44 /* OperationType.swift in Sources */,
+				B67EFD5A04CA775DA4BF7301 /* ResultMode.swift in Sources */,
 				6941B28D1A45D187421F3662 /* SimplifyOperation.swift in Sources */,
 				4A47216C077CA05EB42406A2 /* SimplifyParams.swift in Sources */,
 				DCD8F550BE758B7031840EA2 /* TranslateOperation.swift in Sources */,

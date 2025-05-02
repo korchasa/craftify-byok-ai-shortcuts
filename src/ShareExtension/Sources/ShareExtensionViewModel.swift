@@ -9,9 +9,11 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public var errorMessage: String? = nil
     @Published public var isInputTextTooLong: Bool = false
     @Published public var showCopiedToast: Bool = false
+    @Published public var displayResult: String? = nil
     @Published public var shouldCloseExtension: Bool = false
 
     public let manager: ShareExtensionManager
+    private var currentResultMode: ResultMode = .clipboard
     public var processingTask: Task<Void, Never>? = nil
     public var progressTimer: Timer?
     public var processingTimeoutSeconds: Double = 30
@@ -24,6 +26,8 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     public func process(operation: InventoryOperation) {
         guard !isProcessing else { return }
+        currentResultMode = OperationFactory.make(kind: operation.operation).resultMode
+        displayResult = nil
         if manager.inputText.count > ShareExtensionViewModelConstants.maxInputTextLength {
             errorMessage = "Текст слишком длинный для обработки"
             return
@@ -89,8 +93,12 @@ public final class ShareExtensionViewModel: ObservableObject {
         if let error = result?.error {
             errorMessage = error
         } else if result?.success == true {
-            showCopiedToast = true
-            shouldCloseExtension = true
+            if currentResultMode == .display {
+                displayResult = manager.lastResult
+            } else {
+                showCopiedToast = true
+                shouldCloseExtension = true
+            }
         }
     }
 
