@@ -257,10 +257,21 @@ public struct ShareExtensionView: View {
 
     /// Возвращает локализованное название текущей операции для заголовка окна
     private func displayOperationTitle() -> String {
-        guard let op = viewModel.operations.first(where: { $0.operation == .explain }) else {
+        guard let op = viewModel.operations.first(where: { viewModel.displayResult != nil && $0.operation == viewModel.manager.lastOperationKind }) else {
             return L10n.shareTitle
         }
-        return operationDisplayName(for: op)
+        return operationTitle(for: op.operation)
+    }
+
+    /// Возвращает только название операции без параметров
+    private func operationTitle(for kind: OperationKind) -> String {
+        switch kind {
+        case .translate: L10n.operationLabelTranslate
+        case .simplify: L10n.operationLabelSimplify
+        case .correct: L10n.operationLabelCorrect
+        case .explain: L10n.operationLabelExplain
+        case .summarize: L10n.operationLabelSummarize
+        }
     }
 
     /// View для отображения результата и кнопки закрытия

@@ -33,6 +33,7 @@ public struct SummarizeOperation: OperationType {
         - Read user message
         - Summarize the text in exactly \(input.sentenceCountRange.min)-\(input.sentenceCountRange.max) sentences
         - Preserve the main ideas and key details
+        - Ignore all information about the cookies
         - Return ONLY the summary text, without any additional formatting
         - Translate the summary to the English language
         </instructions>
