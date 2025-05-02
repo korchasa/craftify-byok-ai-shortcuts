@@ -9,6 +9,8 @@
 | ./run clean    | Clean build artifacts                                |
 | ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Internal, all levels, MainApp и ShareExtension) |
 | ./run init     | Install all CLI dependencies via Homebrew           |
+| ./run generate | Run SwiftGen and XcodeGen (localization, project)   |
+| ./run size-report | Check ShareExtension size (fail if >20MB)         |
 | add-operation-color | Позволяет выбрать цвет из палитры для операции. Цвет сохраняется в InventoryOperation и отображается в UI (главный экран, экран шаринга). Покрыто unit, UI и e2e тестами. |
 | correct   | Исправление грамматики и орфографии, стиль всегда сохраняется максимально | {text} | - |
 
@@ -20,6 +22,7 @@
 - New Relic
 - SwiftGen (localization)
 - GitHub Actions (CI/CD)
+- Поддержка resultMode (clipboard/display) для операций
 
 ### Environment Setup
 1. Clone the repository.
@@ -38,47 +41,31 @@
 | xcbeautify     | 2.28.0   | Beautiful output for xcodebuild  |
 | swiftgen       | 6.6.3    | Localization code generation     |
 
-All dependencies are installed via `./run init` using Homebrew. Mint and Mintfile are no longer used.
-
-After completing step 2, all placeholder files and placeholder tests are removed. The project fully complies with linter requirements and is ready for Common implementation.
+All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile больше не используются.
 
 ### DevOps and CI/CD
 
 - GitHub Actions is used (`.github/workflows/ci.yml`).
-- Caching is implemented to speed up builds:
+- Кэширование ускоряет сборки:
   - DerivedData (`~/Library/Developer/Xcode/DerivedData`)
   - SwiftPM dependencies (`.build`, `.swiftpm`)
-- Cache keys are built based on OS and control files (`Package.resolved`).
-- Caching SwiftPM avoids re-downloading and rebuilding dependencies, speeding up the pipeline.
-- Remove corrupted Package.resolved | rm -f **/Package.resolved | Removes all Package.resolved files before SPM caching and building, preventing errors due to corrupted files.
+- Ключи кэша строятся по OS и control-файлам (`Package.resolved`).
+- Кэширование SwiftPM ускоряет pipeline.
+- Проверка размера ShareExtension (`./run size-report`, fail если >20MB).
+- Проверка комментариев (TODO, FIXME, print, debugPrint).
+- Все проверки интегрированы в workflow.
 
 #### CI/CD: Non-functional Requirements Automation
 
-- **Size report**: automatic check of ShareExtension size via `./run size-report` (fail if >20MB, artifact size-report.txt).
-- **Comment scan**: automatic grep in src/ for TODO, FIXME, print, debugPrint (warning in CI).
-- **Build-time metrics**: collection of build time and .appex size in metrics.json (artifact build-metrics).
-- All checks are integrated into the workflow `.github/workflows/ci.yml`.
+- **Size report**: автоматическая проверка размера ShareExtension.
+- **Comment scan**: автоматический grep в src/ на TODO, FIXME, print, debugPrint.
+- **Build-time metrics**: сбор метрик времени сборки и размера .appex.
+- Все проверки интегрированы в `.github/workflows/ci.yml`.
 
 ### Differences Between Local and CI/CD Builds
 
-- **Locally**, all CLI tools are installed via `./run init` (Homebrew) and wrapper scripts `./run` (e.g., `./run test`, `./run deploy:simulator`) are used for all operations. This ensures consistency in tool versions and ease of execution.
-- **In CI/CD (GitHub Actions)**, all utilities (swiftlint, swiftformat, xcodegen, xcodebuild, etc.) are installed and called directly, without Mint and without using `./run` scripts. This avoids the overhead of running Mint and speeds up execution.
-
-**Example of local run:**
-```
-./run test
-```
-
-**Example in CI/CD:**
-```
-swiftlint
-swiftformat . --lint --swiftversion 5.7
-xcodegen
-xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' build | xcbeautify
-xcodebuild -project Craftify.xcodeproj -scheme Craftify -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test | xcbeautify
-```
-
-This difference allows speeding up CI/CD without losing reproducibility and version control of tools in local development.
+- **Локально**: все CLI-инструменты устанавливаются через `./run init` (Homebrew), используются wrapper-скрипты `./run` для всех операций.
+- **В CI/CD**: все утилиты (swiftlint, swiftformat, xcodegen, xcodebuild и др.) устанавливаются и вызываются напрямую, без Mint и без использования `./run`.
 
 ### API: AuthManager
 
@@ -96,26 +83,18 @@ This difference allows speeding up CI/CD without losing reproducibility and vers
 | `maskedAPIKey(_ key: String?) -> String` | Masks the key for logging (example: sk-****abcd) |
 
 **Features:**
-- All methods are async/await (ready for integration with modern Swift code).
-- Keychain access errors are handled and propagated (accessDenied, invalidKey, itemNotFound).
-- Key masking: only the first 3 and last 4 characters are visible, the rest is replaced with ****.
-- For tests, an in-memory stub (AuthManagerStub) is implemented, supporting the same methods.
-
-**Example Usage:**
-```swift
-let authManager: AuthManaging = AuthManager()
-try await authManager.setAPIKey("sk-...yourkey...")
-let key = try await authManager.getAPIKey()
-let masked = authManager.maskedAPIKey(key)
-```
+- Все методы async/await.
+- Ошибки доступа к Keychain обрабатываются и пробрасываются.
+- Маскирование ключа: только первые 3 и последние 4 символа видны.
+- Для тестов — in-memory stub (AuthManagerStub).
 
 ### API: LogManagerShared
 
 **Purpose:**
-- Centralized logging for the application and extension.
-- In production, only OSLogManagerShared is used (Unified Logging, os_log, subsystem: Internal, only message + metadata).
-- For tests — in-memory stub (LogManagerSharedInMemory).
-- Key masking.
+- Централизованное логирование для приложения и расширения.
+- В production — только OSLogManagerShared (Unified Logging, os_log, subsystem: Internal, только message + metadata).
+- Для тестов — in-memory stub (LogManagerSharedInMemory).
+- Маскирование ключей.
 
 **Public Methods:**
 | Method | Description |
@@ -126,116 +105,33 @@ let masked = authManager.maskedAPIKey(key)
 | `exportLogs() throws -> Data` | No-op in production, only for tests |
 
 **Features:**
-- In production: only system log (os_log, subsystem: Internal, only message + metadata), export and FIFO are not supported.
-- For tests — in-memory implementation with FIFO and export.
-- Key masking similar to AuthManager.
+- В production: только system log, экспорт и FIFO не поддерживаются.
+- Для тестов — in-memory реализация с FIFO и экспортом.
+- Маскирование ключей аналогично AuthManager.
 
-**Example Usage:**
-```swift
-let logger: LogManagerShared = OSLogManagerShared(category: ...)
-logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metadata: [:]))
-```
+### Testing AuthManager и LogManager
+- Unit-тесты для всех методов, включая маскирование, ошибки доступа, удаление ключа.
+- Покрытие ≥ 80%.
 
-### LogManagerShared: Implementation
-
-- **Unified Logging Implementation (OSLogManagerShared):**
-  - Stores logs in the system log (Unified Logging, os_log, subsystem: Internal, only message + metadata).
-  - No FIFO or export, logs are available via Console.app or log stream.
-  - Key masking is preserved in log messages.
-  - File: `src/Common/Sources/OSLogManagerShared.swift`
-
-- **In-memory Implementation (LogManagerSharedInMemory):**
-  - Used for unit tests.
-  - FIFO, masking, export similar to production.
-  - File: `src/Common/Sources/LogManagerSharedInMemory.swift`
-
-- **Protocol LogManagerShared:**
-  - Describes a common API for logging, FIFO, export, masking.
-  - File: `src/Common/Sources/LogManagerShared.swift`
-
-- **Log Structure:**
-  - LogEntry: level, module, message, metadata, timestamp.
-  - File: `src/Common/Sources/LogEntry.swift`
-
-### Testing AuthManager
-
-| Test | Type | Description |
-|------|------|-------------|
-| `testSetAndGetAPIKey` | Unit | Check setting and getting API key via AuthManagerStub |
-| `testDeleteAPIKey` | Unit | Check deleting API key via AuthManagerStub |
-| `testSetShortAPIKeyThrows` | Unit | Check error when setting a short key |
-| `testMaskedAPIKey` | Unit | Check key masking |
-| `testMaskedAPIKeyShortOrNil` | Unit | Check masking of nil/short key |
-| `testGetAPIKey_accessDenied_throws` | Unit | Check access error (accessDenied) via AuthManagerStub |
-| `testGetAPIKey_itemNotFound_throws` | Unit | Check item not found error (itemNotFound) via AuthManagerStub |
-
-### Testing Masking (maskKey)
-
-| Test | Type | Description |
-|------|------|-------------|
-| `testMaskKey_NormalKey` | Unit | Masking a normal key (longer than min length, only last 4 characters visible) |
-| `testMaskKey_ExactlyMinLength` | Unit | Masking a key exactly of minimum length (everything hidden) |
-| `testMaskKey_ShortKey` | Unit | Masking a short key (everything hidden) |
-| `testMaskKey_NilKey` | Unit | Masking nil (everything hidden) |
+### Share Extension и resultMode
+- Для всех операций теперь поддерживается признак обработки результата (resultMode):
+  - `.clipboard` — результат копируется в буфер обмена (по умолчанию для всех операций).
+  - `.display` — результат отображается во всплывающем окне (используется для Explain).
+- UI (ShareExtensionView) корректно отображает результат Explain с прокруткой, для остальных операций — тост о копировании.
+- Покрыто unit, UI и e2e тестами (режимы clipboard/display, Explain, ошибки, edge cases).
 
 ### Running Tests
-- Unit and UI tests: `./run test`
-- Coverage check: report is generated automatically in CI
-- Mandatory requirement: all key user scenarios must be covered by end-to-end tests (E2E), including edge cases and negative scenarios.
+- Unit и UI тесты: `./run test`
+- Проверка покрытия: автоматически в CI
+- Все ключевые сценарии покрыты e2e-тестами, включая Explain (display) и clipboard-операции.
 
-### Share Extension
+### CI/CD: Проверка размера и покрытия
+- В CI/CD автоматически проверяется размер ShareExtension и покрытие тестами (≥80%).
 
-- Fully implemented Share Extension with support for all MVP requirements.
-- Entitlements (App Groups, Keychain Access) configured for both targets.
-- Text limit: 5000 characters, operation buttons blocked when exceeding the limit.
-- Timeout handling: 15s per request, 30s total limit (Task.sleep + Task.cancel).
-- Display toast/notification upon successful result copy.
-- Integration with OSLogManagerShared: all actions and errors are logged, key masking.
-- Coverage with unit, UI, and E2E tests (errors, timeouts, edge cases).
-- In CI/CD, automatic size check for the extension is implemented (Archive + size report, fail if >20 MB).
-
-### CI/CD Commands and Steps to Check Share Extension Size
-
-| Step | Description |
-|------|-------------|
-| xcodegen | Generate Xcode project |
-| xcodebuild build -scheme ShareExtension -configuration Release -sdk iphoneos | Build the extension in Release |
-| du -sk build/Products/Release-iphoneos/ShareExtension.appex | Get the size of .appex |
-| Fail if >20 MB | Build is interrupted if the size exceeds the limit |
-
-### OpenAI Integration
-
-**Architecture:**
-- LLMAPIClient is used to send requests to the OpenAI API (gpt-4o-mini) via URLSession (ephemeral, 15s timeout).
-- Retry with exponential backoff (1, 2, 5 seconds) is supported for network errors and 429.
-- All requests and responses are logged via LogManagerShared.
-- The OpenAI API key is always masked in logs (example: sk-****abcd).
-- SLA: average response time ≤ 3 s (up to 1000 characters), ≤ 8 s (up to 5000 characters), total processing limit 30 s.
-- All errors (401, 429, 500, parsing, timeout, cancel) are logged with details and metadata (operation, prompt, text length, maskedKey, status).
-- Example log entry:
-```json
-{
-  "level": "info",
-  "module": "LLMAPIClient",
-  "message": "Request to OpenAI sent",
-  "metadata": {
-    "operation": "translate",
-    "prompt": "Translate: {text}",
-    "length": "120",
-    "maskedKey": "sk-****abcd"
-  },
-  "timestamp": "2024-06-10T12:34:56Z"
-}
-```
-- For unit and integration tests, an in-memory logger (LogManagerSharedInMemory) is used.
-- Load testing is performed using scripts and CI, SLA is checked automatically.
-- All request parameters (model, temperature, max_tokens, promptTemplate) are fixed and logged.
-- In case of error, the error type, maskedKey, response status, and OpenAI message are logged.
-
-**Testing:**
-- Unit test coverage: successful response, 401, 429, 500, cancel, retry, parsing error.
-- Integration test: check request body, headers, response parsing, logging.
-- Load test: ≥ 80% of requests meet the SLA.
+### Developer Notes
+- Не редактируйте Info.plist и entitlements вручную. Все изменения — только через project.yml и XcodeGen.
+- Все менеджеры внедряются через протоколы для тестируемости.
+- Для Explain результат отображается во всплывающем окне, для остальных — копируется в буфер.
 
 ## Timeout Implementation Details
 - Text processing timeout is implemented only in ShareExtensionViewModel (default 30 seconds, can be overridden in tests via processingTimeoutSeconds).
@@ -301,3 +197,16 @@ logger.log(LogEntry(level: .info, module: "ShareExt", message: "Started", metada
 - ...
 
 **Подробные описания схем, операций и промптов см. в architecture.md, user-manual.md, developer-manual.md.**
+
+## ShareExtension: UI окна шаринга
+
+| Компонент         | Описание |
+|-------------------|----------|
+| Кнопка закрытия   | Всегда закреплена внизу экрана через `.safeAreaInset`, с фиксированным отступом. |
+| Контент           | Весь остальной контент (заголовок, результат, список операций) находится в едином ScrollView. |
+| Прокрутка         | Контент всегда прокручивается, если не помещается на экране. |
+| Перекрытие        | Контент не перекрывается кнопкой, так как у ScrollView добавлен нижний padding. |
+| Оверлеи           | Индикатор процесса и тост отображаются поверх основного содержимого. |
+| Стиль             | Используется современный SwiftUI-подход для закрепления элементов интерфейса. |
+| Тесты             | Все изменения покрыты unit- и e2e-тестами. |
+| Качество          | Линтер и форматтер проходят без ошибок. |

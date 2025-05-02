@@ -1,47 +1,58 @@
 # Craftify User Manual
 
 ## How to Use the Application
-1. Open Craftify after installation.
-2. On first launch, review the instructions and give consent for text processing (checkbox).
-3. Add the required operations (translation, simplification, correction, explanation) via HomeView.
-4. Enter your OpenAI API key in SettingsView.
-5. To process text:
-   - Select text in any application.
-   - Invoke Craftify via the Share menu.
-   - Choose the desired operation.
-   - Receive the result—it will be automatically copied to the clipboard.
+1. Откройте Craftify после установки.
+2. При первом запуске ознакомьтесь с инструкцией и дайте согласие на обработку текста (чекбокс).
+3. Добавьте нужные операции (перевод, упрощение, исправление, объяснение) через HomeView.
+4. Введите свой OpenAI API-ключ в SettingsView.
+5. Для обработки текста:
+   - Выделите текст в любом приложении.
+   - Вызовите Craftify через меню "Поделиться".
+   - Выберите нужную операцию.
+   - Получите результат:
+     - Для большинства операций результат будет автоматически скопирован в буфер обмена (и появится уведомление).
+     - Для Explain результат отобразится прямо во всплывающем окне с возможностью прокрутки.
+
+## Processing Result Modes
+- Для каждой операции теперь поддерживается режим обработки результата:
+  - **Clipboard**: результат копируется в буфер обмена (по умолчанию для всех операций).
+  - **Display**: результат отображается во всплывающем окне (используется для Explain).
+- Для Explain результат не копируется автоматически, а показывается прямо в окне расширения.
 
 ## Testing
-- All main scenarios are tested automatically (mandatory requirement: all key user scenarios are covered by end-to-end tests, including edge cases and negative scenarios).
-- For manual testing: use the Share Extension with different types of text and parameters.
+- Все основные сценарии тестируются автоматически (unit, UI, e2e), включая Explain (display) и clipboard-операции.
+- Для ручного тестирования: используйте Share Extension с разными типами текста и параметрами, проверьте оба режима (копирование и отображение).
 
 ## Build and Deployment
-- For self-building: follow the instructions in developer-manual.md.
-- For updates: use the App Store or TestFlight (if available).
+- Для самостоятельной сборки: следуйте инструкциям в developer-manual.md.
+- Для обновлений: используйте App Store или TestFlight (если доступно).
 
 ## Notes
-- All data (key, inventory) is stored only on the device.
-- A valid OpenAI API key is required for operation.
-- The app does not save request history and does not analyze clipboard contents.
+- Все данные (ключ, инвентарь) хранятся только на устройстве.
+- Для работы требуется действующий OpenAI API-ключ.
+- Приложение не сохраняет историю запросов и не анализирует содержимое буфера обмена.
 
 ## User Testing Results
-- All user scenarios for the Share Extension have been tested and work according to the documentation.
-- Edge-case scenarios (no text, text too long, network errors, invalid key, etc.) are handled correctly.
+- Все пользовательские сценарии для Share Extension протестированы и работают согласно документации.
+- Edge-case сценарии (нет текста, слишком длинный текст, ошибки сети, неверный ключ и др.) обрабатываются корректно.
+- Проверено, что Explain отображает результат, а остальные операции копируют в буфер.
 
 ## What's New in Share Extension
-- Support for all main operations (translation, simplification, correction, explanation) with parameters.
-- Automatic text length check and blocking processing if the limit is exceeded.
-- All errors (no text, text too long, network errors, invalid key, clipboard errors) are handled with clear messages.
-- The result is always copied to the clipboard and confirmed by a notification.
-- All actions and errors are logged (FIFO, log export available in the main app).
+- Поддержка всех основных операций (перевод, упрощение, исправление, объяснение) с параметрами.
+- Автоматическая проверка длины текста и блокировка обработки при превышении лимита.
+- Все ошибки (нет текста, слишком длинный текст, ошибки сети, неверный ключ, ошибки буфера) обрабатываются с понятными сообщениями.
+- Результат:
+  - Для большинства операций — копируется в буфер обмена и подтверждается уведомлением.
+  - Для Explain — отображается во всплывающем окне с прокруткой.
+- Все действия и ошибки логируются (FIFO, просмотр через ./run logs).
 
 ## Instruction Relevance
-- Instructions for building, testing, and updating are always up to date in developer-manual.md.
-- The structure of the app and documentation fully matches the current state of the project.
+- Инструкции по сборке, тестированию и обновлению всегда актуальны в developer-manual.md.
+- Структура приложения и документация полностью соответствуют текущему состоянию проекта.
 
 ## Processing Time Limit
-- If text processing takes too long (over 30 seconds), a timeout message will appear.
-- The timeout is implemented only in the Share Extension. The main app does not apply a time limit.
+- Если обработка текста занимает слишком много времени (более 30 секунд), появится сообщение о таймауте.
+- Таймаут реализован только в Share Extension. В основном приложении лимит времени не применяется.
 
 ## Log Viewing
 Все действия и ошибки приложения логируются через Unified Log (os_log, subsystem: Internal, только message + metadata). Для просмотра логов используйте команду:
@@ -60,3 +71,11 @@
 При первом запуске приложения Craftify отображается приветственный экран с инструкцией и чекбоксом согласия на обработку текста. Пока пользователь не поставит галочку и не нажмёт "Готово", доступ к функциям приложения невозможен. После согласия автоматически открывается основной экран. Согласие сохраняется и не запрашивается повторно при последующих запусках.
 
 **Подробные описания схем и операций см. в developer-manual.md.**
+
+## Использование окна шаринга (ShareExtension)
+
+- Кнопка закрытия всегда доступна внизу экрана, независимо от длины контента.
+- Весь остальной контент (операции, результат) прокручивается, если не помещается на экране.
+- Кнопка не перекрывает контент, даже если его много.
+- Интерфейс адаптирован для всех устройств и поддерживает accessibility.
+- Все действия протестированы (unit + e2e), стабильность гарантирована.

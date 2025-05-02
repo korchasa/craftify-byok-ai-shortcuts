@@ -127,5 +127,23 @@ import XCTest
                 XCTAssertEqual(viewController.preferredContentSize.height, expectedHeight)
             }
         }
+
+        public func testLongResultTextIsFullyVisibleOrScrollable() throws {
+            let vm = makeViewModel()
+            // Длинный текст (больше 1000 символов)
+            let longText = String(repeating: "Очень длинный текст ", count: 100)
+            vm.displayResult = longText
+            let view = ShareExtensionView(viewModel: vm)
+            // Получаем DisplayResultView
+            let textEditor = try view.inspect().find(ViewType.TextEditor.self)
+            // Проверяем, что текст совпадает
+            let displayedText = try textEditor.input()
+            expect(displayedText) == longText
+            // Проверяем высоту TextEditor (должна быть не минимальной)
+            let frame = try textEditor.actualView().frame(in: .local)
+            XCTAssertGreaterThan(frame.height, 120) // minHeight
+            // Проверяем, что если текст очень длинный, высота ограничена разумным максимумом
+            XCTAssertLessThanOrEqual(frame.height, 400)
+        }
     }
 #endif

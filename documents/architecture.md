@@ -1,66 +1,71 @@
 ## Architecture Craftify
 
 ### General Scheme
-- The main application (SwiftUI) and Share Extension use a common module Common (SwiftPM).
-- Interaction between modules through App Group (UserDefaults) and Keychain Sharing.
-- Logging through LogManagerShared (SPM), storing logs in the os log.
+- Основное приложение (SwiftUI) и Share Extension используют общий модуль Common (SwiftPM).
+- Взаимодействие между модулями через App Group (UserDefaults) и Keychain Sharing.
+- Логирование через LogManagerShared (SPM), хранение логов в os log.
+- Для всех операций теперь поддерживается признак обработки результата (resultMode):
+  - `.clipboard` — результат копируется в буфер обмена (по умолчанию для всех операций).
+  - `.display` — результат отображается во всплывающем окне (используется для Explain).
 
 ### Key Patterns
-- MVVM + SwiftUI for UI and business logic.
-- Dependency Injection for managers.
-- FIFO for logs (limit of 1000 entries).
+- MVVM + SwiftUI для UI и бизнес-логики.
+- Dependency Injection для менеджеров.
+- FIFO для логов (лимит 1000 записей).
 
 ### Logging and Analytics
 
 #### Log Architecture
-- All logs are written through the system log (Unified Logging, os_log, subsystem: Internal, only message + metadata) via OSLogManagerShared. Log export is not supported, viewing is done through Console.app or log stream, or ./run logs.
-- LogManagerShared supports levels: debug, info, warning, error. In production, only message + metadata are logged (no level/module in output).
-- API keys are always masked (only the first and last 4 characters are visible).
-- Crash reporting is implemented through the New Relic SDK, integrated only into the main application (not in the Share Extension).
-- The New Relic App Token is stored in Info.plist and is injected at runtime.
-- No third-party SDKs for analytics or crash reporting are used in the Share Extension (minimum size, compliance with App Store).
+- Все логи пишутся через системный лог (Unified Logging, os_log, subsystem: Internal, только message + metadata) через OSLogManagerShared. Экспорт логов не поддерживается, просмотр — через Console.app, log stream или ./run logs.
+- LogManagerShared поддерживает уровни: debug, info, warning, error. В production логируются только message + metadata.
+- API-ключи всегда маскируются (видны только первые и последние 4 символа).
+- Crash reporting реализован через New Relic SDK (только в основном приложении).
+- В Share Extension не используются сторонние SDK для аналитики и crash reporting (минимальный размер, соответствие App Store).
 
 #### Log Export and Retention Policy
-- Log export is not supported (system log limitation). Logs can be viewed through Console.app or log stream.
-- Crash reports are sent only from the main application via New Relic SDK.
+- Экспорт логов не поддерживается (ограничение system log). Просмотр — только через системные средства.
+- Crash reports отправляются только из основного приложения через New Relic SDK.
 
 #### Consequences
-- Logs are available for diagnostics only through system tools or ./run logs (filtered by subsystem Internal, all levels, MainApp и ShareExtension).
-- Crash analytics is available only for the main application through New Relic.
-- Share Extension remains lightweight and meets privacy requirements.
-- Log masking policy is implemented at the code level.
+- Логи доступны только для диагностики через system tools или ./run logs (фильтрация по subsystem Internal, все уровни, MainApp и ShareExtension).
+- Crash analytics — только для основного приложения.
+- Share Extension остаётся лёгким и соответствует privacy-требованиям.
+- Политика маскировки ключей реализована на уровне кода.
 
 ### Component Interaction
-- ShareExtensionManager reads inventory and API key, calls ProcessingManager.
-- ProcessingManager forms a request, calls LLMAPIClient.
-- LLMAPIClient sends HTTP POST to OpenAI, parses the response through ResponseParser.
-- ClipboardManager copies the result to UIPasteboard.
-- All actions are logged through LogManagerShared.
+- ShareExtensionManager читает inventory и API-ключ, вызывает ProcessingManager.
+- ProcessingManager формирует запрос, вызывает LLMAPIClient.
+- LLMAPIClient отправляет HTTP POST в OpenAI, парсит ответ через ResponseParser.
+- ClipboardManager копирует результат в UIPasteboard.
+- Если операция с resultMode `.display` (Explain) — результат сохраняется и отображается во вью, не копируется в буфер.
+- Все действия логируются через LogManagerShared.
 
 ### Error Handling
-- All errors (Keychain, network, parsing, clipboard) are handled with an Alert display.
-- Retries on network errors (exponential backoff).
-- Masking of the API key in logs.
-- In case of key access errors — suggestion to open Settings.
+- Все ошибки (Keychain, сеть, парсинг, буфер обмена) обрабатываются с показом Alert.
+- Повторные попытки при сетевых ошибках (exponential backoff).
+- Маскирование API-ключа в логах.
+- В случае ошибок доступа к ключу — предложение открыть настройки.
 
 ### Testing
-- Unit tests for all managers.
-- UI/E2E tests for main scenarios (mandatory requirement: all key user scenarios must be covered by end-to-end tests, including edge cases and negative scenarios).
-- Coverage ≥ 80% for key modules.
+- Unit-тесты для всех менеджеров и моделей.
+- UI/E2E-тесты для всех основных сценариев, включая Explain (display) и clipboard-операции.
+- Проверяется, что Explain отображает результат, а остальные операции копируют в буфер.
+- Покрытие ≥ 80% для ключевых модулей.
 
 ### Results of Share Extension Implementation
-- Architectural solutions (DI, logging, error handling, testability) implemented in full compliance with documentation.
-- All components and interactions correspond to the description in this architecture.
+- Архитектурные решения (DI, логирование, обработка ошибок, тестируемость) реализованы в полном соответствии с документацией.
+- Все компоненты и взаимодействия соответствуют описанию.
+- Поддержка resultMode для операций.
 
 ### Share Extension: Final Architecture
 
-- All managers are injected through DI, including OSLogManagerShared (Unified Logging, system log).
-- Logging of all actions and errors, key masking.
-- Text limit: 5000 characters, blocking on UI and in the manager.
-- Timeouts: 15 seconds per request, 30 seconds total limit (Task.sleep + Task.cancel).
-- Error handling: all scenarios covered (no text, limit, no consent, invalid key, network, parsing, buffer, cancellation).
-- Coverage of unit, UI, E2E tests (≥80%).
-- In CI/CD, automatic size check of the extension is implemented (Archive + size report, fail if >20 MB).
+- Все менеджеры внедряются через DI, включая OSLogManagerShared.
+- Логирование всех действий и ошибок, маскирование ключей.
+- Лимит текста: 5000 символов, блокировка на UI и в менеджере.
+- Таймауты: 15 секунд на запрос, 30 секунд общий лимит.
+- Обработка ошибок: все сценарии покрыты (нет текста, лимит, нет согласия, неверный ключ, сеть, парсинг, буфер, отмена).
+- Покрытие unit, UI, E2E тестами (≥80%).
+- В CI/CD реализована автоматическая проверка размера расширения (Archive + size report, fail если >20 МБ).
 
 #### Updated Interaction Diagram
 
@@ -74,6 +79,7 @@ graph TD
     LogManagerShared[Log Manager Shared]
   end
   ShareExtension & ProcessingManager & LLMAPIClient & UIPasteboard -.-> LogManagerShared
+  ShareExtension -->|resultMode .display| ShareExtensionView[ShareExtensionView: Display Result]
 ```
 
 ### Targets and Schemes
@@ -91,17 +97,18 @@ graph TD
 **Подробные описания операций и промптов см. в user-manual.md и developer-manual.md.**
 
 ## Timeout Mechanism for Text Processing
-- The processing timeout is implemented only at the ShareExtensionViewModel level (default 30 seconds, can be overridden in tests).
-- ShareExtensionManager does not implement a timeout, only the business logic for processing and errors.
-- In unit tests, the ViewModel timeout is set through processingTimeoutSeconds.
-- In E2E tests, ShareExtensionManager only checks for errors and successes in processing, but not the timeout.
+- Таймаут обработки реализован только на уровне ShareExtensionViewModel (по умолчанию 30 секунд, можно переопределить в тестах).
+- ShareExtensionManager не реализует таймаут, только бизнес-логику обработки и ошибок.
+- В unit-тестах таймаут ViewModel задаётся через processingTimeoutSeconds.
+- В E2E-тестах ShareExtensionManager проверяет только ошибки и успехи обработки, но не таймаут.
 
-### Operation Color Support
+### Operation Color & ResultMode Support
 - InventoryOperation расширена свойством colorHex (hex-код цвета из палитры).
-- Сериализация/десериализация InventoryOperation поддерживает colorHex.
-- UI (HomeView, ShareExtensionView) отображает цвет операции (индикатор).
-- Выбор цвета реализован в AddOperationView и EditOperationView через палитру.
-- Покрыто unit, UI и e2e тестами (отображение, выбор, сохранение цвета).
+- Добавлен признак resultMode (clipboard/display) для операций.
+- Сериализация/десериализация InventoryOperation поддерживает colorHex и режим обработки результата.
+- UI (HomeView, ShareExtensionView) отображает цвет операции и корректно обрабатывает режимы clipboard/display.
+- Для Explain результат отображается во всплывающем окне с прокруткой.
+- Покрыто unit, UI и e2e тестами (отображение, выбор, сохранение цвета, режимы обработки результата).
 
 - Операция correct теперь не содержит параметра stylePreservationLevel, всегда используется максимальный уровень сохранения стиля.
 - UI не отображает элементы для выбора уровня сохранения стиля.
@@ -112,3 +119,14 @@ graph TD
 - После согласия автоматически отображается основной экран HomeView.
 - Согласие хранится в App Group UserDefaults через ConsentManager.
 - Покрыто e2e-тестом на полный flow: нет согласия → согласие → переход на HomeView.
+
+## Архитектура UI окна шаринга (ShareExtension)
+
+- Весь основной контент (заголовок, результат, список операций) размещён внутри ScrollView.
+- Кнопка закрытия закреплена внизу через `.safeAreaInset(edge: .bottom)`, всегда доступна пользователю.
+- Оверлеи (индикатор процесса, тост) реализованы через ZStack и не мешают взаимодействию с основным контентом.
+- Такой подход обеспечивает:
+    - UX: кнопка всегда доступна, даже при длинном контенте
+    - Контент не перекрывается кнопкой
+    - Поддержка accessibility и адаптация к разным устройствам
+- Все изменения покрыты unit- и e2e-тестами, что гарантирует стабильность поведения.

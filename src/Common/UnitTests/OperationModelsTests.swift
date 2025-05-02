@@ -68,6 +68,22 @@ public final class OperationModelsTests: XCTestCase {
         expect(decoded.colorHex) == colorHex
     }
 
+    /// Проверяет режим обработки результата по умолчанию (clipboard)
+    public func testDefaultResultMode() {
+        let translateOp = TranslateOperation()
+        let simplifyOp = SimplifyOperation()
+        let correctOp = CorrectOperation()
+        expect(translateOp.resultMode) == .clipboard
+        expect(simplifyOp.resultMode) == .clipboard
+        expect(correctOp.resultMode) == .clipboard
+    }
+
+    /// Проверяет режим обработки результата для ExplainOperation (display)
+    public func testExplainOperationResultMode() {
+        let explainOp = ExplainOperation()
+        expect(explainOp.resultMode) == .display
+    }
+
     /// Очистка ресурсов (stub)
     deinit { /* nothing to cleanup */ }
 }

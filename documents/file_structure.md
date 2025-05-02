@@ -26,14 +26,18 @@ src/
       LogManagerShared.swift    # Centralized logging
       Masking.swift            # Key masking utilities
       Models/                  # Shared data models
-      InventoryOperation.swift      # Модель операции, теперь с colorHex
-      InventoryManager.swift        # Управление инвентарём, поддержка colorHex
-      CorrectParams.swift          # Параметры операции correct (теперь без stylePreservationLevel)
+        ResultMode.swift           # Режим обработки результата (clipboard/display)
+        OperationType.swift        # Протокол операций с resultMode
+        ExplainOperation.swift     # Операция Explain с режимом display
+        ...
+      InventoryOperation.swift      # Модель операции, теперь с colorHex и поддержкой resultMode
+      InventoryManager.swift        # Управление инвентарём, поддержка colorHex и resultMode
+      CorrectParams.swift           # Параметры операции correct (без stylePreservationLevel)
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests
-      InventoryOperationTests.swift # Unit-тесты для модели с colorHex
-      InventoryManagerTests.swift   # Unit-тесты сериализации colorHex
+      InventoryOperationTests.swift # Unit-тесты для модели с colorHex и resultMode
+      InventoryManagerTests.swift   # Unit-тесты сериализации colorHex и resultMode
     Config/
       Info.plist               # SPM target configuration
     Resources/
@@ -54,17 +58,17 @@ src/
       HowToUseView.swift        # Onboarding UI
       AddOperationView.swift    # Add operation UI
       EditOperationView.swift   # Edit operation UI
-      InventoryOperation.swift      # Модель операции, теперь с colorHex
-      InventoryManager.swift        # Управление инвентарём, поддержка colorHex
+      InventoryOperation.swift      # Модель операции, теперь с colorHex и resultMode
+      InventoryManager.swift        # Управление инвентарём, поддержка colorHex и resultMode
     UnitTests/
       HomeViewModelTests.swift  # Inventory logic tests
       SettingsViewModelTests.swift # Settings logic tests
-      InventoryOperationTests.swift # Unit-тесты для модели с colorHex
-      InventoryManagerTests.swift   # Unit-тесты сериализации colorHex
+      InventoryOperationTests.swift # Unit-тесты для модели с colorHex и resultMode
+      InventoryManagerTests.swift   # Unit-тесты сериализации colorHex и resultMode
     E2ETests/
       HomeViewUITests.swift     # UI tests for inventory
       SettingsViewUITests.swift # UI tests for settings
-      ShareExtensionViewUITests.swift # E2E/UI тесты отображения цвета
+      ShareExtensionViewUITests.swift # E2E/UI тесты отображения цвета и режимов обработки результата
     Config/
       Info.plist                # App configuration
       Craftify.entitlements      # App entitlements
@@ -76,17 +80,17 @@ src/
 
   ShareExtension/    # Share Extension for text processing from other apps
     Sources/
-      ShareExtensionManager.swift   # Reads inventory, API key, triggers processing
+      ShareExtensionManager.swift   # Reads inventory, API key, triggers processing (учитывает resultMode)
       ProcessingManager.swift       # Handles text processing logic
       LLMAPIClient.swift            # OpenAI API client
       ClipboardManager.swift        # Clipboard integration
-      ShareExtensionView.swift      # SwiftUI UI for extension
+      ShareExtensionView.swift      # SwiftUI UI for extension (поддержка display/clipboard)
       ShareExtensionViewController.swift # Hosting controller
     UnitTests/
-      ShareExtensionManagerTests.swift # Manager logic tests
+      ShareExtensionManagerTests.swift # Manager logic tests (режимы clipboard/display)
       LLMAPIClientTests.swift          # API client tests
     E2ETests/
-      E2EShareExtensionFlowTests.swift # E2E tests for extension flow
+      E2EShareExtensionFlowTests.swift # E2E tests for extension flow, режимы обработки результата
     Config/
       Info.plist                # Extension configuration
       ShareExtension.entitlements # Extension entitlements
@@ -109,3 +113,5 @@ src/
 - Все логи пишутся через Unified Log (os_log, subsystem: Internal, только message + metadata).
 - Просмотр логов: ./run logs (фильтрация по subsystem Internal, MainApp и ShareExtension, все уровни).
 - Экспорт логов не поддерживается.
+
+- `src/ShareExtension/Sources/ShareExtensionView.swift` — основной UI-компонент окна шаринга, реализует разметку, закрепление кнопки закрытия, скроллирование и оверлеи.

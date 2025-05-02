@@ -32,6 +32,7 @@
 "share_title" = "Craftify";
 "share_cancel" = "Отмена";
 "share_copied" = "Скопировано в буфер";
+"share_close" = "Закрыть";
 
 /* Operation Params Labels */
 "operation_param_target_language" = "Язык перевода";
