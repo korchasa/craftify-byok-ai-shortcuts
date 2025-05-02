@@ -12,7 +12,7 @@
 - Сборка: `./run build`
 
 ## Running Tests
-- Unit и UI тесты: `./run test`
+- Unit и UI тесты: `./run check`
 - Проверка покрытия: автоматически в CI
 - Все ключевые сценарии покрыты e2e-тестами, включая Explain (display) и clipboard-операции.
 

@@ -86,7 +86,7 @@ jobs:
       - name: Archive build
         run: ./run archive
       - name: Unit & UI tests
-        run: ./run test
+        run: ./run check
       - name: Coverage
         run: ./run test:coverage
       - name: Internal TestFlight deploy
@@ -152,7 +152,7 @@ jobs:
       - name: Release build
         run: ./run build
       - name: Full test suite
-        run: ./run test
+        run: ./run check
       - name: Archive for dSYMs
         run: ./run archive
       - name: Collect dSYMs

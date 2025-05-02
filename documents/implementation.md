@@ -4,7 +4,7 @@
 
 | Command         | Description                                           |
 |----------------|------------------------------------------------------|
-| ./run test     | Run tests                                           |
+| ./run check     | Run tests, lint, format, size-report, comment-scan, etc. |
 | ./run deploy:simulator      | Build and run in iPhone 14 simulator (iOS 16)      |
 | ./run clean    | Clean build artifacts                                |
 | ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Internal, all levels, MainApp и ShareExtension) |
@@ -29,7 +29,7 @@
 2. Install dependencies: run `./run init` (installs all CLI tools via Homebrew).
 3. Generate the project: `xcodegen`.
 4. Build and run: `./run deploy:simulator`.
-5. For tests: `./run test`.
+5. For tests: `./run check`.
 
 ### CLI Tools
 
@@ -121,7 +121,7 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 - Покрыто unit, UI и e2e тестами (режимы clipboard/display, Explain, ошибки, edge cases).
 
 ### Running Tests
-- Unit и UI тесты: `./run test`
+- Unit и UI тесты: `./run check`
 - Проверка покрытия: автоматически в CI
 - Все ключевые сценарии покрыты e2e-тестами, включая Explain (display) и clipboard-операции.
 
