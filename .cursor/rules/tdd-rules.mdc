@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: true
 ---
 ## TDD Flow
@@ -9,13 +9,13 @@ alwaysApply: true
 - Run tests.
 2.	Green:
 - Implement just enough code to make the test pass.
-- Run the full suite to ensure everything is green.
+- Run the test to ensure everything is green.
 3.	Refactor:
 - Clean up code and tests without changing behavior.
 - Eliminate duplication and improve readability.
-- Run tests to confirm the correctness of the refactoring.
-4.  Final check:
-- Run `./run test` to finally ensure that everything is working fine. Fix all found issues, including linting errors and warnings.
+- Run test to confirm the correctness of the refactoring.
+1.  Final check:
+- Run all checks by `./run check` to finally ensure that everything is working fine. Fix all found issues, including linting errors and warnings.
 
 ## Tests rules
 

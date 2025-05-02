@@ -108,8 +108,17 @@ targets:
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
           NSExtensionAttributes:
-            NSExtensionActivationRule:
-              NSExtensionActivationSupportsText: true
+            NSExtensionActivationRule: |
+              SUBQUERY (
+                extensionItems,
+                $extensionItem,
+                SUBQUERY (
+                  $extensionItem.attachments,
+                  $attachment,
+                  ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" ||
+                  ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url"
+                ).@count > 0
+              ).@count > 0
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ShareExtensionViewController
     dependencies:
       - target: Common

@@ -40,9 +40,12 @@ Users waste time copying text between apps for translation, simplification, or c
 - Introduced result processing mode (clipboard/display) for operations.
 - For Explain, the result is displayed in a scrollable popup window.
 - Covered by unit, UI, and e2e tests.
+- Share Extension can now be activated for both text and URLs (public.text, public.url) via NSExtensionActivationRule in project.yml (XcodeGen).
+- Оба типа обрабатываются как обычный текст, приоритет у текста. Покрыто unit- и e2e-тестами.
 
 ## Problems Solved
 - Added resultMode attribute for operations, implemented support for result display mode.
 - Removed stylePreservationLevel property from the correct operation. Now the style is always preserved at maximum, the user cannot choose the style preservation level.
 - UI and ViewModel updated: Stepper and related fields removed.
 - All tests (unit, e2e) updated to match the new logic.
+- Share Extension теперь поддерживает шаринг ссылок (public.url) и текста (public.text), оба типа обрабатываются как текст, приоритет у текста.
