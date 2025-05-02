@@ -35,6 +35,7 @@ targets:
     info:
       path: src/MainApp/Config/Info.plist
       properties:
+        CFBundleDisplayName: Craftify
         UILaunchStoryboardName: LaunchScreen
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -206,6 +207,10 @@ targets:
         SWIFT_OPTIMIZATION_LEVEL: '-Onone'
       release:
         SWIFT_OPTIMIZATION_LEVEL: '-O'
+      dependencies:
+        - package: SwiftSoup
+    dependencies:
+      - package: SwiftSoup
   CommonUnitTests:
     type: bundle.unit-test
     platform: iOS
@@ -249,6 +254,9 @@ packages:
   NewRelic:
     url: https://github.com/newrelic/newrelic-ios-agent-spm
     from: 7.5.5
+  SwiftSoup:
+    url: https://github.com/scinfu/SwiftSoup.git
+    from: 2.4.3
 
 testPlans:
   Unit:

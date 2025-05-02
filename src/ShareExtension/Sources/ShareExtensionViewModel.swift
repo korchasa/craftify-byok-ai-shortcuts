@@ -17,6 +17,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     public var processingTask: Task<Void, Never>? = nil
     public var progressTimer: Timer?
     public var processingTimeoutSeconds: Double = 30
+    private var logManager: LogManagerShared { manager.logManager }
 
     public init(manager: ShareExtensionManager) {
         self.manager = manager
@@ -26,7 +27,7 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     public func process(operation: InventoryOperation) {
         guard !isProcessing else { return }
-        currentResultMode = OperationFactory.make(kind: operation.operation).resultMode
+        currentResultMode = OperationFactory.make(kind: operation.operation, logManager: self.logManager).resultMode
         displayResult = nil
         if manager.inputText.count > ShareExtensionViewModelConstants.maxInputTextLength {
             errorMessage = "Текст слишком длинный для обработки"
@@ -43,15 +44,45 @@ public final class ShareExtensionViewModel: ObservableObject {
             }
         }
         processingTask = Task { [weak self] in
-            await self?.runProcessingWithTimeout(operation: operation)
+            guard let self else { return }
+            do {
+                let opType = OperationFactory.make(kind: operation.operation, logManager: logManager)
+                // Формируем OperationInput с учетом inputText (как text или url)
+                let input = if let url = URL(string: manager.inputText), url.scheme?.hasPrefix("http") == true {
+                    OperationInput(
+                        targetLanguage: "",
+                        complexityLevel: .schoolchild,
+                        detailLevel: .schoolchild,
+                        sentenceCountRange: .twoToThree,
+                        url: manager.inputText,
+                        text: nil
+                    )
+                } else {
+                    OperationInput(
+                        targetLanguage: "",
+                        complexityLevel: .schoolchild,
+                        detailLevel: .schoolchild,
+                        sentenceCountRange: .twoToThree,
+                        url: nil,
+                        text: manager.inputText
+                    )
+                }
+                let resolvedText = try await opType.resolveInput(input: input)
+                await runProcessingWithTimeout(operation: operation, resolvedText: resolvedText)
+            } catch {
+                await MainActor.run {
+                    self.isProcessing = false
+                    self.errorMessage = error.localizedDescription
+                }
+            }
         }
     }
 
-    private func runProcessingWithTimeout(operation: InventoryOperation) async {
+    private func runProcessingWithTimeout(operation: InventoryOperation, resolvedText: String) async {
         // Запускаем две задачи: обработка и таймер
         await withTaskGroup(of: (finishedFirst: Int, result: (success: Bool, error: String?)?).self) { group in
             let processingTask = Task<(success: Bool, error: String?)?, Never> {
-                await self.manager.process(text: self.manager.inputText, operation: operation)
+                await self.manager.process(text: resolvedText, operation: operation)
             }
             let timeoutTask = Task<Void, Never> {
                 let timeoutNs = self.processingTimeoutSeconds * Double(ShareExtensionViewModelConstants.nanosecondsPerSecond)

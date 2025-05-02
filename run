@@ -77,7 +77,6 @@ function init() {
 }
 
 function _start_section() {
-  echo -e "\n\n"
   echo -e "${PURPLE}========================================${NC}"
   echo -e "${PURPLE}>>> $1${NC}"
   SECTION_START_TIME=$(date +%s)
@@ -121,6 +120,15 @@ function lint() {
   _start_section "Running SwiftLint"
   swiftlint lint --fix --quiet
   swiftlint lint --strict --quiet
+  _end_section
+}
+
+function _build() {
+  _start_section "Building MainApp (Release/iphoneos)"
+  xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
+  _end_section
+  _start_section "Building ShareExtension (Release/iphoneos)"
+  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
   _end_section
 }
 
@@ -210,27 +218,6 @@ function test_single() {
   echo "  Cleanup:   $((t3-t2))s"
   echo "  TOTAL:     $((t3-t0))s"
   echo -e "${YELLOW}==> Build timing summary saved to build/TimingSummary.log${NC}"
-}
-
-function test() {
-  clean
-  generate
-  comment_scan
-  fmt
-  lint
-  analyze
-  test_unit
-  test_e2e
-}
-
-function build() {
-  generate "$@"
-  _start_section "Building MainApp (Release/iphoneos)"
-  xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
-  _end_section
-  _start_section "Building ShareExtension (Release/iphoneos)"
-  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
-  _end_section
 }
 
 function size_report() {
@@ -485,6 +472,7 @@ function check() {
   fmt
   lint
   analyze
+  _build
   test_unit
   test_e2e
 }
