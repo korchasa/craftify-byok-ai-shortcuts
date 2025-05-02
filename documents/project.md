@@ -49,3 +49,25 @@ Users waste time copying text between apps for translation, simplification, or c
 - UI and ViewModel updated: Stepper and related fields removed.
 - All tests (unit, e2e) updated to match the new logic.
 - Share Extension теперь поддерживает шаринг ссылок (public.url) и текста (public.text), оба типа обрабатываются как текст, приоритет у текста.
+
+## URL Text Fetcher for SummarizeOperation
+
+### Problem
+Users often want to summarize the content of web pages, not just plain text. Manual copy-paste is inconvenient and error-prone.
+
+### Solution
+A new module allows SummarizeOperation to accept a URL. The system downloads the HTML, extracts meaningful text from the <body> using SwiftSoup, and summarizes it. This is fully automated and transparent for the user.
+
+### Target Audience
+- Users who want to quickly summarize articles, blog posts, or any web content by URL.
+- Power users and researchers who process large volumes of online text.
+
+### Success Metrics
+- User can pass a URL to SummarizeOperation and receive a summary of the page content.
+- All tests pass, no linter/format errors.
+- No manual copy-paste required for web content.
+
+### Constraints
+- Only HTTPS URLs are supported by default (App Transport Security).
+- Non-UTF8 encodings are not guaranteed to be handled.
+- Only visible <body> text is extracted; scripts/styles are ignored.

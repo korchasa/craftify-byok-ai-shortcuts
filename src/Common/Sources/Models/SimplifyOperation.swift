@@ -3,6 +3,8 @@ import Foundation
 public struct SimplifyOperation: OperationType {
     public let identifier = OperationKind.simplify.rawValue
     public let colorHex: String = ""
+    private static let ERROR_CODE_URL_NOT_SUPPORTED = -100
+    private static let ERROR_CODE_NO_TEXT = -101
 
     public init() {}
 
@@ -49,5 +51,15 @@ public struct SimplifyOperation: OperationType {
             throw NSError(domain: "SimplifyOperation", code: -1, userInfo: nil)
         }
         return str
+    }
+
+    public func resolveInput(input: OperationInput) throws -> String {
+        if let text = input.text, !text.isEmpty {
+            return text
+        }
+        if let url = input.url, !url.isEmpty {
+            throw NSError(domain: "SimplifyOperation", code: Self.ERROR_CODE_URL_NOT_SUPPORTED, userInfo: [NSLocalizedDescriptionKey: "URL input is not supported for SimplifyOperation"])
+        }
+        throw NSError(domain: "SimplifyOperation", code: Self.ERROR_CODE_NO_TEXT, userInfo: [NSLocalizedDescriptionKey: "No text provided"])
     }
 }

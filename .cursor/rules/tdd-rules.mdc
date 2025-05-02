@@ -1,6 +1,6 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
 ## TDD Flow
@@ -13,7 +13,7 @@ alwaysApply: true
 3.	Refactor:
 - Clean up code and tests without changing behavior.
 - Eliminate duplication and improve readability.
-- Run test to confirm the correctness of the refactoring.
+- Run separate tests to confirm the correctness of the refactoring.
 1.  Final check:
 - Run all checks by `./run check` to finally ensure that everything is working fine. Fix all found issues, including linting errors and warnings.
 

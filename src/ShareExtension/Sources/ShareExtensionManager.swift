@@ -9,7 +9,8 @@ public final class ShareExtensionManager {
     private let clipboardManager: AnyObject
     private let processingManager: AnyObject
     private let consentManager: ConsentManaging
-    private let logManager: LogManagerShared
+    /// Менеджер логирования для Share Extension (используется для отладочных и бизнес-логов)
+    public let logManager: LogManagerShared
     private var isCancelled = false
     /// Последний результат обработки, используется для режима отображения
     public private(set) var lastResult: String?

@@ -33,6 +33,11 @@ src/
       InventoryOperation.swift      # Модель операции, теперь с colorHex и поддержкой resultMode
       InventoryManager.swift        # Управление инвентарём, поддержка colorHex и resultMode
       CorrectParams.swift           # Параметры операции correct (без stylePreservationLevel)
+      TextFetcher/                 # Module for loading and extracting text from URL
+        TextFetching.swift         # Protocol for loading text
+        SwiftSoupTextFetcher.swift # Implementation using SwiftSoup and URLSession
+      OperationInput.swift         # Added fields `url: String?`, `text: String?` for passing URL or text in operations
+      SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests

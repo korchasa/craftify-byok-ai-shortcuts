@@ -13,6 +13,8 @@
 | ./run size-report | Check ShareExtension size (fail if >20MB)         |
 | add-operation-color | Позволяет выбрать цвет из палитры для операции. Цвет сохраняется в InventoryOperation и отображается в UI (главный экран, экран шаринга). Покрыто unit, UI и e2e тестами. |
 | correct   | Исправление грамматики и орфографии, стиль всегда сохраняется максимально | {text} | - |
+| summarize-url | Summarize text from a web page by URL or plain text | SummarizeOperation, SwiftSoupTextFetcher | Accepts either direct text or URL, downloads HTML if needed, extracts <body> text, summarizes |
+| resolveInput | Асинхронно получает текст для LLM: для Summarize поддерживает url (загрузка и парсинг текста), для остальных — только text, url вызывает ошибку | OperationType | input: OperationInput, output: String (async) |
 
 ### Technology Stack
 - Swift 5.7+
@@ -23,6 +25,9 @@
 - SwiftGen (localization)
 - GitHub Actions (CI/CD)
 - Поддержка resultMode (clipboard/display) для операций
+- SwiftSoup (HTML parsing)
+- URLSession (networking)
+- TDD (unit tests for all error branches)
 
 ### Environment Setup
 1. Clone the repository.
@@ -217,3 +222,39 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 - Если в одном шаринге есть и текст, и URL — приоритет у текста.
 - Лимит длины (5000 символов) применяется и к URL.
 - Покрыто unit- и e2e-тестами.
+
+## Technology stack and dependencies (update)
+- Swift
+- SwiftSoup (HTML parsing)
+- URLSession (networking)
+- TDD (unit tests for all error branches)
+
+## Development environment and setup (update)
+- Add SwiftSoup via SPM in project.yml
+- All code for text fetching is in src/Common/Sources/TextFetcher
+- No manual Xcode configuration required
+
+- `src/Common/Sources/Models/OperationInput.swift` — добавлено поле `url: String?` и `text: String?` для передачи URL или текста в операции
+
+## Input Handling for Operations
+
+All operations now implement an async method `resolveInput(input: OperationInput) -> String`, which is always called before sending data to LLM:
+- **SummarizeOperation**: supports both `text` and `url` (fetches and parses text from URL if needed).
+- **Other operations**: only support `text`; if a URL is provided, an error is thrown.
+
+The ViewModel always calls `resolveInput` and passes the result to the LLM, ensuring URLs are never sent directly.
+
+### Ограничения по входным данным операций
+
+| Операция              | Поддержка text | Поддержка url |
+|----------------------|:--------------:|:-------------:|
+| SummarizeOperation   |      Да        |      Да       |
+| TranslateOperation   |      Да        |      Нет      |
+| SimplifyOperation    |      Да        |      Нет      |
+| CorrectOperation     |      Да        |      Нет      |
+| ExplainOperation     |      Да        |      Нет      |
+
+- Для SummarizeOperation: resolveInput асинхронно загружает и парсит текст по url (через TextFetcher), либо возвращает text.
+- Для остальных операций: resolveInput принимает только text, url вызывает ошибку (ошибка с доменом <OperationName>Operation).
+- ViewModel всегда вызывает resolveInput перед отправкой текста в LLM.
+- Покрыто unit-тестами для всех операций (text и url).
