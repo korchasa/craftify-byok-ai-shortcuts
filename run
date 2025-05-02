@@ -22,7 +22,7 @@ function xcb() {
 # Define arrays for test schemes
 SCHEMES_UNIT=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
 SCHEMES_E2E=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
-SCHEMES_TESTS=("${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}")
+SCHEMES_ALL_TESTS=("${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}")
 
 # Default parallel testing worker count
 WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}
@@ -54,7 +54,7 @@ Commands:
   monitor-setup       Setup monitoring (Sentry etc.)
   notify              Send notifications (Slack, email)
   size-report         Check ShareExtension size
-  test                Run all tests (unit + e2e)
+  check               Run all checks(clean, generate, comment-scan, fmt, lint, analyze, test_unit, test_e2e)
   test:coverage       Run tests with code coverage
   test:single         Run a single test or class (unit or e2e), for example: $SCRIPT_NAME test:single MainAppUnitTests MainAppUnitTests/AddOperationViewModelTests
   help                Show this help
@@ -75,99 +75,122 @@ function init() {
   echo -e "${GREEN}All dependencies checked.${NC}"
 }
 
-function echo_section() {
+function _start_section() {
   echo -e "\n\n"
-  echo -e "${PURPLE}----------------------------------------${NC}"
+  echo -e "${PURPLE}========================================${NC}"
   echo -e "${PURPLE}>>> $1${NC}"
-  echo -e "${PURPLE}----------------------------------------${NC}"
+  SECTION_START_TIME=$(date +%s)
+}
+
+function _end_section() {
+  local section_end_time=$(date +%s)
+  local elapsed=$((section_end_time - SECTION_START_TIME))
+  echo -e "${GREEN}<<< Section finished in ${elapsed}s${NC}"
+  echo -e "${GREEN}========================================${NC}"
 }
 
 function clean() {
-  echo_section "Cleaning build artifacts"
+  _start_section "Cleaning build artifacts"
   rm -rf build
   rm -rf .build
   rm -rf .swiftpm
   rm -rf ~/Library/Developer/Xcode/DerivedData
   xcb clean || true
+  _end_section
 }
 
 function generate() {
-  # Ensure output directories exist for SwiftGen
   mkdir -p src/MainApp/Resources/Generated
   mkdir -p src/Common/Generated
-  echo_section "Running SwiftGen"
+  _start_section "Running SwiftGen"
   swiftgen "$@"
-  echo_section "Running XcodeGen"
+  _end_section
+  _start_section "Running XcodeGen"
   xcodegen "$@"
+  _end_section
 }
 
 function fmt() {
-  echo_section "Running SwiftFormat"
+  _start_section "Running SwiftFormat"
   swiftformat . --quiet "$@"
+  _end_section
 }
 
 function lint() {
-  echo_section "Running SwiftLint"
+  _start_section "Running SwiftLint"
   swiftlint lint --fix --quiet
   swiftlint lint --strict --quiet
+  _end_section
+}
+
+function _run_schemes_parallel() {
+  local schemes=("${!1}")
+  shift
+  local pids=()
+  rm -rf build/Results
+  for scheme in "${schemes[@]}"; do
+    local derived_data_path="build/DerivedData_${scheme}"
+    rm -rf "$derived_data_path"
+    echo "⚙️ Testing scheme $scheme"
+    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID},arch=arm64" -scheme "${scheme}" \
+      -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
+      -derivedDataPath "$derived_data_path" \
+      -resultBundlePath "build/Results/${scheme}.xcresult" \
+      -collect-test-diagnostics on-failure \
+      "${ONLY_TEST_FLAGS[@]}" "$@" &
+    pids+=("$!")
+  done
+  local exit_code=0
+  for i in "${!pids[@]}"; do
+    pid="${pids[$i]}"
+    scheme="${schemes[$i]}"
+    wait "$pid" || exit_code=1
+    echo "✅ Finished scheme $scheme"
+  done
+  if [[ $exit_code -ne 0 ]]; then
+    echo -e "${RED}One or more test schemes failed!${NC}"
+    exit 1
+  fi
 }
 
 function test_unit() {
-  echo_section "Running Unit Tests"
-  rm -rf build/Results
-  local pids=()
-  for scheme in "${SCHEMES_UNIT[@]}"; do
-    echo_section "Testing scheme $scheme"
-    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID},arch=arm64" -scheme "${scheme}" \
-      -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
-      -resultBundlePath "build/Results/${scheme}.xcresult" \
-      -collect-test-diagnostics on-failure \
-      "${ONLY_TEST_FLAGS[@]}" "$@" &
-    pids+=("$!")
-  done
-  local exit_code=0
-  for pid in "${pids[@]}"; do
-    wait "$pid" || exit_code=1
-  done
-  if [[ $exit_code -ne 0 ]]; then
-    echo -e "${RED}One or more unit test schemes failed!${NC}"
-    exit 1
-  fi
+  _start_section "Running Unit Tests"
+  _run_schemes_parallel SCHEMES_UNIT[@] "$@"
+  _end_section
 }
 
 function test_e2e() {
-  echo_section "Running E2E Tests"
-  rm -rf build/Results
-  local pids=()
-  for scheme in "${SCHEMES_E2E[@]}"; do
-    echo_section "Testing scheme $scheme"
-    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID},arch=arm64" -scheme "${scheme}" \
-      -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
-      -resultBundlePath "build/Results/${scheme}.xcresult" \
-      -collect-test-diagnostics on-failure \
-      "${ONLY_TEST_FLAGS[@]}" "$@" &
-    pids+=("$!")
-  done
-  local exit_code=0
-  for pid in "${pids[@]}"; do
-    wait "$pid" || exit_code=1
-  done
-  if [[ $exit_code -ne 0 ]]; then
-    echo -e "${RED}One or more E2E test schemes failed!${NC}"
-    exit 1
-  fi
+  _start_section "Running E2E Tests"
+  _run_schemes_parallel SCHEMES_E2E[@] "$@"
+  _end_section
 }
 
 function test_single() {
-  local scheme="$1"; shift
-  local test_id="$1"; shift
-  echo_section "Running single test: $test_id in scheme $scheme"
+  local scheme="${1:-}"
+  shift || true
+  local test_id="${1:-}"
+  shift || true
+  local valid=0
+  for s in "${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}"; do
+    if [[ "$scheme" == "$s" ]]; then
+      valid=1
+      break
+    fi
+  done
+  if [[ -z "$scheme" || $valid -eq 0 ]]; then
+    echo -e "${RED}Error: You must specify a valid test scheme!${NC}"
+    echo -e "\nAvailable unit test schemes:" && for s in "${SCHEMES_UNIT[@]}"; do echo "  $s"; done
+    echo -e "\nAvailable e2e test schemes:" && for s in "${SCHEMES_E2E[@]}"; do echo "  $s"; done
+    exit 1
+  fi
+  _start_section "Running single test: $test_id in scheme $scheme"
   rm -rf build/Results
   xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID}" -scheme "$scheme" \
     -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
     -resultBundlePath "build/Results/${scheme}.xcresult" \
     -collect-test-diagnostics on-failure \
     -only-testing "$test_id" "$@"
+  _end_section
 }
 
 function test() {
@@ -183,18 +206,22 @@ function test() {
 
 function build() {
   generate "$@"
-  echo_section "Building MainApp (Release/iphoneos)"
+  _start_section "Building MainApp (Release/iphoneos)"
   xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
-  echo_section "Building ShareExtension (Release/iphoneos)"
+  _end_section
+  _start_section "Building ShareExtension (Release/iphoneos)"
   xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates "$@"
+  _end_section
 }
 
 function size_report() {
   generate "$@"
-  echo_section "Cleaning build artifacts"
+  _start_section "Cleaning build artifacts"
   rm -rf build
-  echo_section "Building ShareExtension for size report (Release/iphoneos)"
+  _end_section
+  _start_section "Building ShareExtension for size report (Release/iphoneos)"
   xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build "$@"
+  _end_section
   local appex=$(find build -name 'ShareExtension.appex' | head -n1)
   if [[ ! -f "$appex" ]]; then
     echo -e "${RED}Error: ShareExtension.appex not found!${NC}"
@@ -209,15 +236,13 @@ function size_report() {
   fi
 }
 
-function boot_and_wait_simulator() {
-  # Проверяем состояние симулятора через JSON
+function _boot_and_wait_simulator() {
   local sim_status
   sim_status=$(xcrun simctl list -j | jq -r '.devices[] | .[] | select(.udid=="'${SIMULATOR_ID}'") | .state')
-  echo_section "Simulator ${SIMULATOR_ID} status: $sim_status"
+  _start_section "Simulator ${SIMULATOR_ID} status: $sim_status"
   if [[ "$sim_status" != "Booted" ]]; then
-    echo_section "Booting simulator ${SIMULATOR_ID}..."
+    _start_section "Booting simulator ${SIMULATOR_ID}..."
     xcrun simctl boot "${SIMULATOR_ID}"
-    # Ждём, пока симулятор не станет Booted
     for i in {1..20}; do
       sim_status=$(xcrun simctl list -j | jq -r '.devices[] | .[] | select(.udid=="'${SIMULATOR_ID}'") | .state')
       if [[ "$sim_status" == "Booted" ]]; then
@@ -225,12 +250,15 @@ function boot_and_wait_simulator() {
       fi
       sleep 1
     done
+    _end_section
   else
-    echo_section "Simulator already Booted."
+    _start_section "Simulator already Booted."
+    _end_section
   fi
+  _end_section
 }
 
-function install_app_to_simulator() {
+function _install_app_to_simulator() {
   local app_path="$1"
   if [[ ! -d "$app_path" ]]; then
     echo "${RED}MainApp.app not found at $app_path!${NC}"
@@ -257,39 +285,48 @@ function deploy_simulator() {
   clean
   generate "$@"
   if [[ -z "${CI:-}" ]]; then
-    echo_section "Opening Simulator"
+    _start_section "Opening Simulator"
     open -a Simulator
+    _end_section
   fi
-  echo_section "Building MainApp for simulator"
-  xcb build -sdk iphonesimulator -destination "id=${SIMULATOR_ID},arch=arm64" -scheme MainApp build "$@"
-  boot_and_wait_simulator
+  _start_section "Building MainApp for simulator"
+  local derived_data_path="build/DerivedData_DeploySimulator"
+  rm -rf "$derived_data_path"
+  xcb build -sdk iphonesimulator -destination "id=${SIMULATOR_ID},arch=arm64" -scheme MainApp build -derivedDataPath "$derived_data_path" "$@"
+  _end_section
+  _boot_and_wait_simulator
   local app_path
-  app_path=$(xcodebuild -scheme MainApp -destination "id=${SIMULATOR_ID},arch=arm64" -sdk iphonesimulator -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
-  echo_section "Installing app to simulator: $app_path"
-  install_app_to_simulator "$app_path"
-  echo_section "Launching app in simulator: $app_path"
+  app_path=$(xcodebuild -scheme MainApp -destination "id=${SIMULATOR_ID},arch=arm64" -sdk iphonesimulator -derivedDataPath "$derived_data_path" -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
+  _start_section "Installing app to simulator: $app_path"
+  _install_app_to_simulator "$app_path"
+  _end_section
+  _start_section "Launching app in simulator: $app_path"
   xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
-  echo_section "Starting log stream to emulator.log (background)"
+  _end_section
+  _start_section "Starting log stream to emulator.log (background)"
   xcrun simctl spawn booted log stream --predicate '(subsystem == "Internal") && (process == "MainApp" OR process == "ShareExtension")' --style syslog --level=debug > emulator.log 2>&1 &
   LOG_STREAM_PID=$!
   tail -f emulator.log
+  _end_section
 }
 
 function logs() {
-  echo_section "Streaming logs from MainApp и ShareExtension (все уровни, включая debug)"
+  _start_section "Streaming logs from MainApp и ShareExtension (все уровни, включая debug)"
   xcrun simctl spawn booted log stream --predicate '(subsystem == "Internal") && (process == "MainApp" OR process == "ShareExtension")' --style syslog --level=debug
+  _end_section
 }
 
 function comment_scan() {
-  echo_section "Scanning for TODO/FIXME/print/debugPrint"
+  _start_section "Scanning for TODO/FIXME/print/debugPrint"
   if grep -rE 'TODO|FIXME|print\(|debugPrint\(' src/; then
     echo -e "${RED}Error: TODO/FIXME/print/debugPrint found!${NC}"
     exit 1
   fi
+  _end_section
 }
 
 function bump_version() {
-  echo_section "Bumping version numbers"
+  _start_section "Bumping version numbers"
   local marketing="${1:-}"
   if [[ -z "$marketing" ]]; then
     agvtool next-version -all
@@ -297,28 +334,31 @@ function bump_version() {
     agvtool new-marketing-version "$marketing"
     agvtool next-version -all
   fi
+  _end_section
 }
 
 function archive() {
   generate "$@"
-  echo_section "Archiving MainApp"
+  _start_section "Archiving MainApp"
   xcb archive \
     -scheme MainApp \
     -configuration Release \
     -archivePath build/MainApp.xcarchive \
     -allowProvisioningUpdates "$@"
+  _end_section
 }
 
 function export_ipa() {
-  echo_section "Exporting IPA from archive"
+  _start_section "Exporting IPA from archive"
   xcb -exportArchive \
     -archivePath build/MainApp.xcarchive \
     -exportOptionsPlist ExportOptions.plist \
     -exportPath build/IPA "$@"
+  _end_section
 }
 
 function deploy_testflight() {
-  echo_section "Deploying IPA to TestFlight"
+  _start_section "Deploying IPA to TestFlight"
   if [[ -z "${API_KEY_PATH:-}" || -z "${API_ISSUER_ID:-}" ]]; then
     echo -e "${RED}Error: API_KEY_PATH or API_ISSUER_ID env vars not set${NC}"
     exit 1
@@ -327,84 +367,107 @@ function deploy_testflight() {
     --upload-app --type ios \
     --file build/IPA/MainApp.ipa \
     --apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
+  _end_section
 }
 
 function coverage() {
   generate "$@"
-  echo_section "Running tests with code coverage"
+  _start_section "Running tests with code coverage"
   xcb test \
     -scheme MainAppUnitTests \
     -enableCodeCoverage YES \
     -sdk iphonesimulator \
     -destination "id=${TEST_SIMULATOR_ID}" "$@"
-  echo_section "Generating coverage report"
+  _end_section
+  _start_section "Generating coverage report"
   xcrun xccov view --report build/Logs/Test/*.xcresult
+  _end_section
 }
 
-# Supporting stubs for CI/CD pipelines
-function build_sim() {
-  echo_section "Building for Simulator (Debug)"
+function _build_sim() {
+  _start_section "Building for Simulator (Debug)"
   xcb build \
     -scheme MainApp \
     -configuration Debug \
     -sdk iphonesimulator \
     -destination "id=${SIMULATOR_ID},arch=arm64" "$@"
+  _end_section
 }
 
 function analyze() {
-  echo_section "Running static analysis"
+  _start_section "Running static analysis"
   xcb analyze \
     -scheme MainApp \
     -sdk iphoneos \
     -destination "id=${SIMULATOR_ID},arch=arm64" \
     -configuration Debug "$@"
+  _end_section
 }
 
-function export_ipa_adhoc() {
-  echo_section "Exporting AdHoc IPA"
+function _export_ipa_adhoc() {
+  _start_section "Exporting AdHoc IPA"
   xcb -exportArchive \
     -archivePath build/MainApp.xcarchive \
     -exportOptionsPlist ExportOptionsAdHoc.plist \
     -exportPath build/IPA/ad-hoc "$@"
+  _end_section
 }
 
 function deploy_internal() {
-  echo_section "Deploying to internal TestFlight"
+  _start_section "Deploying to internal TestFlight"
   deploy_testflight "$@"
+  _end_section
 }
 
 function deploy_adhoc() {
-  echo_section "Deploying AdHoc distribution"
+  _start_section "Deploying AdHoc distribution"
   deploy_testflight "$@"
+  _end_section
 }
 
 function deploy_appstore() {
-  echo_section "Uploading to App Store Connect"
+  _start_section "Uploading to App Store Connect"
   xcrun altool \
     -upload-app --type ios \
     -file build/IPA/MainApp.ipa \
     -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
+  _end_section
 }
 
 function notify() {
-  echo_section "Sending notifications"
+  _start_section "Sending notifications"
   # integrate Slack/email notifications here
+  _end_section
 }
 
 function monitor_setup() {
-  echo_section "Setting up monitoring"
+  _start_section "Setting up monitoring"
   # configure Sentry or other services
+  _end_section
 }
 
 function pr_checks() {
-  echo_section "Running PR checks (e.g. TODO/FIXME scan)"
+  _start_section "Running PR checks (e.g. TODO/FIXME scan)"
   comment_scan "$@"
+  _end_section
 }
 
-function collect_dsyms() {
-  echo_section "Collecting artifacts & dSYMs"
+function _collect_dsyms() {
+  _start_section "Collecting artifacts & dSYMs"
   mkdir -p build/Artifacts
   cp -R build/MainApp.xcarchive/dSYMs build/Artifacts/
+  _end_section
+}
+
+function check() {
+  clean
+  generate
+  comment_scan
+  fmt
+  lint
+  analyze
+  test_unit
+  test_e2e
 }
 
 CMD="${1:-}"
@@ -431,6 +494,6 @@ case "$CMD" in
   size-report) size_report "$@" ;;     # Check ShareExtension size
   test:coverage) coverage "$@" ;;      # Run code coverage
   test:single) test_single "$@" ;;     # Run a single test or class
-  test) test "$@" ;;                   # Run unit & UI tests
+  check) check "$@" ;;                 # Run all checks(clean, generate, comment-scan, fmt, lint, analyze, test_unit, test_e2e)
   help|*) usage ;;                     # Show help
 esac
