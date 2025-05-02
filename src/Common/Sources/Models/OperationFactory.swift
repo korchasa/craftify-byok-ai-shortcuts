@@ -12,6 +12,7 @@ public enum OperationFactory {
         case .simplify: SimplifyOperation()
         case .correct: CorrectOperation()
         case .explain: ExplainOperation()
+        case .summarize: SummarizeOperation()
         }
     }
 }

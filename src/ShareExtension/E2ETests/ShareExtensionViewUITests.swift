@@ -13,7 +13,8 @@ import XCTest
             let inventory = InventoryManagerStub()
             let op1 = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
             let op2 = InventoryOperation(operation: .simplify, params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .schoolchild)), promptTemplate: "S: {text}")
-            inventory.saveInventory([op1, op2])
+            let op3 = InventoryOperation(operation: .summarize, params: try! JSONEncoder().encode(SummarizeParams(sentenceCountRange: .fiveToSix)), promptTemplate: "Summary: {text}")
+            inventory.saveInventory([op1, op2, op3])
             let manager = ShareExtensionManager(
                 inventoryManager: inventory,
                 authManager: AuthManagerStub(),

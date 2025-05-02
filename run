@@ -20,10 +20,9 @@ function xcb() {
 }
 
 # Define arrays for test schemes
-SCHEMES_PROD=(MainApp ShareExtension Common)
 SCHEMES_UNIT=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
 SCHEMES_E2E=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
-SCHEMES_ALL=("${SCHEMES_PROD[@]}" "${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}")
+SCHEMES_TESTS=("${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}")
 
 # Default parallel testing worker count
 WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}

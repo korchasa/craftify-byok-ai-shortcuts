@@ -7,6 +7,7 @@ public final class AddOperationViewModel: ObservableObject {
     @Published public var complexityLevel: ComplexityLevel = .schoolchild
     @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String = AddOperationViewModel.palette.first!
+    @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
 
     /// Проверяет, могут ли данные создать операцию
     public var isValid: Bool {
@@ -14,7 +15,8 @@ public final class AddOperationViewModel: ObservableObject {
         let input = OperationInput(
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
-            detailLevel: detailLevel
+            detailLevel: detailLevel,
+            sentenceCountRange: sentenceCountRange
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.isValid(input: input)
@@ -28,7 +30,8 @@ public final class AddOperationViewModel: ObservableObject {
         let input = OperationInput(
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
-            detailLevel: detailLevel
+            detailLevel: detailLevel,
+            sentenceCountRange: sentenceCountRange
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
@@ -41,6 +44,7 @@ public final class AddOperationViewModel: ObservableObject {
         complexityLevel = .schoolchild
         detailLevel = .schoolchild
         selectedColorHex = AddOperationViewModel.palette.first!
+        sentenceCountRange = .twoToThree
     }
 
     deinit {}

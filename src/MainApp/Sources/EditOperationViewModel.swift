@@ -8,6 +8,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     @Published public var complexityLevel: ComplexityLevel = .schoolchild
     @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String
+    @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
 
     private let originalOperation: InventoryOperation
     private let originalTargetLanguage: String
@@ -58,6 +59,16 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             self.originalTargetLanguage = ""
             self.complexityLevel = .schoolchild
             self.originalComplexityLevel = .schoolchild
+        case .summarize:
+            let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params)
+            let range = params?.sentenceCountRange ?? .twoToThree
+            self.sentenceCountRange = range
+            self.targetLanguage = ""
+            self.originalTargetLanguage = ""
+            self.complexityLevel = .schoolchild
+            self.originalComplexityLevel = .schoolchild
+            self.detailLevel = .schoolchild
+            self.originalDetailLevel = .schoolchild
         }
     }
 
@@ -66,7 +77,8 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         let input = OperationInput(
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
-            detailLevel: detailLevel
+            detailLevel: detailLevel,
+            sentenceCountRange: sentenceCountRange
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
@@ -78,6 +90,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         self.complexityLevel = originalComplexityLevel
         self.detailLevel = originalDetailLevel
         self.selectedColorHex = originalColorHex
+        self.sentenceCountRange = .twoToThree
     }
 
     deinit {}
@@ -91,7 +104,8 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         let input = OperationInput(
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
-            detailLevel: detailLevel
+            detailLevel: detailLevel,
+            sentenceCountRange: sentenceCountRange
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.isValid(input: input)

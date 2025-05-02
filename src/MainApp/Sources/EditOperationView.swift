@@ -88,6 +88,15 @@ public struct EditOperationView: View {
             .pickerStyle(.segmented)
             .accessibilityLabel(L10n.operationParamDetailLevel)
             .padding(.horizontal)
+        case .summarize:
+            Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
+                ForEach(SentenceCountRange.allCases, id: \ .self) { range in
+                    Text(sentenceCountRangeLabel(range)).tag(range)
+                }
+            }
+            .pickerStyle(.segmented)
+            .accessibilityLabel(L10n.operationLabelSummarize)
+            .padding(.horizontal)
         case .none:
             EmptyView()
         }
@@ -151,6 +160,15 @@ public struct EditOperationView: View {
         case .simplify: L10n.operationLabelSimplify
         case .correct: L10n.operationLabelCorrect
         case .explain: L10n.operationLabelExplain
+        case .summarize: L10n.operationLabelSummarize
+        }
+    }
+
+    private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
+        switch range {
+        case .twoToThree: L10n.sentenceCount23
+        case .fiveToSix: L10n.sentenceCount56
+        case .nineToTen: L10n.sentenceCount910
         }
     }
 }

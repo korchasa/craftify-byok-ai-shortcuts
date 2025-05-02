@@ -56,6 +56,7 @@
 "operation_label_simplify" = "Simplify";
 "operation_label_correct" = "Correct";
 "operation_label_explain" = "Explain";
+"operation_label_summarize" = "Summarize";
 
 /* Language Names */
 "language_russian" = "Russian";
@@ -71,3 +72,7 @@
 "save" = "Save";
 "delete" = "Delete";
 "copied_to_clipboard" = "Copied to clipboard";
+
+"sentence_count_2_3" = "2–3 sentences";
+"sentence_count_5_6" = "5–6 sentences";
+"sentence_count_9_10" = "9–10 sentences";

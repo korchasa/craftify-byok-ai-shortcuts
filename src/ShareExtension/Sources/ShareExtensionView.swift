@@ -192,6 +192,19 @@ public struct ShareExtensionView: View {
                 return "\(L10n.operationLabelExplain) \(level)"
             }
             return L10n.operationLabelExplain
+        case .summarize:
+            if let params = try? JSONDecoder().decode(SummarizeParams.self, from: op.params) {
+                return "\(L10n.operationLabelSummarize) (\(sentenceCountRangeLabel(params.sentenceCountRange)))"
+            }
+            return L10n.operationLabelSummarize
+        }
+    }
+
+    private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
+        switch range {
+        case .twoToThree: L10n.sentenceCount23
+        case .fiveToSix: L10n.sentenceCount56
+        case .nineToTen: L10n.sentenceCount910
         }
     }
 

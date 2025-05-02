@@ -1,71 +1,71 @@
-## Architecture Craftify
+## Craftify Architecture
 
 ### General Scheme
-- Основное приложение (SwiftUI) и Share Extension используют общий модуль Common (SwiftPM).
-- Взаимодействие между модулями через App Group (UserDefaults) и Keychain Sharing.
-- Логирование через LogManagerShared (SPM), хранение логов в os log.
-- Для всех операций теперь поддерживается признак обработки результата (resultMode):
-  - `.clipboard` — результат копируется в буфер обмена (по умолчанию для всех операций).
-  - `.display` — результат отображается во всплывающем окне (используется для Explain).
+- The main application (SwiftUI) and Share Extension use the shared Common module (SwiftPM).
+- Interaction between modules is via App Group (UserDefaults) and Keychain Sharing.
+- Logging is done via LogManagerShared (SPM), logs are stored in os log.
+- All operations now support a result processing mode (resultMode):
+  - `.clipboard` — the result is copied to the clipboard (default for all operations).
+  - `.display` — the result is displayed in a popup window (used for Explain).
 
 ### Key Patterns
-- MVVM + SwiftUI для UI и бизнес-логики.
-- Dependency Injection для менеджеров.
-- FIFO для логов (лимит 1000 записей).
+- MVVM + SwiftUI for UI and business logic.
+- Dependency Injection for managers.
+- FIFO for logs (limit 1000 entries).
 
 ### Logging and Analytics
 
 #### Log Architecture
-- Все логи пишутся через системный лог (Unified Logging, os_log, subsystem: Internal, только message + metadata) через OSLogManagerShared. Экспорт логов не поддерживается, просмотр — через Console.app, log stream или ./run logs.
-- LogManagerShared поддерживает уровни: debug, info, warning, error. В production логируются только message + metadata.
-- API-ключи всегда маскируются (видны только первые и последние 4 символа).
-- Crash reporting реализован через New Relic SDK (только в основном приложении).
-- В Share Extension не используются сторонние SDK для аналитики и crash reporting (минимальный размер, соответствие App Store).
+- All logs are written via the system log (Unified Logging, os_log, subsystem: Internal, message + metadata only) through OSLogManagerShared. Log export is not supported, viewing is via Console.app, log stream, or ./run logs.
+- LogManagerShared supports levels: debug, info, warning, error. In production, only message + metadata are logged.
+- API keys are always masked (only the first and last 4 characters are visible).
+- Crash reporting is implemented via New Relic SDK (main app only).
+- No third-party SDKs for analytics or crash reporting are used in the Share Extension (minimal size, App Store compliance).
 
 #### Log Export and Retention Policy
-- Экспорт логов не поддерживается (ограничение system log). Просмотр — только через системные средства.
-- Crash reports отправляются только из основного приложения через New Relic SDK.
+- Log export is not supported (system log limitation). Viewing is only via system tools.
+- Crash reports are sent only from the main app via New Relic SDK.
 
 #### Consequences
-- Логи доступны только для диагностики через system tools или ./run logs (фильтрация по subsystem Internal, все уровни, MainApp и ShareExtension).
-- Crash analytics — только для основного приложения.
-- Share Extension остаётся лёгким и соответствует privacy-требованиям.
-- Политика маскировки ключей реализована на уровне кода.
+- Logs are available only for diagnostics via system tools or ./run logs (filtered by subsystem Internal, all levels, MainApp and ShareExtension).
+- Crash analytics — only for the main app.
+- Share Extension remains lightweight and privacy-compliant.
+- Key masking policy is implemented at the code level.
 
 ### Component Interaction
-- ShareExtensionManager читает inventory и API-ключ, вызывает ProcessingManager.
-- ProcessingManager формирует запрос, вызывает LLMAPIClient.
-- LLMAPIClient отправляет HTTP POST в OpenAI, парсит ответ через ResponseParser.
-- ClipboardManager копирует результат в UIPasteboard.
-- Если операция с resultMode `.display` (Explain) — результат сохраняется и отображается во вью, не копируется в буфер.
-- Все действия логируются через LogManagerShared.
+- ShareExtensionManager reads inventory and API key, calls ProcessingManager.
+- ProcessingManager forms the request, calls LLMAPIClient.
+- LLMAPIClient sends HTTP POST to OpenAI, parses the response via ResponseParser.
+- ClipboardManager copies the result to UIPasteboard.
+- If the operation has resultMode `.display` (Explain) — the result is saved and displayed in the view, not copied to the clipboard.
+- All actions are logged via LogManagerShared.
 
 ### Error Handling
-- Все ошибки (Keychain, сеть, парсинг, буфер обмена) обрабатываются с показом Alert.
-- Повторные попытки при сетевых ошибках (exponential backoff).
-- Маскирование API-ключа в логах.
-- В случае ошибок доступа к ключу — предложение открыть настройки.
+- All errors (Keychain, network, parsing, clipboard) are handled with an Alert.
+- Retries for network errors (exponential backoff).
+- API key masking in logs.
+- In case of key access errors — prompt to open settings.
 
 ### Testing
-- Unit-тесты для всех менеджеров и моделей.
-- UI/E2E-тесты для всех основных сценариев, включая Explain (display) и clipboard-операции.
-- Проверяется, что Explain отображает результат, а остальные операции копируют в буфер.
-- Покрытие ≥ 80% для ключевых модулей.
+- Unit tests for all managers and models.
+- UI/E2E tests for all main scenarios, including Explain (display) and clipboard operations.
+- Checks that Explain displays the result, and other operations copy to the clipboard.
+- Coverage ≥ 80% for key modules.
 
 ### Results of Share Extension Implementation
-- Архитектурные решения (DI, логирование, обработка ошибок, тестируемость) реализованы в полном соответствии с документацией.
-- Все компоненты и взаимодействия соответствуют описанию.
-- Поддержка resultMode для операций.
+- Architectural solutions (DI, logging, error handling, testability) are fully implemented as per documentation.
+- All components and interactions match the description.
+- Support for resultMode for operations.
 
 ### Share Extension: Final Architecture
 
-- Все менеджеры внедряются через DI, включая OSLogManagerShared.
-- Логирование всех действий и ошибок, маскирование ключей.
-- Лимит текста: 5000 символов, блокировка на UI и в менеджере.
-- Таймауты: 15 секунд на запрос, 30 секунд общий лимит.
-- Обработка ошибок: все сценарии покрыты (нет текста, лимит, нет согласия, неверный ключ, сеть, парсинг, буфер, отмена).
-- Покрытие unit, UI, E2E тестами (≥80%).
-- В CI/CD реализована автоматическая проверка размера расширения (Archive + size report, fail если >20 МБ).
+- All managers are injected via DI, including OSLogManagerShared.
+- Logging of all actions and errors, key masking.
+- Text limit: 5000 characters, enforced in UI and manager.
+- Timeouts: 15 seconds per request, 30 seconds total limit.
+- Error handling: all scenarios covered (no text, limit, no consent, invalid key, network, parsing, clipboard, cancel).
+- Covered by unit, UI, E2E tests (≥80%).
+- CI/CD implements automatic extension size check (Archive + size report, fail if >20 MB).
 
 #### Updated Interaction Diagram
 
@@ -94,39 +94,65 @@ graph TD
 - CommonE2ETests
 - ShareExtensionSizeReport
 
-**Подробные описания операций и промптов см. в user-manual.md и developer-manual.md.**
+**Detailed descriptions of operations and prompts can be found in user-manual.md and developer-manual.md.**
 
 ## Timeout Mechanism for Text Processing
-- Таймаут обработки реализован только на уровне ShareExtensionViewModel (по умолчанию 30 секунд, можно переопределить в тестах).
-- ShareExtensionManager не реализует таймаут, только бизнес-логику обработки и ошибок.
-- В unit-тестах таймаут ViewModel задаётся через processingTimeoutSeconds.
-- В E2E-тестах ShareExtensionManager проверяет только ошибки и успехи обработки, но не таймаут.
+- Processing timeout is implemented only at the ShareExtensionViewModel level (default 30 seconds, can be overridden in tests).
+- ShareExtensionManager does not implement a timeout, only business logic for processing and errors.
+- In unit tests, the ViewModel timeout is set via processingTimeoutSeconds.
+- In E2E tests, ShareExtensionManager checks only for errors and processing successes, not timeout.
 
 ### Operation Color & ResultMode Support
-- InventoryOperation расширена свойством colorHex (hex-код цвета из палитры).
-- Добавлен признак resultMode (clipboard/display) для операций.
-- Сериализация/десериализация InventoryOperation поддерживает colorHex и режим обработки результата.
-- UI (HomeView, ShareExtensionView) отображает цвет операции и корректно обрабатывает режимы clipboard/display.
-- Для Explain результат отображается во всплывающем окне с прокруткой.
-- Покрыто unit, UI и e2e тестами (отображение, выбор, сохранение цвета, режимы обработки результата).
+- InventoryOperation extended with colorHex property (hex color from palette).
+- Added resultMode (clipboard/display) for operations.
+- InventoryOperation serialization/deserialization supports colorHex and result processing mode.
+- UI (HomeView, ShareExtensionView) displays operation color and correctly handles clipboard/display modes.
+- For Explain, the result is displayed in a scrollable popup window.
+- Covered by unit, UI, and e2e tests (display, selection, saving color, result processing modes).
 
-- Операция correct теперь не содержит параметра stylePreservationLevel, всегда используется максимальный уровень сохранения стиля.
-- UI не отображает элементы для выбора уровня сохранения стиля.
+- The correct operation no longer contains the stylePreservationLevel parameter, always uses the maximum style preservation level.
+- UI does not display elements for selecting style preservation level.
 
 ### Onboarding (Welcome Screen Before Consent)
-- CraftifyApp использует глобальное состояние AppState (ObservableObject), которое хранит флаг согласия пользователя.
-- Если согласие не получено, показывается HowToUseView с чекбоксом и кнопкой согласия.
-- После согласия автоматически отображается основной экран HomeView.
-- Согласие хранится в App Group UserDefaults через ConsentManager.
-- Покрыто e2e-тестом на полный flow: нет согласия → согласие → переход на HomeView.
+- CraftifyApp uses global AppState (ObservableObject), which stores the user's consent flag.
+- If consent is not given, HowToUseView with a checkbox and consent button is shown.
+- After consent, the main HomeView screen is automatically displayed.
+- Consent is stored in App Group UserDefaults via ConsentManager.
+- Covered by e2e test for the full flow: no consent → consent → transition to HomeView.
 
-## Архитектура UI окна шаринга (ShareExtension)
+## Share Extension UI Architecture
 
-- Весь основной контент (заголовок, результат, список операций) размещён внутри ScrollView.
-- Кнопка закрытия закреплена внизу через `.safeAreaInset(edge: .bottom)`, всегда доступна пользователю.
-- Оверлеи (индикатор процесса, тост) реализованы через ZStack и не мешают взаимодействию с основным контентом.
-- Такой подход обеспечивает:
-    - UX: кнопка всегда доступна, даже при длинном контенте
-    - Контент не перекрывается кнопкой
-    - Поддержка accessibility и адаптация к разным устройствам
-- Все изменения покрыты unit- и e2e-тестами, что гарантирует стабильность поведения.
+- All main content (title, result, list of operations) is placed inside a ScrollView.
+- The close button is fixed at the bottom via `.safeAreaInset(edge: .bottom)`, always available to the user.
+- Overlays (progress indicator, toast) are implemented via ZStack and do not interfere with main content interaction.
+- This approach ensures:
+    - UX: the button is always available, even with long content
+    - Content is not overlapped by the button
+    - Accessibility support and adaptation to different devices
+- All changes are covered by unit and e2e tests, ensuring stable behavior.
+
+## Localization Features
+
+- **Localization only at the UI level**: All strings displayed to the user must be localized only in the views (MainApp, ShareExtension), not inside models, enums, or business logic in the Common module.
+- **Models and enums in Common** must return only rawValue or identifier, not a localized string.
+- **Reason**: SwiftGen generates a separate L10n for each target, and direct use of L10n in Common leads to visibility errors and conflicts. Localization at the UI level ensures correct operation and consistency.
+- **Example**:
+    - CORRECT:
+      ```swift
+      // In Common model
+      public enum ComplexityLevel: String, Codable, CaseIterable, Equatable { ... }
+      // In UI:
+      Text(labelForComplexityLevel(level))
+      private func labelForComplexityLevel(_ level: ComplexityLevel) -> String {
+          switch level {
+          case .schoolchild: L10n.operationValueSchoolchild
+          ...
+          }
+      }
+      ```
+    - INCORRECT:
+      ```swift
+      // In Common model
+      public var displayName: String { L10n.operationValueSchoolchild } // do not do this!
+      ```
+- **Recommendation**: If you need to get a string for an enum/model, always do it via a function/mapping in the UI layer.
