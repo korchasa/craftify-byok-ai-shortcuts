@@ -9,6 +9,7 @@ TEST_SIMULATOR_ID="A6CB3FE3-9CF3-458C-AC2E-7307FDF8D816"
 # Colors for output
 RED='\033[0;31m'
 PURPLE='\033[0;35m'
+YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
@@ -183,14 +184,32 @@ function test_single() {
     echo -e "\nAvailable e2e test schemes:" && for s in "${SCHEMES_E2E[@]}"; do echo "  $s"; done
     exit 1
   fi
+  local t0=$(date +%s)
   _start_section "Running single test: $test_id in scheme $scheme"
+  echo -e "${YELLOW}==> test_single: Start at $(date)${NC}"
   rm -rf build/Results
-  xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID}" -scheme "$scheme" \
-    -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
+  local t1=$(date +%s)
+  echo -e "${YELLOW}==> Build start: $(date)${NC}"
+  xcodebuild test -showBuildTimingSummary \
+    -sdk iphonesimulator \
+    -destination "id=${TEST_SIMULATOR_ID}" \
+    -scheme "$scheme" \
+    -parallel-testing-enabled YES \
+    -parallel-testing-worker-count "${WORKER_COUNT}" \
     -resultBundlePath "build/Results/${scheme}.xcresult" \
     -collect-test-diagnostics on-failure \
-    -only-testing "$test_id" "$@"
+    -only-testing "$test_id" "$@" 2>&1 | tee build/TimingSummary.log | grep -v 'DVTDeviceOperation: Encountered a build number' | xcbeautify --quiet --disable-logging
+  local t2=$(date +%s)
+  echo -e "${YELLOW}==> Build+Test finished: $(date)${NC}"
   _end_section
+  local t3=$(date +%s)
+  echo -e "${YELLOW}==> test_single: Finished at $(date)${NC}"
+  echo -e "${YELLOW}==> Timing:${NC}"
+  echo "  Prepare:   $((t1-t0))s"
+  echo "  Build+Run: $((t2-t1))s"
+  echo "  Cleanup:   $((t3-t2))s"
+  echo "  TOTAL:     $((t3-t0))s"
+  echo -e "${YELLOW}==> Build timing summary saved to build/TimingSummary.log${NC}"
 }
 
 function test() {
