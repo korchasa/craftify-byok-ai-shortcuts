@@ -15,9 +15,37 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+               BuildableName = "Common.framework"
+               BlueprintName = "Common"
+               ReferencedContainer = "container:Craftify.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
                BuildableName = "MainApp.app"
                BlueprintName = "MainApp"
+               ReferencedContainer = "container:Craftify.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "6E99CB366D323D89B45B1DAE"
+               BuildableName = "ShareExtension.appex"
+               BlueprintName = "ShareExtension"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +60,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
-            BuildableName = "MainApp.app"
-            BlueprintName = "MainApp"
+            BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+            BuildableName = "Common.framework"
+            BlueprintName = "Common"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -46,6 +74,26 @@
                BlueprintIdentifier = "4C8543A90F5821AC5DB9CD4C"
                BuildableName = "MainAppE2ETests.xctest"
                BlueprintName = "MainAppE2ETests"
+               ReferencedContainer = "container:Craftify.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D52BD7D4A192B7F78A1A3F6F"
+               BuildableName = "ShareExtensionE2ETests.xctest"
+               BlueprintName = "ShareExtensionE2ETests"
+               ReferencedContainer = "container:Craftify.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C162F3A09073CA61B73E4FBF"
+               BuildableName = "CommonE2ETests.xctest"
+               BlueprintName = "CommonE2ETests"
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -63,16 +111,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
-            BuildableName = "MainApp.app"
-            BlueprintName = "MainApp"
+            BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+            BuildableName = "Common.framework"
+            BlueprintName = "Common"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -80,16 +127,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "60B67F859084B6AD1ECAD983"
-            BuildableName = "MainApp.app"
-            BlueprintName = "MainApp"
+            BlueprintIdentifier = "0BEF0EF3FA38D9FD9FA04AC4"
+            BuildableName = "Common.framework"
+            BlueprintName = "Common"
             ReferencedContainer = "container:Craftify.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

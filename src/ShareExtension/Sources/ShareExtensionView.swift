@@ -60,14 +60,14 @@ public struct ShareExtensionView: View {
 
             if viewModel.displayResult != nil {
                 Text(displayOperationTitle())
-                    .font(.title2)
-                    .bold()
+                    .font(.craftifyTitle)
+                    .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                     .padding(.top, ShareExtensionViewConstants.topPadding)
             } else {
                 Text(L10n.shareTitle)
-                    .font(.title2)
-                    .bold()
+                    .font(.craftifyTitle)
+                    .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                     .padding(.top, ShareExtensionViewConstants.topPadding)
             }
@@ -85,7 +85,7 @@ public struct ShareExtensionView: View {
                 operationsGrid
             }
         }
-        .padding([.leading, .trailing])
+        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
     }
 
     public var body: some View {
@@ -106,11 +106,11 @@ public struct ShareExtensionView: View {
         // Pin the close button above the bottom safe area with fixed padding
         .safeAreaInset(edge: .bottom) {
             closeButton
-                .padding(.horizontal)
-                .padding(.bottom, ShareExtensionViewLocalConstants.closeButtonBottomPadding)
-                .background(Color(.systemBackground))
+                .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+                .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+                .background(Color.white)
         }
-        .background(Color(.systemBackground))
+        .background(Color.white)
         .ignoresSafeArea(edges: .bottom)
         .zIndex(ZIndexConstants.copiedToast)
         // ViewModel subscriptions & alerts
@@ -146,6 +146,8 @@ public struct ShareExtensionView: View {
                 let color = Color(hex: op.colorHex)
                 Button(action: { viewModel.process(operation: op) }) {
                     Text(operationDisplayName(for: op))
+                        .font(.craftifyBody)
+                        .fontWeight(.bold)
                         .frame(maxWidth: .infinity, minHeight: ShareExtensionViewLocalConstants.operationMinHeight)
                         .padding()
                         .background(color)
@@ -153,11 +155,11 @@ public struct ShareExtensionView: View {
                         .cornerRadius(cardCornerRadius)
                 }
                 .accessibilityLabel(operationDisplayName(for: op))
-                .buttonStyle(.plain)
+                .buttonStyle(CraftifyPrimaryButtonStyle())
                 .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
     }
 
     private func operationDisplayName(for op: InventoryOperation) -> String {
@@ -211,12 +213,14 @@ public struct ShareExtensionView: View {
     private var progressOverlay: some View {
         VStack(spacing: ShareExtensionViewConstants.verticalSpacing) {
             Text(L10n.processing)
-                .font(.headline)
+                .font(.craftifyBody)
+                .fontWeight(.semibold)
             ProgressView(value: progress)
                 .progressViewStyle(.linear)
                 .frame(width: ShareExtensionViewConstants.progressWidth)
             Text("\(Int(progress * ProgressConstants.percentMax))%")
-                .font(.subheadline)
+                .font(.craftifyFootnote)
+                .fontWeight(.semibold)
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: ShareExtensionViewConstants.overlayCornerRadius).fill(Color(.systemBackground).opacity(ShareExtensionViewConstants.overlayOpacity)))
@@ -235,7 +239,8 @@ public struct ShareExtensionView: View {
                     .fill(Color.clear)
                     .frame(width: ShareExtensionViewLocalConstants.toastPadding)
                 Text(L10n.copiedToClipboard)
-                    .font(ShareExtensionViewConstants.copiedToastFont)
+                    .font(.craftifyBody)
+                    .fontWeight(.bold)
                     .padding(.vertical, ShareExtensionViewConstants.copiedToastVerticalSpacing)
                     .padding(.horizontal, ShareExtensionViewConstants.copiedToastHorizontalSpacing)
                     .background(
@@ -288,13 +293,13 @@ public struct ShareExtensionView: View {
     private var closeButton: some View {
         Button(action: { viewModel.shouldCloseExtension = true }) {
             Text(L10n.shareClose)
-                .font(.headline)
+                .font(.craftifyBody)
+                .fontWeight(.bold)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.accentColor.opacity(ShareExtensionViewLocalConstants.closeButtonBackgroundOpacity))
-                .cornerRadius(ShareExtensionViewLocalConstants.cardCornerRadius)
         }
-        .padding(.horizontal)
-        .padding(.bottom, ShareExtensionViewLocalConstants.closeButtonBottomPadding)
+        .buttonStyle(CraftifyPrimaryButtonStyle())
+        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+        .padding(.bottom, CraftifyButtonConstants.bottomPadding)
     }
 }

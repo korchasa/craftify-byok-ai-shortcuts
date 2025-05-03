@@ -20,11 +20,6 @@ function xcb() {
   xcodebuild -showBuildTimingSummary "$@" 2>&1 | grep -v 'DVTDeviceOperation: Encountered a build number' | xcbeautify --quiet --disable-logging
 }
 
-# Define arrays for test schemes
-SCHEMES_UNIT=(MainAppUnitTests ShareExtensionUnitTests CommonUnitTests)
-SCHEMES_E2E=(MainAppE2ETests ShareExtensionE2ETests CommonE2ETests)
-SCHEMES_ALL_TESTS=("${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}")
-
 # Default parallel testing worker count
 WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}
 # Runtime test filters
@@ -49,15 +44,15 @@ Commands:
   deploy:simulator    Build MainApp for simulator
   deploy:testflight   Upload IPA to TestFlight via altool
   export-ipa          Export IPA from archive
+  fmt                 Run SwiftFormat (format code)
   generate            Run SwiftGen and XcodeGen
   init                Install CLI tools
+  lint                Run SwiftLint (lint code)
   logs                Stream MainApp logs
-  monitor-setup       Setup monitoring (Sentry etc.)
   notify              Send notifications (Slack, email)
   size-report         Check ShareExtension size
-  check               Run all checks(clean, generate, comment-scan, fmt, lint, analyze, test_unit, test_e2e)
-  test:coverage       Run tests with code coverage
-  test:single         Run a single test or class (unit or e2e), for example: $SCRIPT_NAME test:single MainAppUnitTests MainAppUnitTests/AddOperationViewModelTests
+  check               Run all checks (clean, generate, comment-scan, fmt, lint, analyze, build, test)
+  test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
   help                Show this help
 EOF
 }
@@ -130,94 +125,6 @@ function _build() {
   _start_section "Building ShareExtension (Release/iphoneos)"
   xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
   _end_section
-}
-
-function _run_schemes_parallel() {
-  local schemes=("${!1}")
-  shift
-  local pids=()
-  rm -rf build/Results
-  for scheme in "${schemes[@]}"; do
-    local derived_data_path="build/DerivedData_${scheme}"
-    rm -rf "$derived_data_path"
-    echo "⚙️ Testing scheme $scheme"
-    xcb test -sdk iphonesimulator -destination "id=${TEST_SIMULATOR_ID},arch=arm64" -scheme "${scheme}" \
-      -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
-      -derivedDataPath "$derived_data_path" \
-      -resultBundlePath "build/Results/${scheme}.xcresult" \
-      -collect-test-diagnostics on-failure \
-      "${ONLY_TEST_FLAGS[@]}" "$@" &
-    pids+=("$!")
-  done
-  local exit_code=0
-  for i in "${!pids[@]}"; do
-    pid="${pids[$i]}"
-    scheme="${schemes[$i]}"
-    wait "$pid" || exit_code=1
-    echo "✅ Finished scheme $scheme"
-  done
-  if [[ $exit_code -ne 0 ]]; then
-    echo -e "${RED}One or more test schemes failed!${NC}"
-    exit 1
-  fi
-}
-
-function test_unit() {
-  _start_section "Running Unit Tests"
-  _run_schemes_parallel SCHEMES_UNIT[@] "$@"
-  _end_section
-}
-
-function test_e2e() {
-  _start_section "Running E2E Tests"
-  _run_schemes_parallel SCHEMES_E2E[@] "$@"
-  _end_section
-}
-
-function test_single() {
-  local scheme="${1:-}"
-  shift || true
-  local test_id="${1:-}"
-  shift || true
-  local valid=0
-  for s in "${SCHEMES_UNIT[@]}" "${SCHEMES_E2E[@]}"; do
-    if [[ "$scheme" == "$s" ]]; then
-      valid=1
-      break
-    fi
-  done
-  if [[ -z "$scheme" || $valid -eq 0 ]]; then
-    echo -e "${RED}Error: You must specify a valid test scheme!${NC}"
-    echo -e "\nAvailable unit test schemes:" && for s in "${SCHEMES_UNIT[@]}"; do echo "  $s"; done
-    echo -e "\nAvailable e2e test schemes:" && for s in "${SCHEMES_E2E[@]}"; do echo "  $s"; done
-    exit 1
-  fi
-  local t0=$(date +%s)
-  _start_section "Running single test: $test_id in scheme $scheme"
-  echo -e "${YELLOW}==> test_single: Start at $(date)${NC}"
-  rm -rf build/Results
-  local t1=$(date +%s)
-  echo -e "${YELLOW}==> Build start: $(date)${NC}"
-  xcodebuild test -showBuildTimingSummary \
-    -sdk iphonesimulator \
-    -destination "id=${TEST_SIMULATOR_ID}" \
-    -scheme "$scheme" \
-    -parallel-testing-enabled YES \
-    -parallel-testing-worker-count "${WORKER_COUNT}" \
-    -resultBundlePath "build/Results/${scheme}.xcresult" \
-    -collect-test-diagnostics on-failure \
-    -only-testing "$test_id" "$@" 2>&1 | tee build/TimingSummary.log | grep -v 'DVTDeviceOperation: Encountered a build number' | xcbeautify --quiet --disable-logging
-  local t2=$(date +%s)
-  echo -e "${YELLOW}==> Build+Test finished: $(date)${NC}"
-  _end_section
-  local t3=$(date +%s)
-  echo -e "${YELLOW}==> test_single: Finished at $(date)${NC}"
-  echo -e "${YELLOW}==> Timing:${NC}"
-  echo "  Prepare:   $((t1-t0))s"
-  echo "  Build+Run: $((t2-t1))s"
-  echo "  Cleanup:   $((t3-t2))s"
-  echo "  TOTAL:     $((t3-t0))s"
-  echo -e "${YELLOW}==> Build timing summary saved to build/TimingSummary.log${NC}"
 }
 
 function size_report() {
@@ -331,18 +238,6 @@ function comment_scan() {
   _end_section
 }
 
-function bump_version() {
-  _start_section "Bumping version numbers"
-  local marketing="${1:-}"
-  if [[ -z "$marketing" ]]; then
-    agvtool next-version -all
-  else
-    agvtool new-marketing-version "$marketing"
-    agvtool next-version -all
-  fi
-  _end_section
-}
-
 function archive() {
   generate "$@"
   _start_section "Archiving MainApp"
@@ -371,22 +266,8 @@ function deploy_testflight() {
   fi
   xcrun altool \
     --upload-app --type ios \
-    --file build/IPA/MainApp.ipa \
-    --apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
-  _end_section
-}
-
-function coverage() {
-  generate "$@"
-  _start_section "Running tests with code coverage"
-  xcb test \
-    -scheme MainAppUnitTests \
-    -enableCodeCoverage YES \
-    -sdk iphonesimulator \
-    -destination "id=${TEST_SIMULATOR_ID}" "$@"
-  _end_section
-  _start_section "Generating coverage report"
-  xcrun xccov view --report build/Logs/Test/*.xcresult
+    -file build/IPA/MainApp.ipa \
+    -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
   _end_section
 }
 
@@ -446,61 +327,117 @@ function notify() {
   _end_section
 }
 
-function monitor_setup() {
-  _start_section "Setting up monitoring"
-  # configure Sentry or other services
+function _test_scheme() {
+  local scheme="$1"; shift
+  local flags=("$@")
+  local t0=$(date +%s)
+  _start_section "Running tests scheme $scheme"
+  rm -rf build/Results
+  local t1=$(date +%s)
+  xcb test \
+    -scheme "$scheme" \
+    -parallel-testing-enabled YES \
+    -parallel-testing-worker-count "${WORKER_COUNT}" \
+    -sdk iphonesimulator \
+    -destination "id=${TEST_SIMULATOR_ID},arch=arm64" \
+    -derivedDataPath "build/DerivedData_${scheme}" \
+    -resultBundlePath "build/Results/${scheme}.xcresult" \
+    -collect-test-diagnostics on-failure \
+    -testLanguage en \
+    -testRegion US \
+    "${flags[@]}"
+  test_exit_code=$?
+  local t2=$(date +%s)
   _end_section
-}
-
-function pr_checks() {
-  _start_section "Running PR checks (e.g. TODO/FIXME scan)"
-  comment_scan "$@"
-  _end_section
-}
-
-function _collect_dsyms() {
-  _start_section "Collecting artifacts & dSYMs"
-  mkdir -p build/Artifacts
-  cp -R build/MainApp.xcarchive/dSYMs build/Artifacts/
-  _end_section
-}
-
-function check() {
-  clean
-  generate
-  comment_scan
-  fmt
-  lint
-  analyze
-  _build
-  test_unit
-  test_e2e
+  local t3=$(date +%s)
+  echo -e "${YELLOW}==> test_scheme: Finished at $(date)${NC}"
+  echo -e "${YELLOW}==> Timing:${NC}"
+  echo "  Prepare:   $((t1-t0))s"
+  echo "  Build+Run: $((t2-t1))s"
+  echo "  Cleanup:   $((t3-t2))s"
+  echo "  TOTAL:     $((t3-t0))s"
+  if [ $test_exit_code -ne 0 ] && [ -f build/Results/AllTests.xcresult ]; then
+    echo -e "${RED}Test failures summary:${NC}"
+    xcrun xcresulttool get --legacy --path build/Results/AllTests.xcresult --format json | jq '.. | .testFailureSummaries? // empty'
+  fi
+  exit $test_exit_code
 }
 
 CMD="${1:-}"
 shift || true
 
 case "$CMD" in
-  analyze) analyze "$@" ;;             # Static analysis
-  archive) archive "$@" ;;             # Archive MainApp for distribution
-  build) build "$@" ;;                 # Build release targets
-  bump-version) bump_version "$@" ;;   # Bump version numbers
-  clean) clean "$@" ;;                 # Clean artifacts
-  comment-scan) comment_scan "$@" ;;   # TODO/FIXME scan
-  deploy:adhoc) deploy_adhoc "$@" ;;             # Ad-hoc TestFlight deploy
-  deploy:appstore) deploy_appstore "$@" ;;       # Upload to App Store Connect
-  deploy:internal) deploy_internal "$@" ;;       # TestFlight internal deploy
-  deploy:simulator) deploy_simulator "$@" ;;     # Run app in simulator
-  deploy:testflight) deploy_testflight "$@" ;;   # Upload to TestFlight via API key
-  export-ipa) export_ipa "$@" ;;       # Export IPA from archive
-  generate) generate "$@" ;;           # SwiftGen & XcodeGen
-  init) init "$@" ;;                   # Install CLI tools
-  logs) logs "$@" ;;                   # Stream device logs
-  monitor-setup) monitor_setup "$@" ;; # Setup monitoring (Sentry etc.)
-  notify) notify "$@" ;;               # Send notifications (Slack, email)
-  size-report) size_report "$@" ;;     # Check ShareExtension size
-  test:coverage) coverage "$@" ;;      # Run code coverage
-  test:single) test_single "$@" ;;     # Run a single test or class
-  check) check "$@" ;;                 # Run all checks(clean, generate, comment-scan, fmt, lint, analyze, test_unit, test_e2e)
-  help|*) usage ;;                     # Show help
+  analyze) analyze "$@" ;;
+  archive) archive "$@" ;;
+  build)
+    _start_section "Building MainApp (Release/iphoneos)"
+    xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
+    _end_section
+    _start_section "Building ShareExtension (Release/iphoneos)"
+    xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
+    _end_section
+    ;;
+  bump-version)
+    _start_section "Bumping version numbers"
+    local marketing="${1:-}"
+    if [[ -z "$marketing" ]]; then
+      agvtool next-version -all
+    else
+      agvtool new-marketing-version "$marketing"
+      agvtool next-version -all
+    fi
+    _end_section
+  ;;
+  clean) clean "$@" ;;
+  comment-scan) comment_scan "$@" ;;
+  deploy:adhoc)
+    _start_section "Deploying AdHoc distribution"
+    deploy_testflight "$@"
+    _end_section
+    ;;
+  deploy:appstore)
+    _start_section "Uploading to App Store Connect"
+    xcrun altool \
+      -upload-app --type ios \
+      -file build/IPA/MainApp.ipa \
+      -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
+    _end_section
+    ;;
+  deploy:internal)
+    _start_section "Deploying to internal TestFlight"
+    deploy_testflight "$@"
+    _end_section
+    ;;
+  deploy:simulator) deploy_simulator "$@" ;;
+  deploy:testflight) deploy_testflight "$@" ;;
+  export-ipa) export_ipa "$@" ;;
+  generate) generate "$@" ;;
+  init) init "$@" ;;
+  logs) logs "$@" ;;
+  notify)
+    _start_section "Sending notifications"
+    # integrate Slack/email notifications here
+    _end_section
+    ;;
+  size-report) size_report "$@" ;;
+  test)
+    if [[ -z "$1" ]]; then
+      usage
+      exit 1
+    fi
+    test_id="$1"; shift
+    _test_scheme AllTests -only-testing "$test_id" "$@"
+    ;;
+  check)
+    clean
+    generate
+    comment_scan
+    fmt
+    lint
+    analyze
+    _build
+    _test_scheme AllUnitTests
+    _test_scheme AllE2ETests
+    ;;
+  help|*) usage ;;
 esac

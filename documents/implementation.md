@@ -258,3 +258,32 @@ The ViewModel always calls `resolveInput` and passes the result to the LLM, ensu
 - Для остальных операций: resolveInput принимает только text, url вызывает ошибку (ошибка с доменом <OperationName>Operation).
 - ViewModel всегда вызывает resolveInput перед отправкой текста в LLM.
 - Покрыто unit-тестами для всех операций (text и url).
+
+## Button Style Constants
+
+| Constant                        | Purpose                                 | Value/Source                      |
+|---------------------------------|-----------------------------------------|-----------------------------------|
+| CraftifyButtonConstants.primaryColor   | Основной цвет кнопки                    | #ff807d                           |
+| CraftifyButtonConstants.secondaryColor | Второстепенный цвет кнопки              | #89e1c5                           |
+| CraftifyButtonConstants.cornerRadius   | Радиус скругления                      | 20                                |
+| CraftifyButtonConstants.horizontalPadding | Горизонтальный отступ                  | 16                                |
+| CraftifyButtonConstants.bottomPadding     | Нижний отступ                          | 16                                |
+| CraftifyButtonConstants.pressedScale      | Масштаб при нажатии                    | 0.97                              |
+
+**Использование:**
+- Все основные кнопки во всех экранах используют эти константы через `.buttonStyle(CraftifyPrimaryButtonStyle())` и `.buttonStyle(CraftifySecondaryButtonStyle())`.
+- Отступы и радиус применяются через `.padding(.horizontal, ...)`, `.padding(.bottom, ...)`, `.cornerRadius(...)`.
+
+## Button Styles Overview
+
+| Style      | Background Color           | Text Color | Font                | Corner Radius | Padding         | Pressed Scale | Usage Examples                |
+|------------|---------------------------|------------|---------------------|---------------|----------------|---------------|------------------------------|
+| Primary    | #ff807d (primaryColor)    | White      | .craftifyBody Bold  | 20            | 16 horiz/bottom | 0.97          | Save, Confirm, Main actions   |
+| Secondary  | #89e1c5 (secondaryColor)  | Black      | .craftifyBody Bold  | 20            | 16 horiz/bottom | 0.97          | Cancel, Secondary actions     |
+| Cancel     | #89e1c5 (secondaryColor)  | White      | .craftifyBody Bold  | 20            | 16 horiz/bottom | 0.97          | Cancel, Dismiss, Close        |
+| Destructive| Transparent/Secondary     | Red        | .craftifyBody Bold  | 20            | 16 horiz/bottom | 0.97          | Delete, Remove, Danger action |
+
+**Notes:**
+- Все параметры берутся из CraftifyButtonConstants и Font+Craftify.
+- Для Destructive-кнопок используйте `.foregroundColor(.red)` или `.tint(.red)`.
+- Не создавайте локальных ButtonStyle — только централизованные.

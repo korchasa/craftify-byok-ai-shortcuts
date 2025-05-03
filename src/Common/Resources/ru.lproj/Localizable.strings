@@ -7,7 +7,7 @@
 
 /* HomeView */
 "home_title" = "Craftify — Операции";
-"home_add_operation" = "Добавить операцию";
+"home_add_operation" = "Операция";
 "home_settings" = "Настройки";
 "home_edit" = "Редактировать";
 "home_delete" = "Удалить";
@@ -26,7 +26,7 @@
 /* SettingsView */
 "settings_title" = "Настройки";
 "settings_api_key" = "OpenAI API-ключ";
-"settings_done" = "Готово";
+"settings_done" = "Отмена";
 
 /* Share Extension UI */
 "share_title" = "Craftify";
@@ -76,3 +76,20 @@
 "sentence_count_2_3" = "2–3 предложения";
 "sentence_count_5_6" = "5–6 предложений";
 "sentence_count_9_10" = "9–10 предложений";
+
+"color" = "Цвет";
+
+"error_no_text" = "Нет текста для обработки";
+"error_text_too_long" = "Текст слишком длинный для обработки";
+"error_consent_required" = "Требуется согласие пользователя";
+"error_invalid_api_key" = "Неверный API-ключ";
+"error_clipboard" = "Ошибка доступа к буферу обмена";
+"error_cancelled" = "Операция отменена";
+"error_network" = "Сетевая ошибка";
+"error_parsing" = "Ошибка парсинга";
+"error_processing" = "Ошибка обработки";
+"error_no_operation" = "Нет операции для обработки";
+"error_api_key_access" = "Ошибка доступа к API-ключу";
+"error_processing_manager_unavailable" = "Менеджер обработки недоступен";
+"error_result_mode_display" = "Режим результата: показать результат";
+"error_result_copied" = "Результат успешно скопирован в буфер обмена";

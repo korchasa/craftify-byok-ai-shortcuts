@@ -12,7 +12,7 @@ public struct BottomSheetContainerView<Content: View>: View {
         maxHeight: CGFloat? = nil,
         cornerRadius: CGFloat = 20,
         shadowRadius: CGFloat = 8,
-        backgroundColor: Color = Color(.systemBackground),
+        backgroundColor: Color = Color.white,
         backgroundOpacity: Double = 1.0,
         @ViewBuilder content: () -> Content
     ) {

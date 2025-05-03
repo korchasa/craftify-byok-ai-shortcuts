@@ -163,3 +163,9 @@ graph TD
   - SUBQUERY (... ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url")
 - Позволяет отправлять как текст, так и ссылки через меню "Поделиться".
 - Оба типа обрабатываются как обычный текст, приоритет у текста.
+
+## Style Centralization
+
+- Все параметры стиля для кнопок (цвета, радиус, отступы) централизованы в CraftifyButtonConstants (src/Common/Sources/CraftifyButtonConstants.swift).
+- Палитра цветов для операций централизована в ColorPaletteConstants (src/Common/Sources/ColorPaletteConstants.swift) и используется во всех ViewModel и View.
+- Такой подход обеспечивает единообразие интерфейса и упрощает поддержку.

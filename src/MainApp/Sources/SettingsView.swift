@@ -16,94 +16,136 @@ public struct SettingsView: View {
     }
 
     public var body: some View {
-        VStack(spacing: SettingsViewConstants.verticalSpacing) {
-            titleSection
-            apiKeySection
-            errorSection
-            Spacer()
-            buttonsSection
+        NavigationStack {
+            SettingsForm(viewModel: viewModel, dismiss: dismiss, isTextFieldFocused: _isTextFieldFocused)
         }
-        .onAppear { isTextFieldFocused = true }
-        .disabled(viewModel.isLoading)
-        .overlay(loadingOverlay)
-        .accessibilityElement(children: .contain)
+        .background(Color.white)
     }
 
-    @ViewBuilder
-    private var titleSection: some View {
-        Text(L10n.settingsTitle)
-            .font(.title2)
-            .bold()
-            .accessibilityAddTraits(.isHeader)
-            .padding(.top, SettingsViewConstants.topPadding)
+    private struct SettingsForm: View {
+        @ObservedObject var viewModel: SettingsViewModel
+        var dismiss: DismissAction
+        @FocusState var isTextFieldFocused: Bool
+        var body: some View {
+            VStack(spacing: 0) {
+                SettingsFormContent(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused, dismiss: dismiss)
+            }
+        }
     }
 
-    @ViewBuilder
-    private var apiKeySection: some View {
-        VStack(alignment: .leading, spacing: SettingsViewConstants.fieldSpacing) {
-            Text(L10n.settingsApiKey)
-                .font(.headline)
-            SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
-                .focused($isTextFieldFocused)
-                .textFieldStyle(.roundedBorder)
-                .accessibilityLabel(L10n.settingsApiKey)
-            if viewModel.isKeyPresent {
-                HStack {
+    private struct SettingsFormContent: View {
+        @ObservedObject var viewModel: SettingsViewModel
+        @FocusState var isTextFieldFocused: Bool
+        var dismiss: DismissAction
+        var body: some View {
+            Form {
+                SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
+                SettingsErrorSection(errorMessage: viewModel.errorMessage)
+            }
+            .navigationTitle(L10n.settingsTitle)
+            .font(.craftifyTitle)
+            .fontWeight(.bold)
+            .scrollContentBackground(.hidden)
+            .background(Color.white)
+            Spacer(minLength: CraftifyButtonConstants.spacerMinLength)
+            SettingsFormButtons(viewModel: viewModel, dismiss: dismiss)
+        }
+    }
+
+    private struct SettingsFormButtons: View {
+        @ObservedObject var viewModel: SettingsViewModel
+        var dismiss: DismissAction
+        var body: some View {
+            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+                Button(action: { dismiss() }) {
+                    Label(L10n.settingsDone, systemImage: "xmark")
+                        .font(.craftifyBody)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                }
+                .buttonStyle(CraftifySecondaryButtonStyle())
+                .accessibilityLabel(L10n.settingsDone)
+                Button(action: {
+                    Task {
+                        await viewModel.saveKey()
+                    }
+                }) {
+                    Label(L10n.addOperationSave, systemImage: "checkmark")
+                        .font(.craftifyBody)
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                }
+                .buttonStyle(CraftifyPrimaryButtonStyle())
+                .accessibilityLabel(L10n.addOperationSave + " ключ")
+                .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
+            }
+            .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+            .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+            .background(Color.white.ignoresSafeArea())
+        }
+    }
+
+    private struct SettingsApiKeySection: View {
+        @ObservedObject var viewModel: SettingsViewModel
+        @FocusState var isTextFieldFocused: Bool
+        var body: some View {
+            Section(header: Text(L10n.settingsApiKey).craftifySectionHeader()) {
+                SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
+                    .focused($isTextFieldFocused)
+                    .accessibilityLabel(L10n.settingsApiKey)
+                if viewModel.isKeyPresent {
                     Text(viewModel.maskedApiKey)
-                        .font(.subheadline)
+                        .font(.craftifyFootnote)
+                        .fontWeight(.semibold)
                         .foregroundColor(.secondary)
-                    Spacer()
+                        .lineLimit(Common.unlimitedLineLimit)
+                        .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
+                }
+                if viewModel.isKeyPresent {
                     Button(role: .destructive, action: { Task { await viewModel.deleteKey() } }) {
                         Text(L10n.homeDelete)
+                            .font(.craftifyBody)
+                            .fontWeight(.bold)
                     }
                     .accessibilityLabel(L10n.homeDelete + " ключ")
                 }
             }
         }
-        .padding(.horizontal)
     }
 
-    @ViewBuilder
-    private var errorSection: some View {
-        if let error = viewModel.errorMessage {
-            Text(error)
-                .foregroundColor(.red)
-                .font(.footnote)
-                .multilineTextAlignment(.center)
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.horizontal)
-        }
-    }
-
-    @ViewBuilder
-    private var buttonsSection: some View {
-        HStack(spacing: SettingsViewConstants.buttonSpacing) {
-            Button(action: { dismiss() }) {
-                Text(L10n.settingsDone)
-                    .frame(maxWidth: .infinity)
+    private struct SettingsErrorSection: View {
+        var errorMessage: String?
+        var body: some View {
+            if let error = errorMessage {
+                Section(header: Text("").craftifySectionHeader()) {
+                    Text(error)
+                        .foregroundColor(.red)
+                        .font(.craftifyFootnote)
+                        .fontWeight(.bold)
+                        .multilineTextAlignment(.center)
+                        .lineLimit(Common.unlimitedLineLimit)
+                        .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
+                }
             }
-            .accessibilityLabel(L10n.settingsDone)
-            .buttonStyle(.bordered)
-
-            Button(action: { Task { await viewModel.saveKey() } }) {
-                Text(L10n.addOperationSave)
-                    .frame(maxWidth: .infinity)
-            }
-            .accessibilityLabel(L10n.addOperationSave + " ключ")
-            .buttonStyle(.borderedProminent)
-            .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
         }
-        .padding(.horizontal)
-        .padding(.bottom, SettingsViewConstants.bottomPadding)
     }
 
-    @ViewBuilder
-    private var loadingOverlay: some View {
-        if viewModel.isLoading {
-            ProgressView()
-                .progressViewStyle(.circular)
-                .scaleEffect(SettingsViewConstants.loadingScale)
+    private struct SettingsLoadingOverlay: View {
+        var isLoading: Bool
+        var body: some View {
+            if isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .scaleEffect(SettingsViewConstants.loadingScale)
+            }
         }
+    }
+}
+
+private extension View {
+    func craftifySectionHeader() -> some View {
+        self.font(.system(size: craftifySectionHeaderFontSize, weight: .bold))
+            .foregroundColor(.secondary)
+            .padding(.leading, CraftifyButtonConstants.titleLeadingPadding)
     }
 }

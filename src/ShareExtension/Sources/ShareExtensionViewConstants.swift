@@ -32,8 +32,6 @@ public enum ShareExtensionViewConstants {
     public static let copiedToastVerticalSpacing: CGFloat = 8
     /// Горизонтальный отступ внутри copiedToast
     public static let copiedToastHorizontalSpacing: CGFloat = 16
-    /// Шрифт copiedToast
-    public static let copiedToastFont: Font = .headline
     /// Задержка скрытия copiedToast (секунды)
     public static let copiedToastHideDelay: TimeInterval = 2
 }

@@ -85,3 +85,13 @@
 - Просто выберите "Поделиться" → Craftify, и ссылка будет обработана как обычный текст.
 - Если вы делитесь и текстом, и ссылкой одновременно, будет обработан текст.
 - Лимит длины (5000 символов) применяется и к ссылкам.
+
+## Unified Button Styles
+
+All buttons in the application have a unified look and feel:
+- Consistent color scheme
+- Rounded corners
+- Uniform padding and spacing
+- Responsive press effect
+
+This ensures a predictable and visually pleasing experience across all screens.

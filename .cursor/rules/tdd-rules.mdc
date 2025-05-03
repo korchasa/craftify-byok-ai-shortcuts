@@ -6,10 +6,10 @@ alwaysApply: true
 ## TDD Flow
 1.	Red:
 - Write a minimal, isolated test for new behavior or error reproduce.
-- Run tests.
+- Run separate test.
 2.	Green:
 - Implement just enough code to make the test pass.
-- Run the test to ensure everything is green.
+- Run the single test to ensure everything is green.
 3.	Refactor:
 - Clean up code and tests without changing behavior.
 - Eliminate duplication and improve readability.

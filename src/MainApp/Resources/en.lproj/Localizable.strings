@@ -7,7 +7,7 @@
 
 /* HomeView */
 "home_title" = "Craftify — Operations";
-"home_add_operation" = "Add Operation";
+"home_add_operation" = "Operation";
 "home_settings" = "Settings";
 "home_edit" = "Edit";
 "home_delete" = "Delete";
@@ -26,7 +26,7 @@
 /* SettingsView */
 "settings_title" = "Settings";
 "settings_api_key" = "OpenAI API Key";
-"settings_done" = "Done";
+"settings_done" = "Cancel";
 
 /* Share Extension UI */
 "share_title" = "Craftify";
@@ -52,3 +52,5 @@
 "operation_label_simplify" = "Simplify";
 "operation_label_correct" = "Correct";
 "operation_label_explain" = "Explain";
+
+"color" = "Color";

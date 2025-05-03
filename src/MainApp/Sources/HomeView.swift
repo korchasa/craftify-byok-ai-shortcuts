@@ -18,21 +18,35 @@ public struct HomeView: View {
         NavigationView {
             VStack {
                 operationsList
-                HStack {
+                Spacer()
+            }
+            .safeAreaInset(edge: .bottom) {
+                HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
                     Button(action: { showAddOperation = true }) {
-                        Text(L10n.homeAddOperation)
+                        Label(L10n.homeAddOperation, systemImage: "plus")
+                            .font(.craftifyBody)
+                            .fontWeight(.bold)
                     }
                     .accessibilityLabel(L10n.homeAddOperation)
-                    Spacer()
+                    .buttonStyle(CraftifyPrimaryButtonStyle())
                     Button(action: { showSettings = true }) {
-                        Text(L10n.homeSettings)
+                        Label(L10n.homeSettings, systemImage: "gearshape")
+                            .font(.craftifyBody)
+                            .fontWeight(.bold)
                     }
                     .accessibilityLabel(L10n.homeSettings)
+                    .buttonStyle(CraftifySecondaryButtonStyle())
                 }
-                .padding()
+                .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+                .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+                .background(Color.white.ignoresSafeArea())
+                .cornerRadius(CraftifyButtonConstants.cornerRadius)
             }
             .navigationTitle(L10n.homeTitle)
+            .font(.craftifyTitle)
+            .fontWeight(.bold)
         }
+        .background(Color.white)
         .sheet(isPresented: $showAddOperation, onDismiss: { addOperationViewModel.cancel() }, content: {
             AddOperationView(viewModel: addOperationViewModel, onSave: { op in
                 viewModel.addOperation(op)
@@ -75,7 +89,8 @@ public struct HomeView: View {
                 }
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
+        .background(Color.white)
     }
 
     private let settingsSheet: AnyView = .init(Text("SettingsView"))
@@ -87,31 +102,34 @@ public struct HomeView: View {
 
         var body: some View {
             HStack {
-                Circle()
-                    .fill(Color(hex: operation.colorHex))
-                    .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
-                    .accessibilityLabel("Цвет операции")
-                Text(operationLabel(for: operation.operation))
-                    .font(.headline)
+                OperationColorCircle(colorHex: operation.colorHex)
+                OperationLabelText(type: operation.operation)
                 Spacer()
-                Text(operationParamsDescription(for: operation))
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                OperationParamsText(operation: operation)
             }
             .swipeActions(edge: .trailing) {
-                Button {
-                    onEdit()
-                } label: {
-                    Text(L10n.homeEdit)
-                }
-                .tint(.blue)
-                Button(role: .destructive) {
-                    onDelete()
-                } label: {
-                    Text(L10n.homeDelete)
-                }
-                .tint(.red)
+                OperationEditButton(onEdit: onEdit)
+                OperationDeleteButton(onDelete: onDelete)
             }
+        }
+    }
+
+    private struct OperationColorCircle: View {
+        let colorHex: String
+        var body: some View {
+            Circle()
+                .fill(Color(hex: colorHex))
+                .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
+                .accessibilityLabel("Цвет операции")
+        }
+    }
+
+    private struct OperationLabelText: View {
+        let type: OperationKind
+        var body: some View {
+            Text(operationLabel(for: type))
+                .font(.craftifyBody)
+                .fontWeight(.semibold)
         }
 
         private func operationLabel(for type: OperationKind) -> String {
@@ -122,6 +140,16 @@ public struct HomeView: View {
             case .explain: L10n.operationLabelExplain
             case .summarize: L10n.operationLabelSummarize
             }
+        }
+    }
+
+    private struct OperationParamsText: View {
+        let operation: InventoryOperation
+        var body: some View {
+            Text(operationParamsDescription(for: operation))
+                .font(.craftifyFootnote)
+                .fontWeight(.semibold)
+                .foregroundColor(.secondary)
         }
 
         private func operationParamsDescription(for operation: InventoryOperation) -> String {
@@ -172,6 +200,34 @@ public struct HomeView: View {
             case .fiveToSix: L10n.sentenceCount56
             case .nineToTen: L10n.sentenceCount910
             }
+        }
+    }
+
+    private struct OperationEditButton: View {
+        let onEdit: () -> Void
+        var body: some View {
+            Button {
+                onEdit()
+            } label: {
+                Text(L10n.homeEdit)
+                    .font(.craftifyBody)
+                    .fontWeight(.bold)
+            }
+            .tint(.blue)
+        }
+    }
+
+    private struct OperationDeleteButton: View {
+        let onDelete: () -> Void
+        var body: some View {
+            Button(role: .destructive) {
+                onDelete()
+            } label: {
+                Text(L10n.homeDelete)
+                    .font(.craftifyBody)
+                    .fontWeight(.bold)
+            }
+            .tint(.red)
         }
     }
 }

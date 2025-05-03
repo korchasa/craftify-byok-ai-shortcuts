@@ -19,8 +19,7 @@ public final class SettingsViewModel: ObservableObject {
     private let authManager: AuthManaging
 
     /// Инициализация с менеджером
-    /// - Parameters:
-    ///   - authManager: Менеджер API-ключа
+    /// - Parameter authManager: Менеджер API-ключа
     public init(authManager: AuthManaging = AuthManager()) {
         self.authManager = authManager
         Task { await load() }

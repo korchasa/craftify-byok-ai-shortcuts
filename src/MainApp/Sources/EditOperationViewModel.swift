@@ -95,8 +95,19 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
 
     deinit {}
 
-    public static let palette: [String] = [
-        "9e0142", "d53e4f", "f46d43", "fdae61", "fee08b", "e6f598", "abdda4", "66c2a5", "3288bd", "5e4fa2"
+    public static let palette: [String] = ColorPaletteConstants.palette
+
+    /// Список поддерживаемых языков для перевода
+    public let supportedLanguages: [(name: String, code: String)] = [
+        ("русский", "ru"),
+        ("english", "en"),
+        ("español", "es"),
+        ("français", "fr"),
+        ("deutsch", "de"),
+        ("中文", "zh"),
+        ("日本語", "ja"),
+        ("українська", "uk"),
+        ("български", "bg")
     ]
 
     public var isValid: Bool {

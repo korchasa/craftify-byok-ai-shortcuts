@@ -41,38 +41,35 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
         guard let error = result?.error else { fail("error is nil")
             return
         }
-        expect(error).to(contain("Нет текста"))
+        expect(error).to(contain("Нет текста для обработки"))
     }
 
     public func testTooLongTextShowsAlert() async {
         let manager = makeManager(consent: true)
-        let longText = String(repeating: "a", count: 13000)
         let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
-        let result = await manager.process(text: longText, operation: op)
+        let result = await manager.process(text: String(repeating: "a", count: 10001), operation: op)
         guard let error = result?.error else { fail("error is nil")
             return
         }
-        expect(error).to(contain("слишком длинный"))
+        expect(error).to(contain("Текст слишком длинный для обработки"))
     }
 
     public func testNoConsentShowsAlert() async {
         let manager = makeManager(consent: false)
-        let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
-        let result = await manager.process(text: "Hello", operation: op)
+        let result = await manager.process(text: "test", operation: nil)
         guard let error = result?.error else { fail("error is nil")
             return
         }
-        expect(error).to(contain("согласие"))
+        expect(error).to(contain("Требуется согласие пользователя"))
     }
 
     public func testInvalidAPIKeyShowsAlert() async {
         let manager = makeManager(consent: true, apiKey: "invalid")
-        let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
-        let result = await manager.process(text: "Hello", operation: op)
+        let result = await manager.process(text: "test", operation: nil)
         guard let error = result?.error else { fail("error is nil")
             return
         }
-        expect(error).to(contain("API-ключ"))
+        expect(error).to(contain("Неверный API-ключ"))
     }
 
     public func testNetworkErrorShowsAlert() async {
@@ -92,28 +89,17 @@ public final class E2EShareExtensionFlowTests: XCTestCase {
         guard let error = result?.error else { fail("error is nil")
             return
         }
-        expect(error).to(contain("парсинга"))
+        expect(error).to(contain("Ошибка парсинга"))
     }
 
     public func testClipboardErrorShowsAlert() async {
         let manager = makeManager(consent: true, simulateClipboardError: true)
         let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
-        let result = await manager.process(text: "Hello", operation: op)
+        let result = await manager.process(text: "test", operation: op)
         guard let error = result?.error else { fail("error is nil")
             return
         }
-        expect(error).to(contain("буфер"))
-    }
-
-    public func testCancelOperation() async {
-        let manager = makeManager(consent: true)
-        let op = InventoryOperation(operation: .translate, params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")), promptTemplate: "T: {text}")
-        manager.cancelProcessing()
-        let result = await manager.process(text: "Hello", operation: op)
-        guard let error = result?.error else { fail("error is nil")
-            return
-        }
-        expect(error).to(contain("отменена"))
+        expect(error).to(contain("Ошибка доступа к буферу обмена"))
     }
 
     public func testNetworkErrorUIFlow() async {

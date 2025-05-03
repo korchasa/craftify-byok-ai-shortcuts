@@ -61,8 +61,8 @@ public enum ColorPaletteConstants {
     public static let selectedTrait: AccessibilityTraits = .isSelected
     /// Список hex-кодов доступных цветов.
     public static let palette: [String] = [
-        "9e0142", "d53e4f", "f46d43", "fdae61", "fee08b",
-        "e6f598", "abdda4", "66c2a5", "3288bd", "5e4fa2"
+        "ef476f", "f78c6b", "ffd166", "83d483", "06d6a0",
+        "0cb0a9", "118ab2", "0c637f", "073b4c"
     ]
     /// Значение компоненты цвета по умолчанию (0), используется для инициализации цвета, если hex-строка некорректна.
     public static let defaultComponent: UInt64 = 0
