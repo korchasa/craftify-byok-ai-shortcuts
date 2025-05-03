@@ -1,9 +1,7 @@
 import Common
-
-// swiftlint:disable:next explicit_import
 import SwiftUI
 
-/// Экран онбординга Craftify: инструкция, согласие, privacy policy, кнопка "Готово"
+// swiftlint:disable:next explicit_import
 public struct HowToUseView: View {
     private static let verticalSpacing: CGFloat = 24
     private static let topPadding: CGFloat = 32
@@ -14,35 +12,78 @@ public struct HowToUseView: View {
 
     public var body: some View {
         VStack(spacing: Self.verticalSpacing) {
+            HowToUseTitle(topPadding: Self.topPadding)
+            HowToUseInstruction()
+            HowToUseConsentToggle(viewModel: viewModel)
+            HowToUsePrivacyLink()
+            Spacer()
+            HowToUseDoneButton(viewModel: viewModel, onConsent: onConsent, handleDoneTapped: handleDoneTapped, bottomPadding: Self.bottomPadding)
+        }
+        .padding()
+        .background(Color.white)
+        .ignoresSafeArea()
+    }
+
+    private struct HowToUseTitle: View {
+        let topPadding: CGFloat
+        var body: some View {
             Text(L10n.howtouseTitle)
-                .font(.title)
-                .bold()
+                .font(.craftifyTitle)
+                .fontWeight(.bold)
                 .multilineTextAlignment(.center)
-                .padding(.top, Self.topPadding)
+                .padding(.top, topPadding)
+        }
+    }
+
+    private struct HowToUseInstruction: View {
+        var body: some View {
             Text(L10n.howtouseInstruction)
-                .font(.body)
+                .font(.craftifyBody)
+                .fontWeight(.semibold)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
+        }
+    }
+
+    private struct HowToUseConsentToggle: View {
+        @ObservedObject var viewModel: HowToUseViewModel
+        var body: some View {
             Toggle(isOn: $viewModel.consentGiven) {
                 Text(L10n.howtouseConsent)
-                    .font(.body)
+                    .font(.craftifyBody)
+                    .fontWeight(.semibold)
             }
             .padding(.horizontal)
+        }
+    }
+
+    private struct HowToUsePrivacyLink: View {
+        var body: some View {
             Link(L10n.howtousePrivacyPolicy, destination: URL(string: "https://korchasa.dev/privacy")!)
-                .font(.footnote)
+                .font(.craftifyFootnote)
+                .fontWeight(.semibold)
                 .foregroundColor(.blue)
-            Spacer()
+        }
+    }
+
+    private struct HowToUseDoneButton: View {
+        @ObservedObject var viewModel: HowToUseViewModel
+        var onConsent: (() -> Void)?
+        var handleDoneTapped: () -> Void
+        let bottomPadding: CGFloat
+        var body: some View {
             Button(action: handleDoneTapped) {
                 Text(L10n.howtouseDone)
+                    .font(.craftifyBody)
+                    .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
             }
             .disabled(!viewModel.consentGiven)
             .accessibilityLabel(L10n.howtouseDone)
-            .buttonStyle(.borderedProminent)
+            .buttonStyle(CraftifyPrimaryButtonStyle())
             .padding(.horizontal)
-            .padding(.bottom, Self.bottomPadding)
+            .padding(.bottom, bottomPadding)
         }
-        .padding()
     }
 
     /// Инициализация с менеджером согласия

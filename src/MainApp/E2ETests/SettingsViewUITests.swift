@@ -32,8 +32,6 @@ import XCTest
             let view = SettingsView(viewModel: viewModel)
             let textField = try view.inspect().find(ViewType.SecureField.self)
             expect(try textField.text()) == ""
-            let toggle = try view.inspect().find(ViewType.Toggle.self)
-            expect(try toggle.isOn()) == false
         }
 
         public func testSaveKeyButtonEnabledWhenValid() throws {
@@ -67,16 +65,6 @@ import XCTest
             expect(deleteButton != nil) == true
         }
 
-        public func testConsentToggleUpdatesManager() throws {
-            guard let consentManager, let viewModel else { XCTFail("nil stub")
-                return
-            }
-            let view = SettingsView(viewModel: viewModel)
-            let toggle = try view.inspect().find(ViewType.Toggle.self)
-            try toggle.setIsOn(true)
-            expect(consentManager.getConsent()) == true
-        }
-
         public func testErrorMessageShown() throws {
             guard let viewModel else { XCTFail("viewModel is nil")
                 return
@@ -94,11 +82,9 @@ import XCTest
             let view = SettingsView(viewModel: viewModel)
             let textField = try view.inspect().find(ViewType.SecureField.self)
             let saveButton = try view.inspect().find(button: "Сохранить")
-            let toggle = try view.inspect().find(ViewType.Toggle.self)
             // accessibilityLabel
             expect(try textField.accessibilityLabel()) == L10n.settingsApiKey
             expect(try saveButton.accessibilityLabel()) == "Сохранить ключ"
-            expect(try toggle.accessibilityLabel()) == L10n.howtouseConsent
             // Dynamic Type (проверка поддержки)
             let title = try view.inspect().find(text: L10n.settingsTitle)
             let font = try title.attributes().font()

@@ -38,6 +38,8 @@ src/
         SwiftSoupTextFetcher.swift # Implementation using SwiftSoup and URLSession
       OperationInput.swift         # Added fields `url: String?`, `text: String?` for passing URL or text in operations
       SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL
+      CraftifyButtonConstants.swift # Единые константы для стилей кнопок (цвета, радиус, отступы, масштаб)
+      ColorPaletteConstants.swift   # Единые константы для палитры цветов операций (размеры, список цветов, отступы, маски)
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests
@@ -122,3 +124,6 @@ src/
 - Экспорт логов не поддерживается.
 
 - `src/ShareExtension/Sources/ShareExtensionView.swift` — основной UI-компонент окна шаринга, реализует разметку, закрепление кнопки закрытия, скроллирование и оверлеи.
+
+- `src/Common/Sources/CraftifyButtonConstants.swift` — единые константы для стилей кнопок (цвета, радиус, отступы, масштаб).
+- `src/Common/Sources/ColorPaletteConstants.swift` — единые константы для палитры цветов операций (размеры, список цветов, отступы, маски).

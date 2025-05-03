@@ -71,3 +71,10 @@ A new module allows SummarizeOperation to accept a URL. The system downloads the
 - Only HTTPS URLs are supported by default (App Transport Security).
 - Non-UTF8 encodings are not guaranteed to be handled.
 - Only visible <body> text is extracted; scripts/styles are ignored.
+
+## UI Requirements
+
+- The background color of all screens in the Craftify application must be strictly white (`Color.white`).
+- System or gray backgrounds (including default List, Form, ScrollView, and safe area backgrounds) are not allowed.
+- This requirement applies to all main and auxiliary screens, including Share Extension.
+- All user-facing surfaces must maintain a clean, white background for visual consistency and clarity.

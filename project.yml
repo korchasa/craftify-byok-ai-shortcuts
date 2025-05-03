@@ -102,6 +102,8 @@ targets:
       - path: src/Common/Generated/Strings.swift
     resources:
       - path: src/ShareExtension/Resources
+      - path: src/Common/Resources/en.lproj
+      - path: src/Common/Resources/ru.lproj
     info:
       path: src/ShareExtension/Config/Info.plist
       properties:
@@ -154,7 +156,7 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
   ShareExtensionE2ETests:
-    type: bundle.ui-testing
+    type: bundle.unit-test
     platform: iOS
     sources:
       - path: src/ShareExtension/E2ETests
@@ -175,7 +177,8 @@ targets:
     sources:
       - path: src/Common/Sources
       - path: src/Common/Generated/Strings.swift
-    resources: []
+    resources:
+      # Удаляю ресурсы с .xctestplan
     info:
       path: src/Common/Config/Info.plist
     settings:
@@ -260,98 +263,82 @@ packages:
 
 testPlans:
   Unit:
-    name: Unit Tests
+    name: "Unit Tests"
     description: "Запуск всех unit-тестов"
     testTargets:
       - MainAppUnitTests
       - ShareExtensionUnitTests
       - CommonUnitTests
-  E2E-Common:
-    name: "E2E Common Tests"
-    description: "Запуск E2E тестов для модуля Common"
-    testTargets:
-      - CommonE2ETests
-  E2E-MainApp:
-    name: "E2E MainApp Tests"
-    description: "Запуск E2E тестов для MainApp"
+  E2E:
+    name: "E2E Tests"
+    description: "Запуск всех e2e-тестов"
     testTargets:
       - MainAppE2ETests
-  E2E-ShareExtension:
-    name: "E2E ShareExtension Tests"
-    description: "Запуск E2E тестов для ShareExtension"
-    testTargets:
       - ShareExtensionE2ETests
+      - CommonE2ETests
+  All:
+    name: "All Tests"
+    description: "Запуск всех тестов"
+    testTargets:
+      - MainAppUnitTests
+      - ShareExtensionUnitTests
+      - CommonUnitTests
+      - MainAppE2ETests
+      - ShareExtensionE2ETests
+      - CommonE2ETests
 
 schemes:
+  AllTests:
+    build:
+      targets:
+        MainApp: all
+        ShareExtension: all
+        Common: all
+    test:
+      targets:
+        - name: MainAppUnitTests
+        - name: ShareExtensionUnitTests
+        - name: CommonUnitTests
+        - name: MainAppE2ETests
+        - name: ShareExtensionE2ETests
+        - name: CommonE2ETests
   MainApp:
     build:
       targets:
         MainApp: all
         ShareExtension: all
-  MainAppUnitTests:
-    build:
-      targets:
-        MainApp: all
-    test:
-      testPlans:
-        - Unit
-      targets:
-        - name: MainAppUnitTests
-  MainAppE2ETests:
-    build:
-      targets:
-        MainApp: all
-    test:
-      testPlans:
-        - E2E-MainApp
-      targets:
-        - name: MainAppE2ETests
   ShareExtension:
     build:
       targets:
         ShareExtension: all
-  ShareExtensionUnitTests:
-    build:
-      targets:
-        ShareExtension: all
-    test:
-      testPlans:
-        - Unit
-      targets:
-        - name: ShareExtensionUnitTests
-  ShareExtensionE2ETests:
-    build:
-      targets:
-        ShareExtension: all
-    test:
-      testPlans:
-        - E2E-ShareExtension
-      targets:
-        - name: ShareExtensionE2ETests
-  CommonUnitTests:
-    build:
-      targets:
-        Common: all
-    test:
-      testPlans:
-        - Unit
-      targets:
-        - name: CommonUnitTests
-  CommonE2ETests:
-    build:
-      targets:
-        Common: all
-    test:
-      testPlans:
-        - E2E-Common
-      targets:
-        - name: CommonE2ETests
   ShareExtensionSizeReport:
     build:
       targets:
         ShareExtension: all
     run:
       config: Release
+  AllUnitTests:
+    build:
+      targets:
+        MainApp: all
+        ShareExtension: all
+        Common: all
+    test:
+      targets:
+        - name: MainAppUnitTests
+        - name: ShareExtensionUnitTests
+        - name: CommonUnitTests
+  AllE2ETests:
+    build:
+      targets:
+        MainApp: all
+        ShareExtension: all
+        Common: all
+    test:
+      targets:
+        - name: MainAppE2ETests
+        - name: ShareExtensionE2ETests
+        - name: CommonE2ETests
 configFiles:
   Debug: Configs/Debug.xcconfig
   Release: Configs/Release.xcconfig

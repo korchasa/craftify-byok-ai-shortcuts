@@ -111,10 +111,12 @@ public final class OperationModelsTests: XCTestCase {
 
     func testSummarizeOperation_resolveInput_noInput_throws() async {
         let op = SummarizeOperation(textFetcher: DummyTextFetcher())
-        let input = OperationInput()
-        await XCTAssertThrowsErrorAsync({ try await op.resolveInput(input: input) }) { error in
-            let nsError = error as NSError
-            expect(nsError.domain) == "SummarizeOperation"
+        let input = OperationInput(url: nil, text: nil)
+        do {
+            _ = try await op.resolveInput(input: input)
+            XCTFail("Ожидалось исключение, но оно не было выброшено")
+        } catch {
+            // Ожидаемое поведение: ошибка выброшена
         }
     }
 

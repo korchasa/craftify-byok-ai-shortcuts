@@ -90,3 +90,28 @@ log show --predicate 'subsystem == "Internal"' --style syslog --last 2h
 - После генерации проекта через ./run generate расширение будет доступно для шаринга ссылок и текста.
 - Оба типа обрабатываются как обычный текст, приоритет у текста.
 - Покрыто unit- и e2e-тестами.
+
+## Style Guide for Buttons and Color Palette
+
+- Для всех кнопок используйте только CraftifyButtonConstants (цвета, радиус, отступы, масштаб).
+- Для палитры цветов используйте только ColorPaletteConstants.palette.
+- Не определяйте локальные константы для этих параметров в отдельных вью или viewmodel.
+- Пример использования:
+
+```swift
+Button(action: ...) {
+    Text("...")
+}
+.buttonStyle(CraftifyPrimaryButtonStyle())
+.padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+.padding(.bottom, CraftifyButtonConstants.bottomPadding)
+.cornerRadius(CraftifyButtonConstants.cornerRadius)
+```
+
+### Button Style Usage Guidelines
+
+- **Primary**: Для основных действий (сохранить, подтвердить, продолжить). Используйте `.buttonStyle(CraftifyPrimaryButtonStyle())`.
+- **Secondary**: Для второстепенных действий (отмена, дополнительные опции). Используйте `.buttonStyle(CraftifySecondaryButtonStyle())`.
+- **Cancel**: Для отмены, закрытия, возврата — используйте secondary-стиль с белым текстом.
+- **Destructive**: Для опасных действий (удалить, сбросить) используйте secondary-стиль с `.foregroundColor(.red)` или `.tint(.red)`.
+- **Не создавайте локальных ButtonStyle** — только централизованные.

@@ -7,7 +7,7 @@
 
 /* HomeView */
 "home_title" = "Craftify — Операции";
-"home_add_operation" = "Добавить операцию";
+"home_add_operation" = "Операция";
 "home_settings" = "Настройки";
 "home_edit" = "Редактировать";
 "home_delete" = "Удалить";
@@ -26,7 +26,7 @@
 /* SettingsView */
 "settings_title" = "Настройки";
 "settings_api_key" = "OpenAI API-ключ";
-"settings_done" = "Готово";
+"settings_done" = "Отмена";
 
 /* Share Extension UI */
 "share_title" = "Craftify";
@@ -52,3 +52,5 @@
 "operation_label_simplify" = "Упрощение";
 "operation_label_correct" = "Коррекция";
 "operation_label_explain" = "Объяснение";
+
+"color" = "Цвет";

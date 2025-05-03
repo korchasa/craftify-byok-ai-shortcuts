@@ -63,7 +63,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             logManager: LogManagerSharedInMemory()
         )
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
-        let longText = String(repeating: "a", count: 5001)
+        let longText = String(repeating: "a", count: ShareExtensionManager.maxTextLength + 1)
         let result = await manager.process(text: longText, operation: op)
         expect(result?.success) == false
         expect(result?.error) == "Текст слишком длинный для обработки"

@@ -19,13 +19,13 @@ Commands:
   deploy:simulator    Build MainApp for simulator
   deploy:testflight   Upload IPA to TestFlight via altool
   export-ipa          Export IPA from archive
+  fmt                 Run SwiftFormat (format code)
   generate            Run SwiftGen and XcodeGen
   init                Install CLI tools
+  lint                Run SwiftLint (lint code)
   logs                Stream MainApp logs
-  monitor-setup       Setup monitoring (Sentry etc.)
   notify              Send notifications (Slack, email)
   size-report         Check ShareExtension size
-  test                Run all tests (unit + e2e)
-  test:coverage       Run tests with code coverage
-  test:single         Run a single test or class (unit or e2e), for example: run test:single MainAppUnitTests MainAppUnitTests/AddOperationViewModelTests
+  check               Run all checks (clean, generate, comment-scan, fmt, lint, analyze, build, test)
+  test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
   help                Show this help

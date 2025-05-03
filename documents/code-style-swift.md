@@ -24,13 +24,17 @@
 - no_magic_numbers — магические числа должны быть заменены на именованные константы.
 - All SwiftLint and compiler warnings are treated as errors: tests and builds fail if any warning is present (warnings_as_errors).
 - Для NSLocalizedString всегда указывать bundle (nslocalizedstring_require_bundle)
+- missing_docs: Все public-элементы должны иметь документацию.
+- no_magic_numbers: Magic numbers запрещены, используйте именованные константы.
+- closure_body_length: Тело замыкания не должно превышать 30 строк.
+- Для всех новых кнопок обязательно используйте один из централизованных стилей: CraftifyPrimaryButtonStyle, CraftifySecondaryButtonStyle. Для опасных действий — secondary-стиль с .foregroundColor(.red). Локальные ButtonStyle запрещены.
 
 ## Правило: Access Control для расширений
 
 ### extension_access_modifier
-- Предпочитайте указывать модификатор доступа на самом `extension` вместо повторного указания его для каждого члена.
-- В расширении с модификатором доступа (`public`/`internal`/`private`/`fileprivate`) не дублируйте тот же модификатор у членов — они наследуют уровень доступа расширения.
-- Если только отдельные члены требуют иного уровня доступа, явно укажите модификатор только для них.
+- Prefer to specify the access modifier on the `extension` itself instead of repeating it for each member.
+- In an extension with an access modifier (`public`/`internal`/`private`/`fileprivate`), do not duplicate the same modifier for members — they inherit the access level of the extension.
+- If only individual members require a different access level, explicitly specify the modifier only for them.
 
 Пример:
 ```swift
@@ -39,3 +43,7 @@ public extension MyType {
     private func bar() {} // приватный член
 }
 ```
+
+- closure_body_length: Closure body should span 30 lines or less excluding comments and whitespace
+- no_magic_numbers: Magic numbers should be replaced by named constants
+- All style parameters for buttons (colors, radius, padding, scale) and palettes must be centralized in CraftifyButtonConstants and ColorPaletteConstants. Duplication or local constants for these parameters are not allowed.

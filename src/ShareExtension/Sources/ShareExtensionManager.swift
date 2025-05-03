@@ -16,7 +16,8 @@ public final class ShareExtensionManager {
     public private(set) var lastResult: String?
     /// Тип последней выполненной операции
     public private(set) var lastOperationKind: OperationKind?
-    private static let maxTextLength = 20000
+    /// Максимальная длина входного текста для обработки (используется для валидации)
+    public static let maxTextLength = 20000
     /// Входной текст для обработки (устанавливается из UI)
     public var inputText: String = ""
     private enum Constants {
@@ -57,34 +58,34 @@ public final class ShareExtensionManager {
         if isCancelled {
             isCancelled = false
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
-            return (false, "Operation cancelled")
+            return (false, L10n.errorCancelled)
         }
         guard !text.isEmpty else {
             logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "No text to process", metadata: [:]))
-            return (false, "No text to process")
+            return (false, L10n.errorNoText)
         }
         if text.count > Self.maxTextLength {
             logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "Text too long to process", metadata: ["length": "\(text.count)"]))
-            return (false, "Text too long to process")
+            return (false, L10n.errorTextTooLong)
         }
         if !consentManager.getConsent() {
             logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "User consent required", metadata: [:]))
-            return (false, "User consent required")
+            return (false, L10n.errorConsentRequired)
         }
         let apiKey: String?
         do {
             apiKey = try await authManager.getAPIKey()
         } catch {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "API key access error", metadata: ["error": "\(error)"]))
-            return (false, "API key access error")
+            return (false, L10n.errorApiKeyAccess)
         }
         guard let key = apiKey, key.starts(with: "sk-") else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Invalid API key", metadata: ["key": authManager.maskedAPIKey(apiKey)]))
-            return (false, "Invalid API key")
+            return (false, L10n.errorInvalidApiKey)
         }
         guard let op = operation else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "No operation to process", metadata: [:]))
-            return (false, "No operation to process")
+            return (false, L10n.errorNoOperation)
         }
         self.lastOperationKind = op.operation
         logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Start processing", metadata: ["operation": "\(op.operation)"]))
@@ -98,7 +99,7 @@ public final class ShareExtensionManager {
             }
             guard let result = stubResult else {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: [:]))
-                return (false, "Processing error")
+                return (false, L10n.errorProcessing)
             }
             switch result {
             case let .failure(err):
@@ -117,12 +118,12 @@ public final class ShareExtensionManager {
             }
         } else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing manager unavailable", metadata: [:]))
-            return (false, "Processing manager unavailable")
+            return (false, L10n.errorProcessingManagerUnavailable)
         }
         if isCancelled {
             isCancelled = false
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
-            return (false, "Operation cancelled")
+            return (false, L10n.errorCancelled)
         }
         // Настройка режима обработки результата и сохранение результата
         let mode = OperationFactory.make(kind: op.operation).resultMode
@@ -135,16 +136,16 @@ public final class ShareExtensionManager {
         if let cb = clipboardManager as? ClipboardManagerStub {
             if !cb.copy(text: processedText) {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
-                return (false, "Clipboard access error")
+                return (false, L10n.errorClipboard)
             }
         } else if let cb = clipboardManager as? ClipboardManaging {
             if !cb.copy(text: processedText) {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
-                return (false, "Clipboard access error")
+                return (false, L10n.errorClipboard)
             }
         } else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error (type)", metadata: [:]))
-            return (false, "Clipboard access error")
+            return (false, L10n.errorClipboard)
         }
         logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Result copied to clipboard successfully", metadata: [:]))
         return (true, nil)
