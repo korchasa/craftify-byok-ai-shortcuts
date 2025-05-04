@@ -26,23 +26,23 @@ public struct AddOperationView: View {
     }
 
     public var body: some View {
-        Form {
-            Section(header: Text(L10n.addOperationType).font(.craftifyTitle).fontWeight(.bold)) {
-                AddOperationTypeSection(viewModel: viewModel)
-            }
-            Section {
-                AddOperationFields(viewModel: viewModel)
-            }
-            Section(header: Text(L10n.color).font(.craftifyTitle).fontWeight(.bold)) {
-                AddOperationColorPalette(viewModel: viewModel)
-            }
-            Section {
+        CommonFormContainer(
+            title: LocalizedStringKey(L10n.addOperationTitle),
+            content: {
+                Section(header: Text(L10n.addOperationType).font(.craftifyTitle).fontWeight(.bold)) {
+                    AddOperationTypeSection(viewModel: viewModel)
+                }
+                Section {
+                    AddOperationFields(viewModel: viewModel)
+                }
+                Section(header: Text(L10n.color).font(.craftifyTitle).fontWeight(.bold)) {
+                    AddOperationColorPalette(viewModel: viewModel)
+                }
+            },
+            buttons: {
                 AddOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
             }
-        }
-        .background(Color.white)
-        .navigationTitle(LocalizedStringKey(L10n.addOperationTitle))
-        .formStyle(.grouped)
+        )
     }
 
     private struct AddOperationButtons: View {
