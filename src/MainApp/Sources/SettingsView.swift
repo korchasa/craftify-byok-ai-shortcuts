@@ -42,12 +42,13 @@ public struct SettingsView: View {
                 SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
                 SettingsErrorSection(errorMessage: viewModel.errorMessage)
             }
+            .padding(.leading, FormStyleConstants.formLeadingPadding)
             .navigationTitle(L10n.settingsTitle)
             .font(.craftifyTitle)
             .fontWeight(.bold)
             .scrollContentBackground(.hidden)
             .background(Color.white)
-            Spacer(minLength: CraftifyButtonConstants.spacerMinLength)
+            Spacer(minLength: MainAppButtonConstants.spacerMinLength)
             SettingsFormButtons(viewModel: viewModel, dismiss: dismiss)
         }
     }
@@ -56,7 +57,7 @@ public struct SettingsView: View {
         @ObservedObject var viewModel: SettingsViewModel
         var dismiss: DismissAction
         var body: some View {
-            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+            HStack(spacing: MainAppButtonConstants.horizontalPadding) {
                 Button(action: { dismiss() }) {
                     Label(L10n.settingsDone, systemImage: "xmark")
                         .font(.craftifyBody)
@@ -79,8 +80,8 @@ public struct SettingsView: View {
                 .accessibilityLabel(L10n.addOperationSave + " ключ")
                 .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
             }
-            .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-            .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+            .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
+            .padding(.bottom, MainAppButtonConstants.bottomPadding)
             .background(Color.white.ignoresSafeArea())
         }
     }
@@ -146,6 +147,6 @@ private extension View {
     func craftifySectionHeader() -> some View {
         self.font(.system(size: craftifySectionHeaderFontSize, weight: .bold))
             .foregroundColor(.secondary)
-            .padding(.leading, CraftifyButtonConstants.titleLeadingPadding)
+            .padding(.leading, FormStyleConstants.titleLeadingPadding)
     }
 }

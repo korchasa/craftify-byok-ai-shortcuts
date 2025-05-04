@@ -85,7 +85,7 @@ public struct ShareExtensionView: View {
                 operationsGrid
             }
         }
-        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+        .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
     }
 
     public var body: some View {
@@ -106,8 +106,8 @@ public struct ShareExtensionView: View {
         // Pin the close button above the bottom safe area with fixed padding
         .safeAreaInset(edge: .bottom) {
             closeButton
-                .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-                .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+                .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
+                .padding(.bottom, ShareExtensionButtonConstants.bottomPadding)
                 .background(Color.white)
         }
         .background(Color.white)
@@ -155,11 +155,11 @@ public struct ShareExtensionView: View {
                         .cornerRadius(cardCornerRadius)
                 }
                 .accessibilityLabel(operationDisplayName(for: op))
-                .buttonStyle(CraftifyPrimaryButtonStyle())
+                .buttonStyle(ShareExtensionPrimaryButtonStyle())
                 .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
             }
         }
-        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+        .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
     }
 
     private func operationDisplayName(for op: InventoryOperation) -> String {
@@ -298,8 +298,8 @@ public struct ShareExtensionView: View {
                 .frame(maxWidth: .infinity)
                 .padding()
         }
-        .buttonStyle(CraftifyPrimaryButtonStyle())
-        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-        .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+        .buttonStyle(ShareExtensionPrimaryButtonStyle())
+        .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
+        .padding(.bottom, ShareExtensionButtonConstants.bottomPadding)
     }
 }

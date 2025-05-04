@@ -48,12 +48,13 @@ public struct AddOperationView: View {
                         AddOperationColorPalette(viewModel: viewModel)
                     }
                 }
+                .padding(.leading, FormStyleConstants.formLeadingPadding)
                 .navigationTitle(L10n.addOperationTitle)
                 .font(.craftifyTitle)
                 .fontWeight(.bold)
                 .scrollContentBackground(.hidden)
                 .background(Color.white)
-                Spacer(minLength: CraftifyButtonConstants.spacerMinLength)
+                Spacer(minLength: MainAppButtonConstants.spacerMinLength)
                 AddOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
             }
         }
@@ -64,7 +65,7 @@ public struct AddOperationView: View {
         var onSave: ((InventoryOperation) -> Void)?
         var dismiss: DismissAction
         var body: some View {
-            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+            HStack(spacing: MainAppButtonConstants.horizontalPadding) {
                 Button(action: {
                     viewModel.cancel()
                     dismiss()
@@ -91,10 +92,10 @@ public struct AddOperationView: View {
                 .accessibilityLabel(L10n.addOperationSave)
                 .disabled(!viewModel.isValid)
             }
-            .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-            .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+            .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
+            .padding(.bottom, MainAppButtonConstants.bottomPadding)
             .background(Color.white.ignoresSafeArea())
-            .cornerRadius(CraftifyButtonConstants.cornerRadius)
+            .cornerRadius(MainAppButtonConstants.cornerRadius)
         }
     }
 
@@ -248,6 +249,6 @@ private extension View {
     func craftifySectionHeader() -> some View {
         self.font(.system(size: craftifySectionHeaderFontSize, weight: .bold))
             .foregroundColor(.secondary)
-            .padding(.leading, CraftifyButtonConstants.titleLeadingPadding)
+            .padding(.leading, FormStyleConstants.titleLeadingPadding)
     }
 }

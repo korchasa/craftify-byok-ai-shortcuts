@@ -215,6 +215,9 @@ targets:
         SWIFT_OPTIMIZATION_LEVEL: '-O'
     dependencies:
       - package: SwiftSoup
+    build:
+      targets:
+        Common: all
   CommonUnitTests:
     type: bundle.unit-test
     platform: iOS
