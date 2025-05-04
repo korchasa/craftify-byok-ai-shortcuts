@@ -40,6 +40,7 @@ public struct EditOperationView: View {
                 EditOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
             }
         }
+        .background(Color.white)
         .navigationTitle(LocalizedStringKey(L10n.editOperationTitle))
         .formStyle(.grouped)
     }

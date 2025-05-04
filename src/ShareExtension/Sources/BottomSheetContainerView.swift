@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 public struct BottomSheetContainerView<Content: View>: View {
@@ -6,21 +7,18 @@ public struct BottomSheetContainerView<Content: View>: View {
     private let cornerRadius: CGFloat
     private let shadowRadius: CGFloat
     private let backgroundColor: Color
-    private let backgroundOpacity: Double
 
     public init(
         maxHeight: CGFloat? = nil,
         cornerRadius: CGFloat = 20,
         shadowRadius: CGFloat = 8,
         backgroundColor: Color = Color.white,
-        backgroundOpacity: Double = 1.0,
         @ViewBuilder content: () -> Content
     ) {
         self.maxHeight = maxHeight
         self.cornerRadius = cornerRadius
         self.shadowRadius = shadowRadius
         self.backgroundColor = backgroundColor
-        self.backgroundOpacity = backgroundOpacity
         self.content = content()
     }
 
@@ -34,8 +32,8 @@ public struct BottomSheetContainerView<Content: View>: View {
         .padding(.horizontal, horizontalPadding)
         .padding(.top, topPadding)
         .padding(.bottom, bottomPadding)
-        .background(backgroundColor.opacity(backgroundOpacity))
-        .clipShape(RoundedCorner(radius: cornerRadius, corners: [.topLeft, .topRight]))
+        .background(backgroundColor)
+        .clipShape(RoundedCorner(radius: cornerRadius, corners: UIRectCorner.topLeft.union(.topRight)))
         .shadow(radius: shadowRadius)
         .frame(maxWidth: .infinity)
         .frame(maxHeight: maxHeight)

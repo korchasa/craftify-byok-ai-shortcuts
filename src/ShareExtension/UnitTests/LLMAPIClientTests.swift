@@ -55,8 +55,10 @@ public final class LLMAPIClientTests: XCTestCase {
         do {
             _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-invalid-key")
             XCTFail("Expected error for 401, but got success")
+        } catch let error as LLMAPIClientError {
+            XCTAssertEqual(error.errorDescription, LLMAPIClientError.unauthorized.errorDescription)
         } catch {
-            XCTAssertTrue(error.localizedDescription == "401" || error.localizedDescription == "unauthorized" || error.localizedDescription == "Unauthorized")
+            XCTFail("Expected LLMAPIClientError.unauthorized, got: \(error)")
         }
     }
 
@@ -77,8 +79,10 @@ public final class LLMAPIClientTests: XCTestCase {
         do {
             _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
             XCTFail("Expected error for 429, but got success")
+        } catch let error as LLMAPIClientError {
+            XCTAssertEqual(error.errorDescription, LLMAPIClientError.tooManyRequests.errorDescription)
         } catch {
-            XCTAssertTrue(error.localizedDescription == "429" || error.localizedDescription == "too many requests" || error.localizedDescription == "Too Many Requests")
+            XCTFail("Expected LLMAPIClientError.tooManyRequests, got: \(error)")
         }
     }
 
@@ -99,8 +103,10 @@ public final class LLMAPIClientTests: XCTestCase {
         do {
             _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
             XCTFail("Expected error for 500, but got success")
+        } catch let error as LLMAPIClientError {
+            XCTAssertEqual(error.errorDescription, LLMAPIClientError.serverError.errorDescription)
         } catch {
-            XCTAssertTrue(error.localizedDescription == "500" || error.localizedDescription == "internal server error" || error.localizedDescription == "Internal Server Error")
+            XCTFail("Expected LLMAPIClientError.serverError, got: \(error)")
         }
     }
 
