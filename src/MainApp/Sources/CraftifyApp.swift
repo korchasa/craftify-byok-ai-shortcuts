@@ -1,5 +1,6 @@
 import Common
-import NewRelic
+
+// import NewRelic
 import SwiftUI
 
 @main
@@ -21,12 +22,6 @@ public struct CraftifyApp: App {
     }
 
     public init() {
-        // New Relic initialization
-        if let infoDict = Bundle.main.infoDictionary,
-           let token = infoDict["NewRelicAppToken"] as? String,
-           token != "__NEWRELIC_APP_TOKEN__"
-        {
-            NewRelic.start(withApplicationToken: token)
-        }
+        // Удалена инициализация New Relic
     }
 }

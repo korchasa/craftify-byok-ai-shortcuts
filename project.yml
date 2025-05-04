@@ -25,7 +25,30 @@ targets:
     type: application
     platform: iOS
     sources:
-      - path: src/MainApp/Sources
+      - path: src/MainApp/Sources/Components
+      - path: src/MainApp/Sources/CraftifyApp.swift
+      - path: src/MainApp/Sources/EditOperationView.swift
+      - path: src/MainApp/Sources/AddOperationView.swift
+      - path: src/MainApp/Sources/SettingsView.swift
+      - path: src/MainApp/Sources/FormStyleConstants.swift
+      - path: src/MainApp/Sources/HomeView.swift
+      - path: src/MainApp/Sources/HowToUseView.swift
+      - path: src/MainApp/Sources/CraftifySecondaryButtonStyle.swift
+      - path: src/MainApp/Sources/SettingsViewConstants.swift
+      - path: src/MainApp/Sources/MainAppButtonConstants.swift
+      - path: src/MainApp/Sources/AddOperationViewConstants.swift
+      - path: src/MainApp/Sources/AddOperationViewModel.swift
+      - path: src/MainApp/Sources/EditOperationViewModel.swift
+      - path: src/MainApp/Sources/Font+Craftify.swift
+      - path: src/MainApp/Sources/SettingsViewModel.swift
+      - path: src/MainApp/Sources/SettingsView_Previews.swift
+      - path: src/MainApp/Sources/AddOperationView_Previews.swift
+      - path: src/MainApp/Sources/EditOperationView_Previews.swift
+      - path: src/MainApp/Sources/AuthManagerMock.swift
+      - path: src/MainApp/Sources/HomeViewModel.swift
+      - path: src/MainApp/Sources/AppState.swift
+      - path: src/MainApp/Sources/HowToUseViewModel.swift
+      - path: src/MainApp/Sources/MainAppPlaceholder.swift
       - path: src/Common/Generated/Strings.swift
       - path: src/Common/Sources/ColorPaletteConstants.swift
     resources:
@@ -60,7 +83,6 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER: "Craftify MainApp"
     dependencies:
       - target: Common
-      - package: NewRelic
       - target: ShareExtension
     embedAppExtensions:
       - ShareExtension
@@ -73,34 +95,47 @@ targets:
       - path: src/Common/Generated/Strings.swift
     dependencies:
       - target: MainApp
-      - package: Nimble
+      - target: Common
       - package: CwlPreconditionTesting
       - package: CwlCatchException
+      - package: ViewInspector
+      - sdk: XCTest.framework
     testTarget: true
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-  MainAppE2ETests:
-    type: bundle.ui-testing
-    platform: iOS
-    sources:
-      - path: src/MainApp/E2ETests
-      - path: src/MainApp/Sources
-      - path: src/Common/Generated/Strings.swift
-    dependencies:
-      - target: MainApp
-      - package: Nimble
-      - package: CwlPreconditionTesting
-      - package: CwlCatchException
-    testTarget: true
-    settings:
-      base:
-        GENERATE_INFOPLIST_FILE: YES
+        ENABLE_TESTING_SEARCH_PATHS: YES
+        SDKROOT: iphonesimulator
+        OTHER_LDFLAGS:
+          - "-weak_framework"
+          - "XCTest"
+          - "-weak-lXCTestSwiftSupport"
   ShareExtension:
     type: app-extension
     platform: iOS
     sources:
-      - path: src/ShareExtension/Sources
+      - path: src/ShareExtension/Sources/ShareExtensionManager.swift
+      - path: src/ShareExtension/Sources/ShareExtensionView.swift
+      - path: src/ShareExtension/Sources/ShareExtensionButtonConstants.swift
+      - path: src/ShareExtension/Sources/ShareExtensionPrimaryButtonStyle.swift
+      - path: src/ShareExtension/Sources/Font+Craftify.swift
+      - path: src/ShareExtension/Sources/ShareExtensionViewConstants.swift
+      - path: src/ShareExtension/Sources/BottomSheetContainerView.swift
+      - path: src/ShareExtension/Sources/ProcessingManager.swift
+      - path: src/ShareExtension/Sources/ShareExtensionViewModel.swift
+      - path: src/ShareExtension/Sources/ShareExtensionViewController.swift
+      - path: src/ShareExtension/Sources/ContentHeightKey.swift
+      - path: src/ShareExtension/Sources/ShareExtensionViewModelConstants.swift
+      - path: src/ShareExtension/Sources/ClipboardManagerStub.swift
+      - path: src/ShareExtension/Sources/LLMAPIClientError.swift
+      - path: src/ShareExtension/Sources/ClipboardManager.swift
+      - path: src/ShareExtension/Sources/LLMAPIClient.swift
+      - path: src/ShareExtension/Sources/ProcessingManaging.swift
+      - path: src/ShareExtension/Sources/ProcessingManagerStub.swift
+      - path: src/ShareExtension/Sources/RoundedCorner.swift
+      - path: src/ShareExtension/Sources/ShareExtensionViewHeight.swift
+      - path: src/ShareExtension/Sources/ClipboardManaging.swift
+      - path: src/ShareExtension/Sources/ShareExtensionPlaceholder.swift
       - path: src/Common/Generated/Strings.swift
     resources:
       - path: src/ShareExtension/Resources
@@ -144,6 +179,7 @@ targets:
         APP_GROUPS: group.dev.korchasa.Craftify
         KEYCHAIN_ACCESS_GROUPS: 78M3ZDR5UH.*
         PROVISIONING_PROFILE_SPECIFIER: "Craftify Share Extension"
+        ENABLE_TESTING_SEARCH_PATHS: NO
   ShareExtensionUnitTests:
     type: bundle.unit-test
     platform: iOS
@@ -153,29 +189,19 @@ targets:
       - path: src/Common/Generated/Strings.swift
     dependencies:
       - target: ShareExtension
-      - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
+      - package: ViewInspector
     testTarget: true
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-  ShareExtensionE2ETests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: src/ShareExtension/E2ETests
-      - path: src/ShareExtension/Sources
-      - path: src/Common/Generated/Strings.swift
-    dependencies:
-      - target: ShareExtension
-      - package: Nimble
-      - package: CwlPreconditionTesting
-      - package: CwlCatchException
-    testTarget: true
-    settings:
-      base:
-        GENERATE_INFOPLIST_FILE: YES
+        ENABLE_TESTING_SEARCH_PATHS: YES
+        SDKROOT: iphonesimulator
+        OTHER_LDFLAGS:
+          - "-weak_framework"
+          - "XCTest"
+          - "-weak-lXCTestSwiftSupport"
   Common:
     type: framework
     platform: iOS
@@ -226,44 +252,32 @@ targets:
       - path: src/Common/Sources
     dependencies:
       - target: Common
-      - package: Nimble
       - package: CwlPreconditionTesting
       - package: CwlCatchException
+      - sdk: XCTest.framework
     testTarget: true
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
-  CommonE2ETests:
-    type: bundle.ui-testing
-    platform: iOS
-    sources:
-      - path: src/Common/E2ETests
-      - path: src/Common/Sources
-    dependencies:
-      - target: Common
-      - package: Nimble
-      - package: CwlPreconditionTesting
-      - package: CwlCatchException
-    testTarget: true
-    settings:
-      base:
-        GENERATE_INFOPLIST_FILE: YES
+        ENABLE_TESTING_SEARCH_PATHS: YES
+        SDKROOT: iphonesimulator
+        OTHER_LDFLAGS:
+          - "-weak_framework"
+          - "XCTest"
+          - "-weak-lXCTestSwiftSupport"
 packages:
-  Nimble:
-    url: https://github.com/Quick/Nimble.git
-    from: 12.0.0
   CwlPreconditionTesting:
     url: https://github.com/mattgallagher/CwlPreconditionTesting.git
     from: 2.2.2
   CwlCatchException:
     url: https://github.com/mattgallagher/CwlCatchException.git
     from: 2.2.1
-  NewRelic:
-    url: https://github.com/newrelic/newrelic-ios-agent-spm
-    from: 7.5.5
   SwiftSoup:
     url: https://github.com/scinfu/SwiftSoup.git
     from: 2.4.3
+  ViewInspector:
+    url: https://github.com/nalexn/ViewInspector.git
+    from: 0.9.0
 
 schemes:
   AllTests:
@@ -277,9 +291,6 @@ schemes:
         - name: MainAppUnitTests
         - name: ShareExtensionUnitTests
         - name: CommonUnitTests
-        - name: MainAppE2ETests
-        - name: ShareExtensionE2ETests
-        - name: CommonE2ETests
   MainApp:
     build:
       targets:
@@ -295,28 +306,6 @@ schemes:
         ShareExtension: all
     run:
       config: Release
-  AllUnitTests:
-    build:
-      targets:
-        MainApp: all
-        ShareExtension: all
-        Common: all
-    test:
-      targets:
-        - name: MainAppUnitTests
-        - name: ShareExtensionUnitTests
-        - name: CommonUnitTests
-  AllE2ETests:
-    build:
-      targets:
-        MainApp: all
-        ShareExtension: all
-        Common: all
-    test:
-      targets:
-        - name: MainAppE2ETests
-        - name: ShareExtensionE2ETests
-        - name: CommonE2ETests
 configFiles:
   Debug: Configs/Debug.xcconfig
   Release: Configs/Release.xcconfig

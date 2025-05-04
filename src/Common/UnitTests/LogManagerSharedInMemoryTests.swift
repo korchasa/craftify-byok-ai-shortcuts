@@ -1,5 +1,4 @@
-@testable import Common
-import Nimble
+// import Common
 import XCTest
 
 /// Тесты для LogManagerSharedInMemory
@@ -16,9 +15,9 @@ public final class LogManagerSharedInMemoryTests: XCTestCase {
         logger.log(entry1)
         logger.log(entry2)
         let logs = logger.getLogs()
-        expect(logs.count).to(equal(2))
-        expect(logs[0]).to(equal(entry1))
-        expect(logs[1]).to(equal(entry2))
+        XCTAssertEqual(logs.count, 2)
+        XCTAssertEqual(logs[0], entry1)
+        XCTAssertEqual(logs[1], entry2)
     }
 
     /// Проверяет удаление логов
@@ -26,7 +25,7 @@ public final class LogManagerSharedInMemoryTests: XCTestCase {
         let logger = LogManagerSharedInMemory(maxLogCount: 10)
         logger.log(LogEntry(level: .info, module: module, message: message, metadata: metadata))
         logger.clearLogs()
-        expect(logger.getLogs()).to(beEmpty())
+        XCTAssertTrue(logger.getLogs().isEmpty)
     }
 
     /// Проверяет FIFO-очистку при превышении лимита
@@ -39,9 +38,9 @@ public final class LogManagerSharedInMemoryTests: XCTestCase {
         logger.log(entry2)
         logger.log(entry3)
         let logs = logger.getLogs()
-        expect(logs.count).to(equal(2))
-        expect(logs[0]).to(equal(entry2))
-        expect(logs[1]).to(equal(entry3))
+        XCTAssertEqual(logs.count, 2)
+        XCTAssertEqual(logs[0], entry2)
+        XCTAssertEqual(logs[1], entry3)
     }
 
     /// Проверяет экспорт логов в JSON
@@ -51,7 +50,7 @@ public final class LogManagerSharedInMemoryTests: XCTestCase {
         logger.log(entry)
         let data = try logger.exportLogs()
         let decoded = try JSONDecoder().decode([LogEntry].self, from: data)
-        expect(decoded).to(equal([entry]))
+        XCTAssertEqual(decoded, [entry])
     }
 
     /// Проверяет уровни логов
@@ -60,7 +59,7 @@ public final class LogManagerSharedInMemoryTests: XCTestCase {
         let entry = LogEntry(level: .warning, module: module, message: message, metadata: metadata)
         logger.log(entry)
         let logs = logger.getLogs()
-        expect(logs.first?.level).to(equal(.warning))
+        XCTAssertEqual(logs.first?.level, .warning)
     }
 
     /// Очистка ресурсов (stub)

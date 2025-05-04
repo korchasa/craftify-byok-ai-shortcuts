@@ -1,6 +1,11 @@
 strings:
   - inputs:
-      - src/Common/Resources/en.lproj/Localizable.strings
+      - src/MainApp/Resources/en.lproj/Localizable.strings
     outputs:
       - templateName: structured-swift5
-        output: src/Common/Generated/Strings.swift
+        output: src/Common/Generated/Strings-en.swift
+  - inputs:
+      - src/MainApp/Resources/ru.lproj/Localizable.strings
+    outputs:
+      - templateName: structured-swift5
+        output: src/Common/Generated/Strings-ru.swift

@@ -28,29 +28,25 @@ if [[ -n "${ONLY_TESTING:-}" ]]; then
   ONLY_TEST_FLAGS+=("-only-testing" "${ONLY_TESTING}")
 fi
 
+# === Общие переменные для ускорения сборки ===
+DERIVED_DATA_FAST=build/DerivedData_FastCheck
+RESULT_BUNDLE_PATH=build/Results/AllUnitTests.xcresult
+SCHEME_ALL_TESTS=AllUnitTests
+SCHEME_MAINAPP=MainApp
+DEST_SIMULATOR="id=${SIMULATOR_ID},arch=arm64"
+# Для deploy:simulator отдельные артефакты
+DERIVED_DATA_SIM=build/DerivedData_DeploySimulator
+RESULT_BUNDLE_SIM=build/Results/DeploySimulator.xcresult
+
 function usage() {
   cat <<EOF
 Usage: $SCRIPT_NAME <command> [args...]
 Commands:
-  analyze             Run static analysis
-  archive             Archive MainApp as .xcarchive
-  build               Build MainApp and ShareExtension (Release)
-  bump-version        Bump version numbers via agvtool
-  clean               Clean build artifacts
-  comment-scan        Scan for TODO/FIXME/print/debugPrint
-  deploy:adhoc        Ad-hoc TestFlight deploy
-  deploy:appstore     Upload to App Store Connect
-  deploy:internal     Internal TestFlight deploy
-  deploy:simulator    Build MainApp for simulator
-  deploy:testflight   Upload IPA to TestFlight via altool
-  export-ipa          Export IPA from archive
-  fmt                 Run SwiftFormat (format code)
+  full-clean          Full clean: deletion of all builds, caches, logs, and temporary files
+  sim                 Build MainApp for simulator
   generate            Run SwiftGen and XcodeGen
   init                Install CLI tools
-  lint                Run SwiftLint (lint code)
   logs                Stream MainApp logs
-  notify              Send notifications (Slack, email)
-  size-report         Check ShareExtension size
   check               Run all checks (clean, generate, comment-scan, fmt, lint, analyze, build, test)
   test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
   help                Show this help
@@ -90,6 +86,11 @@ function clean() {
   rm -rf .build
   rm -rf .swiftpm
   rm -rf ~/Library/Developer/Xcode/DerivedData
+  rm -rf ~/Library/Caches/org.swift.swiftpm
+  rm -rf Craftify.xcodeproj/project.xcworkspace/xcuserdata
+  rm -rf Craftify.xcodeproj/xcuserdata
+  rm -rf Craftify.xcodeproj/xcshareddata/xcschemes
+  rm -rf build/SourcePackages
   xcb clean || true
   _end_section
 }
@@ -191,22 +192,56 @@ function _install_app_to_simulator() {
   fi
 }
 
+function fast_check_build_analyze_test() {
+  _start_section "Fast build+analyze+test (MainApp, ShareExtension, AllUnitTests)"
+  local t0=$(date +%s)
+  rm -rf "$DERIVED_DATA_FAST" "$RESULT_BUNDLE_PATH"
+  local t1=$(date +%s)
+  xcb build analyze test \
+    -scheme AllTests \
+    -configuration Debug \
+    -sdk iphonesimulator \
+    -destination "$DEST_SIMULATOR" \
+    -derivedDataPath "$DERIVED_DATA_FAST" \
+    -parallel-testing-enabled YES \
+    -parallel-testing-worker-count "${WORKER_COUNT}" \
+    -resultBundlePath "$RESULT_BUNDLE_PATH" \
+    -testLanguage en \
+    -testRegion US
+  local exit_code=$?
+  local t2=$(date +%s)
+  _end_section
+  local t3=$(date +%s)
+  echo -e "${YELLOW}==> fast_check_build_analyze_test: Finished at $(date)${NC}"
+  echo -e "${YELLOW}==> Timing:${NC}"
+  echo "  Prepare:   $((t1-t0))s"
+  echo "  Build+Analyze+Test: $((t2-t1))s"
+  echo "  Cleanup:   $((t3-t2))s"
+  echo "  TOTAL:     $((t3-t0))s"
+  return $exit_code
+}
+
 function deploy_simulator() {
-  clean
   generate "$@"
-  if [[ -z "${CI:-}" ]]; then
-    _start_section "Opening Simulator"
-    open -a Simulator
-    _end_section
-  fi
-  _start_section "Building MainApp for simulator"
-  local derived_data_path="build/DerivedData_DeploySimulator"
-  rm -rf "$derived_data_path"
-  xcb build -sdk iphonesimulator -destination "id=${SIMULATOR_ID},arch=arm64" -scheme MainApp build -derivedDataPath "$derived_data_path" "$@"
+  _start_section "Opening Simulator"
+  open -a Simulator
+  _end_section
+  _start_section "Fast build+analyze+test for simulator deploy"
+  xcb build analyze test \
+    -scheme "$SCHEME_ALL_TESTS" \
+    -configuration Debug \
+    -sdk iphonesimulator \
+    -destination "$DEST_SIMULATOR" \
+    -derivedDataPath "$DERIVED_DATA_SIM" \
+    -parallel-testing-enabled YES \
+    -parallel-testing-worker-count "${WORKER_COUNT}" \
+    -resultBundlePath "$RESULT_BUNDLE_SIM" \
+    -testLanguage en \
+    -testRegion US
   _end_section
   _boot_and_wait_simulator
   local app_path
-  app_path=$(xcodebuild -scheme MainApp -destination "id=${SIMULATOR_ID},arch=arm64" -sdk iphonesimulator -derivedDataPath "$derived_data_path" -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
+  app_path=$(xcodebuild -scheme "$SCHEME_MAINAPP" -destination "$DEST_SIMULATOR" -sdk iphonesimulator -derivedDataPath "$DERIVED_DATA_SIM" -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
   _start_section "Installing app to simulator: $app_path"
   _install_app_to_simulator "$app_path"
   _end_section
@@ -232,39 +267,6 @@ function comment_scan() {
     echo -e "${RED}Error: TODO/FIXME/print/debugPrint found!${NC}"
     exit 1
   fi
-  _end_section
-}
-
-function archive() {
-  generate "$@"
-  _start_section "Archiving MainApp"
-  xcb archive \
-    -scheme MainApp \
-    -configuration Release \
-    -archivePath build/MainApp.xcarchive \
-    -allowProvisioningUpdates "$@"
-  _end_section
-}
-
-function export_ipa() {
-  _start_section "Exporting IPA from archive"
-  xcb -exportArchive \
-    -archivePath build/MainApp.xcarchive \
-    -exportOptionsPlist ExportOptions.plist \
-    -exportPath build/IPA "$@"
-  _end_section
-}
-
-function deploy_testflight() {
-  _start_section "Deploying IPA to TestFlight"
-  if [[ -z "${API_KEY_PATH:-}" || -z "${API_ISSUER_ID:-}" ]]; then
-    echo -e "${RED}Error: API_KEY_PATH or API_ISSUER_ID env vars not set${NC}"
-    exit 1
-  fi
-  xcrun altool \
-    --upload-app --type ios \
-    -file build/IPA/MainApp.ipa \
-    -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
   _end_section
 }
 
@@ -295,42 +297,6 @@ function analyze() {
     -destination "id=${SIMULATOR_ID},arch=arm64" \
     -configuration Debug \
     -derivedDataPath build/DerivedData_Analyze_ShareExtension "$@"
-  _end_section
-}
-
-function _export_ipa_adhoc() {
-  _start_section "Exporting AdHoc IPA"
-  xcb -exportArchive \
-    -archivePath build/MainApp.xcarchive \
-    -exportOptionsPlist ExportOptionsAdHoc.plist \
-    -exportPath build/IPA/ad-hoc "$@"
-  _end_section
-}
-
-function deploy_internal() {
-  _start_section "Deploying to internal TestFlight"
-  deploy_testflight "$@"
-  _end_section
-}
-
-function deploy_adhoc() {
-  _start_section "Deploying AdHoc distribution"
-  deploy_testflight "$@"
-  _end_section
-}
-
-function deploy_appstore() {
-  _start_section "Uploading to App Store Connect"
-  xcrun altool \
-    -upload-app --type ios \
-    -file build/IPA/MainApp.ipa \
-    -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
-  _end_section
-}
-
-function notify() {
-  _start_section "Sending notifications"
-  # integrate Slack/email notifications here
   _end_section
 }
 
@@ -370,56 +336,28 @@ function _test_scheme() {
   exit $test_exit_code
 }
 
+function full_clean() {
+  _start_section "Full clean: удаление всех build, кэшей, логов и временных файлов"
+  rm -rf build .build .swiftpm coverage *.log *.tmp *.temp
+  rm -rf ~/Library/Developer/Xcode/DerivedData
+  find . -type d -name DerivedData -exec rm -rf {} +
+  find . -type f -name '*.xcresult' -delete
+  find . -type f -name '*.ipa' -delete
+  find . -type f -name '*.dSYM' -delete
+  find . -type f -name '*.app' -delete
+  find . -type f -name '*.xcarchive' -delete
+  _end_section
+}
+
 CMD="${1:-}"
 shift || true
 
 case "$CMD" in
-  analyze) analyze "$@" ;;
-  archive) archive "$@" ;;
-  build) _build "$@" ;;
-  bump-version)
-    _start_section "Bumping version numbers"
-    local marketing="${1:-}"
-    if [[ -z "$marketing" ]]; then
-      agvtool next-version -all
-    else
-      agvtool new-marketing-version "$marketing"
-      agvtool next-version -all
-    fi
-    _end_section
-  ;;
-  clean) clean "$@" ;;
-  comment-scan) comment_scan "$@" ;;
-  deploy:adhoc)
-    _start_section "Deploying AdHoc distribution"
-    deploy_testflight "$@"
-    _end_section
-    ;;
-  deploy:appstore)
-    _start_section "Uploading to App Store Connect"
-    xcrun altool \
-      -upload-app --type ios \
-      -file build/IPA/MainApp.ipa \
-      -apiKey "$API_KEY_PATH" --apiIssuer "$API_ISSUER_ID"
-    _end_section
-    ;;
-  deploy:internal)
-    _start_section "Deploying to internal TestFlight"
-    deploy_testflight "$@"
-    _end_section
-    ;;
-  deploy:simulator) deploy_simulator "$@" ;;
-  deploy:testflight) deploy_testflight "$@" ;;
-  export-ipa) export_ipa "$@" ;;
+  full-clean) full_clean "$@" ;;
+  sim) deploy_simulator "$@" ;;
   generate) generate "$@" ;;
   init) init "$@" ;;
   logs) logs "$@" ;;
-  notify)
-    _start_section "Sending notifications"
-    # integrate Slack/email notifications here
-    _end_section
-    ;;
-  size-report) size_report "$@" ;;
   test)
     if [[ -z "$1" ]]; then
       usage
@@ -429,14 +367,12 @@ case "$CMD" in
     _test_scheme AllTests -only-testing "$test_id" "$@"
     ;;
   check)
-    clean
     generate
     comment_scan
     fmt
     lint
-    analyze
-    _test_scheme AllUnitTests
-    _test_scheme AllE2ETests
+    fast_check_build_analyze_test
+    deploy_simulator
     ;;
   help|*) usage ;;
 esac

@@ -14,14 +14,6 @@
 ## Running Tests
 - Unit и UI тесты: `./run check`
 - Проверка покрытия: автоматически в CI
-- Все ключевые сценарии покрыты e2e-тестами, включая Explain (display) и clipboard-операции.
-
-### Важно: запуск тестов для iOS
-Для ручного запуска тестов используйте команду с явным симулятором:
-```sh
-xcodebuild -scheme Common -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.4' test
-```
-Это позволяет избежать ошибки "CommonTests does not support My Mac's platform: com.apple.platform.macosx".
 
 ## Linting and Formatting
 - Проверка стиля: `./run lint`
@@ -36,7 +28,6 @@ xcodebuild -scheme Common -sdk iphonesimulator -destination 'platform=iOS Simula
 - Подпись и provisioning автоматизированы через Fastlane `match`.
 
 ## Testing and CI Results
-- Все тесты (unit, UI, E2E) для Share Extension проходят успешно.
 - Инструкции по запуску и тестированию актуальны.
 - Покрытие тестами и размер Share Extension автоматически контролируются в CI.
 

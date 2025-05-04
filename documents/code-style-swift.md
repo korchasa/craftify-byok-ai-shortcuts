@@ -29,7 +29,7 @@
 - closure_body_length: Тело замыкания не должно превышать 30 строк.
 - Для всех новых кнопок обязательно используйте один из централизованных стилей: CraftifyPrimaryButtonStyle, CraftifySecondaryButtonStyle. Для опасных действий — secondary-стиль с .foregroundColor(.red). Локальные ButtonStyle запрещены.
 
-## Правило: Access Control для расширений
+## Rule: Access Control for extensions
 
 ### extension_access_modifier
 - Prefer to specify the access modifier on the `extension` itself instead of repeating it for each member.
@@ -39,8 +39,8 @@
 Пример:
 ```swift
 public extension MyType {
-    func foo() {}        // наследует public
-    private func bar() {} // приватный член
+    func foo() {}        // inherits public
+    private func bar() {} // private member
 }
 ```
 

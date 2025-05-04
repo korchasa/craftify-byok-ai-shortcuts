@@ -1,6 +1,4 @@
 @testable import Common
-@testable import MainApp
-import Nimble
 import XCTest
 
 @MainActor
@@ -25,9 +23,9 @@ public final class SettingsViewModelTests: XCTestCase {
             return
         }
         await viewModel.load()
-        expect(viewModel.apiKey) == ""
-        expect(viewModel.isKeyPresent) == false
-        expect(viewModel.maskedApiKey) == maskKey(nil)
+        XCTAssertEqual(viewModel.apiKey, "")
+        XCTAssertFalse(viewModel.isKeyPresent)
+        XCTAssertEqual(viewModel.maskedApiKey, maskKey(nil))
     }
 
     public func testSaveKey_Valid() async {
@@ -36,9 +34,9 @@ public final class SettingsViewModelTests: XCTestCase {
         }
         await MainActor.run { viewModel.apiKey = "sk-valid-key-1234567890" }
         await viewModel.saveKey()
-        expect(viewModel.isKeyPresent) == true
-        expect(viewModel.maskedApiKey) == maskKey("sk-valid-key-1234567890")
-        expect(viewModel.errorMessage == nil) == true
+        XCTAssertTrue(viewModel.isKeyPresent)
+        XCTAssertEqual(viewModel.maskedApiKey, maskKey("sk-valid-key-1234567890"))
+        XCTAssertNil(viewModel.errorMessage)
     }
 
     public func testSaveKey_Invalid() async {
@@ -47,8 +45,8 @@ public final class SettingsViewModelTests: XCTestCase {
         }
         await MainActor.run { viewModel.apiKey = "short" }
         await viewModel.saveKey()
-        expect(viewModel.isKeyPresent) == false
-        expect(viewModel.errorMessage != nil) == true
+        XCTAssertFalse(viewModel.isKeyPresent)
+        XCTAssertNotNil(viewModel.errorMessage)
     }
 
     public func testDeleteKey() async {
@@ -58,8 +56,8 @@ public final class SettingsViewModelTests: XCTestCase {
         await MainActor.run { viewModel.apiKey = "sk-valid-key-1234567890" }
         await viewModel.saveKey()
         await viewModel.deleteKey()
-        expect(viewModel.isKeyPresent) == false
-        expect(viewModel.apiKey) == ""
+        XCTAssertFalse(viewModel.isKeyPresent)
+        XCTAssertEqual(viewModel.apiKey, "")
     }
 
     deinit {}

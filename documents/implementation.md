@@ -21,7 +21,6 @@
 - SwiftUI
 - XcodeGen
 - SwiftPM (Common, LogManagerShared)
-- New Relic
 - SwiftGen (localization)
 - GitHub Actions (CI/CD)
 - Поддержка resultMode (clipboard/display) для операций
@@ -123,12 +122,11 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
   - `.clipboard` — результат копируется в буфер обмена (по умолчанию для всех операций).
   - `.display` — результат отображается во всплывающем окне (используется для Explain).
 - UI (ShareExtensionView) корректно отображает результат Explain с прокруткой, для остальных операций — тост о копировании.
-- Покрыто unit, UI и e2e тестами (режимы clipboard/display, Explain, ошибки, edge cases).
+- Покрыто unit, UI тестами (режимы clipboard/display, Explain, ошибки, edge cases).
 
 ### Running Tests
 - Unit и UI тесты: `./run check`
 - Проверка покрытия: автоматически в CI
-- Все ключевые сценарии покрыты e2e-тестами, включая Explain (display) и clipboard-операции.
 
 ### CI/CD: Проверка размера и покрытия
 - В CI/CD автоматически проверяется размер ShareExtension и покрытие тестами (≥80%).
@@ -142,7 +140,6 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 - Text processing timeout is implemented only in ShareExtensionViewModel (default 30 seconds, can be overridden in tests via processingTimeoutSeconds).
 - ShareExtensionManager does not implement a timeout, only business logic for processing and errors.
 - In unit tests, the ViewModel timeout is set via processingTimeoutSeconds.
-- In E2E tests, ShareExtensionManager only checks for processing errors and successes, not timeout.
 
 | Requirement | Description |
 | --- | --- |
@@ -166,7 +163,7 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 - InventoryManager: поддержка сериализации/десериализации colorHex.
 - AddOperationView/EditOperationView: UI-палитра для выбора цвета.
 - HomeView/ShareExtensionView: отображение цвета операции (индикатор).
-- Покрытие: unit-тесты (InventoryOperation, InventoryManager), UI-тесты (Add/EditOperationView), e2e-тесты (ShareExtensionView).
+- Покрытие: unit-тесты (InventoryOperation, InventoryManager), UI-тесты (Add/EditOperationView).
 
 - В моделях и UI убран параметр stylePreservationLevel для correct-операции, всегда используется максимальный стиль.
 
@@ -176,7 +173,6 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 - HowToUseView принимает onConsent callback, который вызывается после согласия.
 - После согласия — автоматический переход на HomeView.
 - Согласие хранится через ConsentManager (UserDefaults App Group).
-- Покрыто e2e-тестом на полный flow.
 
 ## Project Schemas
 
@@ -213,7 +209,7 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 | Перекрытие        | Контент не перекрывается кнопкой, так как у ScrollView добавлен нижний padding. |
 | Оверлеи           | Индикатор процесса и тост отображаются поверх основного содержимого. |
 | Стиль             | Используется современный SwiftUI-подход для закрепления элементов интерфейса. |
-| Тесты             | Все изменения покрыты unit- и e2e-тестами. |
+| Тесты             | Все изменения покрыты unit- и UI-тестами. |
 | Качество          | Линтер и форматтер проходят без ошибок. |
 
 ### URL Sharing Support

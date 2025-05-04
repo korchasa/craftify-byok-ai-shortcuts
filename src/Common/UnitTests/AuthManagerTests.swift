@@ -1,5 +1,4 @@
-@testable import Common
-import Nimble
+// import Common
 import XCTest
 
 /// Тесты для AuthManager
@@ -20,7 +19,7 @@ public final class AuthManagerTests: XCTestCase {
         let key = String(repeating: "a", count: 16)
         try await sut?.setAPIKey(key)
         let fetched = try await sut?.getAPIKey()
-        expect(fetched).to(equal(key))
+        XCTAssertEqual(fetched, key)
         try? await sut?.deleteAPIKey()
     }
 
@@ -31,27 +30,32 @@ public final class AuthManagerTests: XCTestCase {
         try await sut?.setAPIKey(key)
         try await sut?.deleteAPIKey()
         let fetched = try await sut?.getAPIKey()
-        expect(fetched).to(beNil())
+        XCTAssertNil(fetched)
     }
 
     /// Проверяет ошибку при установке короткого ключа
     public func testSetShortAPIKeyThrows() async throws {
         try? await sut?.deleteAPIKey()
         let key = "short"
-        await expect { try await self.sut?.setAPIKey(key) }.to(throwError(AuthManagerError.invalidKey))
+        do {
+            _ = try await self.sut?.setAPIKey(key)
+            XCTFail("Ожидалось исключение, но оно не было выброшено")
+        } catch {
+            XCTAssertEqual(error as? AuthManagerError, AuthManagerError.invalidKey)
+        }
     }
 
     /// Проверяет маскирование ключа
     public func testMaskedAPIKey() {
         let key = "sk-1234567890abcdef"
         let masked = sut?.maskedAPIKey(key)
-        expect(masked).to(equal("***************cdef"))
+        XCTAssertEqual(masked, "***************cdef")
     }
 
     /// Проверяет маскирование nil/короткого ключа
     public func testMaskedAPIKeyShortOrNil() {
-        expect(self.sut?.maskedAPIKey(nil)).to(equal("********"))
-        expect(self.sut?.maskedAPIKey("abc")).to(equal("********"))
+        XCTAssertEqual(self.sut?.maskedAPIKey(nil), "********")
+        XCTAssertEqual(self.sut?.maskedAPIKey("abc"), "********")
     }
 
     deinit {}
