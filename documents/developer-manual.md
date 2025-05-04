@@ -1,94 +1,103 @@
 # Craftify Developer Manual
 
+## Table of Contents
+- [Craftify Developer Manual](#craftify-developer-manual)
+  - [Table of Contents](#table-of-contents)
+  - [Installing Dependencies](#installing-dependencies)
+  - [Building the Project](#building-the-project)
+  - [Running Tests](#running-tests)
+  - [Linting and Formatting](#linting-and-formatting)
+  - [CI/CD](#cicd)
+  - [Deployment](#deployment)
+  - [Testing and CI Results](#testing-and-ci-results)
+  - [Processing Timeout Testing](#processing-timeout-testing)
+  - [Retrieving Logs](#retrieving-logs)
+  - [Operation Color \& ResultMode](#operation-color--resultmode)
+  - [Share Extension UI](#share-extension-ui)
+  - [Share Extension Activation for URLs](#share-extension-activation-for-urls)
+  - [Button Style Guide](#button-style-guide)
+    - [Button Style Usage Guidelines](#button-style-usage-guidelines)
+  - [Dependency and Test Isolation](#dependency-and-test-isolation)
+  - [References](#references)
+
+---
+
 ## Installing Dependencies
-1. Установите все необходимые CLI-инструменты одной командой:
+1. Install all required CLI tools with:
    ```sh
    ./run init
    ```
-   Это установит через Homebrew: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen.
+   This installs: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen (via Homebrew).
 
 ## Building the Project
-- Сгенерировать проект: `xcodegen`
-- Сборка: `./run build`
+- Generate the project: `xcodegen`
+- Build: `./run build`
 
 ## Running Tests
-- Unit и UI тесты: `./run check`
-- Проверка покрытия: автоматически в CI
+- Unit and UI tests: `./run check`
+- Coverage is checked automatically in CI
 
 ## Linting and Formatting
-- Проверка стиля: `./run lint`
-- Форматирование: `./run format`
+- Lint: `./run lint`
+- Format: `./run format`
 
 ## CI/CD
-- Все проверки и сборки автоматизированы через GitHub Actions (`.github/workflows/ci.yml`).
-- Проверка размера ShareExtension и покрытия тестами ≥ 80% обязательна для успешной сборки.
+- All checks and builds are automated via GitHub Actions (`.github/workflows/ci.yml`).
+- ShareExtension size and test coverage (≥ 80%) are required for successful builds.
 
 ## Deployment
-- Release-сборка и публикация через Fastlane (см. инструкции в репозитории).
-- Подпись и provisioning автоматизированы через Fastlane `match`.
+- Release build and publishing via Fastlane (see repository instructions).
+- Signing and provisioning automated via Fastlane `match`.
 
 ## Testing and CI Results
-- Инструкции по запуску и тестированию актуальны.
-- Покрытие тестами и размер Share Extension автоматически контролируются в CI.
+- All instructions for running and testing are up-to-date.
+- Test coverage and ShareExtension size are automatically checked in CI.
 
 ## Processing Timeout Testing
-- Таймаут обработки реализован только в ShareExtensionViewModel (по умолчанию 30 секунд).
-- Для unit-тестов таймаут ViewModel можно переопределить через processingTimeoutSeconds.
-- В E2E-тестах ShareExtensionManager проверяет только ошибки и успехи обработки, но не таймаут.
-
-- Не редактируйте Info.plist и entitlements вручную. Все изменения — только через project.yml, который обрабатывается XcodeGen.
+- Timeout is implemented only in ShareExtensionViewModel (default 30 seconds).
+- In unit tests, the ViewModel timeout can be overridden via `processingTimeoutSeconds`.
+- In E2E tests, ShareExtensionManager checks only processing errors and successes, not timeout.
 
 ## Retrieving Logs
-
-Для просмотра логов приложения и расширения используйте Unified Log (os_log, subsystem: Internal, только message + metadata):
-
+To view logs for the app and extension, use Unified Log (os_log, subsystem: Internal, message + metadata only):
 ```sh
 ./run logs
 ```
+The command outputs logs from Unified Log (os_log) for the last 24 hours, filtered by subsystem Internal, MainApp, and ShareExtension, all levels. Log export is not supported.
 
-Команда выводит логи из Unified Log (os_log) за последние 24 часа, фильтруя по subsystem Internal, MainApp и ShareExtension, все уровни. Экспорт логов не поддерживается.
-
-Для изменения периода используйте опции log show, например:
+To change the period, use log show options, e.g.:
 ```sh
 log show --predicate 'subsystem == "Internal"' --style syslog --last 2h
 ```
 
-## Operation Color & ResultMode: Developer Notes
-- InventoryOperation расширена свойством colorHex (hex-код цвета).
-- Для всех операций теперь поддерживается признак обработки результата (resultMode):
-  - `.clipboard` — результат копируется в буфер обмена (по умолчанию для всех операций).
-  - `.display` — результат отображается во всплывающем окне (используется для Explain).
-- Для тестов: InventoryManagerStub поддерживает colorHex и resultMode.
-- Покрытие: unit-тесты (InventoryOperation, InventoryManager, режимы обработки результата), UI-тесты (Add/EditOperationView, ShareExtensionView), e2e-тесты (ShareExtensionView, Explain).
-- Для проверки UI: используйте ShareExtensionViewUITests.swift.
+## Operation Color & ResultMode
+- `InventoryOperation` extended with `colorHex` (hex color code).
+- All operations now support a result processing mode (`resultMode`):
+  - `.clipboard`: result is copied to the clipboard (default)
+  - `.display`: result is shown in a popup window (used for Explain)
+- For tests: InventoryManagerStub supports `colorHex` and `resultMode`.
+- Coverage: unit tests (InventoryOperation, InventoryManager, result modes), UI tests (Add/EditOperationView, ShareExtensionView), e2e tests (ShareExtensionView, Explain).
 
-- Операция correct всегда сохраняет стиль максимально, параметр stylePreservationLevel удалён из моделей, UI и тестов.
-
-**Подробные пользовательские инструкции см. в user-manual.md.**
-
-## ShareExtension: UI
-
-- Основной UI реализован в `src/ShareExtension/Sources/ShareExtensionView.swift`
-- Кнопка закрытия закреплена через `.safeAreaInset`, всегда доступна
-- Весь остальной контент находится в ScrollView
-- Все изменения покрыты unit- и e2e-тестами
-- Линтер и форматтер проходят без ошибок
+## Share Extension UI
+- Main UI is implemented in `src/ShareExtension/Sources/ShareExtensionView.swift`
+- Close button is fixed at the bottom via `.safeAreaInset`, always accessible
+- All other content is in a ScrollView
+- All changes are covered by unit and e2e tests
+- Linter and formatter pass without errors
 
 ## Share Extension Activation for URLs
-- Share Extension активируется для типов данных: текст (public.text) и URL (public.url).
-- Это задаётся через NSExtensionActivationRule в project.yml (XcodeGen):
+- Share Extension is activated for data types: text (public.text) and URL (public.url).
+- This is set via NSExtensionActivationRule in project.yml (XcodeGen):
   - SUBQUERY (... ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url")
-- После генерации проекта через ./run generate расширение будет доступно для шаринга ссылок и текста.
-- Оба типа обрабатываются как обычный текст, приоритет у текста.
-- Покрыто unit- и e2e-тестами.
+- After generating the project via `./run generate`, the extension is available for sharing links and text.
+- Both types are processed as plain text, with priority given to text.
+- Covered by unit and e2e tests.
 
-## Style Guide for Buttons and Color Palette
-
-- Для всех кнопок используйте только CraftifyButtonConstants (цвета, радиус, отступы, масштаб).
-- Для палитры цветов используйте только ColorPaletteConstants.palette.
-- Не определяйте локальные константы для этих параметров в отдельных вью или viewmodel.
-- Пример использования:
-
+## Button Style Guide
+- Use only `CraftifyButtonConstants` for all button parameters (colors, radius, padding, scale).
+- Use only `ColorPaletteConstants.palette` for color palette.
+- Do not define local constants for these parameters in individual views or view models.
+- Example usage:
 ```swift
 Button(action: ...) {
     Text("...")
@@ -100,9 +109,21 @@ Button(action: ...) {
 ```
 
 ### Button Style Usage Guidelines
+- **Primary**: For main actions (save, confirm, continue). Use `.buttonStyle(CraftifyPrimaryButtonStyle())`.
+- **Secondary**: For secondary actions (cancel, extra options). Use `.buttonStyle(CraftifySecondaryButtonStyle())`.
+- **Cancel**: For cancel, close, or return — use secondary style with white text.
+- **Destructive**: For dangerous actions (delete, reset) use secondary style with `.foregroundColor(.red)` or `.tint(.red)`.
+- **Do not create local ButtonStyle** — only use centralized styles.
 
-- **Primary**: Для основных действий (сохранить, подтвердить, продолжить). Используйте `.buttonStyle(CraftifyPrimaryButtonStyle())`.
-- **Secondary**: Для второстепенных действий (отмена, дополнительные опции). Используйте `.buttonStyle(CraftifySecondaryButtonStyle())`.
-- **Cancel**: Для отмены, закрытия, возврата — используйте secondary-стиль с белым текстом.
-- **Destructive**: Для опасных действий (удалить, сбросить) используйте secondary-стиль с `.foregroundColor(.red)` или `.tint(.red)`.
-- **Не создавайте локальных ButtonStyle** — только централизованные.
+## Dependency and Test Isolation
+- Production targets (MainApp, ShareExtension) must not depend on test-only packages or targets.
+- Use `embedAppExtensions` for including extensions, not `dependencies`.
+- Test dependencies (ViewInspector, XCTest, etc.) must be listed only in UnitTest targets.
+- If you encounter linker errors related to test frameworks, run `./run full-clean` and check your target dependencies.
+
+## References
+- [Project Overview](project.md)
+- [Architecture](architecture.md)
+- [Implementation](implementation.md)
+- [File Structure](file_structure.md)
+- [User Manual](user-manual.md)

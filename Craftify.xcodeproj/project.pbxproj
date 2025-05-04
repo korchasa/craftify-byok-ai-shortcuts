@@ -127,7 +127,6 @@
 		790C114B7F91EE4E0185B2E7 /* Common.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 15FC1E1416E7FEFEE9927B03 /* Common.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7A172D71F900F60EE0DABAED /* AuthManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6354634CF5EE1B96882B70F3 /* AuthManagerMock.swift */; };
 		7D095DB11389F4B8CAB2E53B /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
-		7DC7BC4D007681131D813085 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B703ED98C53835018AA8D449 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7DD9490A64C07B3AD071336E /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
 		827EBA6B209998AED80C461B /* AddOperationView_Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7408BE1C4B2B18C8FD73EDF /* AddOperationView_Previews.swift */; };
 		83D963EF6D8C354B5E8318E6 /* ShareExtensionButtonConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381B3E9EF7D51650EE7FF647 /* ShareExtensionButtonConstants.swift */; };
@@ -273,13 +272,6 @@
 			remoteGlobalIDString = 0BEF0EF3FA38D9FD9FA04AC4;
 			remoteInfo = Common;
 		};
-		CC0404919418739E0EF24065 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 18ABFDF18819DFB841A32817 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 6E99CB366D323D89B45B1DAE;
-			remoteInfo = ShareExtension;
-		};
 		DDADE3426A5AAB89A7E69EC1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 18ABFDF18819DFB841A32817 /* Project object */;
@@ -321,17 +313,6 @@
 				045A1A2AFD694D98B0291504 /* Common.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C1A1899CC73BC72427BF5E12 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				7DC7BC4D007681131D813085 /* ShareExtension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -813,14 +794,12 @@
 			buildPhases = (
 				AC92B5C69B9264A4F9A5CADA /* Sources */,
 				91B63B76527E361E878145D5 /* Frameworks */,
-				C1A1899CC73BC72427BF5E12 /* Embed Foundation Extensions */,
 				48EEC59BC856B67E6A6AAF02 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				C47D5B89E2113BEEFA024ADE /* PBXTargetDependency */,
-				09227324E4ABC756BD28DD74 /* PBXTargetDependency */,
 			);
 			name = MainApp;
 			packageProductDependencies = (
@@ -1214,11 +1193,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		09227324E4ABC756BD28DD74 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 6E99CB366D323D89B45B1DAE /* ShareExtension */;
-			targetProxy = CC0404919418739E0EF24065 /* PBXContainerItemProxy */;
-		};
 		0C79DA76D34C54A23F740040 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0BEF0EF3FA38D9FD9FA04AC4 /* Common */;

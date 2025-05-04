@@ -83,7 +83,6 @@ targets:
         PROVISIONING_PROFILE_SPECIFIER: "Craftify MainApp"
     dependencies:
       - target: Common
-      - target: ShareExtension
     embedAppExtensions:
       - ShareExtension
   MainAppUnitTests:

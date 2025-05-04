@@ -1,80 +1,88 @@
-## Craftify Project Overview
+# Craftify Project Overview
 
-### Purpose
-Craftify is an iOS application (iOS 16+) with a Share Extension for contextual text processing (translation, simplification, correction, explanation) via the OpenAI API. It allows you to quickly process text from any app without switching between services.
+## Table of Contents
+- [Craftify Project Overview](#craftify-project-overview)
+  - [Table of Contents](#table-of-contents)
+  - [Purpose](#purpose)
+  - [Problem Statement](#problem-statement)
+  - [Solution Overview](#solution-overview)
+  - [Goals and Objectives](#goals-and-objectives)
+  - [Target Audience](#target-audience)
+  - [Success Criteria](#success-criteria)
+  - [Key Features](#key-features)
+  - [Solved Problems](#solved-problems)
+    - [URL Text Fetcher for SummarizeOperation](#url-text-fetcher-for-summarizeoperation)
+  - [UI Requirements](#ui-requirements)
+  - [References](#references)
 
-### Problem
-Users waste time copying text between apps for translation, simplification, or correction. Craftify eliminates these steps, speeding up the workflow.
+---
 
-### Solution
-- Introduced a result processing mode (resultMode) for operations: the result can be copied to the clipboard or displayed in a popup window (for Explain, for example).
+## Purpose
+Craftify is an iOS application (iOS 16+) with a Share Extension for contextual text processing (translation, simplification, correction, explanation) via the OpenAI API. It enables users to process text from any app without switching between services.
+
+## Problem Statement
+Users waste time copying text between apps for translation, simplification, or correction. This manual process is inefficient and error-prone.
+
+## Solution Overview
+- Result processing mode (`resultMode`) for operations: results can be copied to the clipboard or displayed in a popup window (e.g., Explain operation).
 - All operations except Explain copy the result to the clipboard; Explain displays the result directly in the extension window.
-- Covered by unit, UI, and e2e tests.
-- Mint, DerivedData, and SwiftPM caching for faster CI/CD.
+- Modular architecture with a shared Swift Package (Common).
+- Secure API key storage in Keychain with Keychain Sharing.
+- Unified logging and flexible configuration.
+- Comprehensive test coverage (unit, UI, e2e).
 
-### Goals and Objectives
+## Goals and Objectives
 - Seamless integration of text processing.
 - Increased productivity and user convenience.
-- Modular architecture with shared code via Swift Package (Common).
-- Secure API key storage only in Keychain with Keychain Sharing support.
-- Unified logging.
-- Flexible configuration of operations and languages.
-- All key user scenarios are covered by e2e tests, including edge cases and negative scenarios.
+- Modular, maintainable architecture.
+- Secure and privacy-compliant data handling.
+- All key user scenarios covered by e2e tests, including edge and negative cases.
 
-### Target Audience
-- Multilingual users.
-- Students and professionals.
-- Anyone who needs to quickly explain or simplify text.
+## Target Audience
+- Multilingual users
+- Students and professionals
+- Anyone needing quick text explanation or simplification
 
-### Success Criteria
-- Average response time ≤ 3s for short texts (up to 1000 characters).
-- Share Extension size ≤ 20 MB.
-- Test coverage ≥ 80%.
-- All key scenarios are covered by e2e tests.
-- Simplicity and ease of use.
-- Compliance with security and privacy requirements.
+## Success Criteria
+- Average response time ≤ 3s for short texts (≤1000 characters)
+- Share Extension size ≤ 20 MB
+- Test coverage ≥ 80%
+- All key scenarios covered by e2e tests
+- Simplicity and ease of use
+- Compliance with security and privacy requirements
 
-### New Features
-- Support for selecting a color for each operation from a palette.
-- Operation color is saved and displayed on the main screen and in the Share Extension.
-- Introduced result processing mode (clipboard/display) for operations.
-- For Explain, the result is displayed in a scrollable popup window.
-- Covered by unit, UI, and e2e tests.
-- Share Extension can now be activated for both text and URLs (public.text, public.url) via NSExtensionActivationRule in project.yml (XcodeGen).
-- Оба типа обрабатываются как обычный текст, приоритет у текста. Покрыто unit- и e2e-тестами.
+## Key Features
+- Color selection for each operation from a palette
+- Operation color is saved and displayed in both the main app and Share Extension
+- Result processing mode (clipboard/display) for operations
+- Explain operation displays result in a scrollable popup window
+- Share Extension supports both text and URLs (public.text, public.url) via NSExtensionActivationRule in project.yml (XcodeGen)
+- Both types are processed as plain text, with priority given to text
+- All features are covered by unit, UI, and e2e tests
 
-## Problems Solved
-- Added resultMode attribute for operations, implemented support for result display mode.
-- Removed stylePreservationLevel property from the correct operation. Now the style is always preserved at maximum, the user cannot choose the style preservation level.
-- UI and ViewModel updated: Stepper and related fields removed.
-- All tests (unit, e2e) updated to match the new logic.
-- Share Extension теперь поддерживает шаринг ссылок (public.url) и текста (public.text), оба типа обрабатываются как текст, приоритет у текста.
+## Solved Problems
+- Added `resultMode` attribute for operations, supporting result display mode
+- Removed `stylePreservationLevel` from the correct operation; style is always maximally preserved
+- UI and ViewModel updated: Stepper and related fields removed
+- All tests updated to match new logic
+- Share Extension now supports sharing links (public.url) and text (public.text), both processed as text (priority: text)
+- [See also: Implementation Details](implementation.md)
 
-## URL Text Fetcher for SummarizeOperation
-
-### Problem
-Users often want to summarize the content of web pages, not just plain text. Manual copy-paste is inconvenient and error-prone.
-
-### Solution
-A new module allows SummarizeOperation to accept a URL. The system downloads the HTML, extracts meaningful text from the <body> using SwiftSoup, and summarizes it. This is fully automated and transparent for the user.
-
-### Target Audience
-- Users who want to quickly summarize articles, blog posts, or any web content by URL.
-- Power users and researchers who process large volumes of online text.
-
-### Success Metrics
-- User can pass a URL to SummarizeOperation and receive a summary of the page content.
-- All tests pass, no linter/format errors.
-- No manual copy-paste required for web content.
-
-### Constraints
-- Only HTTPS URLs are supported by default (App Transport Security).
-- Non-UTF8 encodings are not guaranteed to be handled.
-- Only visible <body> text is extracted; scripts/styles are ignored.
+### URL Text Fetcher for SummarizeOperation
+- SummarizeOperation can accept a URL; the system downloads HTML, extracts meaningful text from `<body>` using SwiftSoup, and summarizes it
+- Only HTTPS URLs are supported (App Transport Security)
+- Only visible `<body>` text is extracted; scripts/styles are ignored
+- No manual copy-paste required for web content
 
 ## UI Requirements
+- All screens must have a strictly white background (`Color.white`)
+- System or gray backgrounds (including default List, Form, ScrollView, and safe area backgrounds) are not allowed
+- Applies to all main and auxiliary screens, including Share Extension
+- All user-facing surfaces must maintain a clean, white background for visual consistency and clarity
 
-- The background color of all screens in the Craftify application must be strictly white (`Color.white`).
-- System or gray backgrounds (including default List, Form, ScrollView, and safe area backgrounds) are not allowed.
-- This requirement applies to all main and auxiliary screens, including Share Extension.
-- All user-facing surfaces must maintain a clean, white background for visual consistency and clarity.
+## References
+- [Architecture](architecture.md)
+- [Implementation](implementation.md)
+- [File Structure](file_structure.md)
+- [Developer Manual](developer-manual.md)
+- [User Manual](user-manual.md)
