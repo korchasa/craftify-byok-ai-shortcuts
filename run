@@ -120,7 +120,7 @@ function lint() {
 
 function _build() {
   _start_section "Building MainApp (Release/iphoneos)"
-  xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
+  xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build/DerivedData_Build_MainApp -allowProvisioningUpdates
   _end_section
 }
 
@@ -130,7 +130,7 @@ function size_report() {
   rm -rf build
   _end_section
   _start_section "Building ShareExtension for size report (Release/iphoneos)"
-  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build "$@"
+  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build/DerivedData_SizeReport_ShareExtension "$@"
   _end_section
   local appex=$(find build -name 'ShareExtension.appex' | head -n1)
   if [[ ! -f "$appex" ]]; then
@@ -274,17 +274,27 @@ function _build_sim() {
     -scheme MainApp \
     -configuration Debug \
     -sdk iphonesimulator \
-    -destination "id=${SIMULATOR_ID},arch=arm64" "$@"
+    -destination "id=${SIMULATOR_ID},arch=arm64" \
+    -derivedDataPath build/DerivedData_BuildSim_MainApp "$@"
   _end_section
 }
 
 function analyze() {
-  _start_section "Running static analysis"
+  _start_section "Running static analysis for MainApp"
   xcb analyze \
     -scheme MainApp \
     -sdk iphoneos \
     -destination "id=${SIMULATOR_ID},arch=arm64" \
-    -configuration Debug "$@"
+    -configuration Debug \
+    -derivedDataPath build/DerivedData_Analyze_MainApp "$@"
+  _end_section
+  _start_section "Running static analysis for ShareExtension"
+  xcb analyze \
+    -scheme ShareExtension \
+    -sdk iphoneos \
+    -destination "id=${SIMULATOR_ID},arch=arm64" \
+    -configuration Debug \
+    -derivedDataPath build/DerivedData_Analyze_ShareExtension "$@"
   _end_section
 }
 
@@ -337,7 +347,7 @@ function _test_scheme() {
     -parallel-testing-worker-count "${WORKER_COUNT}" \
     -sdk iphonesimulator \
     -destination "id=${TEST_SIMULATOR_ID},arch=arm64" \
-    -derivedDataPath "build/DerivedData_${scheme}" \
+    -derivedDataPath "build/DerivedData_Test_${scheme}" \
     -resultBundlePath "build/Results/${scheme}.xcresult" \
     -collect-test-diagnostics on-failure \
     -testLanguage en \
@@ -425,7 +435,6 @@ case "$CMD" in
     fmt
     lint
     analyze
-    _build
     _test_scheme AllUnitTests
     _test_scheme AllE2ETests
     ;;

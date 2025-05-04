@@ -21,7 +21,7 @@ public struct HomeView: View {
                 Spacer()
             }
             .safeAreaInset(edge: .bottom) {
-                HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+                HStack(spacing: MainAppButtonConstants.horizontalPadding) {
                     Button(action: { showAddOperation = true }) {
                         Label(L10n.homeAddOperation, systemImage: "plus")
                             .font(.craftifyBody)
@@ -37,10 +37,10 @@ public struct HomeView: View {
                     .accessibilityLabel(L10n.homeSettings)
                     .buttonStyle(CraftifySecondaryButtonStyle())
                 }
-                .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-                .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+                .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
+                .padding(.bottom, MainAppButtonConstants.bottomPadding)
                 .background(Color.white.ignoresSafeArea())
-                .cornerRadius(CraftifyButtonConstants.cornerRadius)
+                .cornerRadius(MainAppButtonConstants.cornerRadius)
             }
             .navigationTitle(L10n.homeTitle)
             .font(.craftifyTitle)
