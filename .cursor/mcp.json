@@ -19,6 +19,10 @@
             "env": {
                 "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
             }
+        },
+        "tuist": {
+            "command": "tuist",
+            "args": ["mcp", "start"]
         }
     }
 }

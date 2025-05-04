@@ -4,7 +4,7 @@
 
 | Command         | Description                                           |
 |----------------|------------------------------------------------------|
-| ./run check     | Run tests, lint, format, size-report, comment-scan, etc. |
+| ./run check     | Run cleaning, generation, formatting, linting, static analysis, building, and testing |
 | ./run deploy:simulator      | Build and run in iPhone 14 simulator (iOS 16)      |
 | ./run clean    | Clean build artifacts                                |
 | ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Internal, all levels, MainApp и ShareExtension) |

@@ -122,9 +122,6 @@ function _build() {
   _start_section "Building MainApp (Release/iphoneos)"
   xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
   _end_section
-  _start_section "Building ShareExtension (Release/iphoneos)"
-  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
-  _end_section
 }
 
 function size_report() {
@@ -369,14 +366,7 @@ shift || true
 case "$CMD" in
   analyze) analyze "$@" ;;
   archive) archive "$@" ;;
-  build)
-    _start_section "Building MainApp (Release/iphoneos)"
-    xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
-    _end_section
-    _start_section "Building ShareExtension (Release/iphoneos)"
-    xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build -allowProvisioningUpdates
-    _end_section
-    ;;
+  build) _build "$@" ;;
   bump-version)
     _start_section "Bumping version numbers"
     local marketing="${1:-}"

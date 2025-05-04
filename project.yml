@@ -32,10 +32,12 @@ targets:
       - path: src/MainApp/Resources
         excludes:
           - Generated/Strings.swift
+    appIcon: AppIcon
     info:
       path: src/MainApp/Config/Info.plist
       properties:
         CFBundleDisplayName: Craftify
+        CFBundleIconName: AppIcon
         UILaunchStoryboardName: LaunchScreen
         UISupportedInterfaceOrientations:
           - UIInterfaceOrientationPortrait
@@ -102,11 +104,14 @@ targets:
       - path: src/Common/Generated/Strings.swift
     resources:
       - path: src/ShareExtension/Resources
+      - path: src/ShareExtension/Resources/Assets.xcassets
       - path: src/Common/Resources/en.lproj
       - path: src/Common/Resources/ru.lproj
+    appIcon: AppIcon
     info:
       path: src/ShareExtension/Config/Info.plist
       properties:
+        CFBundleIconName: AppIcon
         CFBundleDisplayName: Craftify Share
         NSExtension:
           NSExtensionPointIdentifier: com.apple.share-services
@@ -177,8 +182,6 @@ targets:
     sources:
       - path: src/Common/Sources
       - path: src/Common/Generated/Strings.swift
-    resources:
-      # Удаляю ресурсы с .xctestplan
     info:
       path: src/Common/Config/Info.plist
     settings:
@@ -210,8 +213,6 @@ targets:
         SWIFT_OPTIMIZATION_LEVEL: '-Onone'
       release:
         SWIFT_OPTIMIZATION_LEVEL: '-O'
-      dependencies:
-        - package: SwiftSoup
     dependencies:
       - package: SwiftSoup
   CommonUnitTests:
@@ -260,32 +261,6 @@ packages:
   SwiftSoup:
     url: https://github.com/scinfu/SwiftSoup.git
     from: 2.4.3
-
-testPlans:
-  Unit:
-    name: "Unit Tests"
-    description: "Запуск всех unit-тестов"
-    testTargets:
-      - MainAppUnitTests
-      - ShareExtensionUnitTests
-      - CommonUnitTests
-  E2E:
-    name: "E2E Tests"
-    description: "Запуск всех e2e-тестов"
-    testTargets:
-      - MainAppE2ETests
-      - ShareExtensionE2ETests
-      - CommonE2ETests
-  All:
-    name: "All Tests"
-    description: "Запуск всех тестов"
-    testTargets:
-      - MainAppUnitTests
-      - ShareExtensionUnitTests
-      - CommonUnitTests
-      - MainAppE2ETests
-      - ShareExtensionE2ETests
-      - CommonE2ETests
 
 schemes:
   AllTests:
