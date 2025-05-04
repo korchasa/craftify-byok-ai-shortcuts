@@ -19,16 +19,16 @@
 - All logs are written via the system log (Unified Logging, os_log, subsystem: Internal, message + metadata only) through OSLogManagerShared. Log export is not supported, viewing is via Console.app, log stream, or ./run logs.
 - LogManagerShared supports levels: debug, info, warning, error. In production, only message + metadata are logged.
 - API keys are always masked (only the first and last 4 characters are visible).
-- Crash reporting is implemented via New Relic SDK (main app only).
+- Crash reporting is not implemented (New Relic удалён).
 - No third-party SDKs for analytics or crash reporting are used in the Share Extension (minimal size, App Store compliance).
 
 #### Log Export and Retention Policy
 - Log export is not supported (system log limitation). Viewing is only via system tools.
-- Crash reports are sent only from the main app via New Relic SDK.
+- Crash reports are not sent (New Relic удалён).
 
 #### Consequences
 - Logs are available only for diagnostics via system tools or ./run logs (filtered by subsystem Internal, all levels, MainApp and ShareExtension).
-- Crash analytics — only for the main app.
+- No crash analytics.
 - Share Extension remains lightweight and privacy-compliant.
 - Key masking policy is implemented at the code level.
 
@@ -48,7 +48,7 @@
 
 ### Testing
 - Unit tests for all managers and models.
-- UI/E2E tests for all main scenarios, including Explain (display) and clipboard operations.
+- UI tests for all main scenarios, including Explain (display) and clipboard operations.
 - Checks that Explain displays the result, and other operations copy to the clipboard.
 - Coverage ≥ 80% for key modules.
 
@@ -64,7 +64,7 @@
 - Text limit: 5000 characters, enforced in UI and manager.
 - Timeouts: 15 seconds per request, 30 seconds total limit.
 - Error handling: all scenarios covered (no text, limit, no consent, invalid key, network, parsing, clipboard, cancel).
-- Covered by unit, UI, E2E tests (≥80%).
+- Covered by unit and UI tests (display, selection, saving color, result processing modes).
 - CI/CD implements automatic extension size check (Archive + size report, fail if >20 MB).
 
 #### Updated Interaction Diagram
@@ -86,12 +86,9 @@ graph TD
 
 - MainApp
 - MainAppUnitTests
-- MainAppE2ETests
 - ShareExtension
 - ShareExtensionUnitTests
-- ShareExtensionE2ETests
 - CommonUnitTests
-- CommonE2ETests
 - ShareExtensionSizeReport
 
 **Detailed descriptions of operations and prompts can be found in user-manual.md and developer-manual.md.**
@@ -100,7 +97,6 @@ graph TD
 - Processing timeout is implemented only at the ShareExtensionViewModel level (default 30 seconds, can be overridden in tests).
 - ShareExtensionManager does not implement a timeout, only business logic for processing and errors.
 - In unit tests, the ViewModel timeout is set via processingTimeoutSeconds.
-- In E2E tests, ShareExtensionManager checks only for errors and processing successes, not timeout.
 
 ### Operation Color & ResultMode Support
 - InventoryOperation extended with colorHex property (hex color from palette).
@@ -108,7 +104,7 @@ graph TD
 - InventoryOperation serialization/deserialization supports colorHex and result processing mode.
 - UI (HomeView, ShareExtensionView) displays operation color and correctly handles clipboard/display modes.
 - For Explain, the result is displayed in a scrollable popup window.
-- Covered by unit, UI, and e2e tests (display, selection, saving color, result processing modes).
+- Covered by unit and UI tests (display, selection, saving color, result processing modes).
 
 - The correct operation no longer contains the stylePreservationLevel parameter, always uses the maximum style preservation level.
 - UI does not display elements for selecting style preservation level.
@@ -118,7 +114,6 @@ graph TD
 - If consent is not given, HowToUseView with a checkbox and consent button is shown.
 - After consent, the main HomeView screen is automatically displayed.
 - Consent is stored in App Group UserDefaults via ConsentManager.
-- Covered by e2e test for the full flow: no consent → consent → transition to HomeView.
 
 ## Share Extension UI Architecture
 
@@ -129,7 +124,7 @@ graph TD
     - UX: the button is always available, even with long content
     - Content is not overlapped by the button
     - Accessibility support and adaptation to different devices
-- All changes are covered by unit and e2e tests, ensuring stable behavior.
+- All changes are covered by unit and UI tests, ensuring stable behavior.
 
 ## Localization Features
 

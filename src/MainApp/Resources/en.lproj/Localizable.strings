@@ -6,7 +6,7 @@
 "howtouse_done" = "Done";
 
 /* HomeView */
-"home_title" = "Craftify — Operations";
+"home_title" = "Operations";
 "home_add_operation" = "Operation";
 "home_settings" = "Settings";
 "home_edit" = "Edit";
@@ -17,6 +17,7 @@
 "add_operation_type" = "Operation Type";
 "add_operation_save" = "Save";
 "add_operation_cancel" = "Cancel";
+"addOperationColor" = "Color";
 
 /* EditOperationView */
 "edit_operation_title" = "Edit Operation";
@@ -32,6 +33,7 @@
 "share_title" = "Craftify";
 "share_cancel" = "Cancel";
 "share_copied" = "Copied to clipboard";
+"share_close" = "Close";
 
 /* Operation Params Labels */
 "operation_param_target_language" = "Target language";
@@ -44,7 +46,10 @@
 "operation_value_intermediate" = "Intermediate";
 "operation_value_advanced" = "Advanced";
 "operation_value_school" = "School";
+"operation_value_schoolchild" = "Schoolchild";
+"operation_value_teenager" = "Teenager";
 "operation_value_student" = "Student";
+"operation_value_adult" = "Adult";
 "operation_value_expert" = "Expert";
 
 /* Operation Labels */
@@ -52,5 +57,40 @@
 "operation_label_simplify" = "Simplify";
 "operation_label_correct" = "Correct";
 "operation_label_explain" = "Explain";
+"operation_label_summarize" = "Summarize";
+
+/* Language Names */
+"language_russian" = "Russian";
+"language_english" = "English";
+"language_spanish" = "Spanish";
+"language_french" = "French";
+"language_german" = "German";
+"language_chinese" = "Chinese";
+"language_japanese" = "Japanese";
+
+"processing" = "Processing...";
+"error" = "Error";
+"save" = "Save";
+"delete" = "Delete";
+"copied_to_clipboard" = "Copied to clipboard";
+
+"sentence_count_2_3" = "2–3 sentences";
+"sentence_count_5_6" = "5–6 sentences";
+"sentence_count_9_10" = "9–10 sentences";
 
 "color" = "Color";
+
+"error_no_text" = "No text to process";
+"error_text_too_long" = "Text too long to process";
+"error_consent_required" = "User consent required";
+"error_invalid_api_key" = "Invalid API key";
+"error_clipboard" = "Clipboard access error";
+"error_cancelled" = "Operation cancelled";
+"error_network" = "Network error";
+"error_parsing" = "Parsing error";
+"error_processing" = "Processing error";
+"error_no_operation" = "No operation to process";
+"error_api_key_access" = "API key access error";
+"error_processing_manager_unavailable" = "Processing manager unavailable";
+"error_result_mode_display" = "Result mode: display result";
+"error_result_copied" = "Result copied to clipboard successfully";

@@ -1,8 +1,5 @@
 import Common
 import SwiftUI
-#if canImport(ViewInspector)
-    import ViewInspector
-#endif
 
 public struct AddOperationView: View {
     @ObservedObject public var viewModel: AddOperationViewModel
@@ -29,35 +26,22 @@ public struct AddOperationView: View {
     }
 
     public var body: some View {
-        NavigationStack {
-            AddOperationForm(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
-        }
-        .background(Color.white)
-    }
-
-    private struct AddOperationForm: View {
-        @ObservedObject var viewModel: AddOperationViewModel
-        var onSave: ((InventoryOperation) -> Void)?
-        var dismiss: DismissAction
-        var body: some View {
-            VStack(spacing: 0) {
-                Form {
-                    AddOperationTypeSection(viewModel: viewModel)
-                    AddOperationFields(viewModel: viewModel)
-                    Section(header: Text(L10n.color).craftifySectionHeader()) {
-                        AddOperationColorPalette(viewModel: viewModel)
-                    }
-                }
-                .padding(.leading, FormStyleConstants.formLeadingPadding)
-                .navigationTitle(L10n.addOperationTitle)
-                .font(.craftifyTitle)
-                .fontWeight(.bold)
-                .scrollContentBackground(.hidden)
-                .background(Color.white)
-                Spacer(minLength: MainAppButtonConstants.spacerMinLength)
+        Form {
+            Section(header: Text(L10n.addOperationType).font(.craftifyTitle).fontWeight(.bold)) {
+                AddOperationTypeSection(viewModel: viewModel)
+            }
+            Section {
+                AddOperationFields(viewModel: viewModel)
+            }
+            Section(header: Text(L10n.color).font(.craftifyTitle).fontWeight(.bold)) {
+                AddOperationColorPalette(viewModel: viewModel)
+            }
+            Section {
                 AddOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
             }
         }
+        .navigationTitle(LocalizedStringKey(L10n.addOperationTitle))
+        .formStyle(.grouped)
     }
 
     private struct AddOperationButtons: View {
@@ -73,7 +57,6 @@ public struct AddOperationView: View {
                     Label(L10n.addOperationCancel, systemImage: "xmark")
                         .font(.craftifyBody)
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 .accessibilityLabel(L10n.addOperationCancel)
@@ -86,31 +69,24 @@ public struct AddOperationView: View {
                     Label(L10n.addOperationSave, systemImage: "checkmark")
                         .font(.craftifyBody)
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
                 .accessibilityLabel(L10n.addOperationSave)
                 .disabled(!viewModel.isValid)
             }
-            .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
-            .padding(.bottom, MainAppButtonConstants.bottomPadding)
-            .background(Color.white.ignoresSafeArea())
-            .cornerRadius(MainAppButtonConstants.cornerRadius)
         }
     }
 
     private struct AddOperationTypeSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.addOperationType).craftifySectionHeader()) {
-                Picker(L10n.addOperationType, selection: $viewModel.selectedKind) {
-                    ForEach(OperationFactory.allKinds, id: \ .self) { kind in
-                        Text(label(for: kind)).tag(Optional(kind))
-                    }
+            Picker(L10n.addOperationType, selection: $viewModel.selectedKind) {
+                ForEach(OperationFactory.allKinds, id: \.self) { kind in
+                    Text(label(for: kind)).tag(Optional(kind))
                 }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.addOperationType)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.addOperationType)
         }
 
         private func label(for kind: OperationKind) -> String {
@@ -149,64 +125,56 @@ public struct AddOperationView: View {
     private struct AddOperationTranslateSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationParamTargetLanguage).craftifySectionHeader()) {
-                Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
-                    ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
-                        Text(lang.name).tag(lang.code)
-                    }
+            Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
+                ForEach(viewModel.supportedLanguages, id: \.code) { lang in
+                    Text(lang.name).tag(lang.code)
                 }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamTargetLanguage)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationParamTargetLanguage)
         }
     }
 
     private struct AddOperationSimplifySection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationParamComplexityLevel).craftifySectionHeader()) {
-                Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
-                    Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
-                    Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
-                    Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
-                    Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
-                }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamComplexityLevel)
+            Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
+                Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
+                Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
+                Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
+                Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationParamComplexityLevel)
         }
     }
 
     private struct AddOperationExplainSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationParamDetailLevel).craftifySectionHeader()) {
-                Picker(L10n.operationParamDetailLevel, selection: $viewModel.detailLevel) {
-                    Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
-                    Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
-                    Text(L10n.operationValueStudent).tag(DetailLevel.student)
-                    Text(L10n.operationValueAdult).tag(DetailLevel.adult)
-                }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamDetailLevel)
+            Picker(L10n.operationParamDetailLevel, selection: $viewModel.detailLevel) {
+                Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
+                Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
+                Text(L10n.operationValueStudent).tag(DetailLevel.student)
+                Text(L10n.operationValueAdult).tag(DetailLevel.adult)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationParamDetailLevel)
         }
     }
 
     private struct AddOperationSummarizeSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationLabelSummarize).craftifySectionHeader()) {
-                Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
-                    ForEach(SentenceCountRange.allCases, id: \ .self) { range in
-                        Text(sentenceCountRangeLabel(range)).tag(range)
-                            .lineLimit(Common.unlimitedLineLimit)
-                            .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
-                    }
+            Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
+                ForEach(SentenceCountRange.allCases, id: \.self) { range in
+                    Text(sentenceCountRangeLabel(range)).tag(range)
+                        .lineLimit(Common.unlimitedLineLimit)
+                        .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
                 }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationLabelSummarize)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationLabelSummarize)
         }
 
         private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
@@ -220,11 +188,10 @@ public struct AddOperationView: View {
 
     private struct AddOperationColorPalette: View {
         @ObservedObject var viewModel: AddOperationViewModel
-        private static let verticalPadding: CGFloat = 8
         var body: some View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: ColorPaletteConstants.circleSpacing) {
-                    ForEach(AddOperationViewModel.palette, id: \ .self) { hex in
+                    ForEach(AddOperationViewModel.palette, id: \.self) { hex in
                         Circle()
                             .fill(Color(hex: hex))
                             .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
@@ -239,16 +206,8 @@ public struct AddOperationView: View {
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }
                 }
-                .padding(.vertical, Self.verticalPadding)
+                .padding(.vertical, ColorPaletteConstants.verticalSpacing)
             }
         }
-    }
-}
-
-private extension View {
-    func craftifySectionHeader() -> some View {
-        self.font(.system(size: craftifySectionHeaderFontSize, weight: .bold))
-            .foregroundColor(.secondary)
-            .padding(.leading, FormStyleConstants.titleLeadingPadding)
     }
 }

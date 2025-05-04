@@ -16,35 +16,34 @@ public struct HomeView: View {
 
     public var body: some View {
         NavigationView {
-            VStack {
-                operationsList
-                Spacer()
-            }
-            .safeAreaInset(edge: .bottom) {
-                HStack(spacing: MainAppButtonConstants.horizontalPadding) {
-                    Button(action: { showAddOperation = true }) {
-                        Label(L10n.homeAddOperation, systemImage: "plus")
-                            .font(.craftifyBody)
-                            .fontWeight(.bold)
+            CommonFormContainer(
+                title: LocalizedStringKey(L10n.homeTitle),
+                content: {
+                    operationsList
+                },
+                buttons: {
+                    HStack(spacing: MainAppButtonConstants.horizontalPadding) {
+                        Button(action: { showAddOperation = true }) {
+                            Label(L10n.homeAddOperation, systemImage: "plus")
+                                .font(.craftifyBody)
+                                .fontWeight(.bold)
+                        }
+                        .accessibilityLabel(L10n.homeAddOperation)
+                        .buttonStyle(CraftifyPrimaryButtonStyle())
+                        Button(action: { showSettings = true }) {
+                            Label(L10n.homeSettings, systemImage: "gearshape")
+                                .font(.craftifyBody)
+                                .fontWeight(.bold)
+                        }
+                        .accessibilityLabel(L10n.homeSettings)
+                        .buttonStyle(CraftifySecondaryButtonStyle())
                     }
-                    .accessibilityLabel(L10n.homeAddOperation)
-                    .buttonStyle(CraftifyPrimaryButtonStyle())
-                    Button(action: { showSettings = true }) {
-                        Label(L10n.homeSettings, systemImage: "gearshape")
-                            .font(.craftifyBody)
-                            .fontWeight(.bold)
-                    }
-                    .accessibilityLabel(L10n.homeSettings)
-                    .buttonStyle(CraftifySecondaryButtonStyle())
+                    .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
+                    .padding(.bottom, MainAppButtonConstants.bottomPadding)
+                    .background(Color.white.ignoresSafeArea())
+                    .cornerRadius(MainAppButtonConstants.cornerRadius)
                 }
-                .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
-                .padding(.bottom, MainAppButtonConstants.bottomPadding)
-                .background(Color.white.ignoresSafeArea())
-                .cornerRadius(MainAppButtonConstants.cornerRadius)
-            }
-            .navigationTitle(L10n.homeTitle)
-            .font(.craftifyTitle)
-            .fontWeight(.bold)
+            )
         }
         .background(Color.white)
         .sheet(isPresented: $showAddOperation, onDismiss: { addOperationViewModel.cancel() }, content: {
@@ -69,28 +68,30 @@ public struct HomeView: View {
         })
     }
 
-    private var operationsList: some View {
-        List {
-            ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
-                OperationRowView(
-                    operation: operation,
-                    onEdit: {
-                        editOperationViewModel = EditOperationViewModel(operation: operation)
-                        editingIndex = idx
-                    },
-                    onDelete: {
-                        viewModel.removeOperation(at: idx)
+    private var operationsList: AnyView {
+        AnyView(
+            List {
+                ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
+                    OperationRowView(
+                        operation: operation,
+                        onEdit: {
+                            editOperationViewModel = EditOperationViewModel(operation: operation)
+                            editingIndex = idx
+                        },
+                        onDelete: {
+                            viewModel.removeOperation(at: idx)
+                        }
+                    )
+                }
+                .onDelete { indices in
+                    for index in indices {
+                        viewModel.removeOperation(at: index)
                     }
-                )
-            }
-            .onDelete { indices in
-                for index in indices {
-                    viewModel.removeOperation(at: index)
                 }
             }
-        }
-        .listStyle(.plain)
-        .background(Color.white)
+            .listStyle(.plain)
+            .background(Color.white)
+        )
     }
 
     private let settingsSheet: AnyView = .init(Text("SettingsView"))

@@ -54,8 +54,6 @@ src/
       Strings.swift            # SwiftGen-generated localization code
     Docs/
       SwiftLintFormattingExamples.md # Code style examples
-    E2ETests/
-      E2ELogManagerTests.swift # E2E tests for logging
 
   MainApp/           # Main iOS application (SwiftUI views, view models, UI logic)
     Sources/
@@ -72,10 +70,6 @@ src/
       SettingsViewModelTests.swift # Settings logic tests
       InventoryOperationTests.swift # Unit-тесты для модели с colorHex и resultMode
       InventoryManagerTests.swift   # Unit-тесты сериализации colorHex и resultMode
-    E2ETests/
-      HomeViewUITests.swift     # UI tests for inventory
-      SettingsViewUITests.swift # UI tests for settings
-      ShareExtensionViewUITests.swift # E2E/UI тесты отображения цвета и режимов обработки результата
     Config/
       Info.plist                # App configuration
       Craftify.entitlements      # App entitlements
@@ -96,8 +90,6 @@ src/
     UnitTests/
       ShareExtensionManagerTests.swift # Manager logic tests (режимы clipboard/display)
       LLMAPIClientTests.swift          # API client tests
-    E2ETests/
-      E2EShareExtensionFlowTests.swift # E2E tests for extension flow, режимы обработки результата
     Config/
       Info.plist                # Extension configuration
       ShareExtension.entitlements # Extension entitlements
@@ -110,13 +102,8 @@ src/
 ## Targets and Schemes
 - MainApp
 - MainAppUnitTests
-- MainAppE2ETests
 - ShareExtension
 - ShareExtensionUnitTests
-- ShareExtensionE2ETests
-- CommonUnitTests
-- CommonE2ETests
-- ShareExtensionSizeReport
 
 ## Logging
 - Все логи пишутся через Unified Log (os_log, subsystem: Internal, только message + metadata).

@@ -16,41 +16,19 @@ public struct SettingsView: View {
     }
 
     public var body: some View {
-        NavigationStack {
-            SettingsForm(viewModel: viewModel, dismiss: dismiss, isTextFieldFocused: _isTextFieldFocused)
-        }
-        .background(Color.white)
-    }
-
-    private struct SettingsForm: View {
-        @ObservedObject var viewModel: SettingsViewModel
-        var dismiss: DismissAction
-        @FocusState var isTextFieldFocused: Bool
-        var body: some View {
-            VStack(spacing: 0) {
-                SettingsFormContent(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused, dismiss: dismiss)
-            }
-        }
-    }
-
-    private struct SettingsFormContent: View {
-        @ObservedObject var viewModel: SettingsViewModel
-        @FocusState var isTextFieldFocused: Bool
-        var dismiss: DismissAction
-        var body: some View {
-            Form {
+        Form {
+            Section(header: Text(L10n.settingsApiKey).font(.craftifyTitle).fontWeight(.bold)) {
                 SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
+            }
+            Section {
                 SettingsErrorSection(errorMessage: viewModel.errorMessage)
             }
-            .padding(.leading, FormStyleConstants.formLeadingPadding)
-            .navigationTitle(L10n.settingsTitle)
-            .font(.craftifyTitle)
-            .fontWeight(.bold)
-            .scrollContentBackground(.hidden)
-            .background(Color.white)
-            Spacer(minLength: MainAppButtonConstants.spacerMinLength)
-            SettingsFormButtons(viewModel: viewModel, dismiss: dismiss)
+            Section {
+                SettingsFormButtons(viewModel: viewModel, dismiss: dismiss)
+            }
         }
+        .navigationTitle(LocalizedStringKey(L10n.settingsTitle))
+        .formStyle(.grouped)
     }
 
     private struct SettingsFormButtons: View {
@@ -62,7 +40,6 @@ public struct SettingsView: View {
                     Label(L10n.settingsDone, systemImage: "xmark")
                         .font(.craftifyBody)
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 .accessibilityLabel(L10n.settingsDone)
@@ -74,15 +51,11 @@ public struct SettingsView: View {
                     Label(L10n.addOperationSave, systemImage: "checkmark")
                         .font(.craftifyBody)
                         .fontWeight(.bold)
-                        .foregroundColor(.white)
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
                 .accessibilityLabel(L10n.addOperationSave + " ключ")
                 .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
             }
-            .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
-            .padding(.bottom, MainAppButtonConstants.bottomPadding)
-            .background(Color.white.ignoresSafeArea())
         }
     }
 
@@ -90,26 +63,24 @@ public struct SettingsView: View {
         @ObservedObject var viewModel: SettingsViewModel
         @FocusState var isTextFieldFocused: Bool
         var body: some View {
-            Section(header: Text(L10n.settingsApiKey).craftifySectionHeader()) {
-                SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
-                    .focused($isTextFieldFocused)
-                    .accessibilityLabel(L10n.settingsApiKey)
-                if viewModel.isKeyPresent {
-                    Text(viewModel.maskedApiKey)
-                        .font(.craftifyFootnote)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.secondary)
-                        .lineLimit(Common.unlimitedLineLimit)
-                        .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
+            SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
+                .focused($isTextFieldFocused)
+                .accessibilityLabel(L10n.settingsApiKey)
+            if viewModel.isKeyPresent {
+                Text(viewModel.maskedApiKey)
+                    .font(.craftifyFootnote)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                    .lineLimit(Common.unlimitedLineLimit)
+                    .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
+            }
+            if viewModel.isKeyPresent {
+                Button(role: .destructive, action: { Task { await viewModel.deleteKey() } }) {
+                    Text(L10n.homeDelete)
+                        .font(.craftifyBody)
+                        .fontWeight(.bold)
                 }
-                if viewModel.isKeyPresent {
-                    Button(role: .destructive, action: { Task { await viewModel.deleteKey() } }) {
-                        Text(L10n.homeDelete)
-                            .font(.craftifyBody)
-                            .fontWeight(.bold)
-                    }
-                    .accessibilityLabel(L10n.homeDelete + " ключ")
-                }
+                .accessibilityLabel(L10n.homeDelete + " ключ")
             }
         }
     }
@@ -118,15 +89,13 @@ public struct SettingsView: View {
         var errorMessage: String?
         var body: some View {
             if let error = errorMessage {
-                Section(header: Text("").craftifySectionHeader()) {
-                    Text(error)
-                        .foregroundColor(.red)
-                        .font(.craftifyFootnote)
-                        .fontWeight(.bold)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(Common.unlimitedLineLimit)
-                        .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
-                }
+                Text(error)
+                    .foregroundColor(.red)
+                    .font(.craftifyFootnote)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(Common.unlimitedLineLimit)
+                    .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
             }
         }
     }
@@ -140,13 +109,5 @@ public struct SettingsView: View {
                     .scaleEffect(SettingsViewConstants.loadingScale)
             }
         }
-    }
-}
-
-private extension View {
-    func craftifySectionHeader() -> some View {
-        self.font(.system(size: craftifySectionHeaderFontSize, weight: .bold))
-            .foregroundColor(.secondary)
-            .padding(.leading, FormStyleConstants.titleLeadingPadding)
     }
 }

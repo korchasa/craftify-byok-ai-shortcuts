@@ -13,6 +13,8 @@ public struct HowToUseView: View {
     public var body: some View {
         VStack(spacing: Self.verticalSpacing) {
             HowToUseTitle(topPadding: Self.topPadding)
+            Divider()
+                .padding(.bottom, FormStyleConstants.dividerBottomPadding)
             HowToUseInstruction()
             HowToUseConsentToggle(viewModel: viewModel)
             HowToUsePrivacyLink()

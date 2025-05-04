@@ -1,5 +1,4 @@
-@testable import Common
-import Nimble
+// import Common
 import XCTest
 
 /// Тесты для InventoryManager
@@ -9,8 +8,8 @@ public final class InventoryManagerTests: XCTestCase {
         let manager = InventoryManagerStub()
         let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "template", colorHex: "3288bd")
         manager.addOperation(operation)
-        expect(manager.inventory.count) == 1
-        expect(manager.loadInventory().first?.operation) == .translate
+        XCTAssertEqual(manager.inventory.count, 1)
+        XCTAssertEqual(manager.loadInventory().first?.operation, .translate)
     }
 
     /// Проверяет обновление операции
@@ -20,7 +19,7 @@ public final class InventoryManagerTests: XCTestCase {
         let operation2 = InventoryOperation(operation: .simplify, params: Data(), promptTemplate: "t2", colorHex: "d53e4f")
         manager.addOperation(operation1)
         manager.updateOperation(at: 0, with: operation2)
-        expect(manager.inventory.first?.operation) == .simplify
+        XCTAssertEqual(manager.inventory.first?.operation, .simplify)
     }
 
     /// Проверяет удаление операции
@@ -29,7 +28,7 @@ public final class InventoryManagerTests: XCTestCase {
         let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t", colorHex: "3288bd")
         manager.addOperation(operation)
         manager.removeOperation(at: 0)
-        expect(manager.inventory.isEmpty) == true
+        XCTAssertTrue(manager.inventory.isEmpty)
     }
 
     /// Проверяет очистку инвентаря
@@ -37,7 +36,7 @@ public final class InventoryManagerTests: XCTestCase {
         let manager = InventoryManagerStub()
         manager.addOperation(InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t", colorHex: "3288bd"))
         manager.clearInventory()
-        expect(manager.inventory.isEmpty) == true
+        XCTAssertTrue(manager.inventory.isEmpty)
     }
 
     /// Проверяет сохранение и загрузку инвентаря
@@ -46,8 +45,8 @@ public final class InventoryManagerTests: XCTestCase {
         let operation = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "t", colorHex: "3288bd")
         manager.saveInventory([operation])
         let loaded = manager.loadInventory()
-        expect(loaded.count) == 1
-        expect(loaded.first?.operation) == .translate
+        XCTAssertEqual(loaded.count, 1)
+        XCTAssertEqual(loaded.first?.operation, .translate)
     }
 
     deinit {

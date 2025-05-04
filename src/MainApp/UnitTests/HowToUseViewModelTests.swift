@@ -1,20 +1,18 @@
 @testable import Common
-@testable import MainApp
-import Nimble
 import XCTest
 
 public final class HowToUseViewModelTests: XCTestCase {
     public func testInitialConsentIsFalseByDefault() {
         let stub = ConsentManagerStub()
         let viewModel = HowToUseViewModel(consentManager: stub)
-        expect(viewModel.consentGiven) == false
+        XCTAssertFalse(viewModel.consentGiven)
     }
 
     public func testSetConsentUpdatesValue() {
         let stub = ConsentManagerStub()
         let viewModel = HowToUseViewModel(consentManager: stub)
         viewModel.consentGiven = true
-        expect(viewModel.consentGiven) == true
+        XCTAssertTrue(viewModel.consentGiven)
     }
 
     public func testSaveConsentPersistsValue() {
@@ -22,7 +20,7 @@ public final class HowToUseViewModelTests: XCTestCase {
         let viewModel = HowToUseViewModel(consentManager: stub)
         viewModel.consentGiven = true
         viewModel.saveConsent()
-        expect(stub.getConsent()) == true
+        XCTAssertTrue(stub.getConsent())
     }
 
     public func testSaveConsentPersistsFalse() {
@@ -31,7 +29,7 @@ public final class HowToUseViewModelTests: XCTestCase {
         let viewModel = HowToUseViewModel(consentManager: stub)
         viewModel.consentGiven = false
         viewModel.saveConsent()
-        expect(stub.getConsent()) == false
+        XCTAssertFalse(stub.getConsent())
     }
 
     deinit {}

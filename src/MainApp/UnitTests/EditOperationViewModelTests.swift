@@ -1,6 +1,4 @@
 @testable import Common
-@testable import MainApp
-import Nimble
 import XCTest
 
 public final class EditOperationViewModelTests: XCTestCase {
@@ -12,9 +10,9 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "3288bd"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedKind) == OperationKind.translate
-        expect(vm.targetLanguage) == "fr"
-        expect(vm.isValid) == true
+        XCTAssertEqual(vm.selectedKind, OperationKind.translate)
+        XCTAssertEqual(vm.targetLanguage, "fr")
+        XCTAssertTrue(vm.isValid)
     }
 
     public func testInitWithSimplifyOperationFillsFields() {
@@ -25,9 +23,9 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedKind) == OperationKind.simplify
-        expect(vm.complexityLevel) == .adult
-        expect(vm.isValid) == true
+        XCTAssertEqual(vm.selectedKind, OperationKind.simplify)
+        XCTAssertEqual(vm.complexityLevel, .adult)
+        XCTAssertTrue(vm.isValid)
     }
 
     public func testInitWithCorrectOperationFillsFields() {
@@ -38,8 +36,8 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedKind) == OperationKind.correct
-        expect(vm.isValid) == true
+        XCTAssertEqual(vm.selectedKind, OperationKind.correct)
+        XCTAssertTrue(vm.isValid)
     }
 
     public func testInitWithExplainOperationFillsFields() {
@@ -50,9 +48,9 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.selectedKind) == OperationKind.explain
-        expect(vm.detailLevel) == .teenager
-        expect(vm.isValid) == true
+        XCTAssertEqual(vm.selectedKind, OperationKind.explain)
+        XCTAssertEqual(vm.detailLevel, .teenager)
+        XCTAssertTrue(vm.isValid)
     }
 
     public func testValidationFailsOnEmptyLanguage() {
@@ -63,7 +61,7 @@ public final class EditOperationViewModelTests: XCTestCase {
             colorHex: "3288bd"
         )
         let vm = EditOperationViewModel(operation: op)
-        expect(vm.isValid) == false
+        XCTAssertFalse(vm.isValid)
     }
 
     public func testMakeOperationReturnsUpdatedOperation() {
@@ -76,9 +74,9 @@ public final class EditOperationViewModelTests: XCTestCase {
         let vm = EditOperationViewModel(operation: op)
         vm.targetLanguage = "de"
         let updated = vm.makeOperation()
-        expect(updated?.operation) == .translate
+        XCTAssertEqual(updated?.operation, .translate)
         let params = try? JSONDecoder().decode(TranslateParams.self, from: updated!.params)
-        expect(params?.targetLanguage) == "de"
+        XCTAssertEqual(params?.targetLanguage, "de")
     }
 
     deinit {}

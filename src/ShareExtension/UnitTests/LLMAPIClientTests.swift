@@ -1,6 +1,6 @@
-import Common
-import Nimble
-@testable import ShareExtension
+// import ShareExtension
+
+// import Common
 import XCTest
 
 /// Тесты для LLMAPIClient
@@ -35,7 +35,7 @@ public final class LLMAPIClientTests: XCTestCase {
         // Act
         let result = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
         // Assert
-        expect(result) == expectedText
+        XCTAssertEqual(result, expectedText)
     }
 
     public func test_unauthorized_returns401Error() async throws {
@@ -54,13 +54,9 @@ public final class LLMAPIClientTests: XCTestCase {
         // Act & Assert
         do {
             _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-invalid-key")
-            fail("Expected error for 401, but got success")
+            XCTFail("Expected error for 401, but got success")
         } catch {
-            expect(error.localizedDescription).to(satisfyAnyOf(
-                contain("401"),
-                contain("unauthorized"),
-                contain("Unauthorized")
-            ))
+            XCTAssertTrue(error.localizedDescription == "401" || error.localizedDescription == "unauthorized" || error.localizedDescription == "Unauthorized")
         }
     }
 
@@ -80,13 +76,9 @@ public final class LLMAPIClientTests: XCTestCase {
         // Act & Assert
         do {
             _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
-            fail("Expected error for 429, but got success")
+            XCTFail("Expected error for 429, but got success")
         } catch {
-            expect(error.localizedDescription).to(satisfyAnyOf(
-                contain("429"),
-                contain("too many requests"),
-                contain("Too Many Requests")
-            ))
+            XCTAssertTrue(error.localizedDescription == "429" || error.localizedDescription == "too many requests" || error.localizedDescription == "Too Many Requests")
         }
     }
 
@@ -106,13 +98,9 @@ public final class LLMAPIClientTests: XCTestCase {
         // Act & Assert
         do {
             _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
-            fail("Expected error for 500, but got success")
+            XCTFail("Expected error for 500, but got success")
         } catch {
-            expect(error.localizedDescription).to(satisfyAnyOf(
-                contain("500"),
-                contain("internal server error"),
-                contain("Internal Server Error")
-            ))
+            XCTAssertTrue(error.localizedDescription == "500" || error.localizedDescription == "internal server error" || error.localizedDescription == "Internal Server Error")
         }
     }
 
@@ -128,11 +116,11 @@ public final class LLMAPIClientTests: XCTestCase {
         // Act & Assert
         do {
             _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
-            fail("Expected LLMAPIClientError.cancelled, but got success")
+            XCTFail("Expected LLMAPIClientError.cancelled, but got success")
         } catch let error as LLMAPIClientError {
-            expect(error) == .cancelled
+            XCTAssertEqual(error, .cancelled)
         } catch {
-            fail("Expected LLMAPIClientError.cancelled, got: \(error)")
+            XCTFail("Expected LLMAPIClientError.cancelled, got: \(error)")
         }
     }
 }

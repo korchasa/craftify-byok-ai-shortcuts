@@ -1,6 +1,6 @@
+// import ShareExtension
+
 import Common
-import Nimble
-@testable import ShareExtension
 import XCTest
 
 /// Интеграционные тесты: OperationType → InventoryOperation → ProcessingManager → LLMAPIClient
@@ -37,7 +37,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "Hello", operation: op) { result in
-            expect(try? result.get()) == expected
+            XCTAssertEqual(try? result.get(), expected)
             exp.fulfill()
         }
         await fulfillment(of: [exp], timeout: 1)
@@ -55,7 +55,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "Quantum mechanics...", operation: op) { result in
-            expect(try? result.get()) == expected
+            XCTAssertEqual(try? result.get(), expected)
             exp.fulfill()
         }
         await fulfillment(of: [exp], timeout: 1)
@@ -73,7 +73,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "This are errors in text.", operation: op) { result in
-            expect(try? result.get()) == expected
+            XCTAssertEqual(try? result.get(), expected)
             exp.fulfill()
         }
         await fulfillment(of: [exp], timeout: 1)
@@ -91,7 +91,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "Photosynthesis", operation: op) { result in
-            expect(try? result.get()) == expected
+            XCTAssertEqual(try? result.get(), expected)
             exp.fulfill()
         }
         await fulfillment(of: [exp], timeout: 1)
@@ -110,7 +110,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
             case let .failure(error):
                 // Проверяем, что получили ошибку сервера (код 500)
                 let description = error.localizedDescription.lowercased()
-                expect(description).to(contain("500"))
+                XCTAssertTrue(description.contains("500"))
             case .success:
                 XCTFail("Ожидалась ошибка, но получен успех")
             }
@@ -139,7 +139,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
             switch result {
             case let .failure(error):
                 let desc = error.localizedDescription.lowercased()
-                expect(desc).to(contain("401"))
+                XCTAssertTrue(desc.contains("401"))
             case .success:
                 XCTFail("Ожидалась ошибка, но получен успех")
             }
@@ -168,7 +168,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
             switch result {
             case let .failure(error):
                 let desc = error.localizedDescription.lowercased()
-                expect(desc).to(contain("429"))
+                XCTAssertTrue(desc.contains("429"))
             case .success:
                 XCTFail("Ожидалась ошибка, но получен успех")
             }
@@ -194,7 +194,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
             switch result {
             case let .failure(error):
                 let desc = error.localizedDescription.lowercased()
-                expect(desc).to(contain("парсинга"))
+                XCTAssertTrue(desc.contains("парсинга"))
             case .success:
                 XCTFail("Ожидалась ошибка, но получен успех")
             }

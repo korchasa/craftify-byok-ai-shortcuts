@@ -1,5 +1,4 @@
-@testable import Common
-import Nimble
+// import Common
 import XCTest
 
 /// Тесты для ConsentManager
@@ -7,9 +6,9 @@ public final class ConsentManagerTests: XCTestCase {
     /// Проверяет установку и получение согласия
     public func testSetAndGetConsent() {
         let manager = ConsentManagerStub()
-        expect(manager.getConsent()) == false
+        XCTAssertFalse(manager.getConsent())
         manager.setConsent(true)
-        expect(manager.getConsent()) == true
+        XCTAssertTrue(manager.getConsent())
     }
 
     /// Проверяет очистку согласия
@@ -17,7 +16,7 @@ public final class ConsentManagerTests: XCTestCase {
         let manager = ConsentManagerStub()
         manager.setConsent(true)
         manager.clearConsent()
-        expect(manager.getConsent()) == false
+        XCTAssertFalse(manager.getConsent())
     }
 
     deinit {

@@ -1,15 +1,14 @@
-@testable import Common
-import Nimble
+// import Common
 import XCTest
 
 /// Тесты моделей операций Craftify
 public final class OperationModelsTests: XCTestCase {
     /// Проверяет rawValue у OperationType
     public func testOperationTypeRawValues() {
-        expect(OperationKind.translate.rawValue) == "translate"
-        expect(OperationKind.simplify.rawValue) == "simplify"
-        expect(OperationKind.correct.rawValue) == "correct"
-        expect(OperationKind.explain.rawValue) == "explain"
+        XCTAssertEqual(OperationKind.translate.rawValue, "translate")
+        XCTAssertEqual(OperationKind.simplify.rawValue, "simplify")
+        XCTAssertEqual(OperationKind.correct.rawValue, "correct")
+        XCTAssertEqual(OperationKind.explain.rawValue, "explain")
     }
 
     /// Проверяет Codable для TranslateParams
@@ -17,7 +16,7 @@ public final class OperationModelsTests: XCTestCase {
         let params = TranslateParams(targetLanguage: "ru")
         let data = try JSONEncoder().encode(params)
         let decoded = try JSONDecoder().decode(TranslateParams.self, from: data)
-        expect(decoded) == params
+        XCTAssertEqual(decoded, params)
     }
 
     /// Проверяет Codable для SimplifyParams
@@ -25,7 +24,7 @@ public final class OperationModelsTests: XCTestCase {
         let params = SimplifyParams(complexityLevel: .schoolchild)
         let data = try JSONEncoder().encode(params)
         let decoded = try JSONDecoder().decode(SimplifyParams.self, from: data)
-        expect(decoded) == params
+        XCTAssertEqual(decoded, params)
     }
 
     /// Проверяет Codable для CorrectParams
@@ -33,7 +32,7 @@ public final class OperationModelsTests: XCTestCase {
         let params = CorrectParams()
         let data = try JSONEncoder().encode(params)
         let decoded = try JSONDecoder().decode(CorrectParams.self, from: data)
-        expect(decoded) == params
+        XCTAssertEqual(decoded, params)
     }
 
     /// Проверяет Codable для ExplainParams
@@ -41,7 +40,7 @@ public final class OperationModelsTests: XCTestCase {
         let params = ExplainParams(detailLevel: .adult)
         let data = try JSONEncoder().encode(params)
         let decoded = try JSONDecoder().decode(ExplainParams.self, from: data)
-        expect(decoded) == params
+        XCTAssertEqual(decoded, params)
     }
 
     /// Проверяет Codable для InventoryOperation
@@ -51,10 +50,10 @@ public final class OperationModelsTests: XCTestCase {
         let operation = InventoryOperation(operation: .translate, params: paramsData, promptTemplate: "Translate: {text}")
         let data = try JSONEncoder().encode(operation)
         let decoded = try JSONDecoder().decode(InventoryOperation.self, from: data)
-        expect(decoded.operation) == operation.operation
-        expect(decoded.promptTemplate) == operation.promptTemplate
+        XCTAssertEqual(decoded.operation, operation.operation)
+        XCTAssertEqual(decoded.promptTemplate, operation.promptTemplate)
         let decodedParams = try JSONDecoder().decode(TranslateParams.self, from: decoded.params)
-        expect(decodedParams) == params
+        XCTAssertEqual(decodedParams, params)
     }
 
     /// Проверяет сериализацию/десериализацию colorHex в InventoryOperation
@@ -65,7 +64,7 @@ public final class OperationModelsTests: XCTestCase {
         let operation = InventoryOperation(operation: .translate, params: paramsData, promptTemplate: "Translate: {text}", colorHex: colorHex)
         let data = try JSONEncoder().encode(operation)
         let decoded = try JSONDecoder().decode(InventoryOperation.self, from: data)
-        expect(decoded.colorHex) == colorHex
+        XCTAssertEqual(decoded.colorHex, colorHex)
     }
 
     /// Проверяет режим обработки результата по умолчанию (clipboard)
@@ -73,21 +72,21 @@ public final class OperationModelsTests: XCTestCase {
         let translateOp = TranslateOperation()
         let simplifyOp = SimplifyOperation()
         let correctOp = CorrectOperation()
-        expect(translateOp.resultMode) == .clipboard
-        expect(simplifyOp.resultMode) == .clipboard
-        expect(correctOp.resultMode) == .clipboard
+        XCTAssertEqual(translateOp.resultMode, .clipboard)
+        XCTAssertEqual(simplifyOp.resultMode, .clipboard)
+        XCTAssertEqual(correctOp.resultMode, .clipboard)
     }
 
     /// Проверяет режим обработки результата для ExplainOperation (display)
     public func testExplainOperationResultMode() {
         let explainOp = ExplainOperation()
-        expect(explainOp.resultMode) == .display
+        XCTAssertEqual(explainOp.resultMode, .display)
     }
 
     /// Проверяет режим обработки результата для SummarizeOperation (display)
     public func testSummarizeOperationResultMode() {
         let summarizeOp = SummarizeOperation()
-        expect(summarizeOp.resultMode) == .display
+        XCTAssertEqual(summarizeOp.resultMode, .display)
     }
 
     /// Очистка ресурсов (stub)
@@ -99,14 +98,14 @@ public final class OperationModelsTests: XCTestCase {
         let op = SummarizeOperation(textFetcher: DummyTextFetcher())
         let input = OperationInput(text: "Some text")
         let result = try await op.resolveInput(input: input)
-        expect(result) == "Some text"
+        XCTAssertEqual(result, "Some text")
     }
 
     func testSummarizeOperation_resolveInput_withURL_fetchesText() async throws {
         let op = SummarizeOperation(textFetcher: DummyTextFetcher())
         let input = OperationInput(url: "https://test.com")
         let result = try await op.resolveInput(input: input)
-        expect(result) == "FAKE_TEXT"
+        XCTAssertEqual(result, "FAKE_TEXT")
     }
 
     func testSummarizeOperation_resolveInput_noInput_throws() async {
@@ -124,72 +123,64 @@ public final class OperationModelsTests: XCTestCase {
         let op = TranslateOperation()
         let input = OperationInput(text: "Text")
         let result = try op.resolveInput(input: input)
-        expect(result) == "Text"
+        XCTAssertEqual(result, "Text")
     }
 
     func testTranslateOperation_resolveInput_withURL_throws() {
         let op = TranslateOperation()
         let input = OperationInput(url: "https://test.com")
-        expect {
-            _ = try op.resolveInput(input: input)
-        }.to(throwError { (error: Error) in
+        XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
             let nsError = error as NSError
-            expect(nsError.domain) == "TranslateOperation"
-        })
+            XCTAssertEqual(nsError.domain, "TranslateOperation")
+        }
     }
 
     func testSimplifyOperation_resolveInput_withText_returnsText() throws {
         let op = SimplifyOperation()
         let input = OperationInput(text: "Text")
         let result = try op.resolveInput(input: input)
-        expect(result) == "Text"
+        XCTAssertEqual(result, "Text")
     }
 
     func testSimplifyOperation_resolveInput_withURL_throws() {
         let op = SimplifyOperation()
         let input = OperationInput(url: "https://test.com")
-        expect {
-            _ = try op.resolveInput(input: input)
-        }.to(throwError { (error: Error) in
+        XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
             let nsError = error as NSError
-            expect(nsError.domain) == "SimplifyOperation"
-        })
+            XCTAssertEqual(nsError.domain, "SimplifyOperation")
+        }
     }
 
     func testCorrectOperation_resolveInput_withText_returnsText() throws {
         let op = CorrectOperation()
         let input = OperationInput(text: "Text")
         let result = try op.resolveInput(input: input)
-        expect(result) == "Text"
+        XCTAssertEqual(result, "Text")
     }
 
     func testCorrectOperation_resolveInput_withURL_throws() {
         let op = CorrectOperation()
         let input = OperationInput(url: "https://test.com")
-        expect {
-            _ = try op.resolveInput(input: input)
-        }.to(throwError { (error: Error) in
+        XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
             let nsError = error as NSError
-            expect(nsError.domain) == "CorrectOperation"
-        })
+            XCTAssertEqual(nsError.domain, "CorrectOperation")
+        }
     }
 
     func testExplainOperation_resolveInput_withText_returnsText() throws {
         let op = ExplainOperation()
         let input = OperationInput(text: "Text")
         let result = try op.resolveInput(input: input)
-        expect(result) == "Text"
+        XCTAssertEqual(result, "Text")
     }
 
     func testExplainOperation_resolveInput_withURL_throws() {
         let op = ExplainOperation()
         let input = OperationInput(url: "https://test.com")
-        expect {
-            _ = try op.resolveInput(input: input)
-        }.to(throwError { (error: Error) in
+        XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
             let nsError = error as NSError
-            expect(nsError.domain) == "ExplainOperation"
-        })
+            XCTAssertEqual(nsError.domain, "ExplainOperation")
+        }
     }
 }
 

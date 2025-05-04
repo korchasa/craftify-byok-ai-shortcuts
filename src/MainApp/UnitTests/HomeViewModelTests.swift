@@ -1,5 +1,5 @@
 @testable import Common
-import Nimble
+@testable import MainApp
 import XCTest
 
 public final class HomeViewModelTests: XCTestCase {
@@ -21,7 +21,8 @@ public final class HomeViewModelTests: XCTestCase {
     }
 
     public func testInitialInventoryIsEmpty() {
-        expect(self.viewModel?.operations).to(beEmpty())
+        XCTAssertNotNil(self.viewModel)
+        XCTAssertTrue(self.viewModel?.operations.isEmpty ?? false)
     }
 
     public func testLoadInventoryLoadsOperations() {
@@ -33,7 +34,7 @@ public final class HomeViewModelTests: XCTestCase {
         )
         inventoryStub?.saveInventory([operation])
         viewModel?.loadInventory()
-        expect(self.viewModel?.operations) == [operation]
+        XCTAssertEqual(self.viewModel?.operations, [operation])
     }
 
     public func testAddOperationAppendsToInventory() {
@@ -44,8 +45,8 @@ public final class HomeViewModelTests: XCTestCase {
             colorHex: "fdae61"
         )
         viewModel?.addOperation(operation)
-        expect(self.viewModel?.operations).to(contain(operation))
-        expect(self.inventoryStub?.inventory).to(contain(operation))
+        XCTAssertTrue(self.viewModel?.operations.contains(operation) ?? false)
+        XCTAssertTrue(self.inventoryStub?.inventory.contains(operation) ?? false)
     }
 
     public func testRemoveOperationRemovesFromInventory() {
@@ -58,8 +59,8 @@ public final class HomeViewModelTests: XCTestCase {
         inventoryStub?.saveInventory([operation])
         viewModel?.loadInventory()
         viewModel?.removeOperation(at: 0)
-        expect(self.viewModel?.operations).to(beEmpty())
-        expect(self.inventoryStub?.inventory).to(beEmpty())
+        XCTAssertTrue(self.viewModel?.operations.isEmpty ?? false)
+        XCTAssertTrue(self.inventoryStub?.inventory.isEmpty ?? false)
     }
 
     public func testUpdateOperationUpdatesInventory() {
@@ -78,8 +79,8 @@ public final class HomeViewModelTests: XCTestCase {
         inventoryStub?.saveInventory([operation1])
         viewModel?.loadInventory()
         viewModel?.updateOperation(at: 0, with: operation2)
-        expect(self.viewModel?.operations.first) == operation2
-        expect(self.inventoryStub?.inventory.first) == operation2
+        XCTAssertEqual(self.viewModel?.operations.first, operation2)
+        XCTAssertEqual(self.inventoryStub?.inventory.first, operation2)
     }
 
     deinit {}

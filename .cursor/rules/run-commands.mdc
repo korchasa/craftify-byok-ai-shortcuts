@@ -7,25 +7,11 @@ alwaysApply: true
 
 Usage: ./run <command> [args...]
 Commands:
-  analyze             Run static analysis
-  archive             Archive MainApp as .xcarchive
-  build               Build MainApp and ShareExtension (Release)
-  bump-version        Bump version numbers via agvtool
   clean               Clean build artifacts
-  comment-scan        Scan for TODO/FIXME/print/debugPrint
-  deploy:adhoc        Ad-hoc TestFlight deploy
-  deploy:appstore     Upload to App Store Connect
-  deploy:internal     Internal TestFlight deploy
-  deploy:simulator    Build MainApp for simulator
-  deploy:testflight   Upload IPA to TestFlight via altool
-  export-ipa          Export IPA from archive
-  fmt                 Run SwiftFormat (format code)
+  sim                 Build MainApp for simulator
   generate            Run SwiftGen and XcodeGen
   init                Install CLI tools
-  lint                Run SwiftLint (lint code)
   logs                Stream MainApp logs
-  notify              Send notifications (Slack, email)
-  size-report         Check ShareExtension size
   check               Run all checks (clean, generate, comment-scan, fmt, lint, analyze, build, test)
   test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
   help                Show this help

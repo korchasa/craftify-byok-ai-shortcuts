@@ -1,10 +1,6 @@
 import Common
 import SwiftUI
 
-#if canImport(ViewInspector)
-    // moved to EditOperationView+Inspectable.swift
-#endif
-
 public struct EditOperationView: View {
     @ObservedObject public var viewModel: EditOperationViewModel
     private let onSave: (InventoryOperation) -> Void
@@ -30,35 +26,22 @@ public struct EditOperationView: View {
     }
 
     public var body: some View {
-        NavigationStack {
-            EditOperationForm(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
-        }
-        .background(Color.white)
-    }
-
-    private struct EditOperationForm: View {
-        @ObservedObject var viewModel: EditOperationViewModel
-        var onSave: (InventoryOperation) -> Void
-        var dismiss: DismissAction
-        var body: some View {
-            VStack(spacing: 0) {
-                Form {
-                    EditOperationTypeSection(viewModel: viewModel)
-                    EditOperationFields(viewModel: viewModel)
-                    Section(header: Text(L10n.color).craftifySectionHeader()) {
-                        EditOperationColorPalette(viewModel: viewModel)
-                    }
-                }
-                .padding(.leading, FormStyleConstants.formLeadingPadding)
-                .navigationTitle(L10n.editOperationTitle)
-                .font(.craftifyTitle)
-                .fontWeight(.bold)
-                .scrollContentBackground(.hidden)
-                .background(Color.white)
-                Spacer(minLength: MainAppButtonConstants.spacerMinLength)
+        Form {
+            Section(header: Text(L10n.addOperationType).font(.craftifyTitle).fontWeight(.bold)) {
+                EditOperationTypeSection(viewModel: viewModel)
+            }
+            Section {
+                EditOperationFields(viewModel: viewModel)
+            }
+            Section(header: Text(L10n.color).font(.craftifyTitle).fontWeight(.bold)) {
+                EditOperationColorPalette(viewModel: viewModel)
+            }
+            Section {
                 EditOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
             }
         }
+        .navigationTitle(LocalizedStringKey(L10n.editOperationTitle))
+        .formStyle(.grouped)
     }
 
     private struct EditOperationButtons: View {
@@ -103,16 +86,14 @@ public struct EditOperationView: View {
     private struct EditOperationTypeSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.addOperationType).craftifySectionHeader()) {
-                Picker(L10n.addOperationType, selection: $viewModel.selectedKind) {
-                    ForEach(OperationFactory.allKinds, id: \ .self) { kind in
-                        Text(label(for: kind)).tag(Optional(kind))
-                    }
+            Picker(L10n.addOperationType, selection: $viewModel.selectedKind) {
+                ForEach(OperationFactory.allKinds, id: \.self) { kind in
+                    Text(label(for: kind)).tag(Optional(kind))
                 }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.addOperationType)
-                .disabled(true)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.addOperationType)
+            .disabled(true)
         }
 
         private func label(for kind: OperationKind) -> String {
@@ -151,64 +132,56 @@ public struct EditOperationView: View {
     private struct EditOperationTranslateSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationParamTargetLanguage).craftifySectionHeader()) {
-                Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
-                    ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
-                        Text(lang.name).tag(lang.code)
-                    }
+            Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
+                ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
+                    Text(lang.name).tag(lang.code)
                 }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamTargetLanguage)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationParamTargetLanguage)
         }
     }
 
     private struct EditOperationSimplifySection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationParamComplexityLevel).craftifySectionHeader()) {
-                Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
-                    Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
-                    Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
-                    Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
-                    Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
-                }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamComplexityLevel)
+            Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
+                Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
+                Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
+                Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
+                Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationParamComplexityLevel)
         }
     }
 
     private struct EditOperationExplainSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationParamDetailLevel).craftifySectionHeader()) {
-                Picker(L10n.operationParamDetailLevel, selection: $viewModel.detailLevel) {
-                    Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
-                    Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
-                    Text(L10n.operationValueStudent).tag(DetailLevel.student)
-                    Text(L10n.operationValueAdult).tag(DetailLevel.adult)
-                }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamDetailLevel)
+            Picker(L10n.operationParamDetailLevel, selection: $viewModel.detailLevel) {
+                Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
+                Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
+                Text(L10n.operationValueStudent).tag(DetailLevel.student)
+                Text(L10n.operationValueAdult).tag(DetailLevel.adult)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationParamDetailLevel)
         }
     }
 
     private struct EditOperationSummarizeSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Section(header: Text(L10n.operationLabelSummarize).craftifySectionHeader()) {
-                Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
-                    ForEach(SentenceCountRange.allCases, id: \ .self) { range in
-                        Text(sentenceCountRangeLabel(range)).tag(range)
-                            .lineLimit(Common.unlimitedLineLimit)
-                            .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
-                    }
+            Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
+                ForEach(SentenceCountRange.allCases, id: \ .self) { range in
+                    Text(sentenceCountRangeLabel(range)).tag(range)
+                        .lineLimit(Common.unlimitedLineLimit)
+                        .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
                 }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationLabelSummarize)
             }
+            .pickerStyle(DefaultPickerStyle())
+            .accessibilityLabel(L10n.operationLabelSummarize)
         }
 
         private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
@@ -244,17 +217,5 @@ public struct EditOperationView: View {
                 .padding(.vertical, Self.verticalPadding)
             }
         }
-    }
-}
-
-#if canImport(ViewInspector)
-    // moved to EditOperationView+Inspectable.swift
-#endif
-
-private extension View {
-    func craftifySectionHeader() -> some View {
-        self.font(.system(size: craftifySectionHeaderFontSize, weight: .bold))
-            .foregroundColor(.secondary)
-            .padding(.leading, FormStyleConstants.titleLeadingPadding)
     }
 }

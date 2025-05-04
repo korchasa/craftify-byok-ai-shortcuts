@@ -1,6 +1,6 @@
+// import ShareExtension
+
 import Common
-import Nimble
-@testable import ShareExtension
 import XCTest
 
 public final class ShareExtensionManagerTests: XCTestCase {
@@ -22,8 +22,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
         )
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let result = await manager.process(text: "Hello", operation: op)
-        expect(result?.success) == true
-        expect(result?.error).to(beNil())
+        XCTAssertTrue(result?.success == true)
+        XCTAssertNil(result?.error)
     }
 
     public func testProcess_NoConsent() async {
@@ -43,8 +43,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
         )
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let result = await manager.process(text: "Hello", operation: op)
-        expect(result?.success) == false
-        expect(result?.error) == "Требуется согласие пользователя"
+        XCTAssertTrue(result?.success == false)
+        XCTAssertEqual(result?.error, L10n.errorConsentRequired)
     }
 
     public func testProcess_TextTooLong() async {
@@ -65,8 +65,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let longText = String(repeating: "a", count: ShareExtensionManager.maxTextLength + 1)
         let result = await manager.process(text: longText, operation: op)
-        expect(result?.success) == false
-        expect(result?.error) == "Текст слишком длинный для обработки"
+        XCTAssertTrue(result?.success == false)
+        XCTAssertEqual(result?.error, L10n.errorTextTooLong)
     }
 
     public func testProcess_TextAtLimit() async {
@@ -87,8 +87,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let atLimitText = String(repeating: "a", count: 5000)
         let result = await manager.process(text: atLimitText, operation: op)
-        expect(result?.success) == true
-        expect(result?.error).to(beNil())
+        XCTAssertTrue(result?.success == true)
+        XCTAssertNil(result?.error)
     }
 
     public func testProcess_DisplayMode() async {
@@ -111,10 +111,10 @@ public final class ShareExtensionManagerTests: XCTestCase {
         let data = try! JSONEncoder().encode(params)
         let op = InventoryOperation(operation: .explain, params: data, promptTemplate: "ExplainPrompt")
         let result = await manager.process(text: "Test", operation: op)
-        expect(result?.success) == true
-        expect(manager.lastResult) == "Processed: Test"
+        XCTAssertTrue(result?.success == true)
+        XCTAssertEqual(manager.lastResult, "Processed: Test")
         // В режиме отображения не должно быть копирования: ClipboardManagerStub.copiedText остается nil
-        expect(clipboardManager.copiedText).to(beNil())
+        XCTAssertNil(clipboardManager.copiedText)
     }
 
     public func testProcess_URLAsText() async {
@@ -135,8 +135,10 @@ public final class ShareExtensionManagerTests: XCTestCase {
         let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
         let urlString = "https://example.com/some/path?query=1"
         let result = await manager.process(text: urlString, operation: op)
-        expect(result?.success) == true
-        expect(result?.error).to(beNil())
-        expect(clipboardManager.copiedText) == "Processed: https://example.com/some/path?query=1"
+        XCTAssertTrue(result?.success == true)
+        XCTAssertNil(result?.error)
+        XCTAssertEqual(clipboardManager.copiedText, "Processed: https://example.com/some/path?query=1")
     }
+
+    public func testPrintEnvironment() {}
 }

@@ -1,6 +1,5 @@
-import Common
-import Nimble
-@testable import ShareExtension
+// import ShareExtension
+
 import XCTest
 
 /// Интеграционные тесты для LLMAPIClient (end-to-end через URLProtocolStub)
@@ -37,13 +36,13 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
         // Act
         let result = try await client.send(text: "Hello integration", promptTemplate: "Translate: {text}", apiKey: "sk-integration-key")
         // Assert
-        expect(result) == expectedText
-        expect(capturedRequest).notTo(beNil())
+        XCTAssertEqual(result, expectedText)
+        XCTAssertNotNil(capturedRequest)
         if let request = capturedRequest {
-            expect(request.url?.absoluteString) == "https://api.openai.com/v1/chat/completions"
-            expect(request.httpMethod) == "POST"
-            expect(request.value(forHTTPHeaderField: "Authorization")) == "Bearer sk-integration-key"
-            expect(request.value(forHTTPHeaderField: "Content-Type")) == "application/json"
+            XCTAssertEqual(request.url?.absoluteString, "https://api.openai.com/v1/chat/completions")
+            XCTAssertEqual(request.httpMethod, "POST")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer sk-integration-key")
+            XCTAssertEqual(request.value(forHTTPHeaderField: "Content-Type"), "application/json")
             var bodyData: Data? = request.httpBody
             if bodyData == nil, let stream = request.httpBodyStream {
                 var buffer = Data()
@@ -62,19 +61,19 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
                 if !buffer.isEmpty { bodyData = buffer }
             }
             guard let httpBody = bodyData else {
-                fail("httpBody и httpBodyStream отсутствуют в capturedRequest — не отправляется тело JSON")
+                XCTFail("httpBody и httpBodyStream отсутствуют в capturedRequest — не отправляется тело JSON")
                 return
             }
             let body = try JSONSerialization.jsonObject(with: httpBody) as? [String: Any]
-            expect(body?["model"] as? String) == "gpt-4o-mini"
-            expect(body?["temperature"] as? Double) == 0.7
-            expect(body?["max_tokens"] as? Int) == 2048
+            XCTAssertEqual(body?["model"] as? String, "gpt-4o-mini")
+            XCTAssertEqual(body?["temperature"] as? Double, 0.7)
+            XCTAssertEqual(body?["max_tokens"] as? Int, 2048)
             let messages = body?["messages"] as? [[String: Any]]
-            expect(messages?.count) == 2
-            expect(messages?.first? ["role"] as? String) == "system"
-            expect(messages?.first? ["content"] as? String) == "Translate: {text}"
-            expect(messages?.last? ["role"] as? String) == "user"
-            expect(messages?.last? ["content"] as? String) == "Hello integration"
+            XCTAssertEqual(messages?.count, 2)
+            XCTAssertEqual(messages?.first? ["role"] as? String, "system")
+            XCTAssertEqual(messages?.first? ["content"] as? String, "Translate: {text}")
+            XCTAssertEqual(messages?.last? ["role"] as? String, "user")
+            XCTAssertEqual(messages?.last? ["content"] as? String, "Hello integration")
         }
     }
 }
