@@ -1,41 +1,65 @@
-## Implementation and Technology Stack
+# Craftify Implementation & Technology Stack
 
-### CLI Commands
+## Table of Contents
+- [Craftify Implementation \& Technology Stack](#craftify-implementation--technology-stack)
+  - [Table of Contents](#table-of-contents)
+  - [CLI Commands](#cli-commands)
+  - [Technology Stack](#technology-stack)
+  - [Environment Setup](#environment-setup)
+  - [CLI Tools](#cli-tools)
+  - [DevOps and CI/CD](#devops-and-cicd)
+  - [API: AuthManager](#api-authmanager)
+  - [API: LogManagerShared](#api-logmanagershared)
+  - [Testing](#testing)
+  - [Timeout Implementation](#timeout-implementation)
+  - [Receiving Logs](#receiving-logs)
+  - [Operation Color Implementation](#operation-color-implementation)
+  - [Onboarding Flow](#onboarding-flow)
+  - [Project Schemas](#project-schemas)
+  - [Share Extension UI](#share-extension-ui)
+  - [URL Sharing Support](#url-sharing-support)
+  - [Technology Stack and Dependencies](#technology-stack-and-dependencies)
+  - [Development Environment and Setup](#development-environment-and-setup)
+  - [Input Handling for Operations](#input-handling-for-operations)
+  - [Button Style Constants](#button-style-constants)
+  - [Button Styles Overview](#button-styles-overview)
+  - [DevOps-friendly Flow](#devops-friendly-flow)
+  - [References](#references)
+
+---
+
+## CLI Commands
 
 | Command         | Description                                           |
 |----------------|------------------------------------------------------|
 | ./run check     | Run cleaning, generation, formatting, linting, static analysis, building, and testing |
 | ./run deploy:simulator      | Build and run in iPhone 14 simulator (iOS 16)      |
 | ./run clean    | Clean build artifacts                                |
-| ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Internal, all levels, MainApp и ShareExtension) |
+| ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Internal, all levels, MainApp and ShareExtension) |
 | ./run init     | Install all CLI dependencies via Homebrew           |
 | ./run generate | Run SwiftGen and XcodeGen (localization, project)   |
 | ./run size-report | Check ShareExtension size (fail if >20MB)         |
-| add-operation-color | Позволяет выбрать цвет из палитры для операции. Цвет сохраняется в InventoryOperation и отображается в UI (главный экран, экран шаринга). Покрыто unit, UI и e2e тестами. |
-| correct   | Исправление грамматики и орфографии, стиль всегда сохраняется максимально | {text} | - |
-| summarize-url | Summarize text from a web page by URL or plain text | SummarizeOperation, SwiftSoupTextFetcher | Accepts either direct text or URL, downloads HTML if needed, extracts <body> text, summarizes |
-| resolveInput | Асинхронно получает текст для LLM: для Summarize поддерживает url (загрузка и парсинг текста), для остальных — только text, url вызывает ошибку | OperationType | input: OperationInput, output: String (async) |
+| ./run full-clean | Full clean: removes all build artifacts, caches, temp files, xcresult, dSYM, .app, xcarchive, DerivedData, SourcePackages, .build, .swiftpm, coverage, *.log, *.tmp, *.temp. |
 
-### Technology Stack
+## Technology Stack
 - Swift 5.7+
 - SwiftUI
 - XcodeGen
 - SwiftPM (Common, LogManagerShared)
 - SwiftGen (localization)
 - GitHub Actions (CI/CD)
-- Поддержка resultMode (clipboard/display) для операций
 - SwiftSoup (HTML parsing)
 - URLSession (networking)
 - TDD (unit tests for all error branches)
 
-### Environment Setup
+## Environment Setup
 1. Clone the repository.
 2. Install dependencies: run `./run init` (installs all CLI tools via Homebrew).
 3. Generate the project: `xcodegen`.
 4. Build and run: `./run deploy:simulator`.
 5. For tests: `./run check`.
 
-### CLI Tools
+## CLI Tools
 
 | Tool           | Version   | Purpose                          |
 |----------------|-----------|----------------------------------|
@@ -45,38 +69,22 @@
 | xcbeautify     | 2.28.0   | Beautiful output for xcodebuild  |
 | swiftgen       | 6.6.3    | Localization code generation     |
 
-All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile больше не используются.
+All dependencies are installed via `./run init` using Homebrew.
 
-### DevOps and CI/CD
-
+## DevOps and CI/CD
 - GitHub Actions is used (`.github/workflows/ci.yml`).
-- Кэширование ускоряет сборки:
+- Caching accelerates builds:
   - DerivedData (`~/Library/Developer/Xcode/DerivedData`)
   - SwiftPM dependencies (`.build`, `.swiftpm`)
-- Ключи кэша строятся по OS и control-файлам (`Package.resolved`).
-- Кэширование SwiftPM ускоряет pipeline.
-- Проверка размера ShareExtension (`./run size-report`, fail если >20MB).
-- Проверка комментариев (TODO, FIXME, print, debugPrint).
-- Все проверки интегрированы в workflow.
+- Key cache is built from OS and control files (`Package.resolved`).
+- CI/CD checks:
+  - Size report: automatic check of ShareExtension size (fail if >20MB)
+  - Comment scan: automatic grep for TODO, FIXME, print, debugPrint
+  - Build-time metrics: build time and .appex size
+  - All checks are integrated into workflow
 
-#### CI/CD: Non-functional Requirements Automation
-
-- **Size report**: автоматическая проверка размера ShareExtension.
-- **Comment scan**: автоматический grep в src/ на TODO, FIXME, print, debugPrint.
-- **Build-time metrics**: сбор метрик времени сборки и размера .appex.
-- Все проверки интегрированы в `.github/workflows/ci.yml`.
-
-### Differences Between Local and CI/CD Builds
-
-- **Локально**: все CLI-инструменты устанавливаются через `./run init` (Homebrew), используются wrapper-скрипты `./run` для всех операций.
-- **В CI/CD**: все утилиты (swiftlint, swiftformat, xcodegen, xcodebuild и др.) устанавливаются и вызываются напрямую, без Mint и без использования `./run`.
-
-### API: AuthManager
-
-**Purpose:**
-- Secure storage and retrieval of OpenAI API key via Keychain with Keychain Sharing support (App Group).
-- Masking the key for logging.
-- Used in all modules via the `AuthManaging` protocol (DI-friendly, supports stub for tests).
+## API: AuthManager
+**Purpose:** Secure storage and retrieval of OpenAI API key via Keychain with Keychain Sharing support (App Group).
 
 **Public Methods:**
 | Method | Description |
@@ -86,19 +94,13 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 | `deleteAPIKey() async throws` | Delete API key |
 | `maskedAPIKey(_ key: String?) -> String` | Masks the key for logging (example: sk-****abcd) |
 
-**Features:**
-- Все методы async/await.
-- Ошибки доступа к Keychain обрабатываются и пробрасываются.
-- Маскирование ключа: только первые 3 и последние 4 символа видны.
-- Для тестов — in-memory stub (AuthManagerStub).
+- All methods async/await.
+- Errors are handled and propagated.
+- Masking: only first 3 and last 4 characters are visible.
+- For tests — in-memory stub (AuthManagerStub).
 
-### API: LogManagerShared
-
-**Purpose:**
-- Централизованное логирование для приложения и расширения.
-- В production — только OSLogManagerShared (Unified Logging, os_log, subsystem: Internal, только message + metadata).
-- Для тестов — in-memory stub (LogManagerSharedInMemory).
-- Маскирование ключей.
+## API: LogManagerShared
+**Purpose:** Centralized logging for app and extension.
 
 **Public Methods:**
 | Method | Description |
@@ -108,74 +110,42 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 | `clearLogs()` | No-op in production, only for tests |
 | `exportLogs() throws -> Data` | No-op in production, only for tests |
 
-**Features:**
-- В production: только system log, экспорт и FIFO не поддерживаются.
-- Для тестов — in-memory реализация с FIFO и экспортом.
-- Маскирование ключей аналогично AuthManager.
+- In production: only system log, export and FIFO not supported.
+- For tests — in-memory implementation with FIFO and export.
+- Key masking as in AuthManager.
 
-### Testing AuthManager и LogManager
-- Unit-тесты для всех методов, включая маскирование, ошибки доступа, удаление ключа.
-- Покрытие ≥ 80%.
+## Testing
+- Unit and UI tests: `./run check`
+- Coverage is checked automatically in CI
+- All error branches are covered by tests
 
-### Share Extension и resultMode
-- Для всех операций теперь поддерживается признак обработки результата (resultMode):
-  - `.clipboard` — результат копируется в буфер обмена (по умолчанию для всех операций).
-  - `.display` — результат отображается во всплывающем окне (используется для Explain).
-- UI (ShareExtensionView) корректно отображает результат Explain с прокруткой, для остальных операций — тост о копировании.
-- Покрыто unit, UI тестами (режимы clipboard/display, Explain, ошибки, edge cases).
-
-### Running Tests
-- Unit и UI тесты: `./run check`
-- Проверка покрытия: автоматически в CI
-
-### CI/CD: Проверка размера и покрытия
-- В CI/CD автоматически проверяется размер ShareExtension и покрытие тестами (≥80%).
-
-### Developer Notes
-- Не редактируйте Info.plist и entitlements вручную. Все изменения — только через project.yml и XcodeGen.
-- Все менеджеры внедряются через протоколы для тестируемости.
-- Для Explain результат отображается во всплывающем окне, для остальных — копируется в буфер.
-
-## Timeout Implementation Details
+## Timeout Implementation
 - Text processing timeout is implemented only in ShareExtensionViewModel (default 30 seconds, can be overridden in tests via processingTimeoutSeconds).
 - ShareExtensionManager does not implement a timeout, only business logic for processing and errors.
 - In unit tests, the ViewModel timeout is set via processingTimeoutSeconds.
 
-| Requirement | Description |
-| --- | --- |
-| Info.plist and entitlements configuration | Do not edit Info.plist and entitlements directly. All changes must be made only through project.yml, which is processed by XcodeGen. |
+## Receiving Logs
+To view logs, use:
+```sh
+./run logs
+```
+The command outputs logs from the unified log (os_log) for the last day, filtering by the subsystem "dev.korchasa.Craftify" in JSON format.
 
-### Receiving Logs (Unified Log)
-- To view the logs, use the command:
-  ```sh
-  ./run logs
-  ```
-- The command outputs logs from the unified log (os_log) for the last day, filtering by the subsystem "dev.korchasa.Craftify" in JSON format.
-- To change the period, use the log show options, for example:
-  ```sh
-  log show --predicate 'subsystem == "dev.korchasa.Craftify"' --style json --last 2h
-  ```
+## Operation Color Implementation
+- InventoryOperation: added property colorHex (hex color code).
+- InventoryManager: supports serialization/deserialization of colorHex.
+- AddOperationView/EditOperationView: UI palette for color selection.
+- HomeView/ShareExtensionView: displays operation color (indicator).
+- Coverage: unit tests (InventoryOperation, InventoryManager), UI tests (Add/EditOperationView).
 
-| `ci` (GitHub Actions) | Автоматический запуск lint, форматирования, тестов, сборки и деплоя через актуальные команды `./run`. Все шаги workflow используют только существующие команды из скрипта. Ручная работа в Xcode не требуется. |
-
-### Operation Color Implementation
-- InventoryOperation: добавлено свойство colorHex (hex-код цвета).
-- InventoryManager: поддержка сериализации/десериализации colorHex.
-- AddOperationView/EditOperationView: UI-палитра для выбора цвета.
-- HomeView/ShareExtensionView: отображение цвета операции (индикатор).
-- Покрытие: unit-тесты (InventoryOperation, InventoryManager), UI-тесты (Add/EditOperationView).
-
-- В моделях и UI убран параметр stylePreservationLevel для correct-операции, всегда используется максимальный стиль.
-
-### Onboarding Flow (Welcome Screen)
-- AppState (ObservableObject) с Published-флагом согласия пользователя.
-- Используется через @StateObject в CraftifyApp.
-- HowToUseView принимает onConsent callback, который вызывается после согласия.
-- После согласия — автоматический переход на HomeView.
-- Согласие хранится через ConsentManager (UserDefaults App Group).
+## Onboarding Flow
+- AppState (ObservableObject) with Published consent flag.
+- Used via @StateObject in CraftifyApp.
+- HowToUseView accepts onConsent callback, called after consent.
+- After consent — automatic transition to HomeView.
+- Consent is stored via ConsentManager (UserDefaults App Group).
 
 ## Project Schemas
-
 - MainApp
 - MainAppUnitTests
 - MainAppE2ETests
@@ -186,89 +156,61 @@ All dependencies are installed via `./run init` using Homebrew. Mint и Mintfile
 - CommonE2ETests
 - ShareExtensionSizeReport
 
-- ### Описание операций и промптов
--
--#### CorrectOperation
-- ...
--#### ExplainOperation
-- ...
--#### SimplifyOperation
-- ...
--#### TranslateOperation
-- ...
+## Share Extension UI
 
-**Подробные описания схем, операций и промптов см. в architecture.md, user-manual.md, developer-manual.md.**
+```mermaid
+graph TD
+  ShareExtensionView[ShareExtensionView]
+  CloseButton[Close Button (fixed bottom)]
+  ScrollView[ScrollView (content)]
+  Overlay[Overlay (progress, toast)]
+  ShareExtensionView --> ScrollView
+  ShareExtensionView --> CloseButton
+  ShareExtensionView --> Overlay
+  ScrollView -->|contains| Title
+  ScrollView -->|contains| Result
+  ScrollView -->|contains| OperationsList
+```
 
-## ShareExtension: UI окна шаринга
+- The close button is always available at the bottom via `.safeAreaInset`, regardless of content length.
+- All other content (title, result, operations) is in a single ScrollView.
+- Content is always scrollable if it does not fit on the screen.
+- The button does not overlap content, as ScrollView has bottom padding.
+- Overlays (progress, toast) are implemented via ZStack and do not interfere with main content interaction.
+- All changes are covered by unit and UI tests.
 
-| Компонент         | Описание |
-|-------------------|----------|
-| Кнопка закрытия   | Всегда закреплена внизу экрана через `.safeAreaInset`, с фиксированным отступом. |
-| Контент           | Весь остальной контент (заголовок, результат, список операций) находится в едином ScrollView. |
-| Прокрутка         | Контент всегда прокручивается, если не помещается на экране. |
-| Перекрытие        | Контент не перекрывается кнопкой, так как у ScrollView добавлен нижний padding. |
-| Оверлеи           | Индикатор процесса и тост отображаются поверх основного содержимого. |
-| Стиль             | Используется современный SwiftUI-подход для закрепления элементов интерфейса. |
-| Тесты             | Все изменения покрыты unit- и UI-тестами. |
-| Качество          | Линтер и форматтер проходят без ошибок. |
+## URL Sharing Support
+- Share Extension supports sharing both text (UTType.plainText) and URL (UTType.url).
+- If both text and URL are shared, text takes priority.
+- Length limit (5000 characters) applies to both text and URL.
+- Covered by unit and e2e tests.
 
-### URL Sharing Support
-- Share Extension теперь поддерживает шаринг не только текста (UTType.plainText), но и URL (UTType.url).
-- Если пользователь отправляет ссылку через меню "Поделиться", она автоматически преобразуется в строку и обрабатывается как обычный текст.
-- Если в одном шаринге есть и текст, и URL — приоритет у текста.
-- Лимит длины (5000 символов) применяется и к URL.
-- Покрыто unit- и e2e-тестами.
-
-## Technology stack and dependencies (update)
+## Technology Stack and Dependencies
 - Swift
 - SwiftSoup (HTML parsing)
 - URLSession (networking)
 - TDD (unit tests for all error branches)
 
-## Development environment and setup (update)
+## Development Environment and Setup
 - Add SwiftSoup via SPM in project.yml
 - All code for text fetching is in src/Common/Sources/TextFetcher
 - No manual Xcode configuration required
 
-- `src/Common/Sources/Models/OperationInput.swift` — добавлено поле `url: String?` и `text: String?` для передачи URL или текста в операции
-
 ## Input Handling for Operations
-
-All operations now implement an async method `resolveInput(input: OperationInput) -> String`, which is always called before sending data to LLM:
+All operations implement an async method `resolveInput(input: OperationInput) -> String`, always called before sending data to LLM:
 - **SummarizeOperation**: supports both `text` and `url` (fetches and parses text from URL if needed).
 - **Other operations**: only support `text`; if a URL is provided, an error is thrown.
-
-The ViewModel always calls `resolveInput` and passes the result to the LLM, ensuring URLs are never sent directly.
-
-### Ограничения по входным данным операций
-
-| Операция              | Поддержка text | Поддержка url |
-|----------------------|:--------------:|:-------------:|
-| SummarizeOperation   |      Да        |      Да       |
-| TranslateOperation   |      Да        |      Нет      |
-| SimplifyOperation    |      Да        |      Нет      |
-| CorrectOperation     |      Да        |      Нет      |
-| ExplainOperation     |      Да        |      Нет      |
-
-- Для SummarizeOperation: resolveInput асинхронно загружает и парсит текст по url (через TextFetcher), либо возвращает text.
-- Для остальных операций: resolveInput принимает только text, url вызывает ошибку (ошибка с доменом <OperationName>Operation).
-- ViewModel всегда вызывает resolveInput перед отправкой текста в LLM.
-- Покрыто unit-тестами для всех операций (text и url).
 
 ## Button Style Constants
 
 | Constant                        | Purpose                                 | Value/Source                      |
 |---------------------------------|-----------------------------------------|-----------------------------------|
-| CraftifyButtonConstants.primaryColor   | Основной цвет кнопки                    | #ff807d                           |
-| CraftifyButtonConstants.secondaryColor | Второстепенный цвет кнопки              | #89e1c5                           |
-| CraftifyButtonConstants.cornerRadius   | Радиус скругления                      | 20                                |
-| CraftifyButtonConstants.horizontalPadding | Горизонтальный отступ                  | 16                                |
-| CraftifyButtonConstants.bottomPadding     | Нижний отступ                          | 16                                |
-| CraftifyButtonConstants.pressedScale      | Масштаб при нажатии                    | 0.97                              |
-
-**Использование:**
-- Все основные кнопки во всех экранах используют эти константы через `.buttonStyle(CraftifyPrimaryButtonStyle())` и `.buttonStyle(CraftifySecondaryButtonStyle())`.
-- Отступы и радиус применяются через `.padding(.horizontal, ...)`, `.padding(.bottom, ...)`, `.cornerRadius(...)`.
+| CraftifyButtonConstants.primaryColor   | Main button color                    | #ff807d                           |
+| CraftifyButtonConstants.secondaryColor | Secondary button color              | #89e1c5                           |
+| CraftifyButtonConstants.cornerRadius   | Corner radius                      | 20                                |
+| CraftifyButtonConstants.horizontalPadding | Horizontal padding                  | 16                                |
+| CraftifyButtonConstants.bottomPadding     | Bottom padding                          | 16                                |
+| CraftifyButtonConstants.pressedScale      | Pressed scale                    | 0.97                              |
 
 ## Button Styles Overview
 
@@ -279,7 +221,15 @@ The ViewModel always calls `resolveInput` and passes the result to the LLM, ensu
 | Cancel     | #89e1c5 (secondaryColor)  | White      | .craftifyBody Bold  | 20            | 16 horiz/bottom | 0.97          | Cancel, Dismiss, Close        |
 | Destructive| Transparent/Secondary     | Red        | .craftifyBody Bold  | 20            | 16 horiz/bottom | 0.97          | Delete, Remove, Danger action |
 
-**Notes:**
-- Все параметры берутся из CraftifyButtonConstants и Font+Craftify.
-- Для Destructive-кнопок используйте `.foregroundColor(.red)` или `.tint(.red)`.
-- Не создавайте локальных ButtonStyle — только централизованные.
+## DevOps-friendly Flow
+- All dependencies between targets must be minimal and isolated.
+- Use only embedAppExtensions for embedding extensions, not dependencies.
+- Test dependencies must be in UnitTest targets only.
+- This ensures clean production builds and prevents test libraries from leaking into production targets.
+
+## References
+- [Project Overview](project.md)
+- [Architecture](architecture.md)
+- [File Structure](file_structure.md)
+- [Developer Manual](developer-manual.md)
+- [User Manual](user-manual.md)

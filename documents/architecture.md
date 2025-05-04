@@ -1,38 +1,49 @@
-## Craftify Architecture
+# Craftify Architecture
 
-### General Scheme
-- The main application (SwiftUI) and Share Extension use the shared Common module (SwiftPM).
-- Interaction between modules is via App Group (UserDefaults) and Keychain Sharing.
-- Logging is done via LogManagerShared (SPM), logs are stored in os log.
-- All operations now support a result processing mode (resultMode):
-  - `.clipboard` — the result is copied to the clipboard (default for all operations).
-  - `.display` — the result is displayed in a popup window (used for Explain).
+## Table of Contents
+- [Craftify Architecture](#craftify-architecture)
+  - [Table of Contents](#table-of-contents)
+  - [System Overview](#system-overview)
+  - [Key Design Patterns](#key-design-patterns)
+  - [Logging and Analytics](#logging-and-analytics)
+  - [Component Interaction](#component-interaction)
+  - [Error Handling](#error-handling)
+  - [Testing Strategy](#testing-strategy)
+  - [Share Extension Architecture](#share-extension-architecture)
+    - [Interaction Diagram](#interaction-diagram)
+  - [Timeout Mechanism](#timeout-mechanism)
+  - [Operation Color \& ResultMode](#operation-color--resultmode)
+  - [Onboarding Flow](#onboarding-flow)
+  - [UI Architecture](#ui-architecture)
+  - [Localization](#localization)
+  - [Activation Rules](#activation-rules)
+  - [Style Centralization](#style-centralization)
+  - [Target Dependency Isolation](#target-dependency-isolation)
+  - [References](#references)
 
-### Key Patterns
-- MVVM + SwiftUI for UI and business logic.
-- Dependency Injection for managers.
-- FIFO for logs (limit 1000 entries).
+---
 
-### Logging and Analytics
+## System Overview
+- MainApp (SwiftUI) and Share Extension both use the shared Common module (SwiftPM).
+- Modules interact via App Group (UserDefaults) and Keychain Sharing.
+- Logging is centralized via LogManagerShared (SPM), using os_log.
+- All operations support a result processing mode (`resultMode`):
+  - `.clipboard`: result is copied to the clipboard (default)
+  - `.display`: result is shown in a popup window (used for Explain)
 
-#### Log Architecture
-- All logs are written via the system log (Unified Logging, os_log, subsystem: Internal, message + metadata only) through OSLogManagerShared. Log export is not supported, viewing is via Console.app, log stream, or ./run logs.
+## Key Design Patterns
+- MVVM + SwiftUI for UI and business logic
+- Dependency Injection for managers
+- FIFO for logs (limit 1000 entries)
+
+## Logging and Analytics
+- All logs are written via Unified Logging (os_log, subsystem: Internal, message + metadata only) through OSLogManagerShared.
 - LogManagerShared supports levels: debug, info, warning, error. In production, only message + metadata are logged.
 - API keys are always masked (only the first and last 4 characters are visible).
-- Crash reporting is not implemented (New Relic удалён).
 - No third-party SDKs for analytics or crash reporting are used in the Share Extension (minimal size, App Store compliance).
+- Log export is not supported (system log limitation). Viewing is only via system tools or `./run logs`.
 
-#### Log Export and Retention Policy
-- Log export is not supported (system log limitation). Viewing is only via system tools.
-- Crash reports are not sent (New Relic удалён).
-
-#### Consequences
-- Logs are available only for diagnostics via system tools or ./run logs (filtered by subsystem Internal, all levels, MainApp and ShareExtension).
-- No crash analytics.
-- Share Extension remains lightweight and privacy-compliant.
-- Key masking policy is implemented at the code level.
-
-### Component Interaction
+## Component Interaction
 - ShareExtensionManager reads inventory and API key, calls ProcessingManager.
 - ProcessingManager forms the request, calls LLMAPIClient.
 - LLMAPIClient sends HTTP POST to OpenAI, parses the response via ResponseParser.
@@ -40,25 +51,19 @@
 - If the operation has resultMode `.display` (Explain) — the result is saved and displayed in the view, not copied to the clipboard.
 - All actions are logged via LogManagerShared.
 
-### Error Handling
+## Error Handling
 - All errors (Keychain, network, parsing, clipboard) are handled with an Alert.
 - Retries for network errors (exponential backoff).
 - API key masking in logs.
 - In case of key access errors — prompt to open settings.
 
-### Testing
+## Testing Strategy
 - Unit tests for all managers and models.
 - UI tests for all main scenarios, including Explain (display) and clipboard operations.
 - Checks that Explain displays the result, and other operations copy to the clipboard.
 - Coverage ≥ 80% for key modules.
 
-### Results of Share Extension Implementation
-- Architectural solutions (DI, logging, error handling, testability) are fully implemented as per documentation.
-- All components and interactions match the description.
-- Support for resultMode for operations.
-
-### Share Extension: Final Architecture
-
+## Share Extension Architecture
 - All managers are injected via DI, including OSLogManagerShared.
 - Logging of all actions and errors, key masking.
 - Text limit: 5000 characters, enforced in UI and manager.
@@ -67,8 +72,7 @@
 - Covered by unit and UI tests (display, selection, saving color, result processing modes).
 - CI/CD implements automatic extension size check (Archive + size report, fail if >20 MB).
 
-#### Updated Interaction Diagram
-
+### Interaction Diagram
 ```mermaid
 graph TD
   ShareExtension[Share Extension] -->|UserDefaults| AppGroup[UserDefaults (App Group)]
@@ -82,41 +86,28 @@ graph TD
   ShareExtension -->|resultMode .display| ShareExtensionView[ShareExtensionView: Display Result]
 ```
 
-### Targets and Schemes
-
-- MainApp
-- MainAppUnitTests
-- ShareExtension
-- ShareExtensionUnitTests
-- CommonUnitTests
-- ShareExtensionSizeReport
-
-**Detailed descriptions of operations and prompts can be found in user-manual.md and developer-manual.md.**
-
-## Timeout Mechanism for Text Processing
+## Timeout Mechanism
 - Processing timeout is implemented only at the ShareExtensionViewModel level (default 30 seconds, can be overridden in tests).
 - ShareExtensionManager does not implement a timeout, only business logic for processing and errors.
 - In unit tests, the ViewModel timeout is set via processingTimeoutSeconds.
 
-### Operation Color & ResultMode Support
+## Operation Color & ResultMode
 - InventoryOperation extended with colorHex property (hex color from palette).
 - Added resultMode (clipboard/display) for operations.
 - InventoryOperation serialization/deserialization supports colorHex and result processing mode.
 - UI (HomeView, ShareExtensionView) displays operation color and correctly handles clipboard/display modes.
 - For Explain, the result is displayed in a scrollable popup window.
 - Covered by unit and UI tests (display, selection, saving color, result processing modes).
-
 - The correct operation no longer contains the stylePreservationLevel parameter, always uses the maximum style preservation level.
 - UI does not display elements for selecting style preservation level.
 
-### Onboarding (Welcome Screen Before Consent)
+## Onboarding Flow
 - CraftifyApp uses global AppState (ObservableObject), which stores the user's consent flag.
 - If consent is not given, HowToUseView with a checkbox and consent button is shown.
 - After consent, the main HomeView screen is automatically displayed.
 - Consent is stored in App Group UserDefaults via ConsentManager.
 
-## Share Extension UI Architecture
-
+## UI Architecture
 - All main content (title, result, list of operations) is placed inside a ScrollView.
 - The close button is fixed at the bottom via `.safeAreaInset(edge: .bottom)`, always available to the user.
 - Overlays (progress indicator, toast) are implemented via ZStack and do not interfere with main content interaction.
@@ -126,41 +117,34 @@ graph TD
     - Accessibility support and adaptation to different devices
 - All changes are covered by unit and UI tests, ensuring stable behavior.
 
-## Localization Features
-
+## Localization
 - **Localization only at the UI level**: All strings displayed to the user must be localized only in the views (MainApp, ShareExtension), not inside models, enums, or business logic in the Common module.
 - **Models and enums in Common** must return only rawValue or identifier, not a localized string.
 - **Reason**: SwiftGen generates a separate L10n for each target, and direct use of L10n in Common leads to visibility errors and conflicts. Localization at the UI level ensures correct operation and consistency.
-- **Example**:
-    - CORRECT:
-      ```swift
-      // In Common model
-      public enum ComplexityLevel: String, Codable, CaseIterable, Equatable { ... }
-      // In UI:
-      Text(labelForComplexityLevel(level))
-      private func labelForComplexityLevel(_ level: ComplexityLevel) -> String {
-          switch level {
-          case .schoolchild: L10n.operationValueSchoolchild
-          ...
-          }
-      }
-      ```
-    - INCORRECT:
-      ```swift
-      // In Common model
-      public var displayName: String { L10n.operationValueSchoolchild } // do not do this!
-      ```
 - **Recommendation**: If you need to get a string for an enum/model, always do it via a function/mapping in the UI layer.
 
-### Share Extension Activation Rules
-- Share Extension активируется для типов данных: текст (public.text) и URL (public.url).
-- Это задаётся через NSExtensionActivationRule в project.yml (XcodeGen):
+## Activation Rules
+- Share Extension is activated for data types: text (public.text) and URL (public.url).
+- This is set via NSExtensionActivationRule in project.yml (XcodeGen):
   - SUBQUERY (... ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url")
-- Позволяет отправлять как текст, так и ссылки через меню "Поделиться".
-- Оба типа обрабатываются как обычный текст, приоритет у текста.
+- Allows sharing both text and links via the "Share" menu.
+- Both types are processed as plain text, with priority given to text.
 
 ## Style Centralization
+- All style parameters for buttons (colors, radius, padding) are centralized in CraftifyButtonConstants (src/Common/Sources/CraftifyButtonConstants.swift).
+- The color palette for operations is centralized in ColorPaletteConstants (src/Common/Sources/ColorPaletteConstants.swift) and used in all ViewModels and Views.
+- This approach ensures interface consistency and simplifies maintenance.
 
-- Все параметры стиля для кнопок (цвета, радиус, отступы) централизованы в CraftifyButtonConstants (src/Common/Sources/CraftifyButtonConstants.swift).
-- Палитра цветов для операций централизована в ColorPaletteConstants (src/Common/Sources/ColorPaletteConstants.swift) и используется во всех ViewModel и View.
-- Такой подход обеспечивает единообразие интерфейса и упрощает поддержку.
+## Target Dependency Isolation
+- Production targets (MainApp, ShareExtension) must not depend on test-only packages or targets.
+- Use `embedAppExtensions` to include extensions in the app bundle, not `dependencies`.
+- Only include code in `dependencies` that is directly used by the target.
+- Test dependencies (ViewInspector, XCTest, etc.) must be listed only in UnitTest targets.
+- This prevents accidental autolinking of test frameworks and ensures clean, production-ready builds.
+
+## References
+- [Project Overview](project.md)
+- [Implementation](implementation.md)
+- [File Structure](file_structure.md)
+- [Developer Manual](developer-manual.md)
+- [User Manual](user-manual.md)
