@@ -26,23 +26,23 @@ public struct EditOperationView: View {
     }
 
     public var body: some View {
-        Form {
-            Section(header: Text(L10n.addOperationType).font(.craftifyTitle).fontWeight(.bold)) {
-                EditOperationTypeSection(viewModel: viewModel)
-            }
-            Section {
-                EditOperationFields(viewModel: viewModel)
-            }
-            Section(header: Text(L10n.color).font(.craftifyTitle).fontWeight(.bold)) {
-                EditOperationColorPalette(viewModel: viewModel)
-            }
-            Section {
+        CommonFormContainer(
+            title: LocalizedStringKey(L10n.editOperationTitle),
+            content: {
+                Section(header: Text(L10n.addOperationType).font(.craftifyTitle).fontWeight(.bold)) {
+                    EditOperationTypeSection(viewModel: viewModel)
+                }
+                Section {
+                    EditOperationFields(viewModel: viewModel)
+                }
+                Section(header: Text(L10n.color).font(.craftifyTitle).fontWeight(.bold)) {
+                    EditOperationColorPalette(viewModel: viewModel)
+                }
+            },
+            buttons: {
                 EditOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
             }
-        }
-        .background(Color.white)
-        .navigationTitle(LocalizedStringKey(L10n.editOperationTitle))
-        .formStyle(.grouped)
+        )
     }
 
     private struct EditOperationButtons: View {

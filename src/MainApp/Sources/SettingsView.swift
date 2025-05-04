@@ -16,19 +16,20 @@ public struct SettingsView: View {
     }
 
     public var body: some View {
-        Form {
-            Section(header: Text(L10n.settingsApiKey).font(.craftifyTitle).fontWeight(.bold)) {
-                SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
-            }
-            Section {
-                SettingsErrorSection(errorMessage: viewModel.errorMessage)
-            }
-            Section {
+        CommonFormContainer(
+            title: LocalizedStringKey(L10n.settingsTitle),
+            content: {
+                Section(header: Text(L10n.settingsApiKey).font(.craftifyTitle).fontWeight(.bold)) {
+                    SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
+                }
+                Section {
+                    SettingsErrorSection(errorMessage: viewModel.errorMessage)
+                }
+            },
+            buttons: {
                 SettingsFormButtons(viewModel: viewModel, dismiss: dismiss)
             }
-        }
-        .navigationTitle(LocalizedStringKey(L10n.settingsTitle))
-        .formStyle(.grouped)
+        )
     }
 
     private struct SettingsFormButtons: View {
