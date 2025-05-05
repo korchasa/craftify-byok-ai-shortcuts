@@ -74,7 +74,7 @@ public struct HomeView: View {
                             viewModel.removeOperation(at: idx)
                         }
                     )
-                    .listRowInsets(EdgeInsets(top: 2, leading: 7, bottom: 0, trailing: 15))
+                    .listRowInsets(EdgeInsets(top: ListRowInsets.top, leading: ListRowInsets.leading, bottom: ListRowInsets.bottom, trailing: ListRowInsets.trailing))
                 }
                 .onDelete { indices in
                     for index in indices {
@@ -223,5 +223,12 @@ public struct HomeView: View {
             }
             .tint(.red)
         }
+    }
+
+    private enum ListRowInsets {
+        static let top: CGFloat = 2
+        static let leading: CGFloat = 7
+        static let bottom: CGFloat = 0
+        static let trailing: CGFloat = 15
     }
 }
