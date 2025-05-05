@@ -113,6 +113,7 @@
 		444948E77EBB4FB818FF2358 /* BottomSheetContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 501D8464DBBEC232AB634B7C /* BottomSheetContainerView.swift */; };
 		44CE31CC08F25CCD816A83B0 /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
 		44EF78CE48693C3137EAB8D6 /* LogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3300990178545D06F20EFB1C /* LogManagerShared.swift */; };
+		45123CBCD28B5184E0E86957 /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD47111DB74E4BA7DBBEF7 /* SupportedLanguage.swift */; };
 		45979489A638E5FADB63BFFB /* OperationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431706693D7F029E9774D4B /* OperationFactory.swift */; };
 		46663BEEBA4FD425D45C64D7 /* Font+Craftify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB980E35AE2B9A7EFF9558 /* Font+Craftify.swift */; };
 		46A8880F35E7428B089FF190 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = DD32B495F3AEF2CA8CA31E91 /* SwiftSoup */; };
@@ -149,6 +150,7 @@
 		5C659060E2EFE93F602DFD91 /* ExplainOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974E8354DD987F3405191DF0 /* ExplainOperation.swift */; };
 		5CA563FE865785159A702257 /* OperationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431706693D7F029E9774D4B /* OperationFactory.swift */; };
 		5D3CAC045096E8D6CA2C191C /* TranslateOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B353C768F09100832BB29ED /* TranslateOperation.swift */; };
+		5D5614CCCD77FC8D1335C89C /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD47111DB74E4BA7DBBEF7 /* SupportedLanguage.swift */; };
 		5DC1CA295C839B1469C143EB /* EditOperationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7DAE164D467254CD313DBD7 /* EditOperationViewModel.swift */; };
 		5E8687E4C0310EC3433AE6D6 /* SwiftSoupTextFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B548C4CED138F9920BDF717 /* SwiftSoupTextFetcher.swift */; };
 		5F325E3A57D9C49A3CB19B46 /* SummarizeOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCD6CD1478FE88D8E9192F0 /* SummarizeOperation.swift */; };
@@ -157,6 +159,7 @@
 		605E399B6BC0E7A9B27E7737 /* AuthManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6354634CF5EE1B96882B70F3 /* AuthManagerMock.swift */; };
 		60C1438881ACED44F64B4083 /* OperationInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 585FE9EAAFCAFF8E6C61F8B8 /* OperationInput.swift */; };
 		61E1F4DE5940E1A4B2C5853F /* TextFetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9483E4A900619A793318F5 /* TextFetching.swift */; };
+		63009F5ECB470902879FCD02 /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD47111DB74E4BA7DBBEF7 /* SupportedLanguage.swift */; };
 		633A22EA15B29A6D715D7674 /* ResultMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB28402DE83D4B97C8EDB4A /* ResultMode.swift */; };
 		6368FE0C096D659FFFCE7B56 /* CraftifyButtonConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72672A5AAB5CD88823041487 /* CraftifyButtonConstants.swift */; };
 		638786C730DBDFF9691977B5 /* LLMAPIClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F48598F4F782A4FFFC3F38 /* LLMAPIClientTests.swift */; };
@@ -263,6 +266,7 @@
 		B371C2986B356543B096C313 /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
 		B5B52AB5C00F8EEC39AB8CC6 /* AuthManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8706FC6569F61629E86A4B47 /* AuthManagerError.swift */; };
 		B5EE6F01697B6FCF5F5C90FB /* AuthManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFEC8DC7B02AB6D71A45D880 /* AuthManagerStub.swift */; };
+		B6698D291A05944EF5BDA155 /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD47111DB74E4BA7DBBEF7 /* SupportedLanguage.swift */; };
 		B67EFD5A04CA775DA4BF7301 /* ResultMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFB28402DE83D4B97C8EDB4A /* ResultMode.swift */; };
 		B77188DA8795873EAB00E617 /* SummarizeOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCD6CD1478FE88D8E9192F0 /* SummarizeOperation.swift */; };
 		B7DEC937FC43D3D0607557CE /* ExplainParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7568EB39A52FE78B1B9F25 /* ExplainParams.swift */; };
@@ -375,6 +379,7 @@
 		FCDB69180B029FCFE1E3F9F3 /* FetchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D0E140222C9F6AB3994208 /* FetchError.swift */; };
 		FD3476E2CC0D6E625AAE6FBC /* ShareExtensionViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B0CEEE04739F40BFF240C2 /* ShareExtensionViewConstants.swift */; };
 		FD7C417822A479EB248B608A /* SentenceCountRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19F3128797ADF6F6D0011EB /* SentenceCountRange.swift */; };
+		FDF8C12DAE8953C55C52A64A /* SupportedLanguage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BD47111DB74E4BA7DBBEF7 /* SupportedLanguage.swift */; };
 		FF0F5B1CE13D82FBCF60F331 /* Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810426C6D523E6D985CC5F3A /* Strings.swift */; };
 		FF24CBCA4CC8B5C4412A2792 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73BEEF846398C71F616D891 /* LogLevel.swift */; };
 		FFB5268DA5B832FAA5D580F9 /* TextFetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9483E4A900619A793318F5 /* TextFetching.swift */; };
@@ -422,6 +427,7 @@
 		006838A636CAF1E02EA7A172 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		01C6C19F19EDE6D4D80D05AE /* CommonFormContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonFormContainer.swift; sourceTree = "<group>"; };
 		01F48598F4F782A4FFFC3F38 /* LLMAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMAPIClientTests.swift; sourceTree = "<group>"; };
+		03BD47111DB74E4BA7DBBEF7 /* SupportedLanguage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguage.swift; sourceTree = "<group>"; };
 		0431706693D7F029E9774D4B /* OperationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationFactory.swift; sourceTree = "<group>"; };
 		076E533CF19947AC86647DF5 /* OperationModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationModelsTests.swift; sourceTree = "<group>"; };
 		08B369514ABE40FC04527C80 /* CraftifyPrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftifyPrimaryButtonStyle.swift; sourceTree = "<group>"; };
@@ -809,6 +815,7 @@
 				43FF41537084CF100069C265 /* SimplifyParams.swift */,
 				FBCD6CD1478FE88D8E9192F0 /* SummarizeOperation.swift */,
 				158C2FC77FEE9F7ADDD39876 /* SummarizeParams.swift */,
+				03BD47111DB74E4BA7DBBEF7 /* SupportedLanguage.swift */,
 				96D432F90BE31951D969C660 /* SupportedLanguages.swift */,
 				8B353C768F09100832BB29ED /* TranslateOperation.swift */,
 				1684129DE2E2AA1ACBFF2D88 /* TranslateParams.swift */,
@@ -1088,6 +1095,7 @@
 				EE280801A7D16DAC32FC57FF /* Strings.swift in Sources */,
 				3EDAC3580C96954421A86127 /* SummarizeOperation.swift in Sources */,
 				BF3398FED97961749BE0654F /* SummarizeParams.swift in Sources */,
+				5D5614CCCD77FC8D1335C89C /* SupportedLanguage.swift in Sources */,
 				8BC2954CB975AE7C0AC5D177 /* SupportedLanguages.swift in Sources */,
 				C737201977F035F2E244B573 /* SwiftSoupTextFetcher.swift in Sources */,
 				FFB5268DA5B832FAA5D580F9 /* TextFetching.swift in Sources */,
@@ -1167,6 +1175,7 @@
 				2E2E4960ED4A40782FFA2476 /* Strings.swift in Sources */,
 				602A30ADBEE682F0D0E1A2B7 /* SummarizeOperation.swift in Sources */,
 				2E1442A89B8728404C54B047 /* SummarizeParams.swift in Sources */,
+				B6698D291A05944EF5BDA155 /* SupportedLanguage.swift in Sources */,
 				8D3E85EB1D9B247ACB092361 /* SupportedLanguages.swift in Sources */,
 				41725D7AF9072E134250299C /* SwiftSoupTextFetcher.swift in Sources */,
 				14A53F7B2732D03EB48F622F /* TextFetching.swift in Sources */,
@@ -1244,6 +1253,7 @@
 				FF0F5B1CE13D82FBCF60F331 /* Strings.swift in Sources */,
 				C07C7BB3F16DA0B5F96D55F3 /* SummarizeOperation.swift in Sources */,
 				3B51CFFFB4115DDA2273EA0C /* SummarizeParams.swift in Sources */,
+				FDF8C12DAE8953C55C52A64A /* SupportedLanguage.swift in Sources */,
 				304DC24B6D374B40C10B5005 /* SupportedLanguages.swift in Sources */,
 				9142A8BEF0925DC3DF7756CD /* SwiftSoupTextFetcher.swift in Sources */,
 				61E1F4DE5940E1A4B2C5853F /* TextFetching.swift in Sources */,
@@ -1327,6 +1337,7 @@
 				4140CF2DA5C781299883082E /* Strings.swift in Sources */,
 				5F325E3A57D9C49A3CB19B46 /* SummarizeOperation.swift in Sources */,
 				2439B7F3D0DC9739F2F6B1EF /* SummarizeParams.swift in Sources */,
+				45123CBCD28B5184E0E86957 /* SupportedLanguage.swift in Sources */,
 				3601CEEBBA8DF1B5454BF159 /* SupportedLanguages.swift in Sources */,
 				28FA0DFE582AA1661749E3E8 /* SwiftSoupTextFetcher.swift in Sources */,
 				65E4D5B766B0F1B6EFA2ABDC /* TextFetching.swift in Sources */,
@@ -1391,6 +1402,7 @@
 				386AD0169258ED0FF883C8B3 /* Strings.swift in Sources */,
 				B77188DA8795873EAB00E617 /* SummarizeOperation.swift in Sources */,
 				177576BE2E768D9E2914B544 /* SummarizeParams.swift in Sources */,
+				63009F5ECB470902879FCD02 /* SupportedLanguage.swift in Sources */,
 				374C4D13C649CE21D722C3D0 /* SupportedLanguages.swift in Sources */,
 				5E8687E4C0310EC3433AE6D6 /* SwiftSoupTextFetcher.swift in Sources */,
 				2A01AB9871F78C68413E5DC4 /* SwiftSoupTextFetcherTests.swift in Sources */,

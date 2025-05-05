@@ -110,8 +110,20 @@ function fmt() {
 
 function lint() {
   _start_section "Running SwiftLint"
-  swiftlint lint --fix --quiet
-  swiftlint lint --strict --quiet
+  local output
+  local exit_code=0
+  output=$(swiftlint lint --fix --quiet || exit_code=$?)
+  if [[ -n "$output" ]]; then
+    echo "$output"
+    echo -e "${RED}SwiftLint found issues!${NC}"
+    exit 1
+  fi
+  output=$(swiftlint lint --strict --quiet || exit_code=$?)
+  if [[ -n "$output" ]]; then
+    echo "$output"
+    echo -e "${RED}SwiftLint (strict) found issues!${NC}"
+    exit 1
+  fi
   _end_section
 }
 
