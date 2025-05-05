@@ -96,7 +96,7 @@ public struct HomeView: View {
 
         var body: some View {
             HStack {
-                OperationColorCircle(colorHex: operation.colorHex)
+                OperationIconCircle(kind: operation.operation, colorHex: operation.colorHex)
                 OperationLabelText(type: operation.operation)
                 Spacer()
                 OperationParamsText(operation: operation)
@@ -108,13 +108,22 @@ public struct HomeView: View {
         }
     }
 
-    private struct OperationColorCircle: View {
+    private struct OperationIconCircle: View {
+        let kind: OperationKind
         let colorHex: String
+        private static let symbolScale: CGFloat = 0.5
         var body: some View {
-            Circle()
-                .fill(Color(hex: colorHex))
-                .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
-                .accessibilityLabel("Цвет операции")
+            ZStack {
+                Circle()
+                    .fill(Color(hex: colorHex))
+                    .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
+                    .accessibilityLabel("Цвет операции")
+                Image(systemName: kind.sfSymbol)
+                    .foregroundColor(.white)
+                    .font(.system(size: ColorPaletteConstants.circleSize * OperationIconCircle.symbolScale))
+                    .fontWeight(.semibold)
+                    .accessibilityLabel("SF Symbol for operation: \(kind.rawValue)")
+            }
         }
     }
 
@@ -150,7 +159,7 @@ public struct HomeView: View {
             switch operation.operation {
             case .translate:
                 if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
-                    return "→ \(params.targetLanguage)"
+                    return "\u{2192} \(params.targetLanguage)"
                 }
             case .simplify:
                 if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {

@@ -140,63 +140,95 @@ public struct ShareExtensionView: View {
 
     private var operationsGrid: some View {
         let cardCornerRadius: CGFloat = ShareExtensionViewLocalConstants.cardCornerRadius
+        let symbolScale: CGFloat = 0.5
+        let vStackSpacing: CGFloat = 4
+        let hStackSpacing: CGFloat = 6
         return LazyVGrid(columns: ShareExtensionViewLocalConstants.gridColumns, spacing: ShareExtensionViewConstants.gridSpacing) {
             ForEach(viewModel.operations, id: \ .id) { op in
-                let color = Color(hex: op.colorHex)
-                Button(action: { viewModel.process(operation: op) }) {
-                    Text(operationDisplayName(for: op))
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
-                        .frame(maxWidth: .infinity, minHeight: ShareExtensionViewLocalConstants.operationMinHeight)
-                        .padding()
-                        .background(color)
-                        .foregroundColor(color.isDarkColor ? .white : .black)
-                        .cornerRadius(cardCornerRadius)
-                }
-                .accessibilityLabel(operationDisplayName(for: op))
-                .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
+                operationButton(for: op, cardCornerRadius: cardCornerRadius, symbolScale: symbolScale, vStackSpacing: vStackSpacing, hStackSpacing: hStackSpacing)
             }
         }
         .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
     }
 
-    private func operationDisplayName(for op: InventoryOperation) -> String {
+    private func operationButton(for op: InventoryOperation, cardCornerRadius: CGFloat, symbolScale: CGFloat, vStackSpacing: CGFloat, hStackSpacing: CGFloat) -> some View {
+        let color = Color(hex: op.colorHex)
+        return Button(action: { viewModel.process(operation: op) }) {
+            VStack(spacing: vStackSpacing) {
+                HStack(spacing: hStackSpacing) {
+                    ZStack {
+                        Image(systemName: op.operation.sfSymbol)
+                            .foregroundColor(.white)
+                            .font(.system(size: ColorPaletteConstants.circleSize * symbolScale))
+                            .fontWeight(.semibold)
+                            .accessibilityLabel("SF Symbol for operation: \(op.operation.rawValue)")
+                    }
+                    Text(operationCategory(for: op))
+                        .font(.craftifyBody)
+                        .fontWeight(.semibold)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                Text(operationProperty(for: op))
+                    .font(.craftifyFootnote)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .frame(maxWidth: .infinity, minHeight: ShareExtensionViewLocalConstants.operationMinHeight)
+            .padding()
+            .background(color)
+            .foregroundColor(.white)
+            .cornerRadius(cardCornerRadius)
+        }
+        .accessibilityLabel(operationCategory(for: op))
+        .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
+    }
+
+    private func operationCategory(for op: InventoryOperation) -> String {
+        switch op.operation {
+        case .translate: L10n.operationLabelTranslate
+        case .simplify: L10n.operationLabelSimplify
+        case .correct: L10n.operationLabelCorrect
+        case .explain: L10n.operationLabelExplain
+        case .summarize: L10n.operationLabelSummarize
+        }
+    }
+
+    private func operationProperty(for op: InventoryOperation) -> String {
         switch op.operation {
         case .translate:
             if let params = try? JSONDecoder().decode(TranslateParams.self, from: op.params) {
                 let langName = ShareExtensionView.supportedLanguages.first(where: { $0.code == params.targetLanguage })?.name ?? params.targetLanguage
-                return "\(L10n.operationLabelTranslate) → \(langName)"
+                return "\u{2192} " + langName
             }
-            return L10n.operationLabelTranslate
+            return ""
         case .simplify:
             if let params = try? JSONDecoder().decode(SimplifyParams.self, from: op.params) {
-                let level: String = switch params.complexityLevel {
-                case .schoolchild: L10n.operationValueSchoolchild
-                case .teenager: L10n.operationValueTeenager
-                case .student: L10n.operationValueStudent
-                case .adult: L10n.operationValueAdult
+                switch params.complexityLevel {
+                case .schoolchild: return L10n.operationValueSchoolchild
+                case .teenager: return L10n.operationValueTeenager
+                case .student: return L10n.operationValueStudent
+                case .adult: return L10n.operationValueAdult
                 }
-                return "\(L10n.operationLabelSimplify) \(level)"
             }
-            return L10n.operationLabelSimplify
+            return ""
         case .correct:
-            return L10n.operationLabelCorrect
+            return ""
         case .explain:
             if let params = try? JSONDecoder().decode(ExplainParams.self, from: op.params) {
-                let level: String = switch params.detailLevel {
-                case .schoolchild: L10n.operationValueSchoolchild
-                case .teenager: L10n.operationValueTeenager
-                case .student: L10n.operationValueStudent
-                case .adult: L10n.operationValueAdult
+                switch params.detailLevel {
+                case .schoolchild: return L10n.operationValueSchoolchild
+                case .teenager: return L10n.operationValueTeenager
+                case .student: return L10n.operationValueStudent
+                case .adult: return L10n.operationValueAdult
                 }
-                return "\(L10n.operationLabelExplain) \(level)"
             }
-            return L10n.operationLabelExplain
+            return ""
         case .summarize:
             if let params = try? JSONDecoder().decode(SummarizeParams.self, from: op.params) {
-                return "\(L10n.operationLabelSummarize) (\(sentenceCountRangeLabel(params.sentenceCountRange)))"
+                return sentenceCountRangeLabel(params.sentenceCountRange)
             }
-            return L10n.operationLabelSummarize
+            return ""
         }
     }
 

@@ -89,6 +89,15 @@ public final class OperationModelsTests: XCTestCase {
         XCTAssertEqual(summarizeOp.resultMode, .display)
     }
 
+    /// Проверяет соответствие SF Symbol для каждого типа операции
+    public func testOperationKindSFSymbols() {
+        XCTAssertEqual(OperationKind.translate.sfSymbol, "globe")
+        XCTAssertEqual(OperationKind.simplify.sfSymbol, "line.3.horizontal.decrease")
+        XCTAssertEqual(OperationKind.correct.sfSymbol, "checkmark.circle")
+        XCTAssertEqual(OperationKind.explain.sfSymbol, "lightbulb")
+        XCTAssertEqual(OperationKind.summarize.sfSymbol, "list.bullet")
+    }
+
     /// Очистка ресурсов (stub)
     deinit { /* nothing to cleanup */ }
 
