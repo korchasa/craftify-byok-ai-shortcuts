@@ -4,6 +4,7 @@ import SwiftUI
 public struct CraftifySecondaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .fontWeight(.bold)
             .padding()
             .frame(maxWidth: .infinity)
             .background(CraftifyButtonConstants.secondaryColor)

@@ -4,6 +4,7 @@ import SwiftUI
 public struct ShareExtensionPrimaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .fontWeight(.bold)
             .padding()
             .frame(maxWidth: .infinity)
             .background(Color.accentColor)
