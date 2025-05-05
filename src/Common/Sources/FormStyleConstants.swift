@@ -13,4 +13,6 @@ public enum FormStyleConstants {
     public static let formContentTopPadding: CGFloat = 16
     /// Отступ под линией-разделителем между заголовком и контентом
     public static let dividerBottomPadding: CGFloat = 8
+    /// Вертикальный отступ между секциями формы
+    public static let sectionSpacing: CGFloat = 16
 }

@@ -1,5 +1,3 @@
-import Common
-
 #if DEBUG
     public final class AuthManagerMock: AuthManaging {
         public init() {}

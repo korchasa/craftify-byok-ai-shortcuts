@@ -360,10 +360,11 @@ case "$CMD" in
     ;;
   check)
     generate || { echo -e "${RED}===CHECK_FAILED=== (generate)${NC}"; exit 1; }
-    comment_scan || { echo -e "${RED}===CHECK_FAILED=== (comment_scan)${NC}"; exit 1; }
     fmt || { echo -e "${RED}===CHECK_FAILED=== (fmt)${NC}"; exit 1; }
     lint || { echo -e "${RED}===CHECK_FAILED=== (lint)${NC}"; exit 1; }
     fast_check_build_analyze_test || { echo -e "${RED}===CHECK_FAILED=== (test)${NC}"; exit 1; }
+    comment_scan || { echo -e "${RED}===CHECK_FAILED=== (comment_scan)${NC}"; exit 1; }
+    deploy_simulator || { echo -e "${RED}===CHECK_FAILED=== (deploy_simulator)${NC}"; exit 1; }
     ;;
   help|*) usage ;;
 esac

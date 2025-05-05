@@ -1,5 +1,4 @@
 import Combine
-import Common
 import Foundation
 
 public final class ShareExtensionViewModel: ObservableObject {

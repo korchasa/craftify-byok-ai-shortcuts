@@ -1,4 +1,3 @@
-import Common
 import SwiftUI
 
 // swiftlint:disable:next explicit_import

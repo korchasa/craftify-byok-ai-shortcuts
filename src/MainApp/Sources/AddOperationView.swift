@@ -1,4 +1,4 @@
-import Common
+import Foundation
 import SwiftUI
 
 public struct AddOperationView: View {
@@ -29,15 +29,25 @@ public struct AddOperationView: View {
         CommonFormContainer(
             title: LocalizedStringKey(L10n.addOperationTitle),
             content: {
-                Section(header: Text(L10n.addOperationType).font(.craftifyTitle).fontWeight(.bold)) {
-                    AddOperationTypeSection(viewModel: viewModel)
-                }
-                Section {
-                    AddOperationFields(viewModel: viewModel)
-                }
-                Section(header: Text(L10n.color).font(.craftifyTitle).fontWeight(.bold)) {
+                VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
+                    HStack {
+                        Text(L10n.addOperationType)
+                            .font(.title2).bold()
+                        Spacer()
+                        AddOperationTypeSection(viewModel: viewModel)
+                    }
+                    HStack {
+                        Text(L10n.operationParamDetailLevel)
+                            .font(.title2).bold()
+                        Spacer()
+                        AddOperationExplainSection(viewModel: viewModel)
+                    }
+                    Text(L10n.color)
+                        .font(.title2).bold()
+                        .padding(.top, FormStyleConstants.sectionSpacing)
                     AddOperationColorPalette(viewModel: viewModel)
                 }
+                .padding(.horizontal, FormStyleConstants.formLeadingPadding)
             },
             buttons: {
                 AddOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
@@ -50,7 +60,7 @@ public struct AddOperationView: View {
         var onSave: ((InventoryOperation) -> Void)?
         var dismiss: DismissAction
         var body: some View {
-            HStack(spacing: MainAppButtonConstants.horizontalPadding) {
+            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
                 Button(action: {
                     viewModel.cancel()
                     dismiss()
@@ -58,6 +68,7 @@ public struct AddOperationView: View {
                     Label(L10n.addOperationCancel, systemImage: "xmark")
                         .font(.craftifyBody)
                         .fontWeight(.bold)
+                        .frame(minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 .accessibilityLabel(L10n.addOperationCancel)
@@ -70,6 +81,7 @@ public struct AddOperationView: View {
                     Label(L10n.addOperationSave, systemImage: "checkmark")
                         .font(.craftifyBody)
                         .fontWeight(.bold)
+                        .frame(minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
                 .accessibilityLabel(L10n.addOperationSave)
@@ -81,13 +93,14 @@ public struct AddOperationView: View {
     private struct AddOperationTypeSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Picker(L10n.addOperationType, selection: $viewModel.selectedKind) {
+            Picker("", selection: $viewModel.selectedKind) {
                 ForEach(OperationFactory.allKinds, id: \.self) { kind in
                     Text(label(for: kind)).tag(Optional(kind))
                 }
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.addOperationType)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
 
         private func label(for kind: OperationKind) -> String {
@@ -133,6 +146,7 @@ public struct AddOperationView: View {
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationParamTargetLanguage)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
@@ -147,13 +161,14 @@ public struct AddOperationView: View {
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationParamComplexityLevel)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
     private struct AddOperationExplainSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Picker(L10n.operationParamDetailLevel, selection: $viewModel.detailLevel) {
+            Picker("", selection: $viewModel.detailLevel) {
                 Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
                 Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
                 Text(L10n.operationValueStudent).tag(DetailLevel.student)
@@ -161,6 +176,7 @@ public struct AddOperationView: View {
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationParamDetailLevel)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
@@ -170,12 +186,13 @@ public struct AddOperationView: View {
             Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
                 ForEach(SentenceCountRange.allCases, id: \.self) { range in
                     Text(sentenceCountRangeLabel(range)).tag(range)
-                        .lineLimit(Common.unlimitedLineLimit)
-                        .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
+                        .lineLimit(ViewConstants.unlimitedLineLimit)
+                        .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
                 }
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationLabelSummarize)
+            .frame(maxWidth: .infinity, alignment: .trailing)
         }
 
         private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {

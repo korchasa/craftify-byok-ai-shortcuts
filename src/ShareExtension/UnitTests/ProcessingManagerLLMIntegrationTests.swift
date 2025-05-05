@@ -1,6 +1,5 @@
 // import ShareExtension
 
-import Common
 import XCTest
 
 /// Интеграционные тесты: OperationType → InventoryOperation → ProcessingManager → LLMAPIClient

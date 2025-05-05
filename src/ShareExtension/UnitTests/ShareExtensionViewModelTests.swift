@@ -1,5 +1,4 @@
 import Combine
-import Common
 @testable import ShareExtension
 import XCTest
 

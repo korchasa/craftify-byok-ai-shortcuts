@@ -1,4 +1,3 @@
-import Common
 import Foundation
 
 /// Клиент для отправки запросов к OpenAI API (gpt-4o-mini)

@@ -1,6 +1,5 @@
 // import ShareExtension
 
-import Common
 import XCTest
 
 public final class ShareExtensionManagerTests: XCTestCase {
