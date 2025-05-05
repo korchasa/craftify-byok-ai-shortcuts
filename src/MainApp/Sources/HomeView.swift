@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 public struct HomeView: View {
@@ -21,26 +22,18 @@ public struct HomeView: View {
                     operationsList
                 },
                 buttons: {
-                    HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+                    CraftifyButtonBar {
                         Button(action: { showAddOperation = true }) {
                             Label(L10n.homeAddOperation, systemImage: "plus")
-                                .font(.craftifyBody)
-                                .fontWeight(.bold)
+                                .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                         }
-                        .accessibilityLabel(L10n.homeAddOperation)
                         .buttonStyle(CraftifyPrimaryButtonStyle())
                         Button(action: { showSettings = true }) {
                             Label(L10n.homeSettings, systemImage: "gearshape")
-                                .font(.craftifyBody)
-                                .fontWeight(.bold)
+                                .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                         }
-                        .accessibilityLabel(L10n.homeSettings)
                         .buttonStyle(CraftifySecondaryButtonStyle())
                     }
-                    .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-                    .padding(.bottom, CraftifyButtonConstants.bottomPadding)
-                    .background(Color.white.ignoresSafeArea())
-                    .cornerRadius(CraftifyButtonConstants.cornerRadius)
                 }
             )
         }

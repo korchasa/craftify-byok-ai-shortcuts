@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Стиль вторичной кнопки Craftify
+/// Стиль вторичной кнопки Craftify (например, Cancel)
 public struct CraftifySecondaryButtonStyle: ButtonStyle {
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label

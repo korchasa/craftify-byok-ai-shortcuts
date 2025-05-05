@@ -60,18 +60,15 @@ public struct AddOperationView: View {
         var onSave: ((InventoryOperation) -> Void)?
         var dismiss: DismissAction
         var body: some View {
-            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+            CraftifyButtonBar {
                 Button(action: {
                     viewModel.cancel()
                     dismiss()
                 }) {
                     Label(L10n.addOperationCancel, systemImage: "xmark")
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
-                        .frame(minHeight: CraftifyButtonConstants.minButtonHeight)
+                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
-                .accessibilityLabel(L10n.addOperationCancel)
                 Button(action: {
                     if let op = viewModel.makeOperation() {
                         onSave?(op)
@@ -79,12 +76,9 @@ public struct AddOperationView: View {
                     }
                 }) {
                     Label(L10n.addOperationSave, systemImage: "checkmark")
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
-                        .frame(minHeight: CraftifyButtonConstants.minButtonHeight)
+                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
-                .accessibilityLabel(L10n.addOperationSave)
                 .disabled(!viewModel.isValid)
             }
         }

@@ -233,3 +233,14 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 - [File Structure](file_structure.md)
 - [Developer Manual](developer-manual.md)
 - [User Manual](user-manual.md)
+
+| Компонент | Назначение |
+|-----------|------------|
+| CraftifyPrimaryButtonStyle | Единый стиль для основных action-кнопок (шрифт, фон, скругление, высота) |
+| CraftifySecondaryButtonStyle | Единый стиль для вторичных action-кнопок (например, Cancel) |
+| CraftifyButtonBar | Контейнер для группы кнопок внизу формы, обеспечивает отступы и выравнивание |
+
+**Изменения:**
+- Весь стиль кнопок теперь задаётся через ButtonStyle.
+- Удалены экспериментальные ViewModifier для текста кнопок.
+- Кнопки на всех экранах MainApp используют только эти стили.

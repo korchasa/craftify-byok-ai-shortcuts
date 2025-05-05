@@ -30,7 +30,7 @@
 		0D54720EB908EC5AB3B9ADD7 /* InventoryManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD4A751EF9EC4A8D7CAFB1F7 /* InventoryManaging.swift */; };
 		0DD056A53A64C3062EC0F1FE /* CorrectParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD0333EA9FC6B26863C4BE6 /* CorrectParams.swift */; };
 		0DD6D1E67BBF3ED9A920C0A3 /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
-		0E3EBFA18E6AA61F274BF9A9 /* Font+Craftify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6238582FD7584BC20B9C661E /* Font+Craftify.swift */; };
+		0E2CE839B65885D547FDC16B /* CraftifyButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D802498B72CA5F37104CB44 /* CraftifyButtonBar.swift */; };
 		0E83F2F3A17692AAD7FB0460 /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342D38B23DEC1087A3AE0C8 /* URLSessionProtocol.swift */; };
 		0F4EAA7A72689B4C38B2EEE6 /* AuthManagerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8706FC6569F61629E86A4B47 /* AuthManagerError.swift */; };
 		10BA501821E71EEB6468CC18 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB252053A9AB38F2FDBA5BF0 /* Color+Hex.swift */; };
@@ -111,6 +111,7 @@
 		44CE31CC08F25CCD816A83B0 /* ShareExtensionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D9C3A0A4853F1136B0B82A /* ShareExtensionManager.swift */; };
 		44EF78CE48693C3137EAB8D6 /* LogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3300990178545D06F20EFB1C /* LogManagerShared.swift */; };
 		45979489A638E5FADB63BFFB /* OperationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0431706693D7F029E9774D4B /* OperationFactory.swift */; };
+		46663BEEBA4FD425D45C64D7 /* Font+Craftify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB980E35AE2B9A7EFF9558 /* Font+Craftify.swift */; };
 		46A8880F35E7428B089FF190 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = DD32B495F3AEF2CA8CA31E91 /* SwiftSoup */; };
 		4A47216C077CA05EB42406A2 /* SimplifyParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FF41537084CF100069C265 /* SimplifyParams.swift */; };
 		4A6AFB61B09D6D361E477861 /* LogManagerSharedInMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDC451AEAC0B8D41744BA7C5 /* LogManagerSharedInMemory.swift */; };
@@ -118,6 +119,7 @@
 		4D213ECA4E7C63911040B078 /* InventoryManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9261D496D9E44B905AEBEF07 /* InventoryManagerTests.swift */; };
 		4D3333CF26F97910E7EF6A95 /* CraftifyButtonConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72672A5AAB5CD88823041487 /* CraftifyButtonConstants.swift */; };
 		4E1FBA6510AAE7D3767C9E65 /* URLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA886D2ADD52FDF38B6EF98 /* URLSession+Protocol.swift */; };
+		4E4B076F7D79F51CAAB66727 /* CraftifyButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D802498B72CA5F37104CB44 /* CraftifyButtonBar.swift */; };
 		4E7C8F287C5A7D7165A41D58 /* ProcessingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADA53D955B10A190FBAE956 /* ProcessingManager.swift */; };
 		4EE938BA5703D840AC8CCCAD /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = B342D38B23DEC1087A3AE0C8 /* URLSessionProtocol.swift */; };
 		4F356153AD72CE11E9BC8994 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006838A636CAF1E02EA7A172 /* HomeViewModel.swift */; };
@@ -181,6 +183,7 @@
 		7273C9D06C891F01EE4C0E24 /* ConsentManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D0B2F999AF2599A9823FBD4 /* ConsentManaging.swift */; };
 		7409A0430DE7BE46053D33E4 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F28D5C33BA848367FB858C36 /* SettingsViewModel.swift */; };
 		7540821C5B3BD81F30F6B49B /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7844378BE20480EBE4A87152 /* AppState.swift */; };
+		76C2D36B301316DD58FBFFE4 /* CraftifyButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D802498B72CA5F37104CB44 /* CraftifyButtonBar.swift */; };
 		76FB40197CDA7192A3DA69FB /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A73BEEF846398C71F616D891 /* LogLevel.swift */; };
 		7744989F637E1C591C455B1A /* ColorPaletteConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63E8243A75BA42F250805BD /* ColorPaletteConstants.swift */; };
 		783266C0441A9EA5E760FFEA /* ClipboardManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0292538F0FE6189D748FF8 /* ClipboardManaging.swift */; };
@@ -189,12 +192,14 @@
 		7DD9490A64C07B3AD071336E /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
 		7F376226861089006DEAD0AB /* CommonFormContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C6C19F19EDE6D4D80D05AE /* CommonFormContainer.swift */; };
 		805D3E2B02E2ACA60ACA9047 /* Masking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9A4A38CF4E4F0AE58771FF /* Masking.swift */; };
+		81ACA2F9F4372D7990CD731E /* Font+Craftify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB980E35AE2B9A7EFF9558 /* Font+Craftify.swift */; };
 		827EBA6B209998AED80C461B /* AddOperationView_Previews.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7408BE1C4B2B18C8FD73EDF /* AddOperationView_Previews.swift */; };
 		829AAEA008D0DBC07F28A534 /* CorrectOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65D017795CDE883040E300F /* CorrectOperation.swift */; };
 		83618341D611F47915E8C964 /* URLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA886D2ADD52FDF38B6EF98 /* URLSession+Protocol.swift */; };
 		83D963EF6D8C354B5E8318E6 /* ShareExtensionButtonConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381B3E9EF7D51650EE7FF647 /* ShareExtensionButtonConstants.swift */; };
 		847394CBABDB85C75E320481 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9585D656FFE5C1B0ADAD097F /* HomeView.swift */; };
 		861211E20086DB1BB807E78C /* AuthManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E32103F017739E1D10B1E59 /* AuthManaging.swift */; };
+		862E93D26CD5FAAA16B6A6F1 /* CraftifyButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D802498B72CA5F37104CB44 /* CraftifyButtonBar.swift */; };
 		886BE7F14A88416A19432931 /* CorrectOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F65D017795CDE883040E300F /* CorrectOperation.swift */; };
 		890810068D37A7509A68F7AF /* InventoryOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9A0B81764D8C1D51D6CC88 /* InventoryOperation.swift */; };
 		89BB605CE6CF5B5A5650A963 /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9543E1059C3C102358325D9 /* HomeViewModelTests.swift */; };
@@ -210,9 +215,11 @@
 		97870FF38F237CA9C467C2CA /* DetailLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E0DFF03BAEF851D6598A5BD /* DetailLevel.swift */; };
 		98746CD01006606ED9D9D06C /* TextFetching.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB9483E4A900619A793318F5 /* TextFetching.swift */; };
 		98961397DDD3C159D78A6AD3 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63611641A94E5EAA7AE49EB0 /* AuthManager.swift */; };
+		9A41523E2D4F2019AED57D88 /* Font+Craftify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47BB980E35AE2B9A7EFF9558 /* Font+Craftify.swift */; };
 		9A4954D21398E2676D3812EE /* CraftifySecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8958162BABC9AB06C03CDFE3 /* CraftifySecondaryButtonStyle.swift */; };
 		9A901EEC37301884F2A6FBA8 /* TranslateParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1684129DE2E2AA1ACBFF2D88 /* TranslateParams.swift */; };
 		9B9643D1ED91215F01A9F1E8 /* CraftifySecondaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8958162BABC9AB06C03CDFE3 /* CraftifySecondaryButtonStyle.swift */; };
+		9BAF0C86285577045A4D9C6B /* CraftifyButtonBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D802498B72CA5F37104CB44 /* CraftifyButtonBar.swift */; };
 		9C0A4304CDB3AA1DC55C83A7 /* FormStyleConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13433EDC93E8E5ABC7AD8C8E /* FormStyleConstants.swift */; };
 		9C9AB885C59EE8D0B0D69735 /* FetchError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7D0E140222C9F6AB3994208 /* FetchError.swift */; };
 		9D0B2614FCC8E73832F8374A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3BC6E262EFE243391BC5E96 /* XCTest.framework */; };
@@ -283,7 +290,6 @@
 		C7D976E09D16821D8C6241FB /* ExplainParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7568EB39A52FE78B1B9F25 /* ExplainParams.swift */; };
 		C7E8516093A37ED29F57157F /* InventoryOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9A0B81764D8C1D51D6CC88 /* InventoryOperation.swift */; };
 		C84F02243A19D9B62E636117 /* InventoryManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F967405397B94E4F95FEAB1 /* InventoryManagerStub.swift */; };
-		C981C9747C4F88AF8CDAE961 /* Font+Craftify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6238582FD7584BC20B9C661E /* Font+Craftify.swift */; };
 		C9B333F4E788C32DBDC419E4 /* LLMAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */; };
 		CABD441D29926B218D8C98F5 /* ExplainOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974E8354DD987F3405191DF0 /* ExplainOperation.swift */; };
 		CB6C364E89536256357A8C7F /* HowToUseViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A4418A8EAA30BB61C2D79E9 /* HowToUseViewModelTests.swift */; };
@@ -426,6 +432,7 @@
 		47BB980E35AE2B9A7EFF9558 /* Font+Craftify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Craftify.swift"; sourceTree = "<group>"; };
 		47CB57AEC41987C2AC6FC0AB /* HowToUseViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowToUseViewModel.swift; sourceTree = "<group>"; };
 		4C26B9672FEF501ECD45771A /* SettingsView_Previews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView_Previews.swift; sourceTree = "<group>"; };
+		4D802498B72CA5F37104CB44 /* CraftifyButtonBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CraftifyButtonBar.swift; sourceTree = "<group>"; };
 		501D8464DBBEC232AB634B7C /* BottomSheetContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetContainerView.swift; sourceTree = "<group>"; };
 		51BFCE9C55197CC466DC8DCE /* ComplexityLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplexityLevel.swift; sourceTree = "<group>"; };
 		561B0A33C008D454C8D75698 /* ContentHeightKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentHeightKey.swift; sourceTree = "<group>"; };
@@ -433,7 +440,6 @@
 		5B986DB4B42C475355A045A8 /* MaskingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaskingTests.swift; sourceTree = "<group>"; };
 		5EFA9E1579B01537E823FF8D /* ConsentManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsentManagerTests.swift; sourceTree = "<group>"; };
 		6056E150F64CAB54DE9E80FC /* MainAppPlaceholder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppPlaceholder.swift; sourceTree = "<group>"; };
-		6238582FD7584BC20B9C661E /* Font+Craftify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Craftify.swift"; sourceTree = "<group>"; };
 		62C1B640D60D9477EED3564D /* ShareExtensionViewHeightTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewHeightTests.swift; sourceTree = "<group>"; };
 		6354634CF5EE1B96882B70F3 /* AuthManagerMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManagerMock.swift; sourceTree = "<group>"; };
 		63611641A94E5EAA7AE49EB0 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -575,7 +581,6 @@
 				FC92F7876E7E53A7C65DBB28 /* EditOperationView_Previews.swift */,
 				3734B7B6FEB4877F290E0804 /* EditOperationView.swift */,
 				F7DAE164D467254CD313DBD7 /* EditOperationViewModel.swift */,
-				47BB980E35AE2B9A7EFF9558 /* Font+Craftify.swift */,
 				9585D656FFE5C1B0ADAD097F /* HomeView.swift */,
 				006838A636CAF1E02EA7A172 /* HomeViewModel.swift */,
 				8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */,
@@ -676,7 +681,6 @@
 				A07D5AD74D8F325EF20F6982 /* ClipboardManagerStub.swift */,
 				DF0292538F0FE6189D748FF8 /* ClipboardManaging.swift */,
 				561B0A33C008D454C8D75698 /* ContentHeightKey.swift */,
-				6238582FD7584BC20B9C661E /* Font+Craftify.swift */,
 				2AFE3AD1CE2A3D312FF20F81 /* LLMAPIClient.swift */,
 				407A38276A23D06965404A90 /* LLMAPIClientError.swift */,
 				7ADA53D955B10A190FBAE956 /* ProcessingManager.swift */,
@@ -791,9 +795,11 @@
 				9E32103F017739E1D10B1E59 /* AuthManaging.swift */,
 				BB252053A9AB38F2FDBA5BF0 /* Color+Hex.swift */,
 				A63E8243A75BA42F250805BD /* ColorPaletteConstants.swift */,
+				4D802498B72CA5F37104CB44 /* CraftifyButtonBar.swift */,
 				72672A5AAB5CD88823041487 /* CraftifyButtonConstants.swift */,
 				08B369514ABE40FC04527C80 /* CraftifyPrimaryButtonStyle.swift */,
 				8958162BABC9AB06C03CDFE3 /* CraftifySecondaryButtonStyle.swift */,
+				47BB980E35AE2B9A7EFF9558 /* Font+Craftify.swift */,
 				13433EDC93E8E5ABC7AD8C8E /* FormStyleConstants.swift */,
 				121BC52402A5A5F85C716752 /* LogEntry.swift */,
 				A73BEEF846398C71F616D891 /* LogLevel.swift */,
@@ -998,6 +1004,7 @@
 				13E3883F2F25D6CD59FB9B05 /* ContentHeightKey.swift in Sources */,
 				39E0CEC497F5D238FB84D7D6 /* CorrectOperation.swift in Sources */,
 				BE5A6C2A12C4AD021DE3FC6E /* CorrectParams.swift in Sources */,
+				4E4B076F7D79F51CAAB66727 /* CraftifyButtonBar.swift in Sources */,
 				67F8E8D7F45CE0BAFD9219BC /* CraftifyButtonConstants.swift in Sources */,
 				F99E21CA4F7A50CABCAD22A2 /* CraftifyPrimaryButtonStyle.swift in Sources */,
 				9A4954D21398E2676D3812EE /* CraftifySecondaryButtonStyle.swift in Sources */,
@@ -1005,7 +1012,7 @@
 				5C659060E2EFE93F602DFD91 /* ExplainOperation.swift in Sources */,
 				AE4EF6B9669E831A70D83FEC /* ExplainParams.swift in Sources */,
 				9C9AB885C59EE8D0B0D69735 /* FetchError.swift in Sources */,
-				C981C9747C4F88AF8CDAE961 /* Font+Craftify.swift in Sources */,
+				46663BEEBA4FD425D45C64D7 /* Font+Craftify.swift in Sources */,
 				3944E729FEBD667390A7568C /* FormStyleConstants.swift in Sources */,
 				E62137DA551DEB4D3E486C17 /* InventoryManager.swift in Sources */,
 				C84F02243A19D9B62E636117 /* InventoryManagerStub.swift in Sources */,
@@ -1081,6 +1088,7 @@
 				B869B03E07D05912099C1398 /* ContentHeightKey.swift in Sources */,
 				886BE7F14A88416A19432931 /* CorrectOperation.swift in Sources */,
 				29AFAF8483F36BC0094BC27F /* CorrectParams.swift in Sources */,
+				0E2CE839B65885D547FDC16B /* CraftifyButtonBar.swift in Sources */,
 				6368FE0C096D659FFFCE7B56 /* CraftifyButtonConstants.swift in Sources */,
 				13ED0BE2E58562DCBB5293BB /* CraftifyPrimaryButtonStyle.swift in Sources */,
 				9B9643D1ED91215F01A9F1E8 /* CraftifySecondaryButtonStyle.swift in Sources */,
@@ -1088,7 +1096,7 @@
 				6E6AA2D2150EEA3515804C0D /* ExplainOperation.swift in Sources */,
 				C7D976E09D16821D8C6241FB /* ExplainParams.swift in Sources */,
 				A6FF7DFD54851CB5B3643522 /* FetchError.swift in Sources */,
-				0E3EBFA18E6AA61F274BF9A9 /* Font+Craftify.swift in Sources */,
+				9A41523E2D4F2019AED57D88 /* Font+Craftify.swift in Sources */,
 				35D3DC078F6954A4D2F8B174 /* FormStyleConstants.swift in Sources */,
 				016D555361A48111360E1290 /* InventoryManager.swift in Sources */,
 				E6C03036AF95BD4876DF298D /* InventoryManagerStub.swift in Sources */,
@@ -1160,6 +1168,7 @@
 				829AAEA008D0DBC07F28A534 /* CorrectOperation.swift in Sources */,
 				0DD056A53A64C3062EC0F1FE /* CorrectParams.swift in Sources */,
 				EEC63FAAA52A9E8376E001B9 /* CraftifyApp.swift in Sources */,
+				862E93D26CD5FAAA16B6A6F1 /* CraftifyButtonBar.swift in Sources */,
 				4D3333CF26F97910E7EF6A95 /* CraftifyButtonConstants.swift in Sources */,
 				71B91230BA97EA40566B301E /* CraftifyPrimaryButtonStyle.swift in Sources */,
 				3BB48F14C71B9FECB6AE3FE3 /* CraftifySecondaryButtonStyle.swift in Sources */,
@@ -1237,6 +1246,7 @@
 				55C0724D3CD0BCDFE17FC5F0 /* CorrectOperation.swift in Sources */,
 				C58569E4CE3EACC36F8296E0 /* CorrectParams.swift in Sources */,
 				43D6B2FF803AD0F7CB2135AD /* CraftifyApp.swift in Sources */,
+				76C2D36B301316DD58FBFFE4 /* CraftifyButtonBar.swift in Sources */,
 				A892487417D4D43E790A00E5 /* CraftifyButtonConstants.swift in Sources */,
 				25F00E3F6F4AF7541E5D67B8 /* CraftifyPrimaryButtonStyle.swift in Sources */,
 				E1FDBAD9AB6C632983077C8D /* CraftifySecondaryButtonStyle.swift in Sources */,
@@ -1311,6 +1321,7 @@
 				7273C9D06C891F01EE4C0E24 /* ConsentManaging.swift in Sources */,
 				37690563A58A1EA11BD6B3CD /* CorrectOperation.swift in Sources */,
 				94D6532B41920E9BFC0875D2 /* CorrectParams.swift in Sources */,
+				9BAF0C86285577045A4D9C6B /* CraftifyButtonBar.swift in Sources */,
 				8A700D4F07224DB719DA6F8D /* CraftifyButtonConstants.swift in Sources */,
 				55BCFCEE1401ABC7EBE3215A /* CraftifyPrimaryButtonStyle.swift in Sources */,
 				F9C3CFA5F7DBFF7F1D0002B6 /* CraftifySecondaryButtonStyle.swift in Sources */,
@@ -1318,6 +1329,7 @@
 				A287A5DA198683DFAAA4B467 /* ExplainOperation.swift in Sources */,
 				B7DEC937FC43D3D0607557CE /* ExplainParams.swift in Sources */,
 				522FDA1AF1F5814396C1223B /* FetchError.swift in Sources */,
+				81ACA2F9F4372D7990CD731E /* Font+Craftify.swift in Sources */,
 				1A482E5EE12EE4F016FE5143 /* FormStyleConstants.swift in Sources */,
 				D94814DFF2B9F03B71DDEF50 /* InventoryManager.swift in Sources */,
 				BA61E1148E0717499274AB57 /* InventoryManagerStub.swift in Sources */,
