@@ -32,22 +32,23 @@ public struct AddOperationView: View {
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                     HStack {
                         Text(L10n.addOperationType)
-                            .font(.title2).bold()
+                            .font(.craftifyBody).bold()
                         Spacer()
                         AddOperationTypeSection(viewModel: viewModel)
                     }
                     HStack {
                         Text(L10n.operationParamDetailLevel)
-                            .font(.title2).bold()
+                            .font(.craftifyBody).bold()
                         Spacer()
                         AddOperationExplainSection(viewModel: viewModel)
                     }
                     Text(L10n.color)
-                        .font(.title2).bold()
+                        .font(.craftifyBody).bold()
                         .padding(.top, FormStyleConstants.sectionSpacing)
                     AddOperationColorPalette(viewModel: viewModel)
                 }
-                .padding(.horizontal, FormStyleConstants.formLeadingPadding)
+                .padding(.leading, FormStyleConstants.formLeadingPadding)
+                .padding(.trailing, FormStyleConstants.formTrailingPadding)
             },
             buttons: {
                 AddOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
