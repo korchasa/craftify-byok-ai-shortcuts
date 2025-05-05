@@ -154,7 +154,6 @@ public struct ShareExtensionView: View {
                         .cornerRadius(cardCornerRadius)
                 }
                 .accessibilityLabel(operationDisplayName(for: op))
-                .buttonStyle(ShareExtensionPrimaryButtonStyle())
                 .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
             }
         }
@@ -291,14 +290,11 @@ public struct ShareExtensionView: View {
 
     private var closeButton: some View {
         Button(action: { viewModel.shouldCloseExtension = true }) {
-            Text(L10n.shareClose)
-                .font(.craftifyBody)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity)
-                .padding()
+            Label(L10n.shareClose, systemImage: "xmark")
+                .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
         }
-        .buttonStyle(ShareExtensionPrimaryButtonStyle())
-        .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
-        .padding(.bottom, ShareExtensionButtonConstants.bottomPadding)
+        .buttonStyle(CraftifySecondaryButtonStyle())
+        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+        .padding(.bottom, CraftifyButtonConstants.bottomPadding)
     }
 }
