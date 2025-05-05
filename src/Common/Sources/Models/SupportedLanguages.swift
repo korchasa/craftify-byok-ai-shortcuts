@@ -1,23 +1,6 @@
-import Foundation
-
-/// Представляет поддерживаемый язык (код, самоназвание и английское название)
-public struct SupportedLanguage {
-    /// Код языка (ISO 639-1)
-    public let code: String
-    /// Самоназвание языка
-    public let name: String
-    /// Название языка на английском
-    public let englishName: String
-    public init(code: String, name: String, englishName: String) {
-        self.code = code
-        self.name = name
-        self.englishName = englishName
-    }
-}
-
-/// Содержит список всех поддерживаемых языков для операций Craftify
+/// Contains the list of all supported languages for Craftify operations.
 public enum SupportedLanguages {
-    /// Все поддерживаемые языки (код, самоназвание, английское название)
+    /// All supported languages (code, native name, English name)
     public static let all: [SupportedLanguage] = [
         SupportedLanguage(code: "aa", name: "Afaraf", englishName: "Afar"),
         SupportedLanguage(code: "ab", name: "Аҧсуа", englishName: "Abkhazian"),

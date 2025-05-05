@@ -45,26 +45,34 @@ public struct AddOperationView: View {
         var dismiss: DismissAction
         var body: some View {
             CraftifyButtonBar {
-                Button(action: {
-                    viewModel.cancel()
-                    dismiss()
-                }) {
-                    Label(L10n.addOperationCancel, systemImage: "xmark")
-                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                }
-                .buttonStyle(CraftifySecondaryButtonStyle())
-                Button(action: {
-                    if let op = viewModel.makeOperation() {
-                        onSave?(op)
-                        dismiss()
-                    }
-                }) {
-                    Label(L10n.addOperationSave, systemImage: "checkmark")
-                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                }
-                .buttonStyle(CraftifyPrimaryButtonStyle())
-                .disabled(!viewModel.isValid)
+                cancelButton
+                saveButton
             }
+        }
+
+        private var cancelButton: some View {
+            Button(action: {
+                viewModel.cancel()
+                dismiss()
+            }) {
+                Label(L10n.addOperationCancel, systemImage: "xmark")
+                    .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+            }
+            .buttonStyle(CraftifySecondaryButtonStyle())
+        }
+
+        private var saveButton: some View {
+            Button(action: {
+                if let op = viewModel.makeOperation() {
+                    onSave?(op)
+                    dismiss()
+                }
+            }) {
+                Label(L10n.addOperationSave, systemImage: "checkmark")
+                    .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+            }
+            .buttonStyle(CraftifyPrimaryButtonStyle())
+            .disabled(!viewModel.isValid)
         }
     }
 
@@ -98,38 +106,54 @@ public struct AddOperationView: View {
             Group {
                 switch viewModel.selectedKind {
                 case .translate:
-                    HStack {
-                        Text(L10n.operationParamTargetLanguage)
-                            .font(.craftifyBody).bold()
-                        Spacer()
-                        AddOperationTranslateSection(viewModel: viewModel)
-                    }
+                    translateSection
                 case .simplify:
-                    HStack {
-                        Text(L10n.operationParamComplexityLevel)
-                            .font(.craftifyBody).bold()
-                        Spacer()
-                        AddOperationSimplifySection(viewModel: viewModel)
-                    }
+                    simplifySection
                 case .correct:
                     EmptyView()
                 case .explain:
-                    HStack {
-                        Text(L10n.operationParamDetailLevel)
-                            .font(.craftifyBody).bold()
-                        Spacer()
-                        AddOperationExplainSection(viewModel: viewModel)
-                    }
+                    explainSection
                 case .summarize:
-                    HStack {
-                        Text(L10n.operationLabelSummarize)
-                            .font(.craftifyBody).bold()
-                        Spacer()
-                        AddOperationSummarizeSection(viewModel: viewModel)
-                    }
+                    summarizeSection
                 case .none:
                     EmptyView()
                 }
+            }
+        }
+
+        private var translateSection: some View {
+            HStack {
+                Text(L10n.operationParamTargetLanguage)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                AddOperationTranslateSection(viewModel: viewModel)
+            }
+        }
+
+        private var simplifySection: some View {
+            HStack {
+                Text(L10n.operationParamComplexityLevel)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                AddOperationSimplifySection(viewModel: viewModel)
+            }
+        }
+
+        private var explainSection: some View {
+            HStack {
+                Text(L10n.operationParamDetailLevel)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                AddOperationExplainSection(viewModel: viewModel)
+            }
+        }
+
+        private var summarizeSection: some View {
+            HStack {
+                Text(L10n.operationLabelSummarize)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                AddOperationSummarizeSection(viewModel: viewModel)
             }
         }
     }
