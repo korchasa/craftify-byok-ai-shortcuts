@@ -6,18 +6,6 @@ public struct EditOperationView: View {
     private let onSave: (InventoryOperation) -> Void
     @Environment(\.dismiss) private var dismiss
 
-    private let supportedLanguages: [(name: String, code: String)] = [
-        ("български", "bg"),
-        ("deutsch", "de"),
-        ("english", "en"),
-        ("español", "es"),
-        ("français", "fr"),
-        ("日本語", "ja"),
-        ("русский", "ru"),
-        ("українська", "uk"),
-        ("中文", "zh")
-    ]
-
     private let colorPaletteVerticalPadding: CGFloat = 8
 
     public init(viewModel: EditOperationViewModel, onSave: @escaping (InventoryOperation) -> Void) {

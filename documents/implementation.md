@@ -40,6 +40,7 @@
 | ./run generate | Run SwiftGen and XcodeGen (localization, project)   |
 | ./run size-report | Check ShareExtension size (fail if >20MB)         |
 | ./run full-clean | Full clean: removes all build artifacts, caches, temp files, xcresult, dSYM, .app, xcarchive, DerivedData, SourcePackages, .build, .swiftpm, coverage, *.log, *.tmp, *.temp. |
+| set-native-language | Позволяет пользователю выбрать родной язык из списка всех языков ISO-639-1 и ряда искусственных языков. Используется для операций summarize и explain. |
 
 ## Technology Stack
 - Swift 5.7+
@@ -51,6 +52,8 @@
 - SwiftSoup (HTML parsing)
 - URLSession (networking)
 - TDD (unit tests for all error branches)
+- Поддержка всех языков ISO-639-1 и ряда искусственных языков (Klingon, Sindarin, Quenya, Lojban, Toki Pona, Interlingua, Dothraki, Valyrian, Na'vi) через структуру SupportedLanguages
+- Для промптов LLM всегда используется английское название языка (englishName)
 
 ## Environment Setup
 1. Clone the repository.
@@ -244,3 +247,8 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 - Весь стиль кнопок теперь задаётся через ButtonStyle.
 - Удалены экспериментальные ViewModifier для текста кнопок.
 - Кнопки на всех экранах MainApp используют только эти стили.
+
+## Структура SupportedLanguages
+
+- `SupportedLanguages.all` — массив всех поддерживаемых языков, каждый элемент — структура с кодом, самоназванием и английским названием.
+- Используется для выбора языка в настройках и при переводе/суммаризации/объяснении.

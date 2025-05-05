@@ -16,12 +16,13 @@ public struct TranslateOperation: OperationType {
         guard isValid(input: input) else { return nil }
         let params = TranslateParams(targetLanguage: input.targetLanguage)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
+        let englishName = SupportedLanguages.all.first(where: { $0.code == input.targetLanguage })?.englishName ?? input.targetLanguage
         let prompt = """
         I want you to act as an expert translator.
 
         <instructions>
         - Read user message
-        - Translate the text to the target language: \(input.targetLanguage)
+        - Translate the text to the target language: \(englishName)
         - Preserve the original meaning, tone, and formatting (including markdown and HTML tags).
         - Return ONLY the translated text without any additional formatting.
         </instructions>

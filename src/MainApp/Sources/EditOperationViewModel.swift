@@ -129,17 +129,9 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     public static let palette: [String] = ColorPaletteConstants.palette
 
     /// Список поддерживаемых языков для перевода
-    public let supportedLanguages: [(name: String, code: String)] = [
-        ("русский", "ru"),
-        ("english", "en"),
-        ("español", "es"),
-        ("français", "fr"),
-        ("deutsch", "de"),
-        ("中文", "zh"),
-        ("日本語", "ja"),
-        ("українська", "uk"),
-        ("български", "bg")
-    ]
+    public var supportedLanguages: [SupportedLanguage] {
+        SupportedLanguages.all
+    }
 
     public var isValid: Bool {
         guard let kind = selectedKind else { return false }

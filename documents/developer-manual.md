@@ -127,3 +127,5 @@ Button(action: ...) {
 - [Implementation](implementation.md)
 - [File Structure](file_structure.md)
 - [User Manual](user-manual.md)
+
+- Для поддержки нового языка добавьте его в массив SupportedLanguages.all (src/Common/Sources/Models/SupportedLanguages.swift). Для промптов LLM всегда используется englishName.

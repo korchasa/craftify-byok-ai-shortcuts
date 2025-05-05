@@ -28,6 +28,7 @@
 - no_magic_numbers: Magic numbers запрещены, используйте именованные константы.
 - closure_body_length: Тело замыкания не должно превышать 30 строк.
 - Для всех новых кнопок обязательно используйте один из централизованных стилей: CraftifyPrimaryButtonStyle, CraftifySecondaryButtonStyle. Для опасных действий — secondary-стиль с .foregroundColor(.red). Локальные ButtonStyle запрещены.
+- Для получения текущего языка используйте `Locale.current.language.languageCode?.identifier ?? "en"` (iOS 16+). Не используйте устаревший `Locale.current.languageCode`.
 
 ## Rule: Access Control for extensions
 

@@ -30,6 +30,8 @@
 "settings_title" = "Settings";
 "settings_api_key" = "OpenAI API Key";
 "settings_done" = "Cancel";
+"settings_native_language" = "Native language";
+"settings_native_language_section" = "Select your native language. It will be used as the main language for summarize and explain operations. By default, it matches the system language.";
 
 /* Share Extension UI */
 "share_title" = "Craftify";

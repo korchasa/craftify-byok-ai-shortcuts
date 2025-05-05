@@ -14,13 +14,22 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var isLoading: Bool = false
     /// Признак наличия ключа
     @Published public var isKeyPresent: Bool = false
+    /// Родной язык пользователя
+    @Published public var nativeLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
 
     private let authManager: AuthManaging
+    private let userDefaults = UserDefaults.standard
+    private let nativeLanguageKey = "CraftifyNativeLanguage"
 
     /// Инициализация с менеджером
     /// - Parameter authManager: Менеджер API-ключа
     public init(authManager: AuthManaging = AuthManager()) {
         self.authManager = authManager
+        if let saved = userDefaults.string(forKey: nativeLanguageKey) {
+            self.nativeLanguage = saved
+        } else {
+            self.nativeLanguage = Locale.current.language.languageCode?.identifier ?? "en"
+        }
         Task { await load() }
     }
 
@@ -33,12 +42,19 @@ public final class SettingsViewModel: ObservableObject {
             apiKey = key ?? ""
             maskedApiKey = authManager.maskedAPIKey(key)
             isKeyPresent = (key != nil)
+            if let saved = userDefaults.string(forKey: nativeLanguageKey) {
+                nativeLanguage = saved
+            }
         } catch {
             apiKey = ""
             maskedApiKey = authManager.maskedAPIKey(nil)
             isKeyPresent = false
             errorMessage = error.localizedDescription
         }
+    }
+
+    public func saveNativeLanguage() {
+        userDefaults.set(nativeLanguage, forKey: nativeLanguageKey)
     }
 
     /// Сохранить API-ключ
@@ -68,6 +84,10 @@ public final class SettingsViewModel: ObservableObject {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    public var supportedLanguages: [SupportedLanguage] {
+        SupportedLanguages.all
     }
 
     deinit {}

@@ -26,6 +26,7 @@ public struct SummarizeOperation: OperationType {
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = SummarizeParams(sentenceCountRange: input.sentenceCountRange)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
+        let englishName = SupportedLanguages.all.first(where: { $0.code == input.nativeLanguage })?.englishName ?? input.nativeLanguage
         let prompt = """
         I want you to act as an expert summarizer.
 
@@ -35,7 +36,7 @@ public struct SummarizeOperation: OperationType {
         - Preserve the main ideas and key details
         - Ignore all information about the cookies
         - Return ONLY the summary text, without any additional formatting
-        - Translate the summary to the English language
+        - Translate the summary to the \(englishName) language
         </instructions>
         """
         return InventoryOperation(operation: .summarize, params: data, promptTemplate: prompt, colorHex: colorHex)
