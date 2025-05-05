@@ -8,6 +8,7 @@ public struct SettingsView: View {
     @ObservedObject public var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isTextFieldFocused: Bool
+    @State private var shouldDismiss = false
 
     /// Инициализация с ViewModel
     /// - Parameter viewModel: ViewModel настроек
@@ -31,14 +32,20 @@ public struct SettingsView: View {
                 .padding(.trailing, FormStyleConstants.formTrailingPadding)
             },
             buttons: {
-                SettingsFormButtons(viewModel: viewModel, dismiss: dismiss)
+                SettingsFormButtons(viewModel: viewModel, dismiss: dismiss, shouldDismiss: $shouldDismiss)
             }
         )
+        .onChange(of: shouldDismiss) { newValue in
+            if newValue {
+                dismiss()
+            }
+        }
     }
 
     private struct SettingsFormButtons: View {
         @ObservedObject var viewModel: SettingsViewModel
         var dismiss: DismissAction
+        @Binding var shouldDismiss: Bool
         var body: some View {
             CraftifyButtonBar {
                 Button(action: { dismiss() }) {
@@ -49,6 +56,9 @@ public struct SettingsView: View {
                 Button(action: {
                     Task {
                         await viewModel.saveKey()
+                        if viewModel.errorMessage == nil {
+                            shouldDismiss = true
+                        }
                     }
                 }) {
                     Label(L10n.addOperationSave, systemImage: "checkmark")
