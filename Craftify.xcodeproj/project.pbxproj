@@ -189,6 +189,7 @@
 		783266C0441A9EA5E760FFEA /* ClipboardManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF0292538F0FE6189D748FF8 /* ClipboardManaging.swift */; };
 		79A41763E406BA40F21D9A65 /* OSLogManagerShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = F66267F0A2D59E2C61F555D9 /* OSLogManagerShared.swift */; };
 		7A172D71F900F60EE0DABAED /* AuthManagerMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6354634CF5EE1B96882B70F3 /* AuthManagerMock.swift */; };
+		7DC7BC4D007681131D813085 /* ShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B703ED98C53835018AA8D449 /* ShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7DD9490A64C07B3AD071336E /* HowToUseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB0D95680A7406ECF14BD26 /* HowToUseView.swift */; };
 		7F376226861089006DEAD0AB /* CommonFormContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C6C19F19EDE6D4D80D05AE /* CommonFormContainer.swift */; };
 		805D3E2B02E2ACA60ACA9047 /* Masking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9A4A38CF4E4F0AE58771FF /* Masking.swift */; };
@@ -389,7 +390,28 @@
 			remoteGlobalIDString = 6E99CB366D323D89B45B1DAE;
 			remoteInfo = ShareExtension;
 		};
+		CC0404919418739E0EF24065 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 18ABFDF18819DFB841A32817 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6E99CB366D323D89B45B1DAE;
+			remoteInfo = ShareExtension;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C1A1899CC73BC72427BF5E12 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7DC7BC4D007681131D813085 /* ShareExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		006838A636CAF1E02EA7A172 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
@@ -846,10 +868,12 @@
 			buildPhases = (
 				AC92B5C69B9264A4F9A5CADA /* Sources */,
 				91B63B76527E361E878145D5 /* Frameworks */,
+				C1A1899CC73BC72427BF5E12 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				09227324E4ABC756BD28DD74 /* PBXTargetDependency */,
 			);
 			name = MainApp;
 			packageProductDependencies = (
@@ -1371,6 +1395,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		09227324E4ABC756BD28DD74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6E99CB366D323D89B45B1DAE /* ShareExtension */;
+			targetProxy = CC0404919418739E0EF24065 /* PBXContainerItemProxy */;
+		};
 		1CF86AD4E502DBF45ABDCB82 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 6E99CB366D323D89B45B1DAE /* ShareExtension */;
