@@ -118,60 +118,80 @@ public struct EditOperationView: View {
     private struct EditOperationTranslateSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
-                ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
-                    Text(lang.name).tag(lang.code)
+            HStack {
+                Text(L10n.operationParamTargetLanguage)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
+                    ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
+                        Text(lang.name).tag(lang.code)
+                    }
                 }
+                .pickerStyle(DefaultPickerStyle())
+                .accessibilityLabel(L10n.operationParamTargetLanguage)
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.operationParamTargetLanguage)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
     private struct EditOperationSimplifySection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
-                Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
-                Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
-                Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
-                Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
+            HStack {
+                Text(L10n.operationParamComplexityLevel)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
+                    Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
+                    Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
+                    Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
+                    Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
+                }
+                .pickerStyle(DefaultPickerStyle())
+                .accessibilityLabel(L10n.operationParamComplexityLevel)
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.operationParamComplexityLevel)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
     private struct EditOperationExplainSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Picker("", selection: $viewModel.detailLevel) {
-                Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
-                Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
-                Text(L10n.operationValueStudent).tag(DetailLevel.student)
-                Text(L10n.operationValueAdult).tag(DetailLevel.adult)
+            HStack {
+                Text(L10n.operationParamDetailLevel)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                Picker("", selection: $viewModel.detailLevel) {
+                    Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
+                    Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
+                    Text(L10n.operationValueStudent).tag(DetailLevel.student)
+                    Text(L10n.operationValueAdult).tag(DetailLevel.adult)
+                }
+                .pickerStyle(DefaultPickerStyle())
+                .accessibilityLabel(L10n.operationParamDetailLevel)
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.operationParamDetailLevel)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
     private struct EditOperationSummarizeSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
-                ForEach(SentenceCountRange.allCases, id: \ .self) { range in
-                    Text(sentenceCountRangeLabel(range)).tag(range)
-                        .lineLimit(ViewConstants.unlimitedLineLimit)
-                        .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
+            HStack {
+                Text(L10n.operationLabelSummarize)
+                    .font(.craftifyBody).bold()
+                Spacer()
+                Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
+                    ForEach(SentenceCountRange.allCases, id: \ .self) { range in
+                        Text(sentenceCountRangeLabel(range)).tag(range)
+                            .lineLimit(ViewConstants.unlimitedLineLimit)
+                            .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
+                    }
                 }
+                .pickerStyle(DefaultPickerStyle())
+                .accessibilityLabel(L10n.operationLabelSummarize)
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
-            .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.operationLabelSummarize)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
 
         private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
