@@ -36,12 +36,7 @@ public struct EditOperationView: View {
                         Spacer()
                         EditOperationTypeSection(viewModel: viewModel)
                     }
-                    HStack {
-                        Text(L10n.operationParamDetailLevel)
-                            .font(.craftifyBody).bold()
-                        Spacer()
-                        EditOperationExplainSection(viewModel: viewModel)
-                    }
+                    EditOperationFields(viewModel: viewModel)
                     Text(L10n.color)
                         .font(.craftifyBody).bold()
                         .padding(.top, FormStyleConstants.sectionSpacing)

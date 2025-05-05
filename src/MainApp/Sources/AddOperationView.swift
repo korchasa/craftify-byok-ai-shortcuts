@@ -36,12 +36,7 @@ public struct AddOperationView: View {
                         Spacer()
                         AddOperationTypeSection(viewModel: viewModel)
                     }
-                    HStack {
-                        Text(L10n.operationParamDetailLevel)
-                            .font(.craftifyBody).bold()
-                        Spacer()
-                        AddOperationExplainSection(viewModel: viewModel)
-                    }
+                    AddOperationFields(viewModel: viewModel)
                     Text(L10n.color)
                         .font(.craftifyBody).bold()
                         .padding(.top, FormStyleConstants.sectionSpacing)
@@ -115,15 +110,35 @@ public struct AddOperationView: View {
             Group {
                 switch viewModel.selectedKind {
                 case .translate:
-                    AddOperationTranslateSection(viewModel: viewModel)
+                    HStack {
+                        Text(L10n.operationParamTargetLanguage)
+                            .font(.craftifyBody).bold()
+                        Spacer()
+                        AddOperationTranslateSection(viewModel: viewModel)
+                    }
                 case .simplify:
-                    AddOperationSimplifySection(viewModel: viewModel)
+                    HStack {
+                        Text(L10n.operationParamComplexityLevel)
+                            .font(.craftifyBody).bold()
+                        Spacer()
+                        AddOperationSimplifySection(viewModel: viewModel)
+                    }
                 case .correct:
                     EmptyView()
                 case .explain:
-                    AddOperationExplainSection(viewModel: viewModel)
+                    HStack {
+                        Text(L10n.operationParamDetailLevel)
+                            .font(.craftifyBody).bold()
+                        Spacer()
+                        AddOperationExplainSection(viewModel: viewModel)
+                    }
                 case .summarize:
-                    AddOperationSummarizeSection(viewModel: viewModel)
+                    HStack {
+                        Text(L10n.operationLabelSummarize)
+                            .font(.craftifyBody).bold()
+                        Spacer()
+                        AddOperationSummarizeSection(viewModel: viewModel)
+                    }
                 case .none:
                     EmptyView()
                 }

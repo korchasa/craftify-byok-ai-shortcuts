@@ -2,17 +2,11 @@
 import XCTest
 
 public final class AddOperationViewModelTests: XCTestCase {
-    public func testInitialStateIsEmptyAndInvalid() {
-        let vm = AddOperationViewModel()
-        XCTAssertNil(vm.selectedKind)
-        XCTAssertFalse(vm.isValid)
-    }
-
     public func testSetOperationTypeUpdatesForm() {
         let vm = AddOperationViewModel()
         vm.selectedKind = .translate
         XCTAssertEqual(vm.selectedKind, .translate)
-        XCTAssertFalse(vm.isValid)
+        XCTAssertTrue(vm.isValid)
     }
 
     public func testSetParamsEnablesValidation() {
@@ -45,6 +39,33 @@ public final class AddOperationViewModelTests: XCTestCase {
         vm.cancel()
         XCTAssertNil(vm.selectedKind)
         XCTAssertFalse(vm.isValid)
+    }
+
+    public func testFieldsResetOnOperationTypeChange() {
+        let vm = AddOperationViewModel()
+        vm.selectedKind = .translate
+        vm.targetLanguage = "ru"
+        vm.complexityLevel = .adult
+        vm.detailLevel = .adult
+        vm.sentenceCountRange = .nineToTen
+        // Смена типа
+        vm.selectedKind = .simplify
+        XCTAssertEqual(vm.targetLanguage, "")
+        XCTAssertEqual(vm.complexityLevel, .schoolchild)
+        XCTAssertEqual(vm.detailLevel, .schoolchild)
+        XCTAssertEqual(vm.sentenceCountRange, .twoToThree)
+        // Смена на translate снова
+        vm.selectedKind = .translate
+        XCTAssertEqual(vm.targetLanguage, vm.supportedLanguages.first?.code ?? "")
+        XCTAssertEqual(vm.complexityLevel, .schoolchild)
+        XCTAssertEqual(vm.detailLevel, .schoolchild)
+        XCTAssertEqual(vm.sentenceCountRange, .twoToThree)
+    }
+
+    public func testDefaultSelectedKindIsNotNilAndFormIsValid() {
+        let vm = AddOperationViewModel()
+        XCTAssertNotNil(vm.selectedKind)
+        XCTAssertTrue(vm.isValid)
     }
 
     deinit {}

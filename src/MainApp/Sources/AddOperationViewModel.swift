@@ -1,7 +1,39 @@
 import Foundation
 
 public final class AddOperationViewModel: ObservableObject {
-    @Published public var selectedKind: OperationKind?
+    @Published public var selectedKind: OperationKind? {
+        didSet {
+            guard let kind = selectedKind else { return }
+            switch kind {
+            case .translate:
+                targetLanguage = supportedLanguages.first?.code ?? ""
+                complexityLevel = .schoolchild
+                detailLevel = .schoolchild
+                sentenceCountRange = .twoToThree
+            case .simplify:
+                targetLanguage = ""
+                complexityLevel = .schoolchild
+                detailLevel = .schoolchild
+                sentenceCountRange = .twoToThree
+            case .correct:
+                targetLanguage = ""
+                complexityLevel = .schoolchild
+                detailLevel = .schoolchild
+                sentenceCountRange = .twoToThree
+            case .explain:
+                targetLanguage = ""
+                complexityLevel = .schoolchild
+                detailLevel = .schoolchild
+                sentenceCountRange = .twoToThree
+            case .summarize:
+                targetLanguage = ""
+                complexityLevel = .schoolchild
+                detailLevel = .schoolchild
+                sentenceCountRange = .twoToThree
+            }
+        }
+    }
+
     @Published public var targetLanguage: String = ""
     @Published public var complexityLevel: ComplexityLevel = .schoolchild
     @Published public var detailLevel: DetailLevel = .schoolchild
@@ -21,7 +53,9 @@ public final class AddOperationViewModel: ObservableObject {
         return operation.isValid(input: input)
     }
 
-    public init() {}
+    public init() {
+        self.selectedKind = OperationFactory.allKinds.first
+    }
 
     /// Создает InventoryOperation через соответствующую реализацию OperationType
     public func makeOperation() -> InventoryOperation? {
