@@ -1,4 +1,4 @@
-@testable import Common
+// @testable import Common
 @testable import MainApp
 import XCTest
 

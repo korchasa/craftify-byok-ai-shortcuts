@@ -1,4 +1,3 @@
-import Common
 import SwiftUI
 
 /// Используйте этот контейнер для всех экранов MainApp с формами и кнопками, кроме HowToUseView.
@@ -27,18 +26,12 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
                 Divider()
                     .padding(.bottom, FormStyleConstants.dividerBottomPadding)
                 VStack(spacing: 0) {
-                    Form {
-                        content()
-                    }
-                    .formStyle(.columns)
-                    .padding(.leading, FormStyleConstants.formLeadingPadding)
-                    .font(.craftifyTitle)
-                    .fontWeight(.bold)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.white)
+                    content()
+                        .padding(.leading, FormStyleConstants.formLeadingPadding)
+                        .background(Color.white)
                 }
                 .padding(.top, FormStyleConstants.formContentTopPadding)
-                Spacer(minLength: MainAppButtonConstants.spacerMinLength)
+                Spacer(minLength: CraftifyButtonConstants.spacerMinLength)
                 buttons()
             }
             .navigationTitle(title)

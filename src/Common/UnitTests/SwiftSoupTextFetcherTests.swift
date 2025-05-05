@@ -1,4 +1,3 @@
-@testable import Common
 import XCTest
 
 final class SwiftSoupTextFetcherTests: XCTestCase {

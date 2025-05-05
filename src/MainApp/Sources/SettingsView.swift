@@ -1,4 +1,3 @@
-import Common
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -36,7 +35,7 @@ public struct SettingsView: View {
         @ObservedObject var viewModel: SettingsViewModel
         var dismiss: DismissAction
         var body: some View {
-            HStack(spacing: MainAppButtonConstants.horizontalPadding) {
+            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
                 Button(action: { dismiss() }) {
                     Label(L10n.settingsDone, systemImage: "xmark")
                         .font(.craftifyBody)
@@ -72,8 +71,8 @@ public struct SettingsView: View {
                     .font(.craftifyFootnote)
                     .fontWeight(.semibold)
                     .foregroundColor(.secondary)
-                    .lineLimit(Common.unlimitedLineLimit)
-                    .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
+                    .lineLimit(ViewConstants.unlimitedLineLimit)
+                    .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
             }
             if viewModel.isKeyPresent {
                 Button(role: .destructive, action: { Task { await viewModel.deleteKey() } }) {
@@ -95,8 +94,8 @@ public struct SettingsView: View {
                     .font(.craftifyFootnote)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
-                    .lineLimit(Common.unlimitedLineLimit)
-                    .fixedSize(horizontal: Common.fixedSizeHorizontal, vertical: Common.fixedSizeVertical)
+                    .lineLimit(ViewConstants.unlimitedLineLimit)
+                    .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
             }
         }
     }

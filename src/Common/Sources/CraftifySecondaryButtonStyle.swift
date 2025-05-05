@@ -1,4 +1,3 @@
-import Common
 import SwiftUI
 
 /// Стиль вторичной кнопки Craftify
@@ -7,7 +6,7 @@ public struct CraftifySecondaryButtonStyle: ButtonStyle {
         configuration.label
             .padding()
             .frame(maxWidth: .infinity)
-            .background(CraftifyButtonConstants.primaryColor.opacity(CraftifyButtonConstants.secondaryOpacity))
+            .background(CraftifyButtonConstants.secondaryColor)
             .foregroundColor(.white)
             .cornerRadius(CraftifyButtonConstants.cornerRadius)
             .scaleEffect(configuration.isPressed ? CraftifyButtonConstants.pressedScale : 1.0)

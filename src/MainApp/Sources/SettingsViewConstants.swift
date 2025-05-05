@@ -1,4 +1,3 @@
-import Common
 import SwiftUI
 
 /// Константы для SettingsView (отступы, размеры, лимиты)

@@ -1,4 +1,3 @@
-import Common
 import SwiftUI
 
 public struct HomeView: View {
@@ -22,7 +21,7 @@ public struct HomeView: View {
                     operationsList
                 },
                 buttons: {
-                    HStack(spacing: MainAppButtonConstants.horizontalPadding) {
+                    HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
                         Button(action: { showAddOperation = true }) {
                             Label(L10n.homeAddOperation, systemImage: "plus")
                                 .font(.craftifyBody)
@@ -38,10 +37,10 @@ public struct HomeView: View {
                         .accessibilityLabel(L10n.homeSettings)
                         .buttonStyle(CraftifySecondaryButtonStyle())
                     }
-                    .padding(.horizontal, MainAppButtonConstants.horizontalPadding)
-                    .padding(.bottom, MainAppButtonConstants.bottomPadding)
+                    .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+                    .padding(.bottom, CraftifyButtonConstants.bottomPadding)
                     .background(Color.white.ignoresSafeArea())
-                    .cornerRadius(MainAppButtonConstants.cornerRadius)
+                    .cornerRadius(CraftifyButtonConstants.cornerRadius)
                 }
             )
         }
