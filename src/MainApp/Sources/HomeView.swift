@@ -74,6 +74,7 @@ public struct HomeView: View {
                             viewModel.removeOperation(at: idx)
                         }
                     )
+                    .listRowInsets(EdgeInsets(top: 2, leading: 7, bottom: 0, trailing: 15))
                 }
                 .onDelete { indices in
                     for index in indices {
