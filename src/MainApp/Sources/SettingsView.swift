@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -35,25 +36,21 @@ public struct SettingsView: View {
         @ObservedObject var viewModel: SettingsViewModel
         var dismiss: DismissAction
         var body: some View {
-            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+            CraftifyButtonBar {
                 Button(action: { dismiss() }) {
                     Label(L10n.settingsDone, systemImage: "xmark")
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
-                .accessibilityLabel(L10n.settingsDone)
                 Button(action: {
                     Task {
                         await viewModel.saveKey()
                     }
                 }) {
                     Label(L10n.addOperationSave, systemImage: "checkmark")
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
-                .accessibilityLabel(L10n.addOperationSave + " ключ")
                 .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
             }
         }

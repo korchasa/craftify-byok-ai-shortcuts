@@ -60,19 +60,15 @@ public struct EditOperationView: View {
         var onSave: (InventoryOperation) -> Void
         var dismiss: DismissAction
         var body: some View {
-            HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+            CraftifyButtonBar {
                 Button(action: {
                     viewModel.cancel()
                     dismiss()
                 }) {
                     Label(L10n.editOperationCancel, systemImage: "xmark")
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
-                        .frame(minHeight: CraftifyButtonConstants.minButtonHeight)
-                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
-                .accessibilityLabel(L10n.editOperationCancel)
                 Button(action: {
                     if let op = viewModel.makeOperation() {
                         onSave(op)
@@ -80,19 +76,11 @@ public struct EditOperationView: View {
                     }
                 }) {
                     Label(L10n.editOperationSave, systemImage: "checkmark")
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
-                        .frame(minHeight: CraftifyButtonConstants.minButtonHeight)
-                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
-                .accessibilityLabel(L10n.editOperationSave)
                 .disabled(!viewModel.isValid)
             }
-            .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-            .padding(.bottom, CraftifyButtonConstants.bottomPadding)
-            .background(Color.white.ignoresSafeArea())
-            .cornerRadius(CraftifyButtonConstants.cornerRadius)
         }
     }
 

@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Font styles for Craftify app
+/// Font styles for Craftify app (общий для всех модулей)
 public extension Font {
     /// Title font (Semibold, 22pt)
     static var craftifyTitle: Font {
