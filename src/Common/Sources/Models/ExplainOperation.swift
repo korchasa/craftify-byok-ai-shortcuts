@@ -16,6 +16,7 @@ public struct ExplainOperation: OperationType {
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = ExplainParams(detailLevel: input.detailLevel)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
+        let englishName = SupportedLanguages.all.first(where: { $0.code == input.nativeLanguage })?.englishName ?? input.nativeLanguage
         let prompt = """
         I want you to act as an expert explainer.
 
@@ -23,7 +24,7 @@ public struct ExplainOperation: OperationType {
         - Read user message
         - Explain the concept at the \(input.detailLevel.rawValue) level
         - Use clear, accessible language and examples appropriate for the audience
-        - Respond in the language of the user message
+        - Respond in the \(englishName) language
         - Preserve all formatting (including markdown and HTML tags)
         - Return ONLY the explanation without any additional formatting
         </instructions>

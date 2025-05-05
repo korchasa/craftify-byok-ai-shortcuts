@@ -30,6 +30,8 @@
 "settings_title" = "Настройки";
 "settings_api_key" = "OpenAI API-ключ";
 "settings_done" = "Отмена";
+"settings_native_language" = "Родной язык";
+"settings_native_language_section" = "Выберите ваш родной язык. Он будет использоваться как основной для операций суммаризации и объяснения. По умолчанию совпадает с языком системы.";
 
 /* Share Extension UI */
 "share_title" = "Craftify";

@@ -123,3 +123,7 @@ This ensures a predictable and visually pleasing experience across all screens.
 - [Implementation](implementation.md)
 - [File Structure](file_structure.md)
 - [Developer Manual](developer-manual.md)
+
+## Additional Notes
+- В настройках приложения вы можете выбрать родной язык из полного списка поддерживаемых языков (ISO-639-1 и искусственные языки). Этот язык будет использоваться по умолчанию для операций суммаризации и объяснения.
+- Для операций перевода также доступен этот же список языков.

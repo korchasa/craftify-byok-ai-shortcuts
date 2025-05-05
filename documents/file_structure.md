@@ -57,6 +57,7 @@ graph TD
   - `SummarizeOperation.swift`: Integration with TextFetcher
   - `CraftifyButtonConstants.swift`: Button style constants
   - `ColorPaletteConstants.swift`: Color palette constants
+  - `SupportedLanguages.swift`: Contains the SupportedLanguages structure and a list of all supported languages (ISO-639-1 + artificial), used for language selection in settings and operations.
 - **UnitTests/**: Tests for all logic in Common
 - **Config/**: SPM target configuration (Info.plist)
 - **Resources/**: Localizations
@@ -135,6 +136,7 @@ src/
       SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL
       CraftifyButtonConstants.swift # Единые константы для стилей кнопок (цвета, радиус, отступы, масштаб)
       ColorPaletteConstants.swift   # Единые константы для палитры цветов операций (размеры, список цветов, отступы, маски)
+      SupportedLanguages.swift      # Contains the SupportedLanguages structure and a list of all supported languages (ISO-639-1 + artificial), used for language selection in settings and operations.
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests

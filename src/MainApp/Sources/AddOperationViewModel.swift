@@ -39,6 +39,7 @@ public final class AddOperationViewModel: ObservableObject {
     @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String = AddOperationViewModel.palette.first!
     @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
+    @Published public var nativeLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
 
     /// Проверяет, могут ли данные создать операцию
     public var isValid: Bool {
@@ -47,14 +48,16 @@ public final class AddOperationViewModel: ObservableObject {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange
+            sentenceCountRange: sentenceCountRange,
+            nativeLanguage: nativeLanguage
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.isValid(input: input)
     }
 
-    public init() {
+    public init(nativeLanguage: String = Locale.current.language.languageCode?.identifier ?? "en") {
         self.selectedKind = OperationFactory.allKinds.first
+        self.nativeLanguage = nativeLanguage
     }
 
     /// Создает InventoryOperation через соответствующую реализацию OperationType
@@ -64,7 +67,8 @@ public final class AddOperationViewModel: ObservableObject {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange
+            sentenceCountRange: sentenceCountRange,
+            nativeLanguage: nativeLanguage
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
@@ -85,15 +89,7 @@ public final class AddOperationViewModel: ObservableObject {
     public static let palette: [String] = ColorPaletteConstants.palette
 
     /// Список поддерживаемых языков для перевода
-    public let supportedLanguages: [(name: String, code: String)] = [
-        ("english", "en"),
-        ("українська", "uk"),
-        ("български", "bg"),
-        ("русский", "ru"),
-        ("español", "es"),
-        ("français", "fr"),
-        ("deutsch", "de"),
-        ("中文", "zh"),
-        ("日本語", "ja")
-    ]
+    public var supportedLanguages: [SupportedLanguage] {
+        SupportedLanguages.all
+    }
 }

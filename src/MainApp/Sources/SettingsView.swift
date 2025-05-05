@@ -24,6 +24,17 @@ public struct SettingsView: View {
                     Section(header: Text(L10n.settingsApiKey).font(.craftifyTitle).fontWeight(.bold)) {
                         SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
                     }
+                    Section(header: Text(L10n.settingsNativeLanguage).font(.craftifyTitle).fontWeight(.bold), footer: Text(L10n.settingsNativeLanguageSection).font(.craftifyFootnote)) {
+                        Picker(L10n.settingsNativeLanguage, selection: $viewModel.nativeLanguage) {
+                            ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
+                                Text(lang.name).tag(lang.code)
+                            }
+                        }
+                        .pickerStyle(MenuPickerStyle())
+                        .onChange(of: viewModel.nativeLanguage) { _ in
+                            viewModel.saveNativeLanguage()
+                        }
+                    }
                     Section {
                         SettingsErrorSection(errorMessage: viewModel.errorMessage)
                     }
