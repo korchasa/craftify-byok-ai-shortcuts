@@ -1,25 +1,5 @@
 # Craftify Developer Manual
 
-## Table of Contents
-- [Craftify Developer Manual](#craftify-developer-manual)
-  - [Table of Contents](#table-of-contents)
-  - [Installing Dependencies](#installing-dependencies)
-  - [Building the Project](#building-the-project)
-  - [Running Tests](#running-tests)
-  - [Linting and Formatting](#linting-and-formatting)
-  - [CI/CD](#cicd)
-  - [Deployment](#deployment)
-  - [Testing and CI Results](#testing-and-ci-results)
-  - [Processing Timeout Testing](#processing-timeout-testing)
-  - [Retrieving Logs](#retrieving-logs)
-  - [Operation Color \& ResultMode](#operation-color--resultmode)
-  - [Share Extension UI](#share-extension-ui)
-  - [Share Extension Activation for URLs](#share-extension-activation-for-urls)
-  - [Button Style Guide](#button-style-guide)
-    - [Button Style Usage Guidelines](#button-style-usage-guidelines)
-  - [Dependency and Test Isolation](#dependency-and-test-isolation)
-  - [References](#references)
-
 ---
 
 ## Installing Dependencies
@@ -30,7 +10,7 @@
    This installs: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen (via Homebrew).
 
 ## Building the Project
-- Generate the project: `xcodegen`
+- Generate the project: `./run generate` (uses tuist generate and swiftgen)
 - Build: `./run build`
 
 ## Running Tests
