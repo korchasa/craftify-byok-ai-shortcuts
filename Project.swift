@@ -1,0 +1,197 @@
+import ProjectDescription
+
+/// Main Tuist project manifest for Craftify. Defines all targets, packages, settings, and schemes.
+public let project = Project(
+    name: "Craftify",
+    organizationName: "dev.korchasa",
+    packages: [
+        .remote(url: "https://github.com/scinfu/SwiftSoup.git", requirement: .upToNextMajor(from: "2.4.3")),
+        .remote(url: "https://github.com/mattgallagher/CwlPreconditionTesting.git", requirement: .upToNextMajor(from: "2.2.2")),
+        .remote(url: "https://github.com/mattgallagher/CwlCatchException.git", requirement: .upToNextMajor(from: "2.2.1")),
+        .remote(url: "https://github.com/nalexn/ViewInspector.git", requirement: .upToNextMajor(from: "0.9.0"))
+    ],
+    settings: .settings(
+        base: [
+            "DEVELOPMENT_TEAM": "78M3ZDR5UH",
+            "SWIFT_VERSION": "5.9",
+            "CODE_SIGN_STYLE": "Automatic",
+            "ENABLE_BITCODE": "NO",
+            "SWIFT_OPTIMIZATION_LEVEL": "-Onone",
+            "CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION": "YES",
+            "SWIFT_TREAT_WARNINGS_AS_ERRORS": "YES"
+        ],
+        configurations: [
+            .debug(name: "Debug", xcconfig: "Configs/Debug.xcconfig"),
+            .release(name: "Release", xcconfig: "Configs/Release.xcconfig")
+        ]
+    ),
+    targets: [
+        .target(
+            name: "MainApp",
+            destinations: [.iPhone],
+            product: .app,
+            bundleId: "dev.korchasa.Craftify",
+            deploymentTargets: .iOS("16.0"),
+            infoPlist: .file(path: "src/MainApp/Config/Info.plist"),
+            sources: [
+                "src/Common/Sources/**",
+                "src/MainApp/Sources/**",
+                "src/MainApp/Resources/Generated/Strings.swift"
+            ],
+            resources: [
+                "src/MainApp/Resources/en.lproj/**",
+                "src/MainApp/Resources/ru.lproj/**",
+                "src/MainApp/Resources/Assets.xcassets"
+            ],
+            entitlements: "src/MainApp/Config/Craftify.entitlements",
+            dependencies: [
+                .package(product: "SwiftSoup"),
+                .target(name: "ShareExtension")
+            ],
+            settings: .settings(base: [
+                "CODE_SIGN_STYLE": "Manual",
+                "PRODUCT_BUNDLE_IDENTIFIER": "dev.korchasa.Craftify",
+                "APP_GROUPS": "group.dev.korchasa.Craftify",
+                "KEYCHAIN_ACCESS_GROUPS": "78M3ZDR5UH.*",
+                "PROVISIONING_PROFILE_SPECIFIER": "Craftify MainApp"
+            ])
+        ),
+        .target(
+            name: "MainAppUnitTests",
+            destinations: [.iPhone],
+            product: .unitTests,
+            bundleId: "dev.korchasa.CraftifyUnitTests",
+            deploymentTargets: .iOS("16.0"),
+            infoPlist: .default,
+            sources: [
+                "src/Common/Sources/**",
+                "src/MainApp/UnitTests/**",
+                "src/MainApp/Sources/**",
+                "src/MainApp/Resources/Generated/Strings.swift"
+            ],
+            dependencies: [
+                .target(name: "MainApp"),
+                .package(product: "CwlPreconditionTesting"),
+                .package(product: "CwlCatchException"),
+                .package(product: "ViewInspector"),
+                .package(product: "SwiftSoup")
+            ],
+            settings: .settings(base: [
+                "GENERATE_INFOPLIST_FILE": "YES",
+                "ENABLE_TESTING_SEARCH_PATHS": "YES",
+                "SDKROOT": "iphonesimulator",
+                "OTHER_LDFLAGS": [
+                    "-weak_framework",
+                    "XCTest",
+                    "-weak-lXCTestSwiftSupport"
+                ]
+            ])
+        ),
+        .target(
+            name: "ShareExtension",
+            destinations: [.iPhone],
+            product: .appExtension,
+            bundleId: "dev.korchasa.Craftify.ShareExtension",
+            deploymentTargets: .iOS("16.0"),
+            infoPlist: .file(path: "src/ShareExtension/Config/Info.plist"),
+            sources: [
+                "src/Common/Sources/**",
+                "src/ShareExtension/Sources/**",
+                "src/ShareExtension/Resources/Generated/Strings.swift"
+            ],
+            resources: [
+                "src/ShareExtension/Resources/en.lproj/**",
+                "src/ShareExtension/Resources/ru.lproj/**",
+                "src/ShareExtension/Resources/Assets.xcassets"
+            ],
+            entitlements: "src/ShareExtension/Config/ShareExtension.entitlements",
+            dependencies: [
+                .package(product: "SwiftSoup")
+            ],
+            settings: .settings(base: [
+                "CODE_SIGN_STYLE": "Manual",
+                "ENABLE_TESTING_SEARCH_PATHS": "NO",
+                "APP_GROUPS": "group.dev.korchasa.Craftify",
+                "KEYCHAIN_ACCESS_GROUPS": "78M3ZDR5UH.*",
+                "PROVISIONING_PROFILE_SPECIFIER": "Craftify Share Extension"
+            ])
+        ),
+        .target(
+            name: "ShareExtensionUnitTests",
+            destinations: [.iPhone],
+            product: .unitTests,
+            bundleId: "dev.korchasa.Craftify.ShareExtensionUnitTests",
+            deploymentTargets: .iOS("16.0"),
+            infoPlist: .default,
+            sources: [
+                "src/Common/Sources/**",
+                "src/ShareExtension/UnitTests/**",
+                "src/ShareExtension/Sources/**",
+                "src/ShareExtension/Resources/Generated/Strings.swift"
+            ],
+            dependencies: [
+                .package(product: "CwlPreconditionTesting"),
+                .package(product: "CwlCatchException"),
+                .package(product: "ViewInspector"),
+                .package(product: "SwiftSoup")
+            ],
+            settings: .settings(base: [
+                "GENERATE_INFOPLIST_FILE": "YES",
+                "ENABLE_TESTING_SEARCH_PATHS": "YES",
+                "SDKROOT": "iphonesimulator",
+                "OTHER_LDFLAGS": [
+                    "-weak_framework",
+                    "XCTest",
+                    "-weak-lXCTestSwiftSupport"
+                ]
+            ])
+        ),
+        .target(
+            name: "CommonUnitTests",
+            destinations: [.iPhone],
+            product: .unitTests,
+            bundleId: "dev.korchasa.Craftify.CommonUnitTests",
+            deploymentTargets: .iOS("16.0"),
+            infoPlist: .default,
+            sources: [
+                "src/Common/Sources/**",
+                "src/Common/UnitTests/**",
+                "src/MainApp/Resources/Generated/Strings.swift",
+                "src/MainApp/Sources/ViewConstants.swift"
+            ],
+            dependencies: [
+                .package(product: "CwlPreconditionTesting"),
+                .package(product: "CwlCatchException"),
+                .package(product: "SwiftSoup")
+            ],
+            settings: .settings(base: [
+                "GENERATE_INFOPLIST_FILE": "YES",
+                "ENABLE_TESTING_SEARCH_PATHS": "YES",
+                "SDKROOT": "iphonesimulator",
+                "OTHER_LDFLAGS": [
+                    "-weak_framework",
+                    "XCTest",
+                    "-weak-lXCTestSwiftSupport"
+                ]
+            ])
+        )
+    ],
+    schemes: [
+        .scheme(
+            name: "AllTests",
+            shared: true,
+            buildAction: .buildAction(targets: ["MainApp", "ShareExtension"]),
+            testAction: .targets(["MainAppUnitTests", "ShareExtensionUnitTests", "CommonUnitTests"])
+        ),
+        .scheme(
+            name: "MainApp",
+            shared: true,
+            buildAction: .buildAction(targets: ["MainApp", "ShareExtension"])
+        ),
+        .scheme(
+            name: "ShareExtension",
+            shared: true,
+            buildAction: .buildAction(targets: ["ShareExtension"])
+        )
+    ]
+)
