@@ -48,63 +48,74 @@ public struct HomeView: View {
         .sheet(item: $editOperationViewModel, onDismiss: {
             editingIndex = nil
         }, content: { vm in
-            EditOperationView(viewModel: vm, onSave: { updatedOperation in
-                if let idx = editingIndex {
-                    viewModel.updateOperation(at: idx, with: updatedOperation)
+            EditOperationView(
+                viewModel: vm,
+                onSave: { updatedOperation in
+                    if let idx = editingIndex {
+                        viewModel.updateOperation(at: idx, with: updatedOperation)
+                    }
+                    editingIndex = nil
+                },
+                onDelete: {
+                    if let idx = editingIndex {
+                        viewModel.removeOperation(at: idx)
+                    }
+                    editingIndex = nil
                 }
-                editingIndex = nil
-            })
+            )
         })
         .sheet(isPresented: $showSettings, onDismiss: nil, content: {
             SettingsView(viewModel: SettingsViewModel())
         })
     }
 
-    private var operationsList: AnyView {
-        AnyView(
-            List {
-                ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
-                    OperationRowView(
-                        operation: operation,
-                        onEdit: {
-                            editOperationViewModel = EditOperationViewModel(operation: operation)
-                            editingIndex = idx
-                        },
-                        onDelete: {
-                            viewModel.removeOperation(at: idx)
-                        }
-                    )
-                    .listRowInsets(EdgeInsets(top: ListRowInsets.top, leading: ListRowInsets.leading, bottom: ListRowInsets.bottom, trailing: ListRowInsets.trailing))
-                }
-                .onDelete { indices in
-                    for index in indices {
-                        viewModel.removeOperation(at: index)
-                    }
-                }
-            }
-            .listStyle(.plain)
-            .background(Color.white)
-        )
+    private var operationsList: some View {
+        VStack(spacing: 0) {
+            operationsListContent
+        }
     }
 
-    private let settingsSheet: AnyView = .init(Text("SettingsView"))
+    private var operationsListContent: some View {
+        List {
+            ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
+                OperationRowView(
+                    operation: operation,
+                    onEdit: {
+                        editOperationViewModel = EditOperationViewModel(operation: operation)
+                        editingIndex = idx
+                    },
+                    onDelete: {}
+                )
+                .buttonStyle(PlainButtonStyle())
+                .listRowInsets(EdgeInsets(top: ListRowInsets.top, leading: ListRowInsets.leading, bottom: ListRowInsets.bottom, trailing: ListRowInsets.trailing))
+            }
+            .onMove { indices, newOffset in
+                viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
+            }
+        }
+        .listStyle(.plain)
+        .background(Color.white)
+        .environment(\ .editMode, .constant(.active))
+    }
 
     private struct OperationRowView: View {
         let operation: InventoryOperation
         let onEdit: () -> Void
         let onDelete: () -> Void
+        private static let iconToLabelSpacing: CGFloat = 12
 
         var body: some View {
-            HStack {
-                OperationIconCircle(kind: operation.operation, colorHex: operation.colorHex)
-                OperationLabelText(type: operation.operation)
-                Spacer()
-                OperationParamsText(operation: operation)
+            Button(action: onEdit) {
+                HStack(spacing: 0) {
+                    OperationIconCircle(kind: operation.operation, colorHex: operation.colorHex)
+                        .padding(.trailing, Self.iconToLabelSpacing)
+                    OperationLabelText(type: operation.operation)
+                    Spacer()
+                    OperationParamsText(operation: operation)
+                }
+                .contentShape(Rectangle())
             }
-            .swipeActions(edge: .trailing) {
-                OperationEditButton(onEdit: onEdit)
-                OperationDeleteButton(onDelete: onDelete)
-            }
+            .buttonStyle(PlainButtonStyle())
         }
     }
 
@@ -203,34 +214,6 @@ public struct HomeView: View {
             case .fiveToSix: L10n.sentenceCount56
             case .nineToTen: L10n.sentenceCount910
             }
-        }
-    }
-
-    private struct OperationEditButton: View {
-        let onEdit: () -> Void
-        var body: some View {
-            Button {
-                onEdit()
-            } label: {
-                Text(L10n.homeEdit)
-                    .font(.craftifyBody)
-                    .fontWeight(.bold)
-            }
-            .tint(.blue)
-        }
-    }
-
-    private struct OperationDeleteButton: View {
-        let onDelete: () -> Void
-        var body: some View {
-            Button(role: .destructive) {
-                onDelete()
-            } label: {
-                Text(L10n.homeDelete)
-                    .font(.craftifyBody)
-                    .fontWeight(.bold)
-            }
-            .tint(.red)
         }
     }
 

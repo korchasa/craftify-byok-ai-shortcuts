@@ -4,39 +4,107 @@ import SwiftUI
 public struct EditOperationView: View {
     @ObservedObject public var viewModel: EditOperationViewModel
     private let onSave: (InventoryOperation) -> Void
+    private let onDelete: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
+    @State private var showDeleteConfirmation = false
 
     private let colorPaletteVerticalPadding: CGFloat = 8
+    private static let dividerVerticalPadding: CGFloat = 8
+    private static let deleteButtonTopPadding: CGFloat = 16
 
-    public init(viewModel: EditOperationViewModel, onSave: @escaping (InventoryOperation) -> Void) {
+    public init(viewModel: EditOperationViewModel, onSave: @escaping (InventoryOperation) -> Void, onDelete: (() -> Void)? = nil) {
         self.viewModel = viewModel
         self.onSave = onSave
+        self.onDelete = onDelete
     }
 
     public var body: some View {
         CommonFormContainer(
             title: LocalizedStringKey(L10n.editOperationTitle),
             content: {
-                VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
-                    HStack {
-                        Text(L10n.addOperationType)
-                            .font(.craftifyBody).bold()
-                        Spacer()
-                        EditOperationTypeSection(viewModel: viewModel)
-                    }
-                    EditOperationFields(viewModel: viewModel)
-                    Text(L10n.color)
-                        .font(.craftifyBody).bold()
-                        .padding(.top, FormStyleConstants.sectionSpacing)
-                    EditOperationColorPalette(viewModel: viewModel)
-                }
-                .padding(.leading, FormStyleConstants.formLeadingPadding)
-                .padding(.trailing, FormStyleConstants.formTrailingPadding)
+                EditOperationContent(
+                    viewModel: viewModel,
+                    onDelete: onDelete,
+                    showDeleteConfirmation: $showDeleteConfirmation,
+                    dismiss: dismiss
+                )
             },
             buttons: {
                 EditOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
             }
         )
+    }
+
+    private struct EditOperationContent: View {
+        @ObservedObject var viewModel: EditOperationViewModel
+        let onDelete: (() -> Void)?
+        @Binding var showDeleteConfirmation: Bool
+        var dismiss: DismissAction
+        static let dividerVerticalPadding: CGFloat = 8
+        static let deleteButtonTopPadding: CGFloat = 16
+        var body: some View {
+            VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
+                HStack {
+                    Text(L10n.addOperationType)
+                        .font(.craftifyBody).bold()
+                    Spacer()
+                    EditOperationTypeSection(viewModel: viewModel)
+                }
+                EditOperationFields(viewModel: viewModel)
+                Text(L10n.color)
+                    .font(.craftifyBody).bold()
+                    .padding(.top, FormStyleConstants.sectionSpacing)
+                EditOperationColorPalette(viewModel: viewModel)
+                if let onDelete {
+                    EditOperationDeleteSection(
+                        showDeleteConfirmation: $showDeleteConfirmation,
+                        onDelete: onDelete,
+                        dismiss: dismiss
+                    )
+                }
+            }
+            .padding(.leading, FormStyleConstants.formLeadingPadding)
+            .padding(.trailing, FormStyleConstants.formTrailingPadding)
+        }
+    }
+
+    private struct EditOperationDeleteSection: View {
+        @Binding var showDeleteConfirmation: Bool
+        let onDelete: () -> Void
+        var dismiss: DismissAction
+        static let dividerVerticalPadding: CGFloat = 8
+        static let deleteButtonTopPadding: CGFloat = 16
+        var body: some View {
+            Divider().padding(.vertical, Self.dividerVerticalPadding)
+            Button(role: .destructive, action: {
+                showDeleteConfirmation = true
+            }) {
+                Label(L10n.homeDelete, systemImage: "trash")
+                    .font(.craftifyBody)
+                    .fontWeight(.bold)
+                    .foregroundColor(.red)
+            }
+            .accessibilityLabel(L10n.homeDelete)
+            .padding(.top, Self.deleteButtonTopPadding)
+            .alert(
+                LocalizedStringKey(L10n.homeDelete),
+                isPresented: $showDeleteConfirmation,
+                actions: {
+                    Button(role: .destructive, action: {
+                        onDelete()
+                        dismiss()
+                    }) {
+                        Text(LocalizedStringKey(L10n.homeDelete))
+                    }
+                    Button(role: .cancel, action: {}) {
+                        Text(LocalizedStringKey("Cancel"))
+                    }
+                },
+                message: {
+                    Text(LocalizedStringKey("Вы уверены, что хотите удалить операцию?"))
+                }
+            )
+        }
     }
 
     private struct EditOperationButtons: View {

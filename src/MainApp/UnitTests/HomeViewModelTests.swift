@@ -83,5 +83,33 @@ public final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(self.inventoryStub?.inventory.first, operation2)
     }
 
+    public func testReorderOperationsChangesOrder() {
+        let operation1 = InventoryOperation(
+            operation: .translate,
+            params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
+            promptTemplate: "Translate to English",
+            colorHex: "3288bd"
+        )
+        let operation2 = InventoryOperation(
+            operation: .simplify,
+            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .student)),
+            promptTemplate: "Simplify for student",
+            colorHex: "fdae61"
+        )
+        let operation3 = InventoryOperation(
+            operation: .correct,
+            params: try! JSONEncoder().encode(CorrectParams()),
+            promptTemplate: "Correct text",
+            colorHex: "d53e4f"
+        )
+        inventoryStub?.saveInventory([operation1, operation2, operation3])
+        viewModel?.loadInventory()
+        // Перемещаем второй элемент (index 1) на первое место (index 0)
+        viewModel?.reorderOperations(fromOffsets: IndexSet(integer: 1), toOffset: 0)
+        let expected = [operation2, operation1, operation3]
+        XCTAssertEqual(self.viewModel?.operations, expected)
+        XCTAssertEqual(self.inventoryStub?.inventory, expected)
+    }
+
     deinit {}
 }

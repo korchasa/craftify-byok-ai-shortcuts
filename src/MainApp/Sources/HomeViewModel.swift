@@ -28,5 +28,12 @@ public final class HomeViewModel: ObservableObject {
         loadInventory()
     }
 
+    public func reorderOperations(fromOffsets: IndexSet, toOffset: Int) {
+        var newOperations = operations
+        newOperations.move(fromOffsets: fromOffsets, toOffset: toOffset)
+        inventoryManager.saveInventory(newOperations)
+        loadInventory()
+    }
+
     deinit {}
 }
