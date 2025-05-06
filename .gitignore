@@ -65,3 +65,19 @@ coverage/
 # Docker
 *.pid
 
+# Tuist/XcodeGen generated projects (если не используются вручную)
+*.xcodeproj/
+*.xcworkspace/
+Derived/
+
+# Эмулируемый лог
+emulator.log
+
+# Tuist/XcodeGen автогенерируемые файлы
+Derived/InfoPlists/
+Derived/Sources/
+
+# Не игнорировать .gitkeep в автогенерируемых папках
+!src/**/Resources/Generated/.gitkeep
+!src/**/Generated/.gitkeep
+
