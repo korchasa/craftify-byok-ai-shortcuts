@@ -103,7 +103,7 @@ graph TD
 
 ## Activation Rules
 - Share Extension is activated for data types: text (public.text) and URL (public.url).
-- This is set via NSExtensionActivationRule in project.yml (XcodeGen):
+- This is set via NSExtensionActivationRule in Project.swift (Tuist):
   - SUBQUERY (... ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url")
 - Allows sharing both text and links via the "Share" menu.
 - Both types are processed as plain text, with priority given to text.
@@ -131,7 +131,7 @@ graph TD
 - The project structure, targets, dependencies, and resources are fully described in Project.swift and Workspace.swift (Tuist manifests).
 - No .xcodeproj or .xcworkspace files are tracked in VCS; they are generated on demand via tuist generate.
 - All configuration is code-based and reproducible, supporting CI/CD and DevOps best practices.
-- Manual editing of Xcode project files or use of XcodeGen is prohibited.
+- Manual editing of Xcode project files or use of XcodeGen is prohibited (all configuration is in Project.swift).
 - All build, test, and code generation steps are automated via ./run scripts and Tuist.
 
 ## Benefits of Tuist-based Architecture

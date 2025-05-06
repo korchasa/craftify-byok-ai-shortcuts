@@ -1,14 +1,24 @@
-// import NewRelic
+import Foundation
 import SwiftUI
+
+// import NewRelic
 
 @main
 public struct CraftifyApp: App {
     @StateObject private var appState = AppState()
+    private let inventoryManager: InventoryManager
+    private let viewModel: HomeViewModel
+    public init() {
+        let userDefaults = UserDefaults(suiteName: "group.dev.korchasa.Craftify") ?? .standard
+        let inventoryManager = InventoryManager(userDefaults: userDefaults)
+        inventoryManager.fillWithDefaultOperationsIfNeeded()
+        self.inventoryManager = inventoryManager
+        self.viewModel = HomeViewModel(inventoryManager: inventoryManager)
+        // Удалена инициализация New Relic
+    }
+
     public var body: some Scene {
         WindowGroup {
-            let userDefaults = UserDefaults(suiteName: "group.dev.korchasa.Craftify") ?? .standard
-            let inventoryManager = InventoryManager(userDefaults: userDefaults)
-            let viewModel = HomeViewModel(inventoryManager: inventoryManager)
             if appState.isConsentGiven {
                 HomeView(viewModel: viewModel)
             } else {
@@ -17,9 +27,5 @@ public struct CraftifyApp: App {
                 })
             }
         }
-    }
-
-    public init() {
-        // Удалена инициализация New Relic
     }
 }

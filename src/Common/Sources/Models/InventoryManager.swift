@@ -70,6 +70,43 @@ public final class InventoryManager: InventoryManaging {
         saveInventory(inventory)
     }
 
+    /// Заполняет инвентарь дефолтными операциями, если он пуст
+    public func fillWithDefaultOperationsIfNeeded() {
+        if !inventory.isEmpty { return }
+        let palette = ColorPaletteConstants.palette
+        var colorIdx = 0
+        func nextColor() -> String {
+            defer { colorIdx = (colorIdx + 1) % palette.count }
+            return palette[colorIdx]
+        }
+        var defaults: [InventoryOperation] = []
+        // correct
+        if let op = OperationFactory.make(kind: .correct).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
+            defaults.append(op)
+        }
+        // simplify student
+        if let op = OperationFactory.make(kind: .simplify).makeInventoryOperation(input: OperationInput(complexityLevel: .student), colorHex: nextColor()) {
+            defaults.append(op)
+        }
+        // explain student
+        if let op = OperationFactory.make(kind: .explain).makeInventoryOperation(input: OperationInput(detailLevel: .student), colorHex: nextColor()) {
+            defaults.append(op)
+        }
+        // translate english
+        if let op = OperationFactory.make(kind: .translate).makeInventoryOperation(input: OperationInput(targetLanguage: "en"), colorHex: nextColor()) {
+            defaults.append(op)
+        }
+        // translate dothraki
+        if let op = OperationFactory.make(kind: .translate).makeInventoryOperation(input: OperationInput(targetLanguage: "dtr"), colorHex: nextColor()) {
+            defaults.append(op)
+        }
+        // summarize
+        if let op = OperationFactory.make(kind: .summarize).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
+            defaults.append(op)
+        }
+        saveInventory(defaults)
+    }
+
     /// Деструктор. Освобождает ресурсы, если это необходимо.
     deinit {
         // Здесь можно освободить ресурсы, если потребуется.

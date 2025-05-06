@@ -18,7 +18,7 @@
 ## Environment Setup
 1. Clone the repository.
 2. Install dependencies: run `./run init` (installs all CLI tools via Homebrew).
-3. Generate the project: `xcodegen`.
+3. Generate the project: `./run generate` (uses tuist generate and swiftgen).
 4. Build and run: `./run deploy:simulator`.
 5. For tests: `./run check`.
 
@@ -26,7 +26,7 @@
 
 | Tool           | Version   | Purpose                          |
 |----------------|-----------|----------------------------------|
-| XcodeGen       | 2.42.0   | Generate Xcode project           |
+| Tuist          | latest    | Generate Xcode project           |
 | SwiftLint      | 0.59.1   | Swift style analyzer             |
 | SwiftFormat    | 0.55.5   | Swift code formatter             |
 | xcbeautify     | 2.28.0   | Beautiful output for xcodebuild  |
@@ -236,3 +236,6 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 - Project.swift и Workspace.swift описывают все targets, схемы, ресурсы
 - project.yml, .xcodeproj, .xcworkspace и XcodeGen удалены
 - Все сборки и тесты теперь только через tuist
++ Project.swift и Workspace.swift описывают все targets, схемы, ресурсы
++ project.yml, .xcodeproj, .xcworkspace и XcodeGen удалены (заменены на Tuist)
++ Все сборки и тесты теперь только через tuist

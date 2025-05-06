@@ -16,7 +16,7 @@ Craftify — iOS-приложение с расширением Share Extension 
    Это установит через Homebrew: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen.
 3. Сгенерируйте проект:
    ```sh
-   xcodegen
+   ./run generate
    ```
 4. Соберите и запустите проект:
    ```sh
@@ -60,7 +60,7 @@ Craftify — iOS-приложение с расширением Share Extension 
 
 The project is now fully managed by Tuist:
 - All targets, dependencies, resources, and schemes are described in Project.swift and Workspace.swift.
-- XcodeGen, project.yml, .xcodeproj, and .xcworkspace are removed.
+- XcodeGen, project.yml, .xcodeproj, and .xcworkspace are removed (replaced by Tuist manifests).
 - All builds and tests are performed via tuist and CLI scripts (see ./run).
 - This ensures reproducible, DevOps-friendly, and CI/CD-compatible workflows.
 
