@@ -134,7 +134,7 @@ public struct ShareExtensionView: View {
             }
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text(L10n.error), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+            Alert(title: Text(L10n.error), message: Text(alertMessage), dismissButton: .default(Text(LocalizedStringKey("OK"))))
         }
     }
 
@@ -248,7 +248,7 @@ public struct ShareExtensionView: View {
             ProgressView(value: progress)
                 .progressViewStyle(.linear)
                 .frame(width: ShareExtensionViewConstants.progressWidth)
-            Text("\(Int(progress * ProgressConstants.percentMax))%")
+            Text(String.localizedStringWithFormat(NSLocalizedString("percent_format", bundle: .main, comment: ""), Int(progress * ProgressConstants.percentMax)))
                 .font(.craftifyFootnote)
                 .fontWeight(.semibold)
         }
