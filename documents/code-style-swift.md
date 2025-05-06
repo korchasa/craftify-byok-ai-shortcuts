@@ -48,3 +48,9 @@ public extension MyType {
 - closure_body_length: Closure body should span 30 lines or less excluding comments and whitespace
 - no_magic_numbers: Magic numbers should be replaced by named constants
 - All style parameters for buttons (colors, radius, padding, scale) and palettes must be centralized in CraftifyButtonConstants and ColorPaletteConstants. Duplication or local constants for these parameters are not allowed.
+
+## Tuist Manifests
+- Для файлов Project.swift и Workspace.swift допускается отсутствие типа или extension, совпадающего с именем файла (исключение для SwiftLint: file_name).
+- Для let project и let workspace допускается отсутствие явного ACL, если это требует Tuist.
+- Документация (///) обязательна для public объявлений в манифестах.
+- Для файлов, сгенерированных Tuist (TuistBundle+*.swift), допускается нарушение правила file_name, если это требуется для корректной работы Tuist.

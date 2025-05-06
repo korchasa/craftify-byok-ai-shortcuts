@@ -132,5 +132,6 @@ excluded:
   - "src/**/UnitTests/*.swift"
   - "src/**/UITests/*.swift"
   - "src/**/Generated/**/*.swift"
+  - "Derived/Sources/TuistBundle+*.swift"
 opt_in_rules:
   - all

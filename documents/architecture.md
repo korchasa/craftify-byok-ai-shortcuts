@@ -1,26 +1,4 @@
 # Craftify Architecture
-
-## Table of Contents
-- [Craftify Architecture](#craftify-architecture)
-  - [Table of Contents](#table-of-contents)
-  - [System Overview](#system-overview)
-  - [Key Design Patterns](#key-design-patterns)
-  - [Logging and Analytics](#logging-and-analytics)
-  - [Component Interaction](#component-interaction)
-  - [Error Handling](#error-handling)
-  - [Testing Strategy](#testing-strategy)
-  - [Share Extension Architecture](#share-extension-architecture)
-    - [Interaction Diagram](#interaction-diagram)
-  - [Timeout Mechanism](#timeout-mechanism)
-  - [Operation Color \& ResultMode](#operation-color--resultmode)
-  - [Onboarding Flow](#onboarding-flow)
-  - [UI Architecture](#ui-architecture)
-  - [Localization](#localization)
-  - [Activation Rules](#activation-rules)
-  - [Style Centralization](#style-centralization)
-  - [Target Dependency Isolation](#target-dependency-isolation)
-  - [References](#references)
-
 ---
 
 ## System Overview
@@ -148,3 +126,16 @@ graph TD
 - [File Structure](file_structure.md)
 - [Developer Manual](developer-manual.md)
 - [User Manual](user-manual.md)
+
+## Project Structure and Build System
+- The project structure, targets, dependencies, and resources are fully described in Project.swift and Workspace.swift (Tuist manifests).
+- No .xcodeproj or .xcworkspace files are tracked in VCS; they are generated on demand via tuist generate.
+- All configuration is code-based and reproducible, supporting CI/CD and DevOps best practices.
+- Manual editing of Xcode project files or use of XcodeGen is prohibited.
+- All build, test, and code generation steps are automated via ./run scripts and Tuist.
+
+## Benefits of Tuist-based Architecture
+- Single source of truth for project structure and configuration
+- Easy onboarding and reproducible builds
+- Full automation for CI/CD pipelines
+- No manual or GUI-based configuration drift

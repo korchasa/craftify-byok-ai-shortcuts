@@ -1,0 +1,189 @@
+# ADR: Интеграция YouTubeSubtitleFetcher в SummarizeOperation
+
+**Дата:** 2024-06-XX
+**Статус:** Предложено
+
+## Контекст и проблема
+- В модуле `Common` используется протокол `TextFetching`, и по умолчанию для любых URL в `SummarizeOperation` применяется `SwiftSoupTextFetcher`, который извлекает видимый HTML-текст.
+- При расшаре ссылок YouTube необходимо загружать не HTML-страницу, а субтитры видео (WebVTT → plain text) и передавать их на вход LLM вместе с метаданными (заголовок, автор, длительность).
+- `fetchText(from:)` протокол требует возвращать `String`; для YouTube это будет объединённый текст: "<Заголовок>\n\n<Субтитры>".
+
+## Цели и ограничения
+- Сохранить совместимость с существующим протоколом `TextFetching` и DI-конфигурацией в `SummarizeOperation`.
+- Для YouTube URL (домен `youtube.com` или `youtu.be`) внедрить специальную логику загрузки субтитров через парсинг `ytInitialPlayerResponse` без API-ключей.
+- Для всех остальных URL оставить `SwiftSoupTextFetcher`.
+- Использовать Swift 5.5+, async/await, iOS 16+.
+- Не локализовать бизнес-логику в Common (ошибки — чистые `Error`).
+
+## Варианты решения
+1. Использовать YouTube Data API (API-ключи, квоты) — **не подходит**.
+2. Интегрировать yt-dlp (Python) — **не подходит** для iOS.
+3. Парсить публичный HTML/JS (`ytInitialPlayerResponse`) — **выбранный вариант**.
+
+## Решение
+1. Создать `YouTubeSubtitleFetcher: TextFetching` в `src/Common/Sources/TextFetcher/YouTubeSubtitleFetcher.swift`.
+2. В `SummarizeOperation` (в `init(textFetcher:)` или в фабрике) определить:
+   ```swift
+   let fetcher: TextFetching
+   if url.host?.contains("youtube.com") == true || url.host?.contains("youtu.be") == true {
+       fetcher = YouTubeSubtitleFetcher(session: session, logManager: log)
+   } else {
+       fetcher = SwiftSoupTextFetcher(session: session, logManager: log)
+   }
+   ```
+3. Интерфейс `YouTubeSubtitleFetcher`:
+   ```swift
+   public final class YouTubeSubtitleFetcher: TextFetching {
+       public init(
+           session: URLSession = .shared,
+           logManager: LogManagerShared = .shared
+       ) { ... }
+
+       public func fetchText(from urlString: String) async throws -> String { ... }
+
+       public func fetchAndExtractText(
+           from urlString: String,
+           completion: @escaping (Result<String, Error>) -> Void
+       ) { ... }
+   }
+   ```
+4. Логика в `fetchText(from:)`:
+   - **Парсинг ID:** извлечь `videoID` из `urlString`.
+   - **fetchVideoHTML(videoID:)**: загрузить HTML страницы.
+   - **extractPlayerJSON(html:)**: найти и десериализовать `ytInitialPlayerResponse`.
+   - **parseCaptionTracks(data:)**: получить `[CaptionTrack]` и выбрать (приоритет `ru`, иначе первый).
+   - **downloadVTT(baseUrl:)**: загрузить WebVTT.
+   - **convertVTTtoPlainText(vtt:)**: перевести WebVTT в простую строку.
+   - **Формирование результата:** `"\(title)\n\n\(subtitlesPlain)"`.
+
+## Пример кода (основные части)
+```swift
+// MARK: — Модели
+struct PlayerResponse: Decodable { let captions: CaptionsContainer? }
+struct CaptionsContainer: Decodable { let playerCaptionsTracklistRenderer: TracklistRenderer }
+struct TracklistRenderer: Decodable { let captionTracks: [CaptionTrack] }
+struct CaptionTrack: Decodable { let baseUrl: String; let name: Name; let languageCode: String }
+struct Name: Decodable { let simpleText: String }
+
+enum YouTubeError: Error {
+    case invalidURL, noHTML, jsonNotFound, decodingFailed, noCaptions, downloadFailed
+}
+
+public final class YouTubeSubtitleFetcher: TextFetching {
+    private let session: URLSession
+    private let log: LogManagerShared
+
+    public init(session: URLSession = .shared,
+                logManager: LogManagerShared = .shared) {
+        self.session = session
+        self.log = logManager
+    }
+
+    public func fetchText(from urlString: String) async throws -> String {
+        // 1. Parse videoID
+        guard let videoID = URLComponents(string: urlString)?
+                .queryItems?.first(where: { $0.name == "v" })?.value
+        else { throw YouTubeError.invalidURL }
+
+        // 2. HTML
+        let html = try await fetchVideoHTML(videoID: videoID)
+        // 3. JSON
+        let jsonData = try extractPlayerJSON(from: html)
+        // 4. Tracks
+        let tracks = try parseCaptionTracks(from: jsonData)
+        let track = tracks.first(where: { $0.languageCode == "ru" }) ?? tracks.first
+        guard let baseUrl = track?.baseUrl else { throw YouTubeError.noCaptions }
+        // 5. VTT
+        let vtt = try await downloadVTT(from: baseUrl)
+        // 6. Plain text
+        let subtitles = convertVTTtoPlainText(vtt)
+        // 7. Title (опционально извлечь из JSON аналогично)
+        let title = try parseVideoTitle(from: jsonData)
+        return "\(title)\n\n\(subtitles)"
+    }
+
+    public func fetchAndExtractText(
+        from urlString: String,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        Task {
+            do {
+                let text = try await fetchText(from: urlString)
+                completion(.success(text))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+}
+```
+
+## Последствия и риски
+- + Автономная работа без ключей.
+- + Интегрируется в существующий DI и SummarizeOperation.
+- – Уязвимо к изменениям структуры YouTube.
+
+## План реализации (TDD)
+1. **Red**: тест для `extractPlayerJSON` на сохранённом HTML.
+2. **Green**: реализация `extractPlayerJSON`.
+3. Тесты для `parseCaptionTracks`, `downloadVTT`, `convertVTTtoPlainText`.
+4. **Red**: интеграционный тест `fetchText` с моком URLSession.
+5. **Green**: реализация `fetchText` и `fetchAndExtractText`.
+6. **Refactor**: кодстайл, убрать дубли, обновить `code-style-swift.md` при необходимости.
+7. Запустить `./run check` и исправить все ошибки, предупреждения, форматирование и ленты.
+
+---
+*ADR адаптирован под архитектуру Craftify. Следующий шаг — реализовать тесты.*
+
+# Task: Fix 'Missing package product SwiftSoup' error for MainApp and ShareExtension
+
+## Restatement
+Error: /Users/korchasa/www/Craftify/Craftify.xcodeproj Missing package product 'SwiftSoup' (for both MainApp and ShareExtension)
+
+## Analysis
+- Error means SPM dependency SwiftSoup is not properly integrated or referenced in Xcode project.
+- Project is managed via project.yml and XcodeGen, so all dependencies must be declared in project.yml.
+- Both MainApp and ShareExtension must explicitly declare dependency on SwiftSoup.
+
+## Steps Taken
+- Located SwiftSoup declaration in project.yml (already present in packages and dependencies for both MainApp and ShareExtension).
+- Regenerated Xcode project using ./run generate.
+- Initiated ./run check to verify build and test, but process was canceled before completion.
+
+## Next Actions
+- Re-run ./run check and allow it to complete to confirm the issue is resolved.
+- If error persists, investigate further.
+
+---
+
+# Task: App icon not shown in Simulator
+
+## Restatement
+App icon is missing in the iOS Simulator for MainApp and/or ShareExtension.
+
+## Analysis
+- Contents.json and all required PNGs are present in AppIcon.appiconset for both MainApp and ShareExtension.
+- In project.yml, appIcon: AppIcon and CFBundleIconName: AppIcon are set for both targets.
+- ASSETCATALOG_COMPILER_APPICON_NAME is set to AppIcon in build settings for all configurations.
+- All icon set names and references match exactly (case-sensitive).
+- Full clean, regenerate, and build/check were performed.
+- No errors or warnings in build output.
+
+## Steps Taken
+- Verified Contents.json and PNGs for both MainApp and ShareExtension.
+- Checked project.yml and Info.plist for correct icon references.
+- Confirmed build settings for all configurations.
+- Ran ./run generate, ./run clean, ./run check.
+
+## Next Actions
+- If icon is still missing in Simulator:
+  1. Uninstall the app from the Simulator completely (to clear old cache).
+  2. Reinstall and launch the app via ./run sim or Xcode.
+  3. If still not visible, check for possible issues with icon PNGs (transparency, color space, corrupted files).
+  4. If the problem persists, try replacing icons with a known-good set and repeat the process.
+
+## Notes
+- All project configuration and icon references are correct and match Apple guidelines.
+- If the issue is not resolved by reinstalling, the root cause may be in the PNG files themselves or a Simulator/Xcode cache bug.
+
+---

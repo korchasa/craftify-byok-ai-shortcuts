@@ -1,46 +1,6 @@
 # Craftify Implementation & Technology Stack
 
-## Table of Contents
-- [Craftify Implementation \& Technology Stack](#craftify-implementation--technology-stack)
-  - [Table of Contents](#table-of-contents)
-  - [CLI Commands](#cli-commands)
-  - [Technology Stack](#technology-stack)
-  - [Environment Setup](#environment-setup)
-  - [CLI Tools](#cli-tools)
-  - [DevOps and CI/CD](#devops-and-cicd)
-  - [API: AuthManager](#api-authmanager)
-  - [API: LogManagerShared](#api-logmanagershared)
-  - [Testing](#testing)
-  - [Timeout Implementation](#timeout-implementation)
-  - [Receiving Logs](#receiving-logs)
-  - [Operation Color Implementation](#operation-color-implementation)
-  - [Onboarding Flow](#onboarding-flow)
-  - [Project Schemas](#project-schemas)
-  - [Share Extension UI](#share-extension-ui)
-  - [URL Sharing Support](#url-sharing-support)
-  - [Technology Stack and Dependencies](#technology-stack-and-dependencies)
-  - [Development Environment and Setup](#development-environment-and-setup)
-  - [Input Handling for Operations](#input-handling-for-operations)
-  - [Button Style Constants](#button-style-constants)
-  - [Button Styles Overview](#button-styles-overview)
-  - [DevOps-friendly Flow](#devops-friendly-flow)
-  - [References](#references)
-
 ---
-
-## CLI Commands
-
-| Command         | Description                                           |
-|----------------|------------------------------------------------------|
-| ./run check     | Run cleaning, generation, formatting, linting, static analysis, building, and testing |
-| ./run deploy:simulator      | Build and run in iPhone 14 simulator (iOS 16)      |
-| ./run clean    | Clean build artifacts                                |
-| ./run logs     | View logs from Unified Log (system log, os_log, filtered by subsystem Internal, all levels, MainApp and ShareExtension) |
-| ./run init     | Install all CLI dependencies via Homebrew           |
-| ./run generate | Run SwiftGen and XcodeGen (localization, project)   |
-| ./run size-report | Check ShareExtension size (fail if >20MB)         |
-| ./run full-clean | Full clean: removes all build artifacts, caches, temp files, xcresult, dSYM, .app, xcarchive, DerivedData, SourcePackages, .build, .swiftpm, coverage, *.log, *.tmp, *.temp. |
-| set-native-language | Позволяет пользователю выбрать родной язык из списка всех языков ISO-639-1 и ряда искусственных языков. Используется для операций summarize и explain. |
 
 ## Technology Stack
 - Swift 5.7+
@@ -252,3 +212,27 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 
 - `SupportedLanguages.all` — массив всех поддерживаемых языков, каждый элемент — структура с кодом, самоназванием и английским названием.
 - Используется для выбора языка в настройках и при переводе/суммаризации/объяснении.
+
+## Технологии и зависимости
+- Tuist — генерация и управление проектом (Project.swift, Workspace.swift)
+- SwiftGen — генерация локализации и ресурсов
+- SwiftLint, SwiftFormat — стиль и форматирование
+- xcbeautify — форматирование вывода xcodebuild
+- XcodeGen — [удалён, проект переведён на Tuist]
+
+## Команды ./run
+| Команда         | Описание                                                      |
+|----------------|--------------------------------------------------------------|
+| generate       | Генерация проекта через tuist generate и swiftgen            |
+| check          | Полная проверка: generate, fmt, lint, тесты, анализ          |
+| sim            | Сборка и запуск MainApp на симуляторе                        |
+| test <test_id> | Запуск теста по id (через AllTests)                          |
+| init           | Установка CLI-инструментов (tuist, swiftgen, swiftlint и др.)|
+| logs           | Логи MainApp и ShareExtension                                |
+| full-clean     | Полная очистка build, кэшей, логов                           |
+| help           | Справка по командам                                          |
+
+## Переход на Tuist
+- Project.swift и Workspace.swift описывают все targets, схемы, ресурсы
+- project.yml, .xcodeproj, .xcworkspace и XcodeGen удалены
+- Все сборки и тесты теперь только через tuist

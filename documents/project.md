@@ -1,20 +1,5 @@
 # Craftify Project Overview
 
-## Table of Contents
-- [Craftify Project Overview](#craftify-project-overview)
-  - [Table of Contents](#table-of-contents)
-  - [Purpose](#purpose)
-  - [Problem Statement](#problem-statement)
-  - [Solution Overview](#solution-overview)
-  - [Goals and Objectives](#goals-and-objectives)
-  - [Target Audience](#target-audience)
-  - [Success Criteria](#success-criteria)
-  - [Key Features](#key-features)
-  - [Solved Problems](#solved-problems)
-    - [URL Text Fetcher for SummarizeOperation](#url-text-fetcher-for-summarizeoperation)
-  - [UI Requirements](#ui-requirements)
-  - [References](#references)
-
 ---
 
 ## Purpose
@@ -86,3 +71,17 @@ Users waste time copying text between apps for translation, simplification, or c
 - [File Structure](file_structure.md)
 - [Developer Manual](developer-manual.md)
 - [User Manual](user-manual.md)
+
+## Migration to Tuist
+
+The project is now fully managed by Tuist:
+- All targets, dependencies, resources, and schemes are described in Project.swift and Workspace.swift.
+- XcodeGen, project.yml, .xcodeproj, and .xcworkspace are removed.
+- All builds and tests are performed via tuist and CLI scripts (see ./run).
+- This ensures reproducible, DevOps-friendly, and CI/CD-compatible workflows.
+- All configuration is file-based, no manual Xcode GUI work required.
+
+## DevOps-friendly flow
+- All project structure and configuration are described in code (Project.swift, Workspace.swift, configs).
+- No manual steps: all builds, tests, and code generation are automated.
+- Easy onboarding: just run ./run init and ./run generate.

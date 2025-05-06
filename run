@@ -17,22 +17,18 @@ SCRIPT_NAME=$(basename "${0}")
 
 # Default parallel testing worker count
 WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}
-# === Общие переменные для ускорения сборки ===
 DERIVED_DATA_FAST=build/DerivedData_FastCheck
 RESULT_BUNDLE_PATH=build/Results/AllUnitTests.xcresult
 SCHEME_ALL_TESTS=AllTests
 SCHEME_MAINAPP=MainApp
 DEST_SIMULATOR="id=${SIMULATOR_ID},arch=arm64"
 DEST_TEST_SIMULATOR="id=${TEST_SIMULATOR_ID},arch=arm64"
-# Для deploy:simulator отдельные артефакты
 DERIVED_DATA_SIM=build/DerivedData_DeploySimulator
 RESULT_BUNDLE_SIM=build/Results/DeploySimulator.xcresult
 
-# Add xcb wrapper for xcodebuild with xcbeautify
 function xcb() {
   xcodebuild -showBuildTimingSummary "$@" 2>&1 | grep -v 'DVTDeviceOperation: Encountered a build number' | xcbeautify --quiet --disable-logging
 }
-
 
 function usage() {
   cat <<EOF
@@ -40,7 +36,7 @@ Usage: $SCRIPT_NAME <command> [args...]
 Commands:
   full-clean          Full clean: deletion of all builds, caches, logs, and temporary files
   sim                 Build MainApp for simulator
-  generate            Run SwiftGen and XcodeGen
+  generate            Run SwiftGen and Tuist
   init                Install CLI tools
   logs                Stream MainApp logs
   check               Run all checks (clean, generate, comment-scan, fmt, lint, analyze, build, test)
@@ -51,7 +47,7 @@ EOF
 
 function init() {
   echo -e "${GREEN}Checking CLI tools via Homebrew...${NC}"
-  local tools=(xcodegen swiftlint swiftformat xcbeautify swiftgen)
+  local tools=(tuist swiftlint swiftformat xcbeautify swiftgen)
   for tool in "${tools[@]}"; do
     if ! command -v $tool &>/dev/null; then
       echo "Installing $tool..."
@@ -83,11 +79,7 @@ function clean() {
   rm -rf .swiftpm
   rm -rf ~/Library/Developer/Xcode/DerivedData
   rm -rf ~/Library/Caches/org.swift.swiftpm
-  rm -rf Craftify.xcodeproj/project.xcworkspace/xcuserdata
-  rm -rf Craftify.xcodeproj/xcuserdata
-  rm -rf Craftify.xcodeproj/xcshareddata/xcschemes
   rm -rf build/SourcePackages
-  xcb clean || true
   _end_section
 }
 
@@ -97,8 +89,8 @@ function generate() {
   _start_section "Running SwiftGen"
   swiftgen "$@"
   _end_section
-  _start_section "Running XcodeGen"
-  xcodegen "$@"
+  _start_section "Running Tuist generate"
+  tuist generate "$@"
   _end_section
 }
 
