@@ -1,26 +1,5 @@
 # Craftify User Manual
 
-## Table of Contents
-- [Craftify User Manual](#craftify-user-manual)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-  - [Processing Result Modes](#processing-result-modes)
-  - [Testing](#testing)
-  - [Build and Deployment](#build-and-deployment)
-  - [Notes](#notes)
-  - [User Testing Results](#user-testing-results)
-  - [What's New in Share Extension](#whats-new-in-share-extension)
-  - [Instruction Relevance](#instruction-relevance)
-  - [Processing Time Limit](#processing-time-limit)
-  - [Log Viewing](#log-viewing)
-  - [Operation Color Selection](#operation-color-selection)
-  - [Welcome Screen and Consent](#welcome-screen-and-consent)
-  - [Using the Share Extension](#using-the-share-extension)
-  - [Sharing Links (URLs)](#sharing-links-urls)
-  - [Unified Button Styles](#unified-button-styles)
-  - [Production Build Safety](#production-build-safety)
-  - [References](#references)
-
 ---
 
 ## Getting Started
@@ -43,7 +22,7 @@
 - For Explain, the result is not copied automatically, but shown in the extension window.
 
 ## Testing
-- All main scenarios are tested automatically (unit, UI, e2e), including Explain (display) and clipboard operations.
+- All main scenarios are tested automatically (unit, UI), including Explain (display) and clipboard operations.
 - For manual testing: use the Share Extension with different text types and parameters, check both modes (copy and display).
 
 ## Build and Deployment

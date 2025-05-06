@@ -55,3 +55,16 @@ Craftify — iOS-приложение с расширением Share Extension 
 - Подробная документация находится в директории `documents/`
 
 > После завершения этапа 2 все placeholder-файлы и placeholder-тесты удалены. Проект полностью соответствует требованиям линтера и готов к реализации Common.
+
+## Migration to Tuist
+
+The project is now fully managed by Tuist:
+- All targets, dependencies, resources, and schemes are described in Project.swift and Workspace.swift.
+- XcodeGen, project.yml, .xcodeproj, and .xcworkspace are removed.
+- All builds and tests are performed via tuist and CLI scripts (see ./run).
+- This ensures reproducible, DevOps-friendly, and CI/CD-compatible workflows.
+
+## DevOps-friendly flow
+- All project structure and configuration are described in code (Project.swift, Workspace.swift, configs).
+- No manual steps: all builds, tests, and code generation are automated.
+- Easy onboarding: just run ./run init and ./run generate.

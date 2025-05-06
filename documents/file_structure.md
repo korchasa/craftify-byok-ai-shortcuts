@@ -1,14 +1,5 @@
 # Craftify Project File Structure
 
-## Table of Contents
-- [Overview](#overview)
-- [Directory Structure](#directory-structure)
-- [Key Files and Folders](#key-files-and-folders)
-- [Targets and Schemes](#targets-and-schemes)
-- [Logging](#logging)
-- [Testing and Isolation](#testing-and-isolation)
-- [References](#references)
-
 ---
 
 ## Overview
@@ -97,6 +88,17 @@ graph TD
 - [Architecture](architecture.md)
 - [Implementation](implementation.md)
 - [Developer Manual](developer-manual.md)
+
+## Key files and directories
+- Project.swift — main Tuist manifest, describes all targets, dependencies, resources
+- Workspace.swift — Tuist workspace manifest
+- src/ — source code, resources, and tests
+- build/ — build artifacts (not tracked)
+- Configs/ — xcconfig files for build settings
+- documents/ — documentation and architecture
+- .swiftlint.yml, .swiftformat — code style and formatting
+- .xcodeproj, .xcworkspace, project.yml — [removed, replaced by Tuist]
+
 # Project root
 run                  # Main CLI script for all project operations
 project.yml          # XcodeGen project configuration
