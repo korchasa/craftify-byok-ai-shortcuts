@@ -75,6 +75,95 @@ final class ShareExtensionViewModelTests: XCTestCase {
         viewModel.hideCopiedToast()
         XCTAssertFalse(viewModel.showCopiedToast)
     }
+
+    func testOperations_FilteredForURLInput() {
+        // Arrange
+        let inventoryManager = InventoryManagerStub()
+        let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")
+        let clipboardManager = ClipboardManagerStub()
+        let processingManager = ProcessingManagerStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: inventoryManager,
+            authManager: authManager,
+            clipboardManager: clipboardManager,
+            processingManager: processingManager,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        // Заполняем inventory всеми типами операций
+        let allKinds = OperationKind.allCases
+        let palette = ["ff807d", "89e1c5", "3288bd", "f7b801", "e14eca"]
+        var colorIdx = 0
+        func nextColor() -> String {
+            defer { colorIdx = (colorIdx + 1) % palette.count }
+            return palette[colorIdx]
+        }
+        let allOps: [InventoryOperation] = allKinds.compactMap { kind in
+            OperationFactory.make(kind: kind).makeInventoryOperation(input: OperationInput(), colorHex: nextColor())
+        }
+        inventoryManager.saveInventory(allOps)
+
+        // Создаем ViewModel с начальным пустым вводом
+        let viewModel = ShareExtensionViewModel(manager: manager)
+
+        // 1. Изначально должны загрузиться все операции
+        XCTAssertEqual(viewModel.operations.count, allOps.count)
+
+        // 2. Обновляем inputText на URL и проверяем, что операции отфильтрованы
+        viewModel.updateInputText("https://example.com")
+
+        // Должна остаться только SummarizeOperation
+        XCTAssertEqual(viewModel.operations.count, 1)
+        XCTAssertEqual(viewModel.operations.first?.operation, .summarize)
+
+        // 3. Обновляем inputText на обычный текст и проверяем, что отображаются все операции
+        viewModel.updateInputText("Просто текст")
+        XCTAssertEqual(viewModel.operations.count, allOps.count)
+    }
+
+    func testUpdateInputText_ChangesFlagAndFiltersOperations() {
+        // Arrange
+        let inventoryManager = InventoryManagerStub()
+        let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")
+        let clipboardManager = ClipboardManagerStub()
+        let processingManager = ProcessingManagerStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: inventoryManager,
+            authManager: authManager,
+            clipboardManager: clipboardManager,
+            processingManager: processingManager,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let allOps: [InventoryOperation] = OperationKind.allCases.compactMap { kind in
+            OperationFactory.make(kind: kind).makeInventoryOperation(input: OperationInput(), colorHex: "ffffff")
+        }
+        inventoryManager.saveInventory(allOps)
+
+        let viewModel = ShareExtensionViewModel(manager: manager)
+
+        // Act - Устанавливаем слишком длинный текст
+        let longText = String(repeating: "a", count: ShareExtensionViewModelConstants.maxInputTextLength + 1)
+        viewModel.updateInputText(longText)
+
+        // Assert - Флаг должен быть установлен
+        XCTAssertTrue(viewModel.isInputTextTooLong)
+        XCTAssertEqual(manager.inputText, longText)
+
+        // Act - Устанавливаем URL
+        let urlText = "https://example.com"
+        viewModel.updateInputText(urlText)
+
+        // Assert - Флаг сброшен и операции отфильтрованы
+        XCTAssertFalse(viewModel.isInputTextTooLong)
+        XCTAssertEqual(manager.inputText, urlText)
+        XCTAssertEqual(viewModel.operations.count, 1)
+        XCTAssertEqual(viewModel.operations.first?.operation, .summarize)
+    }
 }
 
 // Stub для медленной обработки
