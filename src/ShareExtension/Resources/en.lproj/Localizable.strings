@@ -96,3 +96,4 @@
 "error_processing_manager_unavailable" = "Processing manager unavailable";
 "error_result_mode_display" = "Result mode: display result";
 "error_result_copied" = "Result copied to clipboard successfully";
+"percent_format" = "%d%%";
