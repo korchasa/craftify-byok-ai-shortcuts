@@ -1,7 +1,7 @@
 ---
 description:
 globs:
-alwaysApply: true
+alwaysApply: false
 ---
 ## WORKFLOW (NON-STOP)
 Note: If the user asks to continue the task, firstly read documentation, then describe current task from `./documents/whiteboard.md` and proceed to item 5.

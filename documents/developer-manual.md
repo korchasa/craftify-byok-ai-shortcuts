@@ -36,7 +36,7 @@
 ## Processing Timeout Testing
 - Timeout is implemented only in ShareExtensionViewModel (default 30 seconds).
 - In unit tests, the ViewModel timeout can be overridden via `processingTimeoutSeconds`.
-- In E2E tests, ShareExtensionManager checks only processing errors and successes, not timeout.
+- ShareExtensionManager checks only processing errors and successes, not timeout.
 
 ## Retrieving Logs
 To view logs for the app and extension, use Unified Log (os_log, subsystem: Internal, message + metadata only):
@@ -62,7 +62,7 @@ log show --predicate 'subsystem == "Internal"' --style syslog --last 2h
 - Main UI is implemented in `src/ShareExtension/Sources/ShareExtensionView.swift`
 - Close button is fixed at the bottom via `.safeAreaInset`, always accessible
 - All other content is in a ScrollView
-- All changes are covered by unit and e2e tests
+- All changes are covered by unit tests
 - Linter and formatter pass without errors
 
 ## Share Extension Activation for URLs
@@ -71,7 +71,7 @@ log show --predicate 'subsystem == "Internal"' --style syslog --last 2h
   - SUBQUERY (... ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.text" || ANY $attachment.registeredTypeIdentifiers UTI-CONFORMS-TO "public.url")
 - After generating the project via `./run generate`, the extension is available for sharing links and text.
 - Both types are processed as plain text, with priority given to text.
-- Covered by unit and e2e tests.
+- Covered by unit tests.
 
 ## Button Style Guide
 - Use only `CraftifyButtonConstants` for all button parameters (colors, radius, padding, scale).

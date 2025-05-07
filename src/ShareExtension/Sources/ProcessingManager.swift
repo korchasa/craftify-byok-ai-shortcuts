@@ -37,6 +37,9 @@ public final class ProcessingManager: ProcessingManaging {
         } else {
             "<unparsable>"
         }
+        let opType = OperationFactory.make(kind: operation.operation)
+        let input = try? opType.decodeInput(from: operation.params)
+        let promptTemplate = input.map { opType.promptTemplate(for: $0) } ?? "<prompt unavailable>"
         logManager.log(LogEntry(
             level: .debug,
             module: "ProcessingManager",
@@ -44,7 +47,7 @@ public final class ProcessingManager: ProcessingManaging {
             metadata: [
                 "operation": operation.operation.rawValue,
                 "params": paramsString,
-                "promptTemplate": operation.promptTemplate,
+                "promptTemplate": promptTemplate,
                 "apiKey": maskedKey,
                 "inputTextLength": "\(text.count)"
             ]
@@ -78,8 +81,11 @@ public final class ProcessingManager: ProcessingManaging {
     private func processAsync(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) async {
         do {
             let apiKey = try await authManager.getAPIKey() ?? ""
+            let opType = OperationFactory.make(kind: operation.operation)
+            let input = try opType.decodeInput(from: operation.params)
+            let promptTemplate = opType.promptTemplate(for: input)
             logRequest(text: text, operation: operation, apiKey: apiKey)
-            let result = try await llmClient.send(text: text, promptTemplate: operation.promptTemplate, apiKey: apiKey)
+            let result = try await llmClient.send(text: text, promptTemplate: promptTemplate, apiKey: apiKey)
             logResponse(operation: operation, text: text, result: result)
             completion(.success(result))
         } catch {

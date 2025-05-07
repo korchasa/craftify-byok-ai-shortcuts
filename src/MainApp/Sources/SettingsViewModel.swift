@@ -14,22 +14,15 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var isLoading: Bool = false
     /// Признак наличия ключа
     @Published public var isKeyPresent: Bool = false
-    /// Родной язык пользователя
-    @Published public var nativeLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
+    /// Выбранный язык пользователя (реактивно для Picker)
+    @Published public var selectedNativeLanguage: String = AppSettingsManager.shared.nativeLanguage
 
     private let authManager: AuthManaging
-    private let userDefaults = UserDefaults.standard
-    private let nativeLanguageKey = "CraftifyNativeLanguage"
 
     /// Инициализация с менеджером
     /// - Parameter authManager: Менеджер API-ключа
     public init(authManager: AuthManaging = AuthManager()) {
         self.authManager = authManager
-        if let saved = userDefaults.string(forKey: nativeLanguageKey) {
-            self.nativeLanguage = saved
-        } else {
-            self.nativeLanguage = Locale.current.language.languageCode?.identifier ?? "en"
-        }
         Task { await load() }
     }
 
@@ -42,9 +35,6 @@ public final class SettingsViewModel: ObservableObject {
             apiKey = key ?? ""
             maskedApiKey = authManager.maskedAPIKey(key)
             isKeyPresent = (key != nil)
-            if let saved = userDefaults.string(forKey: nativeLanguageKey) {
-                nativeLanguage = saved
-            }
         } catch {
             apiKey = ""
             maskedApiKey = authManager.maskedAPIKey(nil)
@@ -54,7 +44,14 @@ public final class SettingsViewModel: ObservableObject {
     }
 
     public func saveNativeLanguage() {
-        userDefaults.set(nativeLanguage, forKey: nativeLanguageKey)
+        let suiteName = "group.dev.korchasa.Craftify"
+        let userDefaults = UserDefaults(suiteName: suiteName) ?? .standard
+        let lang = selectedNativeLanguage
+        NSLog("[SettingsViewModel] [SAVE] nativeLanguage: %@, suite: %@, userDefaults: %@", lang, suiteName, String(describing: userDefaults))
+        Thread.callStackSymbols.forEach { NSLog("[SettingsViewModel] [SAVE] callStack: %@", $0) }
+        AppSettingsManager.shared.nativeLanguage = lang
+        let saved = userDefaults.string(forKey: "CraftifyNativeLanguage") ?? "<nil>"
+        NSLog("[SettingsViewModel] [SAVE] After set, value in suite: %@", saved)
     }
 
     /// Сохранить API-ключ

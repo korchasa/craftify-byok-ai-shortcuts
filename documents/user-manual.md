@@ -75,7 +75,7 @@ On first launch, Craftify displays a welcome screen with instructions and a cons
 - All other content (operations, result) is scrollable if it does not fit on the screen.
 - The button does not overlap content, even with lots of content.
 - The interface is adapted for all devices and supports accessibility.
-- All actions are tested (unit + e2e), stability is guaranteed.
+- All actions are tested, stability is guaranteed.
 
 ## Sharing Links (URLs)
 - You can now share links (URLs) to Craftify via the "Share" menu from any app.
@@ -106,3 +106,25 @@ This ensures a predictable and visually pleasing experience across all screens.
 ## Additional Notes
 - В настройках приложения вы можете выбрать родной язык из полного списка поддерживаемых языков (ISO-639-1 и искусственные языки). Этот язык будет использоваться по умолчанию для операций суммаризации и объяснения.
 - Для операций перевода также доступен этот же список языков.
+
+## Использование Craftify
+- Для смены языка интерфейса и операций откройте Settings, выберите нужный язык в выпадающем списке и нажмите Save. Язык сменится во всех операциях только после сохранения.
+- Все операции (Summarize, Explain и др.) используют только текущий язык из настроек, выбранный в Settings.
+- После смены языка новые операции сразу используют новое значение, без необходимости перезапуска приложения.
+
+## Логи изменений настроек
+- Все изменения настроек (в том числе языка) фиксируются в системном логе и доступны для анализа через ./run logs.
+
+## Как тестировать смену языка
+1. Откройте Settings, выберите новый язык, нажмите Save.
+2. Выполните любую операцию (Summarize, Explain и др.) — результат будет на новом языке.
+3. Для возврата к предыдущему языку повторите шаги.
+
+## Как собрать и запустить
+- Для быстрой проверки: `./run check`
+- Для запуска на симуляторе: `./run sim`
+- Для просмотра логов: `./run logs`
+
+## Как обновить настройки
+- Все настройки централизованы в AppSettingsManager и сохраняются в App Group, доступны из MainApp и ShareExtension.
+- Изменения применяются только после нажатия Save в Settings.

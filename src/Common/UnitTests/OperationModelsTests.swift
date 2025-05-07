@@ -47,11 +47,10 @@ public final class OperationModelsTests: XCTestCase {
     public func testInventoryOperationCodable() throws {
         let params = TranslateParams(targetLanguage: "en")
         let paramsData = try JSONEncoder().encode(params)
-        let operation = InventoryOperation(operation: .translate, params: paramsData, promptTemplate: "Translate: {text}")
+        let operation = InventoryOperation(operation: .translate, params: paramsData)
         let data = try JSONEncoder().encode(operation)
         let decoded = try JSONDecoder().decode(InventoryOperation.self, from: data)
         XCTAssertEqual(decoded.operation, operation.operation)
-        XCTAssertEqual(decoded.promptTemplate, operation.promptTemplate)
         let decodedParams = try JSONDecoder().decode(TranslateParams.self, from: decoded.params)
         XCTAssertEqual(decodedParams, params)
     }
@@ -61,7 +60,7 @@ public final class OperationModelsTests: XCTestCase {
         let params = TranslateParams(targetLanguage: "fr")
         let paramsData = try JSONEncoder().encode(params)
         let colorHex = "3288bd"
-        let operation = InventoryOperation(operation: .translate, params: paramsData, promptTemplate: "Translate: {text}", colorHex: colorHex)
+        let operation = InventoryOperation(operation: .translate, params: paramsData, colorHex: colorHex)
         let data = try JSONEncoder().encode(operation)
         let decoded = try JSONDecoder().decode(InventoryOperation.self, from: data)
         XCTAssertEqual(decoded.colorHex, colorHex)
@@ -190,6 +189,24 @@ public final class OperationModelsTests: XCTestCase {
             let nsError = error as NSError
             XCTAssertEqual(nsError.domain, "ExplainOperation")
         }
+    }
+
+    /// Проверяет, что смена языка влияет на promptTemplate в SummarizeOperation и ExplainOperation
+    func testPromptTemplateReflectsCurrentLanguage() {
+        let manager = AppSettingsManager(suiteName: "group.dev.korchasa.Craftify")
+        manager.nativeLanguage = "en"
+        let summarizeOp = SummarizeOperation()
+        let explainOp = ExplainOperation()
+        let input = OperationInput()
+        let summarizePromptEN = summarizeOp.promptTemplate(for: input)
+        let explainPromptEN = explainOp.promptTemplate(for: input)
+        XCTAssertTrue(summarizePromptEN.contains("English"), "Prompt должен содержать English для en")
+        XCTAssertTrue(explainPromptEN.contains("English"), "Prompt должен содержать English для en")
+        manager.nativeLanguage = "ru"
+        let summarizePromptRU = summarizeOp.promptTemplate(for: input)
+        let explainPromptRU = explainOp.promptTemplate(for: input)
+        XCTAssertTrue(summarizePromptRU.contains("Russian") || summarizePromptRU.contains("Русский"), "Prompt должен содержать Russian/Русский для ru")
+        XCTAssertTrue(explainPromptRU.contains("Russian") || explainPromptRU.contains("Русский"), "Prompt должен содержать Russian/Русский для ru")
     }
 }
 

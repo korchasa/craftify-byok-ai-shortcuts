@@ -111,12 +111,9 @@ The command outputs logs from the unified log (os_log) for the last day, filteri
 ## Project Schemas
 - MainApp
 - MainAppUnitTests
-- MainAppE2ETests
 - ShareExtension
 - ShareExtensionUnitTests
-- ShareExtensionE2ETests
 - CommonUnitTests
-- CommonE2ETests
 - ShareExtensionSizeReport
 
 ## Share Extension UI
@@ -146,7 +143,7 @@ graph TD
 - Share Extension supports sharing both text (UTType.plainText) and URL (UTType.url).
 - If both text and URL are shared, text takes priority.
 - Length limit (5000 characters) applies to both text and URL.
-- Covered by unit and e2e tests.
+- Covered by unit tests.
 
 ## Technology Stack and Dependencies
 - Swift
@@ -221,16 +218,16 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 - XcodeGen — [удалён, проект переведён на Tuist]
 
 ## Команды ./run
-| Команда         | Описание                                                      |
-|----------------|--------------------------------------------------------------|
-| generate       | Генерация проекта через tuist generate и swiftgen            |
-| check          | Полная проверка: generate, fmt, lint, тесты, анализ          |
-| sim            | Сборка и запуск MainApp на симуляторе                        |
-| test <test_id> | Запуск теста по id (через AllTests)                          |
-| init           | Установка CLI-инструментов (tuist, swiftgen, swiftlint и др.)|
-| logs           | Логи MainApp и ShareExtension                                |
-| full-clean     | Полная очистка build, кэшей, логов                           |
-| help           | Справка по командам                                          |
+| Команда         | Описание                                      |
+|----------------|-----------------------------------------------|
+| ./run check    | Полный цикл: clean, generate, fmt, lint, test |
+| ./run test id  | Запуск одного теста по идентификатору         |
+| ./run sim      | Сборка MainApp для симулятора                 |
+| ./run logs     | Просмотр логов MainApp                        |
+| ./run generate | Генерация SwiftGen и Tuist                    |
+| ./run clean    | Очистка артефактов сборки                     |
+| ./run init     | Установка CLI-инструментов                    |
+| ./run help     | Справка по командам                           |
 
 ## Переход на Tuist
 - Project.swift и Workspace.swift описывают все targets, схемы, ресурсы
@@ -239,3 +236,22 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 + Project.swift и Workspace.swift описывают все targets, схемы, ресурсы
 + project.yml, .xcodeproj, .xcworkspace и XcodeGen удалены (заменены на Tuist)
 + Все сборки и тесты теперь только через tuist
+
+## AppSettingsManager
+- Централизованный сервис для доступа к настройкам пользователя (язык и др.).
+- Использует UserDefaults с поддержкой App Group для MainApp и ShareExtension.
+- Все операции и ViewModel'и получают язык только через AppSettingsManager.shared.nativeLanguage.
+- Все изменения настроек логируются через LogManagerShared.
+- Реактивное обновление UI: выбранный язык хранится в @Published-свойстве ViewModel, применяется глобально только по кнопке Save.
+
+## Технологический стек и зависимости
+- Swift 5.9, SwiftUI, MVVM
+- UserDefaults + App Group
+- OSLogManagerShared для логирования
+- SwiftGen, Tuist, XcodeGen
+- Unit-тесты через XCTest
+
+## Среда разработки и настройка
+- Все зависимости и конфигурация через Project.swift, swiftgen.yml, .xcconfig
+- Не требуется ручная настройка Xcode: всё воспроизводимо через CLI
+- Для запуска: `./run init && ./run generate && ./run check`

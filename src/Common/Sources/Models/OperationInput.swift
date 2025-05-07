@@ -15,8 +15,6 @@ public struct OperationInput {
     public var url: String?
     /// Текст для обработки (опционально, только для summarize)
     public var text: String?
-    /// Родной язык пользователя для summarize/explain
-    public var nativeLanguage: String
     /// Инициализатор контейнера параметров.
     /// - Parameters:
     ///   - targetLanguage: Целевой язык (по умолчанию пустая строка).
@@ -25,14 +23,12 @@ public struct OperationInput {
     ///   - sentenceCountRange: Диапазон количества предложений (по умолчанию .twoToThree).
     ///   - url: URL для загрузки текста (по умолчанию nil)
     ///   - text: Текст для обработки (по умолчанию nil)
-    ///   - nativeLanguage: Родной язык пользователя (по умолчанию "")
-    public init(targetLanguage: String = "", complexityLevel: ComplexityLevel = .schoolchild, detailLevel: DetailLevel = .schoolchild, sentenceCountRange: SentenceCountRange = .twoToThree, url: String? = nil, text: String? = nil, nativeLanguage: String = "") {
+    public init(targetLanguage: String = "", complexityLevel: ComplexityLevel = .schoolchild, detailLevel: DetailLevel = .schoolchild, sentenceCountRange: SentenceCountRange = .twoToThree, url: String? = nil, text: String? = nil) {
         self.targetLanguage = targetLanguage
         self.complexityLevel = complexityLevel
         self.detailLevel = detailLevel
         self.sentenceCountRange = sentenceCountRange
         self.url = url
         self.text = text
-        self.nativeLanguage = nativeLanguage
     }
 }

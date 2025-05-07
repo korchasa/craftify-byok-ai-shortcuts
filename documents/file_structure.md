@@ -35,7 +35,7 @@ graph TD
 - **src/**: All source code and tests
 
 ### src/Common/
-- **Sources/**: Shared business logic, models, and utilities (used by app and extension)
+- **Sources/**: Shared business logic, models, and utilities (used by app and extension), including AppSettingsManager, LogManagerShared, and operations (Summarize, Explain, etc.)
   - `AuthManager.swift`: Keychain API key management
   - `LogManagerShared.swift`: Centralized logging
   - `Masking.swift`: Key masking utilities
@@ -44,24 +44,25 @@ graph TD
   - `InventoryManager.swift`: Inventory management (colorHex and resultMode support)
   - `CorrectParams.swift`: Parameters for correct operation (no stylePreservationLevel)
   - `TextFetcher/`: Module for loading and extracting text from URL
-  - `OperationInput.swift`: Fields for passing URL or text in operations
-  - `SummarizeOperation.swift`: Integration with TextFetcher
+  - `OperationInput.swift`: Fields for passing URL or text in operations, not containing nativeLanguage
+  - `SummarizeOperation.swift`: Integration with TextFetcher, uses AppSettingsManager.shared.nativeLanguage
   - `CraftifyButtonConstants.swift`: Button style constants
   - `ColorPaletteConstants.swift`: Color palette constants
   - `SupportedLanguages.swift`: Contains the SupportedLanguages structure and a list of all supported languages (ISO-639-1 + artificial), used for language selection in settings and operations.
+  - `AppSettingsManager.swift`: Centralized service for all application settings, stores language and logs changes
 - **UnitTests/**: Tests for all logic in Common
 - **Config/**: SPM target configuration (Info.plist)
 - **Resources/**: Localizations
 - **Generated/**: SwiftGen-generated localization code
 
 ### src/MainApp/
-- **Sources/**: Main iOS application (SwiftUI views, view models, UI logic)
+- **Sources/**: Main iOS application (SwiftUI views, view models, UI logic), uses AppSettingsManager for access to settings
 - **UnitTests/**: Tests for all MainApp logic
 - **Config/**: App configuration and entitlements
 - **Resources/**: Localizations and assets
 
 ### src/ShareExtension/
-- **Sources/**: Share Extension for text processing from other apps
+- **Sources/**: Share Extension for text processing from other apps, uses AppSettingsManager through App Group
 - **UnitTests/**: Tests for all ShareExtension logic
 - **Config/**: Extension configuration and entitlements
 - **Resources/**: Assets and localizations
@@ -118,7 +119,7 @@ Configs/             # Additional configuration files
 src/                 # All source code and tests (see below)
 
 src/
-  Common/            # Shared business logic, models, and utilities (used by app and extension)
+  Common/            # Shared business logic, models, and utilities (used by app and extension), including AppSettingsManager, LogManagerShared, and operations (Summarize, Explain, etc.)
     Sources/
       AuthManager.swift         # Keychain API key management
       LogManagerShared.swift    # Centralized logging
@@ -134,11 +135,12 @@ src/
       TextFetcher/                 # Module for loading and extracting text from URL
         TextFetching.swift         # Protocol for loading text
         SwiftSoupTextFetcher.swift # Implementation using SwiftSoup and URLSession
-      OperationInput.swift         # Added fields `url: String?`, `text: String?` for passing URL or text in operations
-      SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL
+      OperationInput.swift         # Added fields `url: String?`, `text: String?` for passing URL or text in operations, not containing nativeLanguage
+      SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL, uses AppSettingsManager.shared.nativeLanguage
       CraftifyButtonConstants.swift # Единые константы для стилей кнопок (цвета, радиус, отступы, масштаб)
       ColorPaletteConstants.swift   # Единые константы для палитры цветов операций (размеры, список цветов, отступы, маски)
       SupportedLanguages.swift      # Contains the SupportedLanguages structure and a list of all supported languages (ISO-639-1 + artificial), used for language selection in settings and operations.
+      AppSettingsManager.swift       # Centralized service for all application settings, stores language and logs changes
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests
@@ -154,7 +156,7 @@ src/
     Docs/
       SwiftLintFormattingExamples.md # Code style examples
 
-  MainApp/           # Main iOS application (SwiftUI views, view models, UI logic)
+  MainApp/           # Main iOS application (SwiftUI views, view models, UI logic), uses AppSettingsManager for access to settings
     Sources/
       CraftifyApp.swift         # App entry point
       HomeView.swift            # Main inventory screen
@@ -178,7 +180,7 @@ src/
       ru.lproj/Localizable.strings # Russian localization
       Generated/Strings.swift    # SwiftGen-generated localization code
 
-  ShareExtension/    # Share Extension for text processing from other apps
+  ShareExtension/    # Share Extension for text processing from other apps, uses AppSettingsManager through App Group
     Sources/
       ShareExtensionManager.swift   # Reads inventory, API key, triggers processing (учитывает resultMode)
       ProcessingManager.swift       # Handles text processing logic
@@ -195,7 +197,7 @@ src/
     Resources/
       Assets.xcassets/           # Extension assets
       Placeholder.txt            # Placeholder resource
-    # Важно: поддержка активации по тексту и URL (public.text, public.url) задаётся через NSExtensionActivationRule в Project.swift (Tuist)
+    # Важно: поддержка активации по тексту и URL (public.text, public.url) задаётся через NSExtensionActivationRule in Project.swift (Tuist)
     # Оба типа обрабатываются как текст, приоритет у текста.
 
 ## Targets and Schemes
@@ -216,3 +218,8 @@ src/
 
 - Все тестовые файлы и тестовые зависимости (например, ViewInspector, XCTest) должны находиться только в папках UnitTests и подключаться только в UnitTest targets.
 - Это предотвращает попадание тестовых библиотек в production-сборки MainApp и ShareExtension.
+
+## File Organization Patterns
+- Все настройки централизованы, нет дублирования полей языка в параметрах операций.
+- Логирование изменений настроек ведётся централизованно через LogManagerShared.
+- Все ViewModel'и используют только AppSettingsManager для доступа к настройкам.

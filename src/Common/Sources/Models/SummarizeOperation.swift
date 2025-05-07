@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 public struct SummarizeOperation: OperationType {
     public let identifier = OperationKind.summarize.rawValue
@@ -26,8 +27,14 @@ public struct SummarizeOperation: OperationType {
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = SummarizeParams(sentenceCountRange: input.sentenceCountRange)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
-        let englishName = SupportedLanguages.all.first(where: { $0.code == input.nativeLanguage })?.englishName ?? input.nativeLanguage
-        let prompt = """
+        return InventoryOperation(operation: .summarize, params: data, colorHex: colorHex)
+    }
+
+    /// Генерирует promptTemplate для данной операции с учётом текущего языка
+    public func promptTemplate(for input: OperationInput) -> String {
+        let nativeLanguage = AppSettingsManager.shared.nativeLanguage
+        let englishName = SupportedLanguages.all.first(where: { $0.code == nativeLanguage })?.englishName ?? nativeLanguage
+        return """
         I want you to act as an expert summarizer.
 
         <instructions>
@@ -35,11 +42,10 @@ public struct SummarizeOperation: OperationType {
         - Summarize the text in exactly \(input.sentenceCountRange.min)-\(input.sentenceCountRange.max) sentences
         - Preserve the main ideas and key details
         - Ignore all information about the cookies
+        - Write the summary in the \(englishName) language
         - Return ONLY the summary text, without any additional formatting
-        - Translate the summary to the \(englishName) language
         </instructions>
         """
-        return InventoryOperation(operation: .summarize, params: data, promptTemplate: prompt, colorHex: colorHex)
     }
 
     /// Асинхронно получает текст для суммаризации: либо из text, либо из url
@@ -86,4 +92,9 @@ public struct SummarizeOperation: OperationType {
     }
 
     public var resultMode: ResultMode { .display }
+
+    public func decodeInput(from data: Data) throws -> OperationInput {
+        let params = try JSONDecoder().decode(SummarizeParams.self, from: data)
+        return OperationInput(sentenceCountRange: params.sentenceCountRange)
+    }
 }

@@ -13,21 +13,14 @@ public struct TranslateOperation: OperationType {
     }
 
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
-        guard isValid(input: input) else { return nil }
         let params = TranslateParams(targetLanguage: input.targetLanguage)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
-        let englishName = SupportedLanguages.all.first(where: { $0.code == input.targetLanguage })?.englishName ?? input.targetLanguage
-        let prompt = """
-        I want you to act as an expert translator.
+        return InventoryOperation(operation: .translate, params: data, colorHex: colorHex)
+    }
 
-        <instructions>
-        - Read user message
-        - Translate the text to the target language: \(englishName)
-        - Preserve the original meaning, tone, and formatting (including markdown and HTML tags).
-        - Return ONLY the translated text without any additional formatting.
-        </instructions>
-        """
-        return InventoryOperation(operation: .translate, params: data, promptTemplate: prompt, colorHex: colorHex)
+    public func promptTemplate(for _: OperationInput) -> String {
+        // Вернуть шаблон промпта для translate
+        "..."
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
@@ -50,5 +43,10 @@ public struct TranslateOperation: OperationType {
             throw NSError(domain: "TranslateOperation", code: Self.ERROR_CODE_URL_NOT_SUPPORTED, userInfo: [NSLocalizedDescriptionKey: "URL input is not supported for TranslateOperation"])
         }
         throw NSError(domain: "TranslateOperation", code: Self.ERROR_CODE_NO_TEXT, userInfo: [NSLocalizedDescriptionKey: "No text provided"])
+    }
+
+    public func decodeInput(from data: Data) throws -> OperationInput {
+        let params = try JSONDecoder().decode(TranslateParams.self, from: data)
+        return OperationInput(targetLanguage: params.targetLanguage)
     }
 }

@@ -19,11 +19,20 @@ public protocol OperationType {
     /// Режим обработки результата операции: копировать в буфер обмена или отображать во всплывающем окне
     var resultMode: ResultMode { get }
 
+    /// Генерирует promptTemplate для данной операции с учётом текущего языка
+    func promptTemplate(for input: OperationInput) -> String
+
     /// Асинхронно получает текст для отправки в LLM: по умолчанию только text, url не поддерживается
     /// - Parameter input: OperationInput с текстом или url
     /// - Returns: Готовый текст для LLM
     /// - Throws: Ошибка, если нет текста или url не поддерживается
     func resolveInput(input: OperationInput) async throws -> String
+
+    /// Синхронное разрешение входных данных (если не требуется асинхронность)
+    func resolveInput(input: OperationInput) throws -> String
+
+    /// Декодирует OperationInput из сериализованных параметров
+    func decodeInput(from data: Data) throws -> OperationInput
 }
 
 /// Дефолтная реализация resultMode: результат копируется в буфер обмена

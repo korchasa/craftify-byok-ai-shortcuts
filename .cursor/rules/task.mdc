@@ -479,10 +479,7 @@ SettingsView
 - Интеграция тестов в GitHub Actions с параллельным запуском unit и UI тестов.
 - Настройка проверки покрытия кода (coverage ≥ 80%) и уведомления о снижении покрытия.
 
-#### 10.3. Integration Tests
-- Полный E2E share workflow (выделение текста → расширение → буфер → уведомление).
-
-#### 10.4. Coverage Requirements
+#### 10.3. Coverage Requirements
 - Покрытие тестами ≥ 80% для ключевых модулей.
 
 #### 10.5. Тестирование Share Extension

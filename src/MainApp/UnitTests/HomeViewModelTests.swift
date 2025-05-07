@@ -29,7 +29,6 @@ public final class HomeViewModelTests: XCTestCase {
         let operation = InventoryOperation(
             operation: .translate,
             params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")),
-            promptTemplate: "Translate the following text to Russian: {text}",
             colorHex: "3288bd"
         )
         inventoryStub?.saveInventory([operation])
@@ -41,7 +40,6 @@ public final class HomeViewModelTests: XCTestCase {
         let operation = InventoryOperation(
             operation: .simplify,
             params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .schoolchild)),
-            promptTemplate: "Simplify the following text for a beginner reader: {text}",
             colorHex: "fdae61"
         )
         viewModel?.addOperation(operation)
@@ -53,7 +51,6 @@ public final class HomeViewModelTests: XCTestCase {
         let operation = InventoryOperation(
             operation: .correct,
             params: try! JSONEncoder().encode(CorrectParams()),
-            promptTemplate: "Correct grammar and spelling: {text}",
             colorHex: "d53e4f"
         )
         inventoryStub?.saveInventory([operation])
@@ -67,13 +64,11 @@ public final class HomeViewModelTests: XCTestCase {
         let operation1 = InventoryOperation(
             operation: .explain,
             params: try! JSONEncoder().encode(ExplainParams(detailLevel: .schoolchild)),
-            promptTemplate: "Explain the following concept at beginner level: {text}",
             colorHex: "abdda4"
         )
         let operation2 = InventoryOperation(
             operation: .explain,
             params: try! JSONEncoder().encode(ExplainParams(detailLevel: .adult)),
-            promptTemplate: "Explain the following concept at advanced level: {text}",
             colorHex: "5e4fa2"
         )
         inventoryStub?.saveInventory([operation1])
@@ -87,19 +82,16 @@ public final class HomeViewModelTests: XCTestCase {
         let operation1 = InventoryOperation(
             operation: .translate,
             params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
-            promptTemplate: "Translate to English",
             colorHex: "3288bd"
         )
         let operation2 = InventoryOperation(
             operation: .simplify,
             params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .student)),
-            promptTemplate: "Simplify for student",
             colorHex: "fdae61"
         )
         let operation3 = InventoryOperation(
             operation: .correct,
             params: try! JSONEncoder().encode(CorrectParams()),
-            promptTemplate: "Correct text",
             colorHex: "d53e4f"
         )
         inventoryStub?.saveInventory([operation1, operation2, operation3])

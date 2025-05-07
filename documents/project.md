@@ -14,14 +14,14 @@ Users waste time copying text between apps for translation, simplification, or c
 - Modular architecture with a shared Swift Package (Common).
 - Secure API key storage in Keychain with Keychain Sharing.
 - Unified logging and flexible configuration.
-- Comprehensive test coverage (unit, UI, e2e).
+- Comprehensive test coverage.
 
 ## Goals and Objectives
 - Seamless integration of text processing.
 - Increased productivity and user convenience.
 - Modular, maintainable architecture.
 - Secure and privacy-compliant data handling.
-- All key user scenarios covered by e2e tests, including edge and negative cases.
+- All key user scenarios covered by tests, including edge and negative cases.
 
 ## Target Audience
 - Multilingual users
@@ -32,7 +32,7 @@ Users waste time copying text between apps for translation, simplification, or c
 - Average response time ≤ 3s for short texts (≤1000 characters)
 - Share Extension size ≤ 20 MB
 - Test coverage ≥ 80%
-- All key scenarios covered by e2e tests
+- All key scenarios covered by tests
 - Simplicity and ease of use
 - Compliance with security and privacy requirements
 
@@ -43,7 +43,7 @@ Users waste time copying text between apps for translation, simplification, or c
 - Explain operation displays result in a scrollable popup window
 - Share Extension supports both text and URLs (public.text, public.url) via NSExtensionActivationRule in project.yml (XcodeGen)
 - Both types are processed as plain text, with priority given to text
-- All features are covered by unit, UI, and e2e tests
+- All features are covered by unit and UI tests
 
 ## Solved Problems
 - Added `resultMode` attribute for operations, supporting result display mode
@@ -85,3 +85,21 @@ The project is now fully managed by Tuist:
 - All project structure and configuration are described in code (Project.swift, Workspace.swift, configs).
 - No manual steps: all builds, tests, and code generation are automated.
 - Easy onboarding: just run ./run init and ./run generate.
+
+## Goals and Requirements
+- Все настройки приложения (включая язык) централизованы в AppSettingsManager.
+- Операции (Summarize, Explain и др.) всегда используют актуальный язык из настроек пользователя.
+- После смены языка все операции используют новое значение без пересоздания.
+- Нет дублирования и устаревших полей в OperationInput и параметрах операций.
+- Все изменения настроек логируются централизованно.
+- Все тесты проходят, документация обновлена.
+
+## Target Audience and Use Cases
+- Пользователи, которым важно быстро менять язык интерфейса и операций без перезапуска приложения.
+- Разработчики, которым важно централизованное управление настройками и прозрачное логирование изменений.
+
+## Success Metrics and Constraints
+- Все операции используют только актуальный язык из AppSettingsManager.
+- Нет дублирования и устаревших полей в параметрах.
+- Все тесты и проверки проходят без ошибок.
+- Документация отражает текущее состояние архитектуры и реализации.

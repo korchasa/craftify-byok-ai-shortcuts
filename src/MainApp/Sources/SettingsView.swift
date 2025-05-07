@@ -25,15 +25,12 @@ public struct SettingsView: View {
                         SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
                     }
                     Section(header: Text(L10n.settingsNativeLanguage).font(.craftifyTitle).fontWeight(.bold), footer: Text(L10n.settingsNativeLanguageSection).font(.craftifyFootnote)) {
-                        Picker(L10n.settingsNativeLanguage, selection: $viewModel.nativeLanguage) {
+                        Picker(L10n.settingsNativeLanguage, selection: $viewModel.selectedNativeLanguage) {
                             ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
                                 Text(lang.name).tag(lang.code)
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .onChange(of: viewModel.nativeLanguage) { _ in
-                            viewModel.saveNativeLanguage()
-                        }
                     }
                     Section {
                         SettingsErrorSection(errorMessage: viewModel.errorMessage)
@@ -66,6 +63,7 @@ public struct SettingsView: View {
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 Button(action: {
                     Task {
+                        viewModel.saveNativeLanguage()
                         await viewModel.saveKey()
                         if viewModel.errorMessage == nil {
                             shouldDismiss = true
