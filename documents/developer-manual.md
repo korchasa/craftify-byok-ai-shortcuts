@@ -99,7 +99,7 @@ Button(action: ...) {
 - Production targets (MainApp, ShareExtension) must not depend on test-only packages or targets.
 - Use `embedAppExtensions` for including extensions, not `dependencies`.
 - Test dependencies (ViewInspector, XCTest, etc.) must be listed only in UnitTest targets.
-- If you encounter linker errors related to test frameworks, run `./run full-clean` and check your target dependencies.
+- If you encounter linker errors related to test frameworks, run `./run clean` and check your target dependencies.
 
 ## References
 - [Project Overview](project.md)

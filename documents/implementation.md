@@ -247,7 +247,7 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 | ./run sim      | Сборка MainApp для симулятора                 |
 | ./run logs     | Просмотр логов MainApp                        |
 | ./run generate | Генерация SwiftGen и Tuist                    |
-| ./run full-clean    | Очистка артефактов сборки                     |
+| ./run clean    | Очистка артефактов сборки                     |
 | ./run init     | Установка CLI-инструментов                    |
 | ./run help     | Справка по командам                           |
 
