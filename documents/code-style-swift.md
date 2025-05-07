@@ -1,43 +1,48 @@
-## Swift Code Style Rules
+# Swift Code Style Rules
 
-- All test classes must implement setUp and tearDown (balanced_xctest_lifecycle).
+## General Rules
 - All declarations must explicitly specify access control level (explicit_acl).
 - Do not use implicitly unwrapped optionals.
-- Prefer Nimble operator overloads over free matcher functions and XCTAssert (prefer_nimble).
-- All classes must have an explicit deinit (required_deinit).
-- Do not use magic numbers—extract them to named constants (no_magic_numbers).
-- Closure bodies must not exceed 30 lines (closure_body_length).
+- Do not use magic numbers — only named constants are allowed (no_magic_numbers).
+- Closure bodies must not exceed 30 lines, excluding comments and blank lines (closure_body_length).
 - Do not use async without await (async_without_await).
-- For generated SwiftGen localization files, missing explicit ACL and other violations are allowed if required for correct SwiftGen operation and do not break the build.
-- Protocols should be named with the -ing suffix (e.g., ClipboardManaging, ProcessingManaging) for DI-friendly architecture.
-- All managers must be injected via protocols for testability.
-- Do not use guard let self or guard let self = self; use only guard self != nil (shorthand_optional_binding).
-- Public declarations must have documentation comments (missing_docs).
-- Only one declaration per file (one_declaration_per_file).
-- Unused parameters must be removed or replaced with _ (unused_parameter).
-- Use static instead of class in final classes (static_over_final_class).
-- Prefer non-optional Data(_:) for String-to-Data conversion (non_optional_string_data_conversion).
 - Do not use async let inside withTaskGroup (async_let_with_taskgroup).
-- For callback-based APIs, provide async wrappers using withCheckedThrowingContinuation (callback_to_async).
 - Do not use self in closures unless required (redundant_self_in_closure).
-- explicit_acl — все объявления должны явно указывать уровень доступа (например, public/private/internal/fileprivate).
-- no_magic_numbers — магические числа должны быть заменены на именованные константы.
-- All SwiftLint and compiler warnings are treated as errors: tests and builds fail if any warning is present (warnings_as_errors).
-- Для NSLocalizedString всегда указывать bundle (nslocalizedstring_require_bundle)
-- missing_docs: Все public-элементы должны иметь документацию.
-- no_magic_numbers: Magic numbers запрещены, используйте именованные константы.
-- closure_body_length: Тело замыкания не должно превышать 30 строк.
-- Для всех новых кнопок обязательно используйте один из централизованных стилей: CraftifyPrimaryButtonStyle, CraftifySecondaryButtonStyle. Для опасных действий — secondary-стиль с .foregroundColor(.red). Локальные ButtonStyle запрещены.
-- Для получения текущего языка используйте `Locale.current.language.languageCode?.identifier ?? "en"` (iOS 16+). Не используйте устаревший `Locale.current.languageCode`.
+- Do not use guard let self or guard let self = self; use only guard self != nil (shorthand_optional_binding).
+- Do not use Data(_:) returning optional for String-to-Data conversion (non_optional_string_data_conversion).
+- All SwiftLint and compiler warnings are treated as errors (warnings_as_errors).
+- Unused parameters must be replaced with _ or removed (unused_parameter).
+- Only one declaration per file (one_declaration_per_file).
+- All classes must have an explicit deinit (required_deinit).
 
-## Rule: Access Control for extensions
+## Tests
+- All test classes must implement setUp and tearDown (balanced_xctest_lifecycle).
+- In CommonUnitTests, using Nimble and third-party assertion libraries is prohibited. Only standard XCTAssert/XCTFail/XCTAssertThrowsError, etc. are allowed.
+- Do not change code solely to pass tests without fixing underlying errors.
+- Tests must be placed in the tested packages and may use private methods.
 
-### extension_access_modifier
-- Prefer to specify the access modifier on the `extension` itself instead of repeating it for each member.
-- In an extension with an access modifier (`public`/`internal`/`private`/`fileprivate`), do not duplicate the same modifier for members — they inherit the access level of the extension.
-- If only individual members require a different access level, explicitly specify the modifier only for them.
+## Buttons and Styles
+- For all new buttons, use only centralized styles: CraftifyPrimaryButtonStyle, CraftifySecondaryButtonStyle. For destructive actions, use the secondary style with .foregroundColor(.red). Local ButtonStyle is prohibited.
+- All style parameters for buttons (colors, radius, padding, scale) and palettes must be centralized in CraftifyButtonConstants and ColorPaletteConstants. Local constants are not allowed.
 
-Пример:
+## Localization
+- All user-facing strings must use internationalization.
+- Always specify the bundle for NSLocalizedString (nslocalizedstring_require_bundle).
+- To get the current language, use `Locale.current.language.languageCode?.identifier ?? "en"` (iOS 16+). Do not use the deprecated `Locale.current.languageCode`.
+
+## Protocols and DI
+- Protocols must be named with the -ing suffix (e.g., ClipboardManaging, ProcessingManaging) for DI-friendly architecture.
+- All managers must be injected via protocols for testability.
+
+## Documentation
+- All public elements must have documentation comments (missing_docs).
+- In Tuist manifests (Project.swift, Workspace.swift), documentation (///) is required for public declarations.
+
+## Extensions
+- Prefer specifying the access modifier on the extension itself rather than on each member (extension_access_modifier).
+- In an extension with an access modifier, members inherit this level. For individual members, explicitly specify a different modifier if needed.
+
+Example:
 ```swift
 public extension MyType {
     func foo() {}        // inherits public
@@ -45,12 +50,11 @@ public extension MyType {
 }
 ```
 
-- closure_body_length: Closure body should span 30 lines or less excluding comments and whitespace
-- no_magic_numbers: Magic numbers should be replaced by named constants
-- All style parameters for buttons (colors, radius, padding, scale) and palettes must be centralized in CraftifyButtonConstants and ColorPaletteConstants. Duplication or local constants for these parameters are not allowed.
+## Callback-based API
+- For callback-based APIs, provide async wrappers using withCheckedThrowingContinuation (callback_to_async).
 
-## Tuist Manifests
-Для файлов Project.swift и Workspace.swift допускается отсутствие типа или extension, совпадающего с именем файла (исключение для SwiftLint: file_name).
-Для let project и let workspace допускается отсутствие явного ACL, если это требует Tuist.
-Документация (///) обязательна для public объявлений в манифестах.
-Для файлов, сгенерированных Tuist (TuistBundle+*.swift), допускается нарушение правила file_name, если это требуется для корректной работы Tuist.
+## Exceptions and Special Cases
+- For files generated by SwiftGen, violations of explicit_acl and other rules are allowed if required for correct SwiftGen operation and do not break the build.
+- For Project.swift and Workspace.swift, the absence of a type or extension matching the file name is allowed (SwiftLint exception: file_name).
+- For let project and let workspace, the absence of explicit ACL is allowed if required by Tuist.
+- For files generated by Tuist (TuistBundle+*.swift), violation of the file_name rule is allowed if required for correct Tuist operation.
