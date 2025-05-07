@@ -248,7 +248,7 @@ public struct ShareExtensionView: View {
             ProgressView(value: progress)
                 .progressViewStyle(.linear)
                 .frame(width: ShareExtensionViewConstants.progressWidth)
-            Text(String.localizedStringWithFormat(NSLocalizedString("percent_format", bundle: .main, comment: ""), Int(progress * ProgressConstants.percentMax)))
+            Text(String.localizedStringWithFormat(NSLocalizedString("percent_format", bundle: Bundle(for: ShareExtensionViewModel.self), comment: ""), Int(progress * ProgressConstants.percentMax)))
                 .font(.craftifyFootnote)
                 .fontWeight(.semibold)
         }
