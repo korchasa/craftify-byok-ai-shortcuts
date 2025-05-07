@@ -33,6 +33,9 @@ public protocol OperationType {
 
     /// Декодирует OperationInput из сериализованных параметров
     func decodeInput(from data: Data) throws -> OperationInput
+
+    /// Поддерживает ли операция обработку URL (скачивание контента)
+    var supportsURL: Bool { get }
 }
 
 /// Дефолтная реализация resultMode: результат копируется в буфер обмена
@@ -52,4 +55,7 @@ public extension OperationType {
         }
         throw NSError(domain: "OperationType", code: -100, userInfo: [NSLocalizedDescriptionKey: "No text provided or URL not supported for this operation"])
     }
+
+    /// По умолчанию операция не поддерживает URL
+    var supportsURL: Bool { false }
 }

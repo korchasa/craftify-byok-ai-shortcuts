@@ -1,5 +1,9 @@
+import Foundation
+
 // import Common
 import XCTest
+
+// Импорт функции isHttpURL
 
 /// Тесты моделей операций Craftify
 public final class OperationModelsTests: XCTestCase {
@@ -95,6 +99,16 @@ public final class OperationModelsTests: XCTestCase {
         XCTAssertEqual(OperationKind.correct.sfSymbol, "checkmark.circle")
         XCTAssertEqual(OperationKind.explain.sfSymbol, "lightbulb")
         XCTAssertEqual(OperationKind.summarize.sfSymbol, "list.bullet")
+    }
+
+    /// Проверяет определение строки как HTTP(S) URL
+    public func testIsHttpURL() {
+        XCTAssertTrue(OperationInput.isHttpURL(string: "http://example.com"))
+        XCTAssertTrue(OperationInput.isHttpURL(string: "https://example.com"))
+        XCTAssertFalse(OperationInput.isHttpURL(string: "ftp://example.com"))
+        XCTAssertFalse(OperationInput.isHttpURL(string: "example.com"))
+        XCTAssertFalse(OperationInput.isHttpURL(string: "not a url"))
+        XCTAssertFalse(OperationInput.isHttpURL(string: ""))
     }
 
     /// Очистка ресурсов (stub)

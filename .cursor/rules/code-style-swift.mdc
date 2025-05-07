@@ -19,6 +19,7 @@ alwaysApply: true
 - Unused parameters must be replaced with _ or removed (unused_parameter).
 - Only one declaration per file (one_declaration_per_file).
 - All classes must have an explicit deinit (required_deinit).
+- Do not import Common; we use it through source inclusion in Project.swift.
 
 ### Tests
 - All test classes must implement setUp and tearDown (balanced_xctest_lifecycle).

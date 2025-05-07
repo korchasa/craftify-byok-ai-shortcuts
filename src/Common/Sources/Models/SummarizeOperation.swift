@@ -93,6 +93,8 @@ public struct SummarizeOperation: OperationType {
 
     public var resultMode: ResultMode { .display }
 
+    public var supportsURL: Bool { true }
+
     public func decodeInput(from data: Data) throws -> OperationInput {
         let params = try JSONDecoder().decode(SummarizeParams.self, from: data)
         return OperationInput(sentenceCountRange: params.sentenceCountRange)
