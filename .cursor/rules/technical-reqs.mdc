@@ -1,6 +1,6 @@
 ---
-description:
-globs:
+description: 
+globs: 
 alwaysApply: true
 ---
 ## Technical Requirements
@@ -8,6 +8,8 @@ alwaysApply: true
 - It is necessary to always use ready-made libraries if they exist on the internet.
 - For all strings displayed to the user, internationalization should be used.
 - Do not edit Info.plist and entitlements directly. All changes must be made only through Project.swift, processed by Tuist.
+- Do not include files from Common. They are included by Project.swift as a source.
+- Use logging instead of prints to receive more
 - ALWAYS USE DEVOPS-FRIENDLY FLOW:
     - NO MANUAL WORK IN XCODE GUI.
     - ALL CONFIGURATION THROUGH FILES (`Project.swift`, `.xcconfig`, `plist`, ETC.).

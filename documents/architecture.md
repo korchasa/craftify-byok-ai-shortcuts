@@ -9,10 +9,18 @@
   - `.clipboard`: result is copied to the clipboard (default)
   - `.display`: result is shown in a popup window (used for Explain)
 
+## System Layers
+- **UI Layer**: SwiftUI Views и ViewModel'и. Все ViewModel'и получают настройки только через AppSettingsManager, не хранят копии языка в OperationInput.
+- **Settings Layer**: AppSettingsManager — централизованный сервис для доступа к настройкам пользователя (язык, и др.), реализует хранение через UserDefaults/App Group, поддерживает логирование изменений.
+- **Operations Layer**: Все операции (Summarize, Explain и др.) получают язык только через AppSettingsManager.shared.nativeLanguage при каждом вызове, не сериализуют язык в параметры.
+
 ## Key Design Patterns
 - MVVM + SwiftUI for UI and business logic
 - Dependency Injection for managers
 - FIFO for logs (limit 1000 entries)
+- **Singleton**: AppSettingsManager.shared используется во всех слоях для доступа к настройкам.
+- **Reactive UI**: Выбранный язык в настройках хранится в @Published-свойстве ViewModel, UI обновляется мгновенно, но сохранение происходит только по кнопке Save.
+- **Dependency Injection**: Операции и сервисы получают зависимости через инициализаторы (например, logManager).
 
 ## Logging and Analytics
 - All logs are written via Unified Logging (os_log, subsystem: Internal, message + metadata only) through OSLogManagerShared.
@@ -28,18 +36,25 @@
 - ClipboardManager copies the result to UIPasteboard.
 - If the operation has resultMode `.display` (Explain) — the result is saved and displayed in the view, not copied to the clipboard.
 - All actions are logged via LogManagerShared.
+- ViewModel читает и пишет настройки через AppSettingsManager.shared.
+- Операции (SummarizeOperation, ExplainOperation и др.) получают язык только через AppSettingsManager.shared.nativeLanguage.
+- Смена языка в настройках немедленно отражается в UI, но применяется глобально только после Save.
 
 ## Error Handling
 - All errors (Keychain, network, parsing, clipboard) are handled with an Alert.
 - Retries for network errors (exponential backoff).
 - API key masking in logs.
 - In case of key access errors — prompt to open settings.
+- Все операции выбрасывают NSError с описанием при ошибках входных данных.
+- AppSettingsManager логирует все изменения настроек через LogManagerShared.
 
 ## Testing Strategy
 - Unit tests for all managers and models.
 - UI tests for all main scenarios, including Explain (display) and clipboard operations.
 - Checks that Explain displays the result, and other operations copy to the clipboard.
 - Coverage ≥ 80% for key modules.
+- Unit-тесты проверяют корректность смены языка, генерации промптов, сериализации параметров операций.
+- Добавлен тест, гарантирующий, что смена языка влияет на promptTemplate во всех операциях.
 
 ## Share Extension Architecture
 - All managers are injected via DI, including OSLogManagerShared.

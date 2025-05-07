@@ -39,7 +39,6 @@ public final class AddOperationViewModel: ObservableObject {
     @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String = AddOperationViewModel.palette.first!
     @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
-    @Published public var nativeLanguage: String = Locale.current.language.languageCode?.identifier ?? "en"
 
     /// Проверяет, могут ли данные создать операцию
     public var isValid: Bool {
@@ -48,16 +47,14 @@ public final class AddOperationViewModel: ObservableObject {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange,
-            nativeLanguage: nativeLanguage
+            sentenceCountRange: sentenceCountRange
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.isValid(input: input)
     }
 
-    public init(nativeLanguage: String = Locale.current.language.languageCode?.identifier ?? "en") {
+    public init() {
         self.selectedKind = OperationFactory.allKinds.first
-        self.nativeLanguage = nativeLanguage
     }
 
     /// Создает InventoryOperation через соответствующую реализацию OperationType
@@ -67,8 +64,7 @@ public final class AddOperationViewModel: ObservableObject {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange,
-            nativeLanguage: nativeLanguage
+            sentenceCountRange: sentenceCountRange
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)

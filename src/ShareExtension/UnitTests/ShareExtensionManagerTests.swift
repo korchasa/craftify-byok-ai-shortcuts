@@ -19,7 +19,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
+        let op = InventoryOperation(operation: .translate, params: Data())
         let result = await manager.process(text: "Hello", operation: op)
         XCTAssertTrue(result?.success == true)
         XCTAssertNil(result?.error)
@@ -40,7 +40,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
+        let op = InventoryOperation(operation: .translate, params: Data())
         let result = await manager.process(text: "Hello", operation: op)
         XCTAssertTrue(result?.success == false)
         XCTAssertEqual(result?.error, L10n.errorConsentRequired)
@@ -61,7 +61,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
+        let op = InventoryOperation(operation: .translate, params: Data())
         let longText = String(repeating: "a", count: ShareExtensionManager.maxTextLength + 1)
         let result = await manager.process(text: longText, operation: op)
         XCTAssertTrue(result?.success == false)
@@ -83,7 +83,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
+        let op = InventoryOperation(operation: .translate, params: Data())
         let atLimitText = String(repeating: "a", count: 5000)
         let result = await manager.process(text: atLimitText, operation: op)
         XCTAssertTrue(result?.success == true)
@@ -108,7 +108,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
         // ExplainOperation должен возвращать режим .display
         let params = ExplainParams(detailLevel: .adult)
         let data = try! JSONEncoder().encode(params)
-        let op = InventoryOperation(operation: .explain, params: data, promptTemplate: "ExplainPrompt")
+        let op = InventoryOperation(operation: .explain, params: data)
         let result = await manager.process(text: "Test", operation: op)
         XCTAssertTrue(result?.success == true)
         XCTAssertEqual(manager.lastResult, "Processed: Test")
@@ -131,7 +131,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
+        let op = InventoryOperation(operation: .translate, params: Data())
         let urlString = "https://example.com/some/path?query=1"
         let result = await manager.process(text: urlString, operation: op)
         XCTAssertTrue(result?.success == true)

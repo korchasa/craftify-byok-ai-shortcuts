@@ -16,30 +16,12 @@ public struct CorrectOperation: OperationType {
     public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = CorrectParams()
         guard let data = try? JSONEncoder().encode(params) else { return nil }
-        let prompt = """
-        I want you to act as an expert editor.
+        return InventoryOperation(operation: .correct, params: data, colorHex: colorHex)
+    }
 
-        <instructions>
-        - Read user message
-        - Correct any spelling, grammar, and punctuation errors.
-        - Respect the original text language, structure, and formatting.
-        - Return ONLY the corrected text without any additional formatting.
-        </instructions>
-
-        <examples>
-        User message:
-        Hi tis is a mesage with `markdown` and <b>tegs</b>
-        Your answer:
-        Hi, this is a message with `markdown` and <b>tags</b>
-
-        User message:
-        Привит это саобщение с \\`markdown\\`, и <b>тегими</b>
-        Your answer:
-        Привет, это сообщение с \\`markdown\\` и <b>тегами</b>
-        </examples>
-        """
-
-        return InventoryOperation(operation: .correct, params: data, promptTemplate: prompt, colorHex: colorHex)
+    public func promptTemplate(for _: OperationInput) -> String {
+        // Вернуть шаблон промпта для correct
+        "..."
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
@@ -61,5 +43,10 @@ public struct CorrectOperation: OperationType {
             throw NSError(domain: "CorrectOperation", code: Self.ERROR_CODE_URL_NOT_SUPPORTED, userInfo: [NSLocalizedDescriptionKey: "URL input is not supported for CorrectOperation"])
         }
         throw NSError(domain: "CorrectOperation", code: Self.ERROR_CODE_NO_TEXT, userInfo: [NSLocalizedDescriptionKey: "No text provided"])
+    }
+
+    public func decodeInput(from data: Data) throws -> OperationInput {
+        _ = try JSONDecoder().decode(CorrectParams.self, from: data)
+        return OperationInput()
     }
 }

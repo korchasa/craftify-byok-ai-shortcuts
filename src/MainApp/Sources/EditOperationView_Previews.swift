@@ -9,7 +9,6 @@ import SwiftUI
             let operation = InventoryOperation(
                 operation: .translate,
                 params: params,
-                promptTemplate: "Перевести на английский",
                 colorHex: EditOperationViewModel.palette[previewColorIndex]
             )
             let viewModel = EditOperationViewModel(operation: operation)

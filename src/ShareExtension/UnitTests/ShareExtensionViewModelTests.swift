@@ -21,7 +21,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         )
         let viewModel = ShareExtensionViewModel(manager: manager)
         viewModel.processingTimeoutSeconds = 0.1 // короткий таймаут для теста
-        let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
+        let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
         // Act: Запускаем обработку
         let exp = expectation(description: "Timeout")
@@ -56,7 +56,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         )
         let viewModel = ShareExtensionViewModel(manager: manager)
         viewModel.processingTimeoutSeconds = 2 // достаточно для успешной обработки
-        let op = InventoryOperation(operation: .translate, params: Data(), promptTemplate: "test")
+        let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
         // Act
         let exp = expectation(description: "CopiedToast")

@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 public struct ExplainOperation: OperationType {
     public let identifier = OperationKind.explain.rawValue
@@ -16,8 +17,18 @@ public struct ExplainOperation: OperationType {
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = ExplainParams(detailLevel: input.detailLevel)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
-        let englishName = SupportedLanguages.all.first(where: { $0.code == input.nativeLanguage })?.englishName ?? input.nativeLanguage
-        let prompt = """
+        return InventoryOperation(operation: .explain, params: data, colorHex: colorHex)
+    }
+
+    /// Генерирует promptTemplate для данной операции с учётом текущего языка
+    public func promptTemplate(for input: OperationInput) -> String {
+        let nativeLanguage = AppSettingsManager.shared.nativeLanguage
+        let englishName = SupportedLanguages.all.first(where: { $0.code == nativeLanguage })?.englishName ?? nativeLanguage
+        let displayName = SupportedLanguages.all.first(where: { $0.code == nativeLanguage })?.name ?? nativeLanguage
+        os_log("[ExplainOperation] Prompt language code: %{public}@", nativeLanguage)
+        os_log("[ExplainOperation] Prompt language englishName: %{public}@", englishName)
+        os_log("[ExplainOperation] Prompt language displayName: %{public}@", displayName)
+        return """
         I want you to act as an expert explainer.
 
         <instructions>
@@ -41,7 +52,6 @@ public struct ExplainOperation: OperationType {
         Гравитация — это сила, которая притягивает предметы друг к другу. Например, она удерживает нас на земле.
         </examples>
         """
-        return InventoryOperation(operation: .explain, params: data, promptTemplate: prompt, colorHex: colorHex)
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
@@ -66,5 +76,10 @@ public struct ExplainOperation: OperationType {
             throw NSError(domain: "ExplainOperation", code: Self.ERROR_CODE_URL_NOT_SUPPORTED, userInfo: [NSLocalizedDescriptionKey: "URL input is not supported for ExplainOperation"])
         }
         throw NSError(domain: "ExplainOperation", code: Self.ERROR_CODE_NO_TEXT, userInfo: [NSLocalizedDescriptionKey: "No text provided"])
+    }
+
+    public func decodeInput(from data: Data) throws -> OperationInput {
+        let params = try JSONDecoder().decode(ExplainParams.self, from: data)
+        return OperationInput(detailLevel: params.detailLevel)
     }
 }
