@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00104C76D0F93CBC22C648F0 /* ShareExtensionImports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2105F8E7E831FF15A111956F /* ShareExtensionImports.swift */; };
 		00B975F04D01A970FE2F8EB7 /* ConsentManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 312F69864C08682C0BB4F218 /* ConsentManagerTests.swift */; };
 		01CFC1E24145EEEF785B6E5F /* InventoryOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ADCB3ECCC87AC53D33BB8C6 /* InventoryOperation.swift */; };
 		0222B8227B6B9E3EFAE0E5A3 /* AuthManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 974C0DA810259055CB845AA6 /* AuthManagerStub.swift */; };
@@ -221,6 +222,7 @@
 		883517762ECE4274056F3B52 /* URLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EE306201DE23763887AE00 /* URLSession+Protocol.swift */; };
 		88377AB66BEAC38602D610FC /* SupportedLanguages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C6329BAAB051BB04ED5C90 /* SupportedLanguages.swift */; };
 		884D7707647242431199EB89 /* AddOperationViewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = DED23F07DA1BE6000EF748A6 /* AddOperationViewConstants.swift */; };
+		88D1F001CC9503886C446AB3 /* ShareExtensionImports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2105F8E7E831FF15A111956F /* ShareExtensionImports.swift */; };
 		8AC544B111AB89800A3D5C05 /* ProcessingManagerStub.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF38EC0CE9DCE84CD2F7C32 /* ProcessingManagerStub.swift */; };
 		8BAC3F5098E231C25CD2AD12 /* AppSettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9591E78B900C0999A2074EF6 /* AppSettingsManager.swift */; };
 		8BCFA50F59311D3CC40AE23A /* URLSessionProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88CA515867CA8542C80EFED /* URLSessionProtocol.swift */; };
@@ -492,6 +494,7 @@
 		122D3A4E8844BADBAADA1B97 /* ShareExtensionViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewModelTests.swift; sourceTree = "<group>"; };
 		1517DCF7C7CBA06C68A99EFA /* LLMAPIClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMAPIClientTests.swift; sourceTree = "<group>"; };
 		1720CBE05038FCFC19FF4957 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
+		2105F8E7E831FF15A111956F /* ShareExtensionImports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionImports.swift; sourceTree = "<group>"; };
 		21C6329BAAB051BB04ED5C90 /* SupportedLanguages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupportedLanguages.swift; sourceTree = "<group>"; };
 		22F97037C7A1E85A4D8F8C59 /* ClipboardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClipboardManager.swift; sourceTree = "<group>"; };
 		26F91DDD55D26068F28D0B4E /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -1000,6 +1003,7 @@
 				6938F6224D1EEBA7F9FC9045 /* ProcessingManaging.swift */,
 				1720CBE05038FCFC19FF4957 /* RoundedCorner.swift */,
 				774375A5DEA8A8012BA895F6 /* ShareExtensionButtonConstants.swift */,
+				2105F8E7E831FF15A111956F /* ShareExtensionImports.swift */,
 				E15D010A3B4690B15244FE6B /* ShareExtensionManager.swift */,
 				8526299DD390ADBD10F88623 /* ShareExtensionPlaceholder.swift */,
 				AACBE6C350CE91CB9D261F0C /* ShareExtensionPrimaryButtonStyle.swift */,
@@ -1295,6 +1299,7 @@
 				C8AE8BFA957B1CF03A5B5A43 /* ProcessingManaging.swift in Sources */,
 				E3A5967367390E07606B360C /* RoundedCorner.swift in Sources */,
 				599829B6426AB7A5F2954035 /* ShareExtensionButtonConstants.swift in Sources */,
+				00104C76D0F93CBC22C648F0 /* ShareExtensionImports.swift in Sources */,
 				B06A24B69D3C828FFCED064B /* ShareExtensionManager.swift in Sources */,
 				33C4C5CAC9DD3F436377BD3E /* ShareExtensionPlaceholder.swift in Sources */,
 				EABEFF4B3FB1E738F2C8FD49 /* ShareExtensionPrimaryButtonStyle.swift in Sources */,
@@ -1385,6 +1390,7 @@
 				1CA4B4A2B3E2D74E4AE334E8 /* ProcessingManaging.swift in Sources */,
 				70E53D9EAC52ED6FC41D3095 /* RoundedCorner.swift in Sources */,
 				7ED475D53A9B1CE8574DDD72 /* ShareExtensionButtonConstants.swift in Sources */,
+				88D1F001CC9503886C446AB3 /* ShareExtensionImports.swift in Sources */,
 				A5C1A725F2D3ECCB68FB801C /* ShareExtensionManager.swift in Sources */,
 				69A92C625ADCC9A405A6CCCE /* ShareExtensionPlaceholder.swift in Sources */,
 				2EEFFF03D8C047D292992089 /* ShareExtensionPrimaryButtonStyle.swift in Sources */,

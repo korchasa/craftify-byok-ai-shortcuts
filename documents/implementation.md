@@ -144,28 +144,28 @@ graph TD
 - If both text and URL are shared, text takes priority.
 - Length limit (5000 characters) applies to both text and URL.
 - Covered by unit tests.
-- URL операции автоматически фильтруются в интерфейсе (показываются только операции с поддержкой URL).
-- Для URL отображается только операция summarize, для обычного текста — все операции.
+- The operation URLs are automatically filtered in the interface (only operations with URL support are shown).
+- For URLs, only the summarize operation is displayed, while for plain text — all operations.
 
 ## ShareExtensionViewModel
-- Асинхронная загрузка данных: URL и текст загружаются асинхронно после инициализации ViewModel.
-- Тщательное логирование: все этапы обработки данных логируются с отображением первых 100 символов контента.
-- Модульная структура: код разбит на небольшие методы с четкой ответственностью (следуя Single Responsibility Principle).
-- Таймауты: встроенная защита от зависаний через тайм-ауты для операций обработки.
-- Актуальный список операций: функциональность фильтрации операций для URL/текста реализована в updateInputText().
-- Покрытие тестами: все ключевые сценарии покрыты автоматическими тестами.
+- Asynchronous data loading: URLs and text are loaded asynchronously after the ViewModel is initialized.
+- Thorough logging: all stages of data processing are logged with the first 100 characters of the content displayed.
+- Modular structure: the code is divided into small methods with clear responsibilities (following the Single Responsibility Principle).
+- Timeouts: built-in protection against hangs through timeouts for processing operations.
+- Up-to-date list of operations: the functionality for filtering operations for URLs/text is implemented in updateInputText().
+- Test coverage: all key scenarios are covered by automated tests.
 
-## Логирование в ShareExtension
-Улучшенная система логирования ShareExtensionViewModel включает:
-- Логирование исходного ввода при инициализации (первые 100 символов)
-- Логирование типа контента (URL/TEXT) и его содержимого при обновлении
-- Детальное логирование всех этапов обработки:
-  - Инициализация операции
-  - Создание OperationInput
-  - Результат разрешения ввода (resolveInput)
-  - Обработка ответа API
-  - Ошибки и тайм-ауты
-- Логи полезны для отладки проблем с распознаванием URL и загрузкой контента.
+## Logging in ShareExtension
+The improved logging system of ShareExtensionViewModel includes:
+- Logging of the original input upon initialization (the first 100 characters)
+- Logging of the content type (URL/TEXT) and its content upon update
+- Detailed logging of all stages of processing:
+  - Operation initialization
+  - Creation of OperationInput
+  - Result of input resolution (resolveInput)
+  - Processing of API response
+  - Errors and timeouts
+- Logs are useful for debugging issues with URL recognition and content loading.
 
 ## Technology Stack and Dependencies
 - Swift
