@@ -31,7 +31,7 @@ Craftify — iOS-приложение с расширением Share Extension 
 - `./run init` — установка всех CLI-инструментов
 - `./run deploy:simulator` — сборка и запуск в симуляторе
 - `./run check` — запуск всех проверок
-- `./run full-clean` — очистка артефактов сборки
+- `./run clean` — очистка артефактов сборки
 - `./run logs` — просмотр логов
 
 ## CI/CD

@@ -94,7 +94,7 @@ This ensures a predictable and visually pleasing experience across all screens.
 
 ## Production Build Safety
 - The application is built so that no test dependencies (ViewInspector, XCTest, etc.) are included in the production app or extension.
-- If you encounter build or linker errors, run `./run full-clean` and rebuild.
+- If you encounter build or linker errors, run `./run clean` and rebuild.
 
 ## References
 - [Project Overview](project.md)

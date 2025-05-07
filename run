@@ -34,7 +34,7 @@ function usage() {
   cat <<EOF
 Usage: $SCRIPT_NAME <command> [args...]
 Commands:
-  full-clean          Full clean: deletion of all builds, caches, logs, and temporary files
+  clean          Full clean: deletion of all builds, caches, logs, and temporary files
   sim                 Build MainApp for simulator
   generate            Run SwiftGen and Tuist
   init                Install CLI tools
@@ -349,7 +349,7 @@ CMD="${1:-}"
 shift || true
 
 case "$CMD" in
-  full-clean) full_clean "$@" ;;
+  clean) full_clean "$@" ;;
   sim) deploy_simulator "$@" ;;
   generate) generate "$@" ;;
   init) init "$@" ;;
