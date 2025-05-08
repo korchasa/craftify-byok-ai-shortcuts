@@ -19,16 +19,9 @@ SCRIPT_NAME=$(basename "${0}")
 WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}
 DERIVED_DATA_FAST=build/DerivedData_FastCheck
 RESULT_BUNDLE_PATH=build/Results/AllUnitTests.xcresult
-SCHEME_ALL_TESTS=AllTests
-SCHEME_MAINAPP=MainApp
 DEST_SIMULATOR="id=${SIMULATOR_ID},arch=arm64"
 DEST_TEST_SIMULATOR="id=${TEST_SIMULATOR_ID},arch=arm64"
 DERIVED_DATA_SIM=build/DerivedData_DeploySimulator
-RESULT_BUNDLE_SIM=build/Results/DeploySimulator.xcresult
-
-function xcb() {
-  xcodebuild -showBuildTimingSummary "$@" 2>&1 | grep -v 'DVTDeviceOperation: Encountered a build number' | xcbeautify --quiet --disable-logging
-}
 
 function usage() {
   cat <<EOF
@@ -47,7 +40,7 @@ EOF
 
 function init() {
   echo -e "${GREEN}Checking CLI tools via Homebrew...${NC}"
-  local tools=(tuist swiftlint swiftformat xcbeautify swiftgen)
+  local tools=(tuist swiftlint swiftformat swiftgen)
   for tool in "${tools[@]}"; do
     if ! command -v $tool &>/dev/null; then
       echo "Installing $tool..."
@@ -119,30 +112,31 @@ function lint() {
   _end_section
 }
 
-function _build() {
-  _start_section "Building MainApp (Release/iphoneos)"
-  xcb build -scheme MainApp -configuration Release -sdk iphoneos -derivedDataPath build/DerivedData_Build_MainApp -allowProvisioningUpdates
-  _end_section
-}
-
 function size_report() {
   generate "$@"
   _start_section "Cleaning build artifacts"
   rm -rf build
   _end_section
   _start_section "Building ShareExtension for size report (Release/iphoneos)"
-  xcb build -scheme ShareExtension -configuration Release -sdk iphoneos -derivedDataPath build/DerivedData_SizeReport_ShareExtension "$@"
+  tuist build ShareExtension --build-output-path build/Products -- -configuration Release -sdk iphoneos
   _end_section
-  local appex=$(find build -name 'ShareExtension.appex' | head -n1)
-  if [[ ! -f "$appex" ]]; then
+  local appex_paths=( $(find build/Products -name 'ShareExtension.appex') )
+  if [[ ${#appex_paths[@]} -eq 0 ]]; then
     echo -e "${RED}Error: ShareExtension.appex not found!${NC}"
     exit 1
   fi
-  local size_bytes=$(stat -f%z "$appex")
-  local size_mb=$(awk "BEGIN {printf \"%.2f\", $size_bytes/1024/1024}")
-  echo "ShareExtension.appex size: ${size_mb} MB (${size_bytes} bytes)"
-  if (( $(echo "${size_mb} > 20.0" | bc -l) )); then
-    echo -e "${RED}Error: ShareExtension size exceeds 20MB!${NC}"
+  local error=0
+  for appex in "${appex_paths[@]}"; do
+    local size_mb=$(du -sm "$appex" | awk '{print $1}')
+    local size_bytes=$(du -sk "$appex" | awk '{print $1 * 1024}')
+    local size_mb_float=$(awk "BEGIN {printf \"%.2f\", $size_bytes/1024/1024}")
+    echo "ShareExtension.appex at $appex size: ${size_mb_float} MB (${size_bytes} bytes)"
+    if (( $(echo "$size_mb_float > 20.0" | bc -l) )); then
+      echo -e "${RED}Error: ShareExtension size at $appex exceeds 20MB!${NC}"
+      error=1
+    fi
+  done
+  if [[ $error -ne 0 ]]; then
     exit 1
   fi
 }
@@ -154,13 +148,7 @@ function _boot_and_wait_simulator() {
   if [[ "$sim_status" != "Booted" ]]; then
     _start_section "Booting simulator ${SIMULATOR_ID}..."
     xcrun simctl boot "${SIMULATOR_ID}"
-    for i in {1..20}; do
-      sim_status=$(xcrun simctl list -j | jq -r '.devices[] | .[] | select(.udid=="'${SIMULATOR_ID}'") | .state')
-      if [[ "$sim_status" == "Booted" ]]; then
-        break
-      fi
-      sleep 1
-    done
+    xcrun simctl bootstatus "${SIMULATOR_ID}" -b
     _end_section
   else
     _start_section "Simulator already Booted."
@@ -195,29 +183,26 @@ function _install_app_to_simulator() {
 function fast_check_build_analyze_test() {
   _start_section "Fast build+analyze+test (MainApp, ShareExtension, AllUnitTests)"
   local t0=$(date +%s)
-  rm -rf "$DERIVED_DATA_FAST" "$RESULT_BUNDLE_PATH"
-  local t1=$(date +%s)
-  xcb build analyze test \
-    -scheme AllTests \
-    -configuration Debug \
-    -sdk iphonesimulator \
-    -destination "$DEST_TEST_SIMULATOR" \
-    -derivedDataPath "$DERIVED_DATA_FAST" \
-    -parallel-testing-enabled YES \
-    -parallel-testing-worker-count "${WORKER_COUNT}" \
-    -resultBundlePath "$RESULT_BUNDLE_PATH" \
-    -testLanguage en \
-    -testRegion US
+  # Build
+  tuist build -scheme AllTests --platform ios --os 16.0 --configuration Debug -- \
+    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA_FAST"
+  # Analyze
+  tuist analyze -scheme AllTests --platform ios --os 16.0 --configuration Debug -- \
+    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA_FAST"
+  # Test
+  tuist test -scheme AllTests --platform ios --os 16.0 --configuration Debug -- \
+    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA_FAST" \
+    -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
+    -resultBundlePath "$RESULT_BUNDLE_PATH" -testLanguage en -testRegion US
   local exit_code=$?
-  local t2=$(date +%s)
+  local t1=$(date +%s)
   _end_section
-  local t3=$(date +%s)
+  local t2=$(date +%s)
   echo -e "${YELLOW}==> fast_check_build_analyze_test: Finished at $(date)${NC}"
   echo -e "${YELLOW}==> Timing:${NC}"
-  echo "  Prepare:   $((t1-t0))s"
-  echo "  Build+Analyze+Test: $((t2-t1))s"
-  echo "  Cleanup:   $((t3-t2))s"
-  echo "  TOTAL:     $((t3-t0))s"
+  echo "  Build+Analyze+Test: $((t1-t0))s"
+  echo "  Cleanup:   $((t2-t1))s"
+  echo "  TOTAL:     $((t2-t0))s"
   return $exit_code
 }
 
@@ -228,16 +213,11 @@ function deploy_simulator() {
   _end_section
   _start_section "Building MainApp for Simulator (Debug)"
   rm -rf "$DERIVED_DATA_SIM"
-  xcb build \
-    -scheme "$SCHEME_MAINAPP" \
-    -configuration Debug \
-    -sdk iphonesimulator \
-    -destination "$DEST_SIMULATOR" \
-    -derivedDataPath "$DERIVED_DATA_SIM"
+  tuist build MainApp --build-output-path build/Products -- -configuration Debug -sdk iphonesimulator -destination "$DEST_SIMULATOR"
   _end_section
   _boot_and_wait_simulator
   local app_path
-  app_path=$(xcodebuild -scheme "$SCHEME_MAINAPP" -destination "$DEST_SIMULATOR" -sdk iphonesimulator -derivedDataPath "$DERIVED_DATA_SIM" -showBuildSettings | awk -F'= ' '/BUILT_PRODUCTS_DIR/ {print $2"/MainApp.app"}' | head -n1)
+  app_path="build/Products/Debug-iphonesimulator/MainApp.app"
   _start_section "Installing app to simulator: $app_path"
   _install_app_to_simulator "$app_path"
   _end_section
@@ -266,20 +246,9 @@ function comment_scan() {
   _end_section
 }
 
-function _build_sim() {
-  _start_section "Building for Simulator (Debug)"
-  xcb build \
-    -scheme MainApp \
-    -configuration Debug \
-    -sdk iphonesimulator \
-    -destination "id=${SIMULATOR_ID},arch=arm64" \
-    -derivedDataPath build/DerivedData_BuildSim_MainApp "$@"
-  _end_section
-}
-
 function analyze() {
   _start_section "Running static analysis for MainApp"
-  xcb analyze \
+  tuist analyze \
     -scheme MainApp \
     -sdk iphoneos \
     -destination "id=${SIMULATOR_ID},arch=arm64" \
@@ -287,7 +256,7 @@ function analyze() {
     -derivedDataPath build/DerivedData_Analyze_MainApp "$@"
   _end_section
   _start_section "Running static analysis for ShareExtension"
-  xcb analyze \
+  tuist analyze \
     -scheme ShareExtension \
     -sdk iphoneos \
     -destination "id=${SIMULATOR_ID},arch=arm64" \
@@ -303,17 +272,11 @@ function _test_scheme() {
   _start_section "Running tests scheme $scheme"
   rm -rf build/Results
   local t1=$(date +%s)
-  xcb test \
-    -scheme "$scheme" \
-    -parallel-testing-enabled YES \
-    -parallel-testing-worker-count "${WORKER_COUNT}" \
-    -sdk iphonesimulator \
-    -destination "id=${TEST_SIMULATOR_ID},arch=arm64" \
-    -derivedDataPath "build/DerivedData_Test_${scheme}" \
-    -resultBundlePath "build/Results/${scheme}.xcresult" \
-    -collect-test-diagnostics on-failure \
-    -testLanguage en \
-    -testRegion US \
+  tuist test \
+    --device ${TEST_SIMULATOR_ID} \
+    "$scheme" \
+    --derived-data-path "build/DerivedData_Test_${scheme}" \
+    --result-bundle-path "build/Results/${scheme}.xcresult" \
     "${flags[@]}"
   test_exit_code=$?
   local t2=$(date +%s)
@@ -345,6 +308,16 @@ function full_clean() {
   _end_section
 }
 
+function _find_first_available_iphone_sim() {
+  local sim_name
+  sim_name=$(xcrun simctl list devices available | grep -Eo 'iPhone [^\(]+' | head -n1 | xargs)
+  if [[ -z "$sim_name" ]]; then
+    echo "No available iPhone simulator found!" >&2
+    exit 1
+  fi
+  echo "$sim_name"
+}
+
 CMD="${1:-}"
 shift || true
 
@@ -354,13 +327,20 @@ case "$CMD" in
   generate) generate "$@" ;;
   init) init "$@" ;;
   logs) logs "$@" ;;
+  size-report) size_report "$@" ;;
   test)
     if [[ -z "$1" ]]; then
       usage
       exit 1
     fi
     test_id="$1"; shift
-    _test_scheme AllTests -only-testing "$test_id" "$@"
+    # Автоматически выбираем симулятор по имени
+    if [[ -n "${TEST_SIMULATOR_ID:-}" ]]; then
+      sim_name="$TEST_SIMULATOR_ID"
+    else
+      sim_name=$(_find_first_available_iphone_sim)
+    fi
+    _test_scheme AllTests --device "$sim_name" --test-targets "$test_id" --no-selective-testing "$@"
     ;;
   check)
     generate || { echo -e "${RED}===CHECK_FAILED=== (generate)${NC}"; exit 1; }
