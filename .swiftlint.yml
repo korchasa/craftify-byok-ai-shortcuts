@@ -129,9 +129,18 @@ disabled_rules:
   - no_extension_access_modifier
 excluded:
   - build
+  - .build
+  - SourcePackages
+  - SourcePackages/**
   - "src/**/UnitTests/*.swift"
   - "src/**/UITests/*.swift"
   - "src/**/Generated/**/*.swift"
   - "Derived/Sources/TuistBundle+*.swift"
+  - "src/Common/.build/**"
+  - "src/Common/.build/index-build/checkouts/**"
+  - "src/Common/.build/checkouts/**"
+  - "src/Common/SourcePackages/**"
+  - "src/Common/SourcePackages/checkouts/**"
+  - "src/Common/SourcePackages/artifacts/**"
 opt_in_rules:
   - all
