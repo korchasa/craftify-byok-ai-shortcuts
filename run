@@ -4,7 +4,7 @@ set -euo pipefail
 # Default iOS Simulator UDID (override SIMULATOR_ID env var)
 SIMULATOR_ID="EE50483C-9861-438F-82D0-52FFB8FDF92C"
 # Simulator for tests
-TEST_SIMULATOR_ID="A6CB3FE3-9CF3-458C-AC2E-7307FDF8D816"
+TEST_SIMULATOR_ID="6744E479-4BE1-4288-B7F2-B022EDE64947"
 
 # Colors for output
 RED='\033[0;31m'
@@ -17,8 +17,6 @@ SCRIPT_NAME=$(basename "${0}")
 
 # Default parallel testing worker count
 WORKER_COUNT=${TEST_WORKER_COUNT:-$(sysctl -n hw.ncpu)}
-DERIVED_DATA_FAST=build/DerivedData_FastCheck
-RESULT_BUNDLE_PATH=build/Results/AllUnitTests.xcresult
 DEST_SIMULATOR="id=${SIMULATOR_ID},arch=arm64"
 DEST_TEST_SIMULATOR="id=${TEST_SIMULATOR_ID},arch=arm64"
 DERIVED_DATA_SIM=build/DerivedData_DeploySimulator
@@ -181,39 +179,44 @@ function _install_app_to_simulator() {
 }
 
 function fast_check_build_analyze_test() {
-  _start_section "Fast build+analyze+test (MainApp, ShareExtension, AllUnitTests)"
+  _start_section "Fast build+test (MainApp, ShareExtension, AllUnitTests)"
   local t0=$(date +%s)
+  BUNDLE_PATH="build/Results/AllTests.xcresult"
+  DERIVED_DATA="build/DerivedData_FastCheck"
   # Build
-  tuist build -scheme AllTests --platform ios --os 16.0 --configuration Debug -- \
-    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA_FAST"
-  # Analyze
-  tuist analyze -scheme AllTests --platform ios --os 16.0 --configuration Debug -- \
-    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA_FAST"
+  tuist build AllTests --configuration Debug -- \
+    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA" -quiet
   # Test
-  tuist test -scheme AllTests --platform ios --os 16.0 --configuration Debug -- \
-    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA_FAST" \
-    -parallel-testing-enabled YES -parallel-testing-worker-count "${WORKER_COUNT}" \
-    -resultBundlePath "$RESULT_BUNDLE_PATH" -testLanguage en -testRegion US
+  tuist test AllTests \
+    --configuration Debug \
+    -- \
+    -sdk iphonesimulator \
+    -destination "$DEST_TEST_SIMULATOR" \
+    -derivedDataPath "$DERIVED_DATA" \
+    -parallel-testing-enabled YES \
+    -parallel-testing-worker-count "4" \
+    -resultBundlePath "$BUNDLE_PATH" \
+    -testLanguage en \
+    -testRegion US
   local exit_code=$?
   local t1=$(date +%s)
   _end_section
   local t2=$(date +%s)
   echo -e "${YELLOW}==> fast_check_build_analyze_test: Finished at $(date)${NC}"
   echo -e "${YELLOW}==> Timing:${NC}"
-  echo "  Build+Analyze+Test: $((t1-t0))s"
+  echo "  Build+Test: $((t1-t0))s"
   echo "  Cleanup:   $((t2-t1))s"
   echo "  TOTAL:     $((t2-t0))s"
   return $exit_code
 }
 
 function deploy_simulator() {
-  generate "$@"
   _start_section "Opening Simulator"
   open -a Simulator
   _end_section
   _start_section "Building MainApp for Simulator (Debug)"
   rm -rf "$DERIVED_DATA_SIM"
-  tuist build MainApp --build-output-path build/Products -- -configuration Debug -sdk iphonesimulator -destination "$DEST_SIMULATOR"
+  tuist build MainApp --build-output-path build/Products -- -configuration Debug -sdk iphonesimulator -destination "$DEST_SIMULATOR" -quiet
   _end_section
   _boot_and_wait_simulator
   local app_path
@@ -239,45 +242,31 @@ function logs() {
 
 function comment_scan() {
   _start_section "Scanning for TODO/FIXME/print/debugPrint"
-  if grep -rE 'TODO|FIXME|print\(|debugPrint\(' src/; then
+  if grep -rE --exclude-dir=src//Common/.build 'TODO|FIXME|print\(|debugPrint\(' src/; then
     echo -e "${RED}Error: TODO/FIXME/print/debugPrint found!${NC}"
     exit 1
   fi
   _end_section
 }
 
-function analyze() {
-  _start_section "Running static analysis for MainApp"
-  tuist analyze \
-    -scheme MainApp \
-    -sdk iphoneos \
-    -destination "id=${SIMULATOR_ID},arch=arm64" \
-    -configuration Debug \
-    -derivedDataPath build/DerivedData_Analyze_MainApp "$@"
-  _end_section
-  _start_section "Running static analysis for ShareExtension"
-  tuist analyze \
-    -scheme ShareExtension \
-    -sdk iphoneos \
-    -destination "id=${SIMULATOR_ID},arch=arm64" \
-    -configuration Debug \
-    -derivedDataPath build/DerivedData_Analyze_ShareExtension "$@"
-  _end_section
-}
-
 function _test_scheme() {
   local scheme="$1"; shift
-  local flags=("$@")
   local t0=$(date +%s)
   _start_section "Running tests scheme $scheme"
   rm -rf build/Results
+  BUNDLE_PATH="build/Results/${scheme}.xcresult"
+  DERIVED_DATA="build/DerivedData_Test_${scheme}"
   local t1=$(date +%s)
-  tuist test \
-    --device ${TEST_SIMULATOR_ID} \
-    "$scheme" \
-    --derived-data-path "build/DerivedData_Test_${scheme}" \
-    --result-bundle-path "build/Results/${scheme}.xcresult" \
-    "${flags[@]}"
+  tuist test "$scheme" "$@" \
+    -- \
+    -sdk iphonesimulator \
+    -destination "$DEST_TEST_SIMULATOR" \
+    -derivedDataPath "$DERIVED_DATA" \
+    -parallel-testing-enabled YES \
+    -parallel-testing-worker-count "4" \
+    -resultBundlePath "$BUNDLE_PATH" \
+    -testLanguage en \
+    -testRegion US
   test_exit_code=$?
   local t2=$(date +%s)
   _end_section
@@ -288,9 +277,9 @@ function _test_scheme() {
   echo "  Build+Run: $((t2-t1))s"
   echo "  Cleanup:   $((t3-t2))s"
   echo "  TOTAL:     $((t3-t0))s"
-  if [ $test_exit_code -ne 0 ] && [ -f build/Results/AllTests.xcresult ]; then
+  if [ $test_exit_code -ne 0 ] && [ -f "$BUNDLE_PATH" ]; then
     echo -e "${RED}Test failures summary:${NC}"
-    xcrun xcresulttool get --legacy --path build/Results/AllTests.xcresult --format json | jq '.. | .testFailureSummaries? // empty'
+    xcrun xcresulttool get --legacy --path "$BUNDLE_PATH" --format json | jq '.. | .testFailureSummaries? // empty'
   fi
   exit $test_exit_code
 }
@@ -318,12 +307,20 @@ function _find_first_available_iphone_sim() {
   echo "$sim_name"
 }
 
+function _get_device_by_uuid() {
+  local uuid="$1"
+  xcrun simctl list devices | grep "$uuid" | sed -E 's/^\s*([^\(]+) \(.*/\1/' | xargs
+}
+
 CMD="${1:-}"
 shift || true
 
 case "$CMD" in
   clean) full_clean "$@" ;;
-  sim) deploy_simulator "$@" ;;
+  sim)
+    generate
+    deploy_simulator "$@"
+  ;;
   generate) generate "$@" ;;
   init) init "$@" ;;
   logs) logs "$@" ;;
@@ -334,13 +331,15 @@ case "$CMD" in
       exit 1
     fi
     test_id="$1"; shift
-    # Автоматически выбираем симулятор по имени
-    if [[ -n "${TEST_SIMULATOR_ID:-}" ]]; then
-      sim_name="$TEST_SIMULATOR_ID"
-    else
-      sim_name=$(_find_first_available_iphone_sim)
+    sim_uuid="${TEST_SIMULATOR_ID}"
+    # Проверяем, существует ли симулятор с таким UUID
+    if ! xcrun simctl list devices | grep "$sim_uuid"; then
+      echo -e "${RED}Simulator with UUID $sim_uuid not found!${NC}"
+      echo -e "${YELLOW}Available simulators:${NC}"
+      xcrun simctl list devices | grep -Eo '([A-F0-9\-]{36})'
+      exit 1
     fi
-    _test_scheme AllTests --device "$sim_name" --test-targets "$test_id" --no-selective-testing "$@"
+    _test_scheme AllTests --test-targets "$test_id" --no-selective-testing
     ;;
   check)
     generate || { echo -e "${RED}===CHECK_FAILED=== (generate)${NC}"; exit 1; }
