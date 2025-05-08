@@ -4,6 +4,7 @@ import SwiftUI
 
 public final class ShareExtensionViewModel: ObservableObject {
     // MARK: - Published Properties
+
     @Published public var operations: [InventoryOperation] = []
     @Published public var isProcessing: Bool = false
     @Published public var progress: Double = 0.0
@@ -14,14 +15,18 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public var shouldCloseExtension: Bool = false
 
     // MARK: - Properties
+
     public let manager: ShareExtensionManager
     private var currentResultMode: ResultMode = .clipboard
     public var processingTask: Task<Void, Never>? = nil
     public var progressTimer: Timer?
     public var processingTimeoutSeconds: Double = 30
+    public var logContentLength: Int = 100
+
     private var logManager: LogManagerShared { manager.logManager }
 
     // MARK: - Initialization
+
     public init(manager: ShareExtensionManager) {
         self.manager = manager
         let input = manager.inputText
@@ -42,6 +47,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     }
 
     // MARK: - Public Methods
+
     public func process(operation: InventoryOperation) {
         guard !isProcessing else { return }
 
@@ -79,8 +85,9 @@ public final class ShareExtensionViewModel: ObservableObject {
     }
 
     // MARK: - Private Methods
+
     private func logProcessingStart() {
-        let inputPreview = String(manager.inputText.prefix(100))
+        let inputPreview = String(manager.inputText.prefix(self.logContentLength))
         let isURL = OperationInput.isHttpURL(string: manager.inputText)
         manager.logManager.log(LogEntry(
             level: .debug,
@@ -152,7 +159,7 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     private func createOperationInput(isURL: Bool) -> OperationInput {
         if isURL {
-            return OperationInput(
+            OperationInput(
                 targetLanguage: "",
                 complexityLevel: .schoolchild,
                 detailLevel: .schoolchild,
@@ -161,7 +168,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 text: nil
             )
         } else {
-            return OperationInput(
+            OperationInput(
                 targetLanguage: "",
                 complexityLevel: .schoolchild,
                 detailLevel: .schoolchild,
@@ -180,7 +187,7 @@ public final class ShareExtensionViewModel: ObservableObject {
             metadata: [
                 "isURL": String(OperationInput.isHttpURL(string: manager.inputText)),
                 "url": input.url ?? "nil",
-                "text_preview": input.text != nil ? String(input.text!.prefix(50)) : "nil"
+                "text_preview": input.text != nil ? String(input.text!.prefix(self.logContentLength)) : "nil"
             ],
             timestamp: Date()
         ))
@@ -223,7 +230,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 level: .info,
                 module: "ShareExtensionViewModel",
                 message: "Отфильтрованы операции для URL, доступно: \(self.operations.count)",
-                metadata: ["operations": self.operations.map { $0.operation.rawValue }.joined(separator: ", ")],
+                metadata: ["operations": self.operations.map(\.operation.rawValue).joined(separator: ", ")],
                 timestamp: Date()
             ))
         } else {
@@ -233,7 +240,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 level: .info,
                 module: "ShareExtensionViewModel",
                 message: "Загружены все операции для текста, доступно: \(self.operations.count)",
-                metadata: ["operations": self.operations.map { $0.operation.rawValue }.joined(separator: ", ")],
+                metadata: ["operations": self.operations.map(\.operation.rawValue).joined(separator: ", ")],
                 timestamp: Date()
             ))
         }
