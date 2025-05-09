@@ -18,9 +18,18 @@ public struct TranslateOperation: OperationType {
         return InventoryOperation(operation: .translate, params: data, colorHex: colorHex)
     }
 
-    public func promptTemplate(for _: OperationInput) -> String {
-        // Вернуть шаблон промпта для translate
-        "..."
+    public func promptTemplate(for input: OperationInput) -> String {
+        let englishName = SupportedLanguages.all.first(where: { $0.code == input.targetLanguage })?.englishName ?? input.targetLanguage
+        return """
+        I want you to act as an expert translator.
+
+        <instructions>
+        - Read user message
+        - Translate the text to the \(englishName) language
+        - Preserve the original meaning, tone, and formatting (including markdown and HTML tags).
+        - Return ONLY the translated text without any additional formatting.
+        </instructions>
+        """
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {

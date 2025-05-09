@@ -20,8 +20,28 @@ public struct CorrectOperation: OperationType {
     }
 
     public func promptTemplate(for _: OperationInput) -> String {
-        // Вернуть шаблон промпта для correct
-        "..."
+        """
+        I want you to act as an expert editor.
+
+        <instructions>
+        - Read user message
+        - Correct any spelling, grammar, and punctuation errors.
+        - Respect the original text language, structure, and formatting.
+        - Return ONLY the corrected text without any additional formatting.
+        </instructions>
+
+        <examples>
+        User message:
+        Hi tis is a mesage with `markdown` and <b>tegs</b>
+        Your answer:
+        Hi, this is a message with `markdown` and <b>tags</b>
+
+        User message:
+        Привит это саобщение с `markdown`, и <b>тегими</b>
+        Your answer:
+        Привет, это сообщение с `markdown` и <b>тегами</b>
+        </examples>
+        """
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
