@@ -19,9 +19,30 @@ public struct SimplifyOperation: OperationType {
         return InventoryOperation(operation: .simplify, params: data, colorHex: colorHex)
     }
 
-    public func promptTemplate(for _: OperationInput) -> String {
-        // Вернуть шаблон промпта для simplify
-        "..."
+    public func promptTemplate(for input: OperationInput) -> String {
+        """
+        I want you to act as an expert simplifier.
+
+        <instructions>
+        - Read user message
+        - Simplify the text for a \(input.complexityLevel.rawValue) reader
+        - Preserve the original meaning, but use simpler words and sentence structure
+        - Keep all formatting (including markdown and HTML tags)
+        - Return ONLY the simplified text without any additional formatting
+        </instructions>
+
+        <examples>
+        User message:
+        The mitochondria is the powerhouse of the cell.
+        Your answer:
+        Cells get their energy from mitochondria.
+
+        User message:
+        Митохондрии — это энергетические станции клетки.
+        Your answer:
+        Клетка получает энергию от митохондрий.
+        </examples>
+        """
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {

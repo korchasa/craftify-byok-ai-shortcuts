@@ -4,9 +4,9 @@ import SwiftUI
 /// Общие константы для стиля форм Craftify
 public enum FormStyleConstants {
     /// Левый отступ для формы
-    public static let formLeadingPadding: CGFloat = 8
+    public static let formLeadingPadding: CGFloat = 16
     /// Правый отступ для формы
-    public static let formTrailingPadding: CGFloat = 20
+    public static let formTrailingPadding: CGFloat = 16
     /// Нижний отступ для кнопок/формы
     public static let bottomPadding: CGFloat = 16
     /// Верхний отступ перед заголовком окна
