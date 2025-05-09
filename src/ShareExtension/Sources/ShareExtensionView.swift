@@ -12,6 +12,10 @@ public struct ShareExtensionView: View {
     @State private var progress: Double = 0.0
     @State private var contentHeight: CGFloat = 0
     public var onContentHeightChange: ((CGFloat) -> Void)? = nil
+    @Environment(\.colorScheme) private var colorScheme
+    private var palette: ShareExtensionColorPaletteProviding {
+        ShareExtensionColorPaletteFactory.palette(for: colorScheme)
+    }
 
     private enum ProgressConstants {
         static let percentMax: Double = 100
@@ -107,11 +111,12 @@ public struct ShareExtensionView: View {
             closeButton
                 .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
                 .padding(.bottom, ShareExtensionButtonConstants.bottomPadding)
-                .background(Color.white)
+                .background(palette.background())
         }
-        .background(Color.white)
+        .background(palette.background())
         .ignoresSafeArea(edges: .bottom)
         .zIndex(ZIndexConstants.copiedToast)
+        .environment(\.shareExtensionColorPalette, palette)
         // ViewModel subscriptions & alerts
         .onReceive(viewModel.$errorMessage) { msg in
             if let msg {
@@ -158,7 +163,7 @@ public struct ShareExtensionView: View {
                 HStack(spacing: hStackSpacing) {
                     ZStack {
                         Image(systemName: op.operation.sfSymbol)
-                            .foregroundColor(.white)
+                            .foregroundColor(palette.primaryButtonText())
                             .font(.system(size: ColorPaletteConstants.circleSize * symbolScale))
                             .fontWeight(.semibold)
                             .accessibilityLabel("SF Symbol for operation: \(op.operation.rawValue)")
@@ -177,7 +182,7 @@ public struct ShareExtensionView: View {
             .frame(maxWidth: .infinity, minHeight: ShareExtensionViewLocalConstants.operationMinHeight)
             .padding()
             .background(color)
-            .foregroundColor(.white)
+            .foregroundColor(palette.primaryButtonText())
             .cornerRadius(cardCornerRadius)
         }
         .accessibilityLabel(operationCategory(for: op))
@@ -324,6 +329,7 @@ public struct ShareExtensionView: View {
         Button(action: { viewModel.shouldCloseExtension = true }) {
             Label(L10n.shareClose, systemImage: "xmark")
                 .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                .foregroundColor(palette.primaryButtonText())
         }
         .buttonStyle(CraftifySecondaryButtonStyle())
         .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
