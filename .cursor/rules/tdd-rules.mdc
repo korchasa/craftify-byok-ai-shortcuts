@@ -4,27 +4,33 @@ globs:
 alwaysApply: true
 ---
 ## TDD Flow
-1.	Red:
-- Write a minimal, isolated test for new behavior or error reproduce.
-- Run affected tests by `./run test <test_id>`
-2.	Green:
-- Implement just enough code to make the test pass.
-- Run the affected test(`./run test <test_id>`) to ensure everything is green.
-3.	Refactor:
-- Clean up code and tests without changing behavior.
-- Eliminate duplication and improve readability.
-- Run affected tests(`./run test <test_id>`) to confirm the correctness of the refactoring.
-4.  Final check:
-- Run all checks by `./run check` to finally ensure that everything is working fine. Fix all found issues, including linting errors and warnings.
 
-## Tests rules
+1. **Red**
+   - Write a simple test for new behavior or to reproduce a bug.
+   - Run it with `./run test <test_id>`.
 
-- Place tests in the tested packages and don't be afraid to use private methods for testing.
-- Don't introduce code changes solely to pass tests without fixing underlying errors.
-- Don't use code stubs; ensure all code is complete and functional.
-- Trying to restart individual tests to speed up testing, but in the final check, run all tests
+2. **Green**
+   - Write just enough code to pass the test.
+   - Run `./run test <test_id>` again to confirm it passes.
 
-### Features for CommonUnitTests
-- Using Nimble (and any third-party assertion libraries) is prohibited in the CommonUnitTests target.
-- All checks must be performed only through standard XCTAssert/XCTFail/XCTAssertThrowsError, etc.
-- Reason: Nimble is incompatible with the current Swift/Xcode configuration for Common (SPM framework), causing compilation and linking errors.
+3. **Refactor**
+   - Improve code and tests without changing what they do.
+   - Remove duplicates and make things clearer.
+   - Run `./run test <test_id>` to ensure it still works.
+
+4. **Final Check**
+   - Run `./run check` to make sure everything is correct.
+   - Fix all problems, including lint errors and warnings.
+
+## Test Rules
+
+- Put tests in the same package as the code being tested. It's okay to test private methods.
+- Don’t write code just to satisfy tests unless it fixes real issues.
+- Don’t use stubs—write real, working code.
+- You can rerun specific tests to save time, but always run all tests before finishing.
+
+### CommonUnitTests Rules
+
+- Don’t use Nimble or other third-party assertion tools in CommonUnitTests.
+- Use only standard tools like `XCTAssert`, `XCTFail`, and `XCTAssertThrowsError`.
+- Reason: Nimble doesn’t work with the current Swift/Xcode setup for the Common module.

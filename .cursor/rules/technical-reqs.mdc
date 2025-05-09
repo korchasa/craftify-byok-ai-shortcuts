@@ -1,18 +1,20 @@
 ---
-description: 
-globs: 
+description:
+globs:
 alwaysApply: true
 ---
 ## Technical Requirements
 
-- It is necessary to always use ready-made libraries if they exist on the internet.
-- For all strings displayed to the user, internationalization should be used.
-- Do not edit Info.plist and entitlements directly. All changes must be made only through Project.swift, processed by Tuist.
-- Do not include files from Common. They are included by Project.swift as a source.
-- Use logging instead of prints to receive more
-- ALWAYS USE DEVOPS-FRIENDLY FLOW:
-    - NO MANUAL WORK IN XCODE GUI.
-    - ALL CONFIGURATION THROUGH FILES (`Project.swift`, `.xcconfig`, `plist`, ETC.).
-    - REPRODUCIBLE BUILDS VIA `tuist generate`, `xcodebuild`.
-    - SIGNING, PROVISIONING, AND VERSIONING AUTOMATED.
-    - ALL TOOLS CLI-BASED, INTEGRATED WITH CI/CD.
+- Use existing libraries when available—don’t build from scratch.
+- All user-facing text must support localization (l10n).
+- Don’t manually edit `Info.plist` or entitlements—make changes only in `Project.swift` (handled by Tuist).
+- Don’t add files from `Common` manually—they’re already included by `Project.swift`.
+- Use logging instead of `print` for output.
+
+## DevOps-Friendly Flow (Must Follow)
+
+- No manual setup in Xcode’s GUI.
+- All settings must be defined in files (`Project.swift`, `.xcconfig`, `.plist`, etc.).
+- Builds must be reproducible using `tuist generate` and `xcodebuild`.
+- Automate signing, provisioning, and versioning.
+- Use only CLI tools that work with CI/CD.
