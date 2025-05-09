@@ -20,7 +20,7 @@ public enum CraftifyButtonConstants {
     public static let secondaryColor = Color(red: secondaryRed, green: secondaryGreen, blue: secondaryBlue)
     /// Радиус скругления кнопки
     public static let cornerRadius: CGFloat = 20
-    /// Масштаб при нажатии
+    /// Масштаб кнопки при нажатии
     public static let pressedScale: CGFloat = 0.97
     /// Прозрачность для вторичной кнопки
     public static let secondaryOpacity: Double = 0.5
@@ -32,4 +32,6 @@ public enum CraftifyButtonConstants {
     public static let spacerMinLength: CGFloat = 0
     /// Минимальная высота кнопки
     public static let minButtonHeight: CGFloat = 44
+    /// Масштаб кнопки по умолчанию
+    public static let defaultScale: CGFloat = 1.0
 }

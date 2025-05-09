@@ -104,27 +104,30 @@ This ensures a predictable and visually pleasing experience across all screens.
 - [Developer Manual](developer-manual.md)
 
 ## Additional Notes
-- В настройках приложения вы можете выбрать родной язык из полного списка поддерживаемых языков (ISO-639-1 и искусственные языки). Этот язык будет использоваться по умолчанию для операций суммаризации и объяснения.
-- Для операций перевода также доступен этот же список языков.
+- In the app settings, you can select the native language from the full list of supported languages (ISO-639-1 and artificial languages). This language will be used by default for operations Summarize and Explain.
+- For the Translate operation, this same list of languages is also available.
 
-## Использование Craftify
-- Для смены языка интерфейса и операций откройте Settings, выберите нужный язык в выпадающем списке и нажмите Save. Язык сменится во всех операциях только после сохранения.
-- Все операции (Summarize, Explain и др.) используют только текущий язык из настроек, выбранный в Settings.
-- После смены языка новые операции сразу используют новое значение, без необходимости перезапуска приложения.
+## Using Craftify
+- To change the language of the interface and operations, open Settings, select the desired language from the dropdown list, and click Save. The language will change in all operations only after saving.
+- All operations (Summarize, Explain, etc.) use only the current language from the settings, selected in Settings.
+- After changing the language, new operations immediately use the new value, without the need to restart the application.
 
-## Логи изменений настроек
-- Все изменения настроек (в том числе языка) фиксируются в системном логе и доступны для анализа через ./run logs.
+## Logs of settings changes
+- All settings changes (including language) are recorded in the system log and can be analyzed via ./run logs.
 
-## Как тестировать смену языка
-1. Откройте Settings, выберите новый язык, нажмите Save.
-2. Выполните любую операцию (Summarize, Explain и др.) — результат будет на новом языке.
-3. Для возврата к предыдущему языку повторите шаги.
+## How to test language change
+1. Open Settings, select a new language, click Save.
+2. Perform any operation (Summarize, Explain, etc.) — the result will be in the new language.
+3. To return to the previous language, repeat the steps.
 
-## Как собрать и запустить
-- Для быстрой проверки: `./run check`
-- Для запуска на симуляторе: `./run sim`
-- Для просмотра логов: `./run logs`
+## How to build and run
+- For quick testing: `./run check`
+- For running on a simulator: `./run sim`
+- For viewing logs: `./run logs`
 
-## Как обновить настройки
-- Все настройки централизованы в AppSettingsManager и сохраняются в App Group, доступны из MainApp и ShareExtension.
-- Изменения применяются только после нажатия Save в Settings.
+## How to update settings
+- All settings are centralized in AppSettingsManager and saved in App Group, accessible from MainApp and ShareExtension.
+- Changes take effect only after clicking Save in Settings.
+
+## Appearance
+- The text color of buttons always matches the application theme, as it is centrally set through the palette.

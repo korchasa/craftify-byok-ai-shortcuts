@@ -8,7 +8,7 @@ import SwiftUI
             let viewModel = AddOperationViewModel()
             viewModel.selectedKind = .translate
             viewModel.targetLanguage = "en"
-            viewModel.selectedColorHex = AddOperationViewModel.palette[previewColorIndex]
+            viewModel.selectedColorHex = viewModel.palette[previewColorIndex]
             return AddOperationView(viewModel: viewModel)
         }
     }

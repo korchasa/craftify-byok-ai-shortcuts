@@ -109,3 +109,5 @@ Button(action: ...) {
 - [User Manual](user-manual.md)
 
 - Для поддержки нового языка добавьте его в массив SupportedLanguages.all (src/Common/Sources/Models/SupportedLanguages.swift). Для промптов LLM всегда используется englishName.
+
+- Цвет текста кнопок задается явно через palette.primaryButtonText()/secondaryButtonText() в вызывающем коде, а не внутри buttonStyle.

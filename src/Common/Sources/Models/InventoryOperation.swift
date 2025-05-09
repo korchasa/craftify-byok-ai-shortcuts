@@ -1,7 +1,7 @@
 import Foundation
 
 /// Операция инвентаря Craftify (тип, параметры, шаблон промпта)
-public struct InventoryOperation: Codable, Equatable, Hashable {
+public struct InventoryOperation: Codable, Equatable, Hashable, Identifiable {
     /// Тип операции (translate, simplify, correct, explain)
     public let operation: OperationKind
     /// Сериализованные параметры операции

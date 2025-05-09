@@ -3,16 +3,17 @@ import SwiftUI
 
 public struct EditOperationView: View {
     @ObservedObject public var viewModel: EditOperationViewModel
-    private let onSave: (InventoryOperation) -> Void
-    private let onDelete: (() -> Void)?
+    public var onSave: ((InventoryOperation) -> Void)?
+    public var onDelete: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.colorPalette) private var palette
     @State private var showDeleteConfirmation = false
 
     private let colorPaletteVerticalPadding: CGFloat = 8
     private static let dividerVerticalPadding: CGFloat = 8
     private static let deleteButtonTopPadding: CGFloat = 16
 
-    public init(viewModel: EditOperationViewModel, onSave: @escaping (InventoryOperation) -> Void, onDelete: (() -> Void)? = nil) {
+    public init(viewModel: EditOperationViewModel, onSave: ((InventoryOperation) -> Void)? = nil, onDelete: (() -> Void)? = nil) {
         self.viewModel = viewModel
         self.onSave = onSave
         self.onDelete = onDelete
@@ -30,9 +31,13 @@ public struct EditOperationView: View {
                 )
             },
             buttons: {
-                EditOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)
+                EditOperationButtons(viewModel: viewModel, onSave: { op in
+                    onSave?(op)
+                    dismiss()
+                }, dismiss: dismiss)
             }
         )
+        .background(palette.background())
     }
 
     private struct EditOperationContent: View {
@@ -72,6 +77,7 @@ public struct EditOperationView: View {
         @Binding var showDeleteConfirmation: Bool
         let onDelete: () -> Void
         var dismiss: DismissAction
+        @Environment(\.colorPalette) private var palette
         static let dividerVerticalPadding: CGFloat = 8
         static let deleteButtonTopPadding: CGFloat = 16
         var body: some View {
@@ -82,7 +88,7 @@ public struct EditOperationView: View {
                 Label(L10n.homeDelete, systemImage: "trash")
                     .font(.craftifyBody)
                     .fontWeight(.bold)
-                    .foregroundColor(.red)
+                    .foregroundColor(palette.destructive())
             }
             .accessibilityLabel(L10n.homeDelete)
             .padding(.top, Self.deleteButtonTopPadding)
@@ -111,14 +117,16 @@ public struct EditOperationView: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var onSave: (InventoryOperation) -> Void
         var dismiss: DismissAction
+        @Environment(\.colorPalette) private var palette
         var body: some View {
-            CraftifyButtonBar {
+            CraftifyButtonBar(backgroundColor: palette.background()) {
                 Button(action: {
                     viewModel.cancel()
                     dismiss()
                 }) {
                     Label(L10n.editOperationCancel, systemImage: "xmark")
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                        .foregroundColor(palette.secondaryButtonText())
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 Button(action: {
@@ -129,6 +137,7 @@ public struct EditOperationView: View {
                 }) {
                     Label(L10n.editOperationSave, systemImage: "checkmark")
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                        .foregroundColor(palette.primaryButtonText())
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
                 .disabled(!viewModel.isValid)
@@ -191,7 +200,7 @@ public struct EditOperationView: View {
                     .font(.craftifyBody).bold()
                 Spacer()
                 Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
-                    ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
+                    ForEach(viewModel.supportedLanguages, id: \.code) { lang in
                         Text(lang.name).tag(lang.code)
                     }
                 }
@@ -250,7 +259,7 @@ public struct EditOperationView: View {
                     .font(.craftifyBody).bold()
                 Spacer()
                 Picker(L10n.operationLabelSummarize, selection: $viewModel.sentenceCountRange) {
-                    ForEach(SentenceCountRange.allCases, id: \ .self) { range in
+                    ForEach(SentenceCountRange.allCases, id: \.self) { range in
                         Text(sentenceCountRangeLabel(range)).tag(range)
                             .lineLimit(ViewConstants.unlimitedLineLimit)
                             .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
@@ -273,17 +282,17 @@ public struct EditOperationView: View {
 
     private struct EditOperationColorPalette: View {
         @ObservedObject var viewModel: EditOperationViewModel
-        private static let verticalPadding: CGFloat = 8
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: ColorPaletteConstants.circleSpacing) {
-                    ForEach(EditOperationViewModel.palette, id: \ .self) { hex in
+                HStack(spacing: palette.circleSpacing) {
+                    ForEach(viewModel.palette, id: \.self) { hex in
                         Circle()
                             .fill(Color(hex: hex))
-                            .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
+                            .frame(width: palette.circleSize, height: palette.circleSize)
                             .overlay(
                                 Circle()
-                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: ColorPaletteConstants.borderWidth)
+                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: palette.borderWidth)
                             )
                             .onTapGesture {
                                 viewModel.selectedColorHex = hex
@@ -292,7 +301,7 @@ public struct EditOperationView: View {
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }
                 }
-                .padding(.vertical, Self.verticalPadding)
+                .padding(.vertical, palette.verticalSpacing)
             }
         }
     }

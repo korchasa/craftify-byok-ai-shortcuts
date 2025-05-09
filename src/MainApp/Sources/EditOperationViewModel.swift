@@ -41,19 +41,25 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     @Published public var selectedColorHex: String
     @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
 
-    private let originalOperation: InventoryOperation
+    public let originalOperation: InventoryOperation
     private let originalTargetLanguage: String
     private let originalComplexityLevel: ComplexityLevel
     private let originalDetailLevel: DetailLevel
     private let originalColorHex: String
     private let originalKind: OperationKind
+    public let palette: [String]
 
-    public init(operation: InventoryOperation) {
+    /// Инициализирует ViewModel для редактирования операции
+    /// - Parameters:
+    ///   - operation: Операция для редактирования
+    ///   - palette: Палитра цветов
+    public init(operation: InventoryOperation, palette: [String] = LightMainAppColorPalette().palette()) {
         self.originalOperation = operation
         self.selectedKind = operation.operation
         self.selectedColorHex = operation.colorHex
         self.originalColorHex = operation.colorHex
         self.originalKind = operation.operation
+        self.palette = palette
         // Десериализация параметров
         switch operation.operation {
         case .translate:
@@ -103,6 +109,8 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         }
     }
 
+    /// Создаёт новую InventoryOperation на основе текущего состояния ViewModel
+    /// - Returns: InventoryOperation или nil, если данные невалидны
     public func makeOperation() -> InventoryOperation? {
         guard let kind = selectedKind else { return nil }
         let input = OperationInput(
@@ -115,6 +123,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
     }
 
+    /// Сбрасывает все поля в исходное состояние
     public func cancel() {
         self.selectedKind = originalKind
         self.targetLanguage = originalTargetLanguage
@@ -126,13 +135,12 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
 
     deinit {}
 
-    public static let palette: [String] = ColorPaletteConstants.palette
-
     /// Список поддерживаемых языков для перевода
     public var supportedLanguages: [SupportedLanguage] {
         SupportedLanguages.all
     }
 
+    /// Проверяет валидность текущих данных для создания операции
     public var isValid: Bool {
         guard let kind = selectedKind else { return false }
         let input = OperationInput(

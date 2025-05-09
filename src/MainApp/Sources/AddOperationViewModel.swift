@@ -37,7 +37,7 @@ public final class AddOperationViewModel: ObservableObject {
     @Published public var targetLanguage: String = ""
     @Published public var complexityLevel: ComplexityLevel = .schoolchild
     @Published public var detailLevel: DetailLevel = .schoolchild
-    @Published public var selectedColorHex: String = AddOperationViewModel.palette.first!
+    @Published public var selectedColorHex: String
     @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
 
     /// Проверяет, могут ли данные создать операцию
@@ -53,8 +53,12 @@ public final class AddOperationViewModel: ObservableObject {
         return operation.isValid(input: input)
     }
 
-    public init() {
+    public let palette: [String]
+
+    public init(palette: [String] = LightMainAppColorPalette().palette()) {
         self.selectedKind = OperationFactory.allKinds.first
+        self.palette = palette
+        self.selectedColorHex = palette.first!
     }
 
     /// Создает InventoryOperation через соответствующую реализацию OperationType
@@ -76,13 +80,11 @@ public final class AddOperationViewModel: ObservableObject {
         targetLanguage = ""
         complexityLevel = .schoolchild
         detailLevel = .schoolchild
-        selectedColorHex = AddOperationViewModel.palette.first!
+        selectedColorHex = palette.first!
         sentenceCountRange = .twoToThree
     }
 
     deinit {}
-
-    public static let palette: [String] = ColorPaletteConstants.palette
 
     /// Список поддерживаемых языков для перевода
     public var supportedLanguages: [SupportedLanguage] {

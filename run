@@ -81,7 +81,7 @@ function generate() {
   swiftgen "$@"
   _end_section
   _start_section "Running Tuist generate"
-  tuist generate "$@"
+  tuist generate "$@" --no-open
   _end_section
 }
 
@@ -183,9 +183,15 @@ function fast_check_build_analyze_test() {
   local t0=$(date +%s)
   BUNDLE_PATH="build/Results/AllTests.xcresult"
   DERIVED_DATA="build/DerivedData_FastCheck"
+  rm -rf "$BUNDLE_PATH"
   # Build
-  tuist build AllTests --configuration Debug -- \
-    -sdk iphonesimulator -destination "$DEST_TEST_SIMULATOR" -derivedDataPath "$DERIVED_DATA" -quiet
+  tuist build AllTests \
+    --configuration Debug \
+    -- \
+    -sdk iphonesimulator \
+    -destination "$DEST_TEST_SIMULATOR" \
+    -derivedDataPath "$DERIVED_DATA" \
+    -quiet
   # Test
   tuist test AllTests \
     --configuration Debug \
@@ -197,7 +203,8 @@ function fast_check_build_analyze_test() {
     -parallel-testing-worker-count "4" \
     -resultBundlePath "$BUNDLE_PATH" \
     -testLanguage en \
-    -testRegion US
+    -testRegion US \
+    -quiet
   local exit_code=$?
   local t1=$(date +%s)
   _end_section
@@ -253,11 +260,12 @@ function _test_scheme() {
   local scheme="$1"; shift
   local t0=$(date +%s)
   _start_section "Running tests scheme $scheme"
-  rm -rf build/Results
   BUNDLE_PATH="build/Results/${scheme}.xcresult"
   DERIVED_DATA="build/DerivedData_Test_${scheme}"
+  rm -rf "$BUNDLE_PATH"
   local t1=$(date +%s)
   tuist test "$scheme" "$@" \
+    --configuration Debug \
     -- \
     -sdk iphonesimulator \
     -destination "$DEST_TEST_SIMULATOR" \
@@ -266,7 +274,8 @@ function _test_scheme() {
     -parallel-testing-worker-count "4" \
     -resultBundlePath "$BUNDLE_PATH" \
     -testLanguage en \
-    -testRegion US
+    -testRegion US \
+    -quiet
   test_exit_code=$?
   local t2=$(date +%s)
   _end_section

@@ -14,8 +14,6 @@ public protocol ColorPaletteProviding {
     func linkColor() -> Color
     /// Вторичный цвет для UI.
     func secondaryColor() -> Color
-    /// Белый цвет (может отличаться в тёмной теме).
-    func whiteColor() -> Color
     /// Палитра hex-цветов для операций.
     func palette() -> [String]
     /// Размер круга для выбора цвета.

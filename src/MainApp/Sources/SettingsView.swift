@@ -9,6 +9,7 @@ public struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isTextFieldFocused: Bool
     @State private var shouldDismiss = false
+    @Environment(\.colorPalette) private var palette
 
     /// Инициализация с ViewModel
     /// - Parameter viewModel: ViewModel настроек
@@ -26,7 +27,7 @@ public struct SettingsView: View {
                     }
                     Section(header: Text(L10n.settingsNativeLanguage).font(.craftifyTitle).fontWeight(.bold), footer: Text(L10n.settingsNativeLanguageSection).font(.craftifyFootnote)) {
                         Picker(L10n.settingsNativeLanguage, selection: $viewModel.selectedNativeLanguage) {
-                            ForEach(viewModel.supportedLanguages, id: \ .code) { lang in
+                            ForEach(viewModel.supportedLanguages, id: \.code) { lang in
                                 Text(lang.name).tag(lang.code)
                             }
                         }
@@ -48,17 +49,20 @@ public struct SettingsView: View {
                 dismiss()
             }
         }
+        .background(palette.background())
     }
 
     private struct SettingsFormButtons: View {
         @ObservedObject var viewModel: SettingsViewModel
         var dismiss: DismissAction
         @Binding var shouldDismiss: Bool
+        @Environment(\.colorPalette) private var palette
         var body: some View {
-            CraftifyButtonBar {
+            CraftifyButtonBar(backgroundColor: palette.background()) {
                 Button(action: { dismiss() }) {
                     Label(L10n.settingsDone, systemImage: "xmark")
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                        .foregroundColor(palette.secondaryButtonText())
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 Button(action: {
@@ -72,6 +76,7 @@ public struct SettingsView: View {
                 }) {
                     Label(L10n.addOperationSave, systemImage: "checkmark")
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                        .foregroundColor(palette.primaryButtonText())
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
                 .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
@@ -82,6 +87,7 @@ public struct SettingsView: View {
     private struct SettingsApiKeySection: View {
         @ObservedObject var viewModel: SettingsViewModel
         @FocusState var isTextFieldFocused: Bool
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
                 .focused($isTextFieldFocused)
@@ -90,7 +96,7 @@ public struct SettingsView: View {
                 Text(viewModel.maskedApiKey)
                     .font(.craftifyFootnote)
                     .fontWeight(.semibold)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(palette.secondaryText())
                     .lineLimit(ViewConstants.unlimitedLineLimit)
                     .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
             }
@@ -99,6 +105,7 @@ public struct SettingsView: View {
                     Text(L10n.homeDelete)
                         .font(.craftifyBody)
                         .fontWeight(.bold)
+                        .foregroundColor(palette.destructive())
                 }
                 .accessibilityLabel(L10n.homeDelete + " ключ")
             }
@@ -107,10 +114,11 @@ public struct SettingsView: View {
 
     private struct SettingsErrorSection: View {
         var errorMessage: String?
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             if let error = errorMessage {
                 Text(error)
-                    .foregroundColor(.red)
+                    .foregroundColor(palette.destructive())
                     .font(.craftifyFootnote)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)

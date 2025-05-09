@@ -5,10 +5,13 @@ public struct HomeView: View {
     @ObservedObject public var viewModel: HomeViewModel
     @State private var showAddOperation = false
     @State private var showSettings = false
-    @State private var addOperationViewModel = AddOperationViewModel()
     @State private var showEditOperation = false
-    @State private var editOperationViewModel: EditOperationViewModel? = nil
+    @State private var editOperationViewModel: InventoryOperation? = nil
     @State private var editingIndex: Int? = nil
+    @Environment(\.colorScheme) private var colorScheme
+    private var palette: MainAppColorPaletteProviding {
+        ColorPaletteFactory.palette(for: colorScheme)
+    }
 
     public init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -22,34 +25,39 @@ public struct HomeView: View {
                     operationsList
                 },
                 buttons: {
-                    CraftifyButtonBar {
+                    CraftifyButtonBar(backgroundColor: palette.background()) {
                         Button(action: { showAddOperation = true }) {
                             Label(L10n.homeAddOperation, systemImage: "plus")
                                 .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                                .foregroundColor(palette.primaryButtonText())
                         }
                         .buttonStyle(CraftifyPrimaryButtonStyle())
                         Button(action: { showSettings = true }) {
                             Label(L10n.homeSettings, systemImage: "gearshape")
                                 .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                                .foregroundColor(palette.secondaryButtonText())
                         }
                         .buttonStyle(CraftifySecondaryButtonStyle())
                     }
                 }
             )
         }
-        .background(Color.white)
-        .sheet(isPresented: $showAddOperation, onDismiss: { addOperationViewModel.cancel() }, content: {
+        .background(palette.background())
+        .environment(\.colorPalette, palette)
+        .sheet(isPresented: $showAddOperation, onDismiss: {}, content: {
+            let addOperationViewModel = AddOperationViewModel(palette: palette.palette())
             AddOperationView(viewModel: addOperationViewModel, onSave: { op in
                 viewModel.addOperation(op)
                 addOperationViewModel.cancel()
                 showAddOperation = false
             })
+            .environment(\.colorPalette, palette)
         })
         .sheet(item: $editOperationViewModel, onDismiss: {
             editingIndex = nil
         }, content: { vm in
             EditOperationView(
-                viewModel: vm,
+                viewModel: EditOperationViewModel(operation: vm, palette: palette.palette()),
                 onSave: { updatedOperation in
                     if let idx = editingIndex {
                         viewModel.updateOperation(at: idx, with: updatedOperation)
@@ -63,9 +71,11 @@ public struct HomeView: View {
                     editingIndex = nil
                 }
             )
+            .environment(\.colorPalette, palette)
         })
         .sheet(isPresented: $showSettings, onDismiss: nil, content: {
             SettingsView(viewModel: SettingsViewModel())
+                .environment(\.colorPalette, palette)
         })
     }
 
@@ -80,26 +90,30 @@ public struct HomeView: View {
             ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
                 OperationRowView(
                     operation: operation,
+                    palette: palette,
                     onEdit: {
-                        editOperationViewModel = EditOperationViewModel(operation: operation)
+                        editOperationViewModel = operation
                         editingIndex = idx
                     },
                     onDelete: {}
                 )
                 .buttonStyle(PlainButtonStyle())
-                .listRowInsets(EdgeInsets(top: ListRowInsets.top, leading: ListRowInsets.leading, bottom: ListRowInsets.bottom, trailing: ListRowInsets.trailing))
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowBackground(palette.background())
             }
             .onMove { indices, newOffset in
                 viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
             }
         }
         .listStyle(.plain)
-        .background(Color.white)
-        .environment(\ .editMode, .constant(.active))
+        .scrollContentBackground(.hidden)
+        .background(palette.background())
+        .environment(\.editMode, .constant(.active))
     }
 
     private struct OperationRowView: View {
         let operation: InventoryOperation
+        let palette: MainAppColorPaletteProviding
         let onEdit: () -> Void
         let onDelete: () -> Void
         private static let iconToLabelSpacing: CGFloat = 12
@@ -107,11 +121,11 @@ public struct HomeView: View {
         var body: some View {
             Button(action: onEdit) {
                 HStack(spacing: 0) {
-                    OperationIconCircle(kind: operation.operation, colorHex: operation.colorHex)
+                    OperationIconCircle(kind: operation.operation, colorHex: operation.colorHex, palette: palette)
                         .padding(.trailing, Self.iconToLabelSpacing)
                     OperationLabelText(type: operation.operation)
                     Spacer()
-                    OperationParamsText(operation: operation)
+                    OperationParamsText(operation: operation, palette: palette)
                 }
                 .contentShape(Rectangle())
             }
@@ -122,16 +136,17 @@ public struct HomeView: View {
     private struct OperationIconCircle: View {
         let kind: OperationKind
         let colorHex: String
+        let palette: MainAppColorPaletteProviding
         private static let symbolScale: CGFloat = 0.5
         var body: some View {
             ZStack {
                 Circle()
                     .fill(Color(hex: colorHex))
-                    .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
+                    .frame(width: palette.circleSize, height: palette.circleSize)
                     .accessibilityLabel("Цвет операции")
                 Image(systemName: kind.sfSymbol)
-                    .foregroundColor(.white)
-                    .font(.system(size: ColorPaletteConstants.circleSize * OperationIconCircle.symbolScale))
+                    .foregroundColor(palette.primaryButtonText())
+                    .font(.system(size: palette.circleSize * OperationIconCircle.symbolScale))
                     .fontWeight(.semibold)
                     .accessibilityLabel("SF Symbol for operation: \(kind.rawValue)")
             }
@@ -159,11 +174,12 @@ public struct HomeView: View {
 
     private struct OperationParamsText: View {
         let operation: InventoryOperation
+        let palette: MainAppColorPaletteProviding
         var body: some View {
             Text(operationParamsDescription(for: operation))
                 .font(.craftifyFootnote)
                 .fontWeight(.semibold)
-                .foregroundColor(.secondary)
+                .foregroundColor(palette.secondaryText())
         }
 
         private func operationParamsDescription(for operation: InventoryOperation) -> String {
@@ -215,12 +231,5 @@ public struct HomeView: View {
             case .nineToTen: L10n.sentenceCount910
             }
         }
-    }
-
-    private enum ListRowInsets {
-        static let top: CGFloat = 2
-        static let leading: CGFloat = 7
-        static let bottom: CGFloat = 0
-        static let trailing: CGFloat = 15
     }
 }
