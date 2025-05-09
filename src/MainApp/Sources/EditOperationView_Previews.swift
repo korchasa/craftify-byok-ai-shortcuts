@@ -9,7 +9,7 @@ import SwiftUI
             let operation = InventoryOperation(
                 operation: .translate,
                 params: params,
-                colorHex: EditOperationViewModel.palette[previewColorIndex]
+                colorHex: EditOperationViewModel(operation: InventoryOperation(operation: .translate, params: params, colorHex: "ef476f")).palette[previewColorIndex]
             )
             let viewModel = EditOperationViewModel(operation: operation)
             return EditOperationView(viewModel: viewModel, onSave: { _ in })

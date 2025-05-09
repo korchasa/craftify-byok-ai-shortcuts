@@ -127,6 +127,8 @@ graph TD
 - All style parameters for buttons (colors, radius, padding) are centralized in CraftifyButtonConstants (src/Common/Sources/CraftifyButtonConstants.swift).
 - The color palette for operations is centralized in ColorPaletteConstants (src/Common/Sources/ColorPaletteConstants.swift) and used in all ViewModels and Views.
 - This approach ensures interface consistency and simplifies maintenance.
+- All buttons use a centralized palette for text and background color through Environment.
+- The text color of the buttons is explicitly set through palette.primaryButtonText()/secondaryButtonText() in the calling code.
 
 ## Target Dependency Isolation
 - Production targets (MainApp, ShareExtension) must not depend on test-only packages or targets.

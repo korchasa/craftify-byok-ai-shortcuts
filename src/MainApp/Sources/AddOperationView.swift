@@ -5,6 +5,7 @@ public struct AddOperationView: View {
     @ObservedObject public var viewModel: AddOperationViewModel
     @Environment(\.dismiss) private var dismiss
     public var onSave: ((InventoryOperation) -> Void)? = nil
+    @Environment(\.colorPalette) private var palette
 
     private let colorPaletteVerticalPadding: CGFloat = 8
 
@@ -43,8 +44,9 @@ public struct AddOperationView: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var onSave: ((InventoryOperation) -> Void)?
         var dismiss: DismissAction
+        @Environment(\.colorPalette) private var palette
         var body: some View {
-            CraftifyButtonBar {
+            CraftifyButtonBar(backgroundColor: palette.background()) {
                 cancelButton
                 saveButton
             }
@@ -57,6 +59,7 @@ public struct AddOperationView: View {
             }) {
                 Label(L10n.addOperationCancel, systemImage: "xmark")
                     .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                    .foregroundColor(palette.secondaryButtonText())
             }
             .buttonStyle(CraftifySecondaryButtonStyle())
         }
@@ -70,6 +73,7 @@ public struct AddOperationView: View {
             }) {
                 Label(L10n.addOperationSave, systemImage: "checkmark")
                     .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                    .foregroundColor(palette.primaryButtonText())
             }
             .buttonStyle(CraftifyPrimaryButtonStyle())
             .disabled(!viewModel.isValid)
@@ -228,16 +232,17 @@ public struct AddOperationView: View {
 
     private struct AddOperationColorPalette: View {
         @ObservedObject var viewModel: AddOperationViewModel
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: ColorPaletteConstants.circleSpacing) {
-                    ForEach(AddOperationViewModel.palette, id: \.self) { hex in
+                HStack(spacing: palette.circleSpacing) {
+                    ForEach(viewModel.palette, id: \.self) { hex in
                         Circle()
                             .fill(Color(hex: hex))
-                            .frame(width: ColorPaletteConstants.circleSize, height: ColorPaletteConstants.circleSize)
+                            .frame(width: palette.circleSize, height: palette.circleSize)
                             .overlay(
                                 Circle()
-                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: ColorPaletteConstants.borderWidth)
+                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: palette.borderWidth)
                             )
                             .onTapGesture {
                                 viewModel.selectedColorHex = hex
@@ -246,7 +251,7 @@ public struct AddOperationView: View {
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }
                 }
-                .padding(.vertical, ColorPaletteConstants.verticalSpacing)
+                .padding(.vertical, palette.verticalSpacing)
             }
         }
     }

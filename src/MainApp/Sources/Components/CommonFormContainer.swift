@@ -6,6 +6,7 @@ import SwiftUI
 
 /// Общий контейнер для экранов MainApp с формами и кнопками
 public struct CommonFormContainer<Content: View, Buttons: View>: View {
+    @Environment(\.colorPalette) private var palette
     public let title: LocalizedStringKey
     public let content: () -> Content
     public let buttons: () -> Buttons
@@ -28,14 +29,15 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
                 VStack(spacing: 0) {
                     content()
                         .padding(.leading, FormStyleConstants.formLeadingPadding)
-                        .background(Color.white)
+                        .background(palette.background())
                 }
                 .padding(.top, FormStyleConstants.formContentTopPadding)
                 Spacer(minLength: CraftifyButtonConstants.spacerMinLength)
                 buttons()
             }
+            .background(palette.background())
             .navigationTitle(title)
         }
-        .background(Color.white)
+        .background(palette.background())
     }
 }

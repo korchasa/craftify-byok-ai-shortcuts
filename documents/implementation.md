@@ -240,8 +240,9 @@ All operations implement an async method `resolveInput(input: OperationInput) ->
 - XcodeGen — [удалён, проект переведён на Tuist]
 
 ## Команды ./run
-| Команда         | Описание                                      |
-|----------------|-----------------------------------------------|
+| Команда | Описание |
+|---------|----------|
+| Цвет текста кнопок | Задается явно через palette.primaryButtonText()/secondaryButtonText() в вызывающем коде, а не внутри buttonStyle. |
 | ./run check    | Полный цикл: clean, generate, fmt, lint, test |
 | ./run test id  | Запуск одного теста по идентификатору         |
 | ./run sim      | Сборка MainApp для симулятора                 |

@@ -73,11 +73,6 @@ public struct DarkColorPalette: ColorPaletteProviding {
         Color(red: Self.secondaryTextRed, green: Self.secondaryTextGreen, blue: Self.secondaryTextBlue)
     }
 
-    /// Белый цвет (может отличаться в тёмной теме)
-    public func whiteColor() -> Color {
-        Color(red: Self.whiteRed, green: Self.whiteGreen, blue: Self.whiteBlue)
-    }
-
     /// Палитра hex-цветов для операций
     public func palette() -> [String] {
         Self.paletteHex

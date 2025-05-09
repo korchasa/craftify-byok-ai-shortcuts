@@ -3,7 +3,9 @@ import SwiftUI
 /// Универсальная панель для кнопок внизу формы Craftify
 public struct CraftifyButtonBar<Content: View>: View {
     private let content: () -> Content
-    public init(@ViewBuilder content: @escaping () -> Content) {
+    private let backgroundColor: Color
+    public init(backgroundColor: Color, @ViewBuilder content: @escaping () -> Content) {
+        self.backgroundColor = backgroundColor
         self.content = content
     }
 
@@ -14,7 +16,7 @@ public struct CraftifyButtonBar<Content: View>: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
         .padding(.bottom, CraftifyButtonConstants.bottomPadding)
-        .background(Color.white.ignoresSafeArea())
+        .background(backgroundColor.ignoresSafeArea())
         .cornerRadius(CraftifyButtonConstants.cornerRadius)
     }
 }

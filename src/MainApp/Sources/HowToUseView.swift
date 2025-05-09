@@ -8,6 +8,7 @@ public struct HowToUseView: View {
 
     @ObservedObject private var viewModel: HowToUseViewModel
     private var onConsent: (() -> Void)?
+    @Environment(\.colorPalette) private var palette
 
     public var body: some View {
         VStack(spacing: Self.verticalSpacing) {
@@ -21,7 +22,7 @@ public struct HowToUseView: View {
             HowToUseDoneButton(viewModel: viewModel, onConsent: onConsent, handleDoneTapped: handleDoneTapped, bottomPadding: Self.bottomPadding)
         }
         .padding()
-        .background(Color.white)
+        .background(palette.background())
         .ignoresSafeArea()
     }
 
@@ -59,11 +60,12 @@ public struct HowToUseView: View {
     }
 
     private struct HowToUsePrivacyLink: View {
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             Link(L10n.howtousePrivacyPolicy, destination: URL(string: "https://korchasa.dev/privacy")!)
                 .font(.craftifyFootnote)
                 .fontWeight(.semibold)
-                .foregroundColor(.blue)
+                .foregroundColor(palette.link())
         }
     }
 
@@ -72,12 +74,14 @@ public struct HowToUseView: View {
         var onConsent: (() -> Void)?
         var handleDoneTapped: () -> Void
         let bottomPadding: CGFloat
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             Button(action: handleDoneTapped) {
                 Text(L10n.howtouseDone)
                     .font(.craftifyBody)
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
+                    .foregroundColor(palette.primaryButtonText())
             }
             .disabled(!viewModel.consentGiven)
             .accessibilityLabel(L10n.howtouseDone)

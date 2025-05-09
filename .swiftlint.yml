@@ -127,6 +127,7 @@ disabled_rules:
   - type_contents_order
   - nimble_operator
   - no_extension_access_modifier
+  - prefer_nimble
 excluded:
   - build
   - .build
