@@ -1,23 +1,38 @@
 import Foundation
 
+/// Операция перевода текста для Craftify.
 public struct TranslateOperation: OperationType {
+    /// Уникальный идентификатор операции ("translate").
     public let identifier = OperationKind.translate.rawValue
+    /// Цвет операции (по умолчанию пустая строка).
     public let colorHex: String = ""
     private static let ERROR_CODE_URL_NOT_SUPPORTED = -100
     private static let ERROR_CODE_NO_TEXT = -101
 
+    /// Инициализация TranslateOperation.
     public init() {}
 
+    /// Проверяет, что целевой язык не пустой.
+    /// - Parameter input: Входные параметры операции.
+    /// - Returns: true, если целевой язык задан.
     public func isValid(input: OperationInput) -> Bool {
         !input.targetLanguage.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    /// Создаёт InventoryOperation для перевода.
+    /// - Parameters:
+    ///   - input: Входные параметры.
+    ///   - colorHex: Цвет операции.
+    /// - Returns: InventoryOperation или nil при ошибке сериализации.
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
         let params = TranslateParams(targetLanguage: input.targetLanguage)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
         return InventoryOperation(operation: .translate, params: data, colorHex: colorHex)
     }
 
+    /// Генерирует promptTemplate для перевода.
+    /// - Parameter input: Входные параметры (целевой язык).
+    /// - Returns: Строка шаблона prompt для LLM.
     public func promptTemplate(for input: OperationInput) -> String {
         let englishName = SupportedLanguages.all.first(where: { $0.code == input.targetLanguage })?.englishName ?? input.targetLanguage
         return """
@@ -32,30 +47,55 @@ public struct TranslateOperation: OperationType {
         """
     }
 
+    /// Формирует URLRequest для отправки к LLM (stub).
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
         // Stub: actual request built by LLMAPIClient
         URLRequest(url: URL(string: "")!)
     }
 
+    /// Парсит ответ от LLM.
+    /// - Parameter responseData: Данные ответа.
+    /// - Throws: UserFacingError при ошибке декодирования.
+    /// - Returns: Строка результата.
     public func parse(responseData: Data) throws -> String {
         guard let str = String(data: responseData, encoding: .utf8) else {
-            throw NSError(domain: "TranslateOperation", code: -1, userInfo: nil)
+            throw UserFacingError(
+                messageKey: .errorParsing,
+                adviceKey: .adviceTryAgainLater
+            )
         }
         return str
     }
 
+    /// Разрешает входные данные для перевода.
+    /// - Parameter input: Входные параметры.
+    /// - Throws: UserFacingError, если нет текста или передан url.
+    /// - Returns: Текст для перевода.
     public func resolveInput(input: OperationInput) throws -> String {
         if let text = input.text, !text.isEmpty {
             return text
         }
         if let url = input.url, !url.isEmpty {
-            throw NSError(domain: "TranslateOperation", code: Self.ERROR_CODE_URL_NOT_SUPPORTED, userInfo: [NSLocalizedDescriptionKey: "URL input is not supported for TranslateOperation"])
+            throw UserFacingError(
+                messageKey: .errorUrlNotSupported,
+                adviceKey: .adviceCheckConnection
+            )
         }
-        throw NSError(domain: "TranslateOperation", code: Self.ERROR_CODE_NO_TEXT, userInfo: [NSLocalizedDescriptionKey: "No text provided"])
+        throw UserFacingError(
+            messageKey: .errorNoText,
+            adviceKey: .adviceCheckConnection
+        )
     }
 
+    /// Декодирует OperationInput из сериализованных параметров.
+    /// - Parameter data: Сериализованные параметры.
+    /// - Throws: Ошибка декодирования.
+    /// - Returns: OperationInput с целевым языком.
     public func decodeInput(from data: Data) throws -> OperationInput {
         let params = try JSONDecoder().decode(TranslateParams.self, from: data)
         return OperationInput(targetLanguage: params.targetLanguage)
     }
+
+    /// Операция перевода не поддерживает обработку URL.
+    public var supportsURL: Bool { false }
 }

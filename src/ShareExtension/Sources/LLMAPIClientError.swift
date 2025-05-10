@@ -10,15 +10,59 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
     case unknown(Int)
     case network(Error)
 
+    public var userFacingError: UserFacingError {
+        switch self {
+        case .unauthorized:
+            UserFacingError(
+                messageKey: .errorInvalidApiKey,
+                adviceKey: .adviceCheckApiKey
+            )
+        case .tooManyRequests:
+            UserFacingError(
+                messageKey: .errorNetwork,
+                adviceKey: .adviceTryAgainLater
+            )
+        case .serverError:
+            UserFacingError(
+                messageKey: .errorProcessing,
+                adviceKey: .adviceTryAgainLater
+            )
+        case .cancelled:
+            UserFacingError(
+                messageKey: .errorCancelled,
+                adviceKey: .adviceTryAgainLater
+            )
+        case .invalidResponse:
+            UserFacingError(
+                messageKey: .errorParsing,
+                adviceKey: .adviceTryAgainLater
+            )
+        case .unknown:
+            UserFacingError.unknown(underlyingError: self)
+        case .network:
+            UserFacingError(
+                messageKey: .errorNetwork,
+                adviceKey: .adviceCheckConnection
+            )
+        }
+    }
+
     public var errorDescription: String? {
         switch self {
-        case .unauthorized: "401 Unauthorized: неверный или отсутствующий API-ключ"
-        case .tooManyRequests: "429 Too Many Requests: превышен лимит запросов"
-        case .serverError: "500 Internal Server Error: внутренняя ошибка сервера"
-        case .cancelled: "Операция отменена"
-        case let .invalidResponse(msg): "Ошибка парсинга ответа: \(msg)"
-        case let .unknown(code): "Неизвестная ошибка (код \(code))"
-        case let .network(err): "Сетевая ошибка: \(err.localizedDescription)"
+        case .unauthorized:
+            "401: " + NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
+        case .tooManyRequests:
+            "429: " + NSLocalizedString("error_network", bundle: .main, comment: "")
+        case .serverError:
+            "500: " + NSLocalizedString("error_processing", bundle: .main, comment: "")
+        case .cancelled:
+            NSLocalizedString("error_cancelled", bundle: .main, comment: "")
+        case let .invalidResponse(msg):
+            NSLocalizedString("error_parsing", bundle: .main, comment: "") + ": " + msg
+        case let .unknown(code):
+            "Unknown error (code: \(code))"
+        case let .network(error):
+            NSLocalizedString("error_network", bundle: .main, comment: "") + ": " + error.localizedDescription
         }
     }
 

@@ -77,7 +77,10 @@ public struct SummarizeOperation: OperationType {
             ))
             return result
         }
-        throw NSError(domain: "SummarizeOperation", code: SummarizeOperation.errorCodeNoTextOrURL, userInfo: [NSLocalizedDescriptionKey: "No text or URL provided"])
+        throw UserFacingError(
+            messageKey: .errorNoText,
+            adviceKey: .adviceCheckConnection
+        )
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {

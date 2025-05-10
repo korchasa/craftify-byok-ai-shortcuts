@@ -192,8 +192,16 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         manager.process(text: "Hello", operation: op) { result in
             switch result {
             case let .failure(error):
-                let desc = error.localizedDescription.lowercased()
-                XCTAssertTrue(desc.contains("парсинга"))
+                if let llmError = error as? LLMAPIClientError {
+                    switch llmError {
+                    case .invalidResponse:
+                        XCTAssertTrue(true)
+                    default:
+                        XCTFail("Ожидался LLMAPIClientError.invalidResponse, получено: \(llmError)")
+                    }
+                } else {
+                    XCTFail("Ожидался LLMAPIClientError.invalidResponse, получено: \(error)")
+                }
             case .success:
                 XCTFail("Ожидалась ошибка, но получен успех")
             }

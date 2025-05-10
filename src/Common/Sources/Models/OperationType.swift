@@ -53,7 +53,10 @@ public extension OperationType {
         if let text = input.text, !text.isEmpty {
             return text
         }
-        throw NSError(domain: "OperationType", code: -100, userInfo: [NSLocalizedDescriptionKey: "No text provided or URL not supported for this operation"])
+        throw UserFacingError(
+            messageKey: .errorNoText,
+            adviceKey: .adviceCheckConnection
+        )
     }
 
     /// По умолчанию операция не поддерживает URL

@@ -43,7 +43,7 @@ public final class ProcessingManager: ProcessingManaging {
         logManager.log(LogEntry(
             level: .debug,
             module: "ProcessingManager",
-            message: "Запрос к OpenAI API",
+            message: "Request to OpenAI API",
             metadata: [
                 "operation": operation.operation.rawValue,
                 "params": paramsString,
@@ -58,7 +58,7 @@ public final class ProcessingManager: ProcessingManaging {
         logManager.log(LogEntry(
             level: .debug,
             module: "ProcessingManager",
-            message: "Ответ OpenAI API",
+            message: "Response from OpenAI API",
             metadata: [
                 "operation": operation.operation.rawValue,
                 "resultPreview": String(result.prefix(Constants.resultPreviewLength)),
@@ -71,7 +71,7 @@ public final class ProcessingManager: ProcessingManaging {
         logManager.log(LogEntry(
             level: .error,
             module: "ProcessingManager",
-            message: "Ошибка OpenAI API",
+            message: "OpenAI API error",
             metadata: [
                 "error": error.localizedDescription
             ]

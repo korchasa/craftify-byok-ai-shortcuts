@@ -40,10 +40,10 @@ final class SwiftSoupTextFetcherTests: XCTestCase {
         mockSession.nextError = URLError(.notConnectedToInternet)
         do {
             _ = try await self.fetcher.fetchText(from: "https://unreachable.example.com")
-            XCTFail("Expected URLError, but got success")
+            XCTFail("Expected FetchError.downloadFailed, but got success")
         } catch {
-            if error is URLError {
-                // ok
+            if let fetchError = error as? FetchError {
+                XCTAssertEqual(fetchError, .downloadFailed)
             } else {
                 XCTFail("Unexpected error: \(error.localizedDescription)")
             }
