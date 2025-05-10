@@ -25,10 +25,10 @@ public struct DarkMainAppColorPalette: MainAppColorPaletteProviding {
     public func background() -> Color { Color(red: ColorPaletteConstants.backgroundDarkRed, green: ColorPaletteConstants.backgroundDarkGreen, blue: ColorPaletteConstants.backgroundDarkBlue) }
     public func primaryText() -> Color { Color.white }
     public func secondaryText() -> Color { Color(red: ColorPaletteConstants.secondaryTextRed, green: ColorPaletteConstants.secondaryTextGreen, blue: ColorPaletteConstants.secondaryTextBlue) }
-    public func primaryButton() -> Color { Color(red: ColorPaletteConstants.primaryRed, green: ColorPaletteConstants.primaryGreen, blue: ColorPaletteConstants.primaryBlue) }
-    public func primaryButtonText() -> Color { background() }
-    public func secondaryButton() -> Color { Color(red: ColorPaletteConstants.secondaryRed, green: ColorPaletteConstants.secondaryGreen, blue: ColorPaletteConstants.secondaryBlue) }
-    public func secondaryButtonText() -> Color { background() }
+    public func primaryButton() -> Color { background() }
+    public func primaryButtonText() -> Color { Color.white }
+    public func secondaryButton() -> Color { background() }
+    public func secondaryButtonText() -> Color { Color.white }
     public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveRed, green: ColorPaletteConstants.destructiveGreen, blue: ColorPaletteConstants.destructiveBlue) }
     public func link() -> Color { Color(red: ColorPaletteConstants.linkRed, green: ColorPaletteConstants.linkGreen, blue: ColorPaletteConstants.linkBlue) }
 }
