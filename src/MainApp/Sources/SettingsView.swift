@@ -23,13 +23,13 @@ public struct SettingsView: View {
             content: {
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                     Text(L10n.settingsApiKey)
-                        .font(.craftifyTitle)
+                        .font(.craftifyBody)
                         .fontWeight(.bold)
                     SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
 
                     HStack {
                         Text(L10n.settingsNativeLanguage)
-                            .font(.craftifyTitle)
+                            .font(.craftifyBody)
                             .fontWeight(.bold)
                         Spacer()
                         Picker(L10n.settingsNativeLanguage, selection: $viewModel.selectedNativeLanguage) {
@@ -44,7 +44,7 @@ public struct SettingsView: View {
                         .font(.craftifyFootnote)
                         .fontWeight(.regular)
                         .foregroundColor(palette.secondaryText())
-                        .padding(.top, 2)
+                        .padding(.top, FormStyleConstants.nativeLanguageSectionTopPadding)
 
                     SettingsErrorSection(errorMessage: viewModel.errorMessage)
                 }
