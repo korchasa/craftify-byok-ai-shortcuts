@@ -103,3 +103,17 @@ The project is now fully managed by Tuist:
 - Нет дублирования и устаревших полей в параметрах.
 - Все тесты и проверки проходят без ошибок.
 - Документация отражает текущее состояние архитектуры и реализации.
+
+## Current State (April 2024)
+
+- Error handling has been significantly improved in both MainApp and ShareExtension:
+  - All errors are now returned as UserFacingError with localization keys and user advice.
+  - New localization keys for advice and errors (en/ru) have been added.
+  - Error messages are always localized and include actionable advice.
+- Alert display and closing logic in ShareExtensionView has been improved.
+- Logs now use English messages for consistency.
+- Tests have been updated and expanded:
+  - Error and timeout handling is thoroughly tested.
+  - Race conditions between error and timeout are covered.
+- Refactoring of FetchError and UserFacingError (moved, updated).
+- The project is stable, all tests pass, and documentation is up to date.

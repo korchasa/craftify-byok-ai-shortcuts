@@ -1,3 +1,13 @@
+# Current State (April 2024)
+
+- Error handling is now fully centralized via UserFacingError in both MainApp and ShareExtension.
+- All user-facing errors are localized (en/ru) and provide actionable advice.
+- Alert logic in ShareExtensionView is improved for reliability and user experience.
+- Logging uses English messages for consistency across modules.
+- Tests cover all error branches, including race conditions between error and timeout.
+- FetchError and UserFacingError have been refactored and relocated for clarity.
+- All changes are covered by unit and UI tests; project is stable and up to date.
+
 # Craftify Project File Structure
 
 ---
