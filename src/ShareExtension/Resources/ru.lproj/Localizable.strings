@@ -99,6 +99,7 @@
 "percent_format" = "%d%%";
 "error_download_failed" = "Не удалось получить содержимое страницы";
 "error_extract_text" = "Не удалось извлечь текст из страницы";
+"error_timeout" = "Время обработки истекло";
 
 "advice_check_connection" = "Проверьте подключение к интернету и попробуйте снова.";
 "advice_check_api_key" = "Проверьте API-ключ в настройках.";

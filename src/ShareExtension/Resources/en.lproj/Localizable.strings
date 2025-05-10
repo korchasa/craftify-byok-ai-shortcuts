@@ -106,3 +106,4 @@
 
 "error_download_failed" = "Failed to load page content";
 "error_extract_text" = "Failed to extract text from the page";
+"error_timeout" = "Processing timeout";

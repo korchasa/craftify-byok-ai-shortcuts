@@ -287,7 +287,9 @@ public final class ShareExtensionViewModel: ObservableObject {
                 timestamp: Date()
             ))
             // swiftlint:disable:next nslocalizedstring_key
-            errorMessage = NSLocalizedString("error_timeout", bundle: .main, comment: "")
+            if errorMessage == nil {
+                errorMessage = NSLocalizedString("error_timeout", bundle: .main, comment: "")
+            }
             manager.cancelProcessing()
             progress = 0.0
         } else {
@@ -308,7 +310,9 @@ public final class ShareExtensionViewModel: ObservableObject {
                 metadata: [:],
                 timestamp: Date()
             ))
-            errorMessage = msg
+            if errorMessage == nil {
+                errorMessage = msg
+            }
         } else if result?.success == true {
             if currentResultMode == .display {
                 displayResult = manager.lastResult
@@ -383,7 +387,9 @@ public final class ShareExtensionViewModel: ObservableObject {
             metadata: [:],
             timestamp: Date()
         ))
-        self.errorMessage = errorMsg
+        if errorMessage == nil {
+            self.errorMessage = errorMsg
+        }
         self.manager.logManager.log(LogEntry(
             level: .error,
             module: "ShareExtensionViewModel",

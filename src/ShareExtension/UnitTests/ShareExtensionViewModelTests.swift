@@ -27,7 +27,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         let exp = expectation(description: "Timeout")
         var cancellable: AnyCancellable?
         cancellable = viewModel.$errorMessage.sink { msg in
-            if msg == "Время обработки истекло" {
+            if msg == NSLocalizedString("error_timeout", bundle: .main, comment: "") {
                 exp.fulfill()
                 cancellable?.cancel()
             }
@@ -35,7 +35,8 @@ final class ShareExtensionViewModelTests: XCTestCase {
         viewModel.process(operation: op)
         await fulfillment(of: [exp], timeout: 1.0)
         // Assert: Должна быть ошибка таймаута
-        XCTAssertEqual(viewModel.errorMessage, "Время обработки истекло")
+        let expected = NSLocalizedString("error_timeout", bundle: .main, comment: "")
+        XCTAssertEqual(viewModel.errorMessage, expected)
     }
 
     func testProcess_ShowCopiedToastOnSuccess() async {
@@ -211,7 +212,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         cancellable?.cancel()
         // Assert: Ошибка должна быть установлена только один раз
         XCTAssertEqual(errorCount, 1)
-        XCTAssertEqual(viewModel.errorMessage, "Время обработки истекло")
+        XCTAssertEqual(viewModel.errorMessage, NSLocalizedString("error_timeout", bundle: .main, comment: ""))
     }
 }
 
