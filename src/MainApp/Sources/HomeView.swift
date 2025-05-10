@@ -9,6 +9,7 @@ public struct HomeView: View {
     @State private var editOperationViewModel: InventoryOperation? = nil
     @State private var editingIndex: Int? = nil
     @Environment(\.colorScheme) private var colorScheme
+    @State private var isEditing = false
     private var palette: MainAppColorPaletteProviding {
         ColorPaletteFactory.palette(for: colorScheme)
     }
@@ -82,24 +83,29 @@ public struct HomeView: View {
     private var operationsList: some View {
         VStack(spacing: 0) {
             operationsListContent
+            sortHint
         }
     }
 
     private var operationsListContent: some View {
         List {
             ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
-                OperationRowView(
+                OperationListRow(
                     operation: operation,
                     palette: palette,
+                    isEditing: isEditing,
                     onEdit: {
-                        editOperationViewModel = operation
-                        editingIndex = idx
+                        if !isEditing {
+                            editOperationViewModel = operation
+                            editingIndex = idx
+                        }
                     },
-                    onDelete: {}
+                    onLongPress: {
+                        withAnimation {
+                            isEditing = true
+                        }
+                    }
                 )
-                .buttonStyle(PlainButtonStyle())
-                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowBackground(palette.background())
             }
             .onMove { indices, newOffset in
                 viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
@@ -108,7 +114,61 @@ public struct HomeView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(palette.background())
-        .environment(\.editMode, .constant(.active))
+        .environment(\.editMode, isEditing ? .constant(.active) : .constant(.inactive))
+        .onTapGesture {
+            if isEditing {
+                withAnimation {
+                    isEditing = false
+                }
+            }
+        }
+        .accessibilityAddTraits(.isButton)
+    }
+
+    private var sortHint: some View {
+        Text(L10n.homeSortHint)
+            .font(.craftifyFootnote)
+            .fontWeight(.regular)
+            .foregroundColor(palette.secondaryText())
+            .multilineTextAlignment(.center)
+            .padding(.top, Self.sortHintTopPadding)
+            .padding(.bottom, Self.sortHintBottomPadding)
+    }
+
+    private static let sortHintTopPadding: CGFloat = 8
+    private static let sortHintBottomPadding: CGFloat = 4
+
+    private struct OperationListRow: View {
+        let operation: InventoryOperation
+        let palette: MainAppColorPaletteProviding
+        let isEditing: Bool
+        let onEdit: () -> Void
+        let onLongPress: () -> Void
+        static let moveHandleSpacing: CGFloat = 8
+        static let moveHandleMinWidth: CGFloat = 24
+        static let moveHandleMinHeight: CGFloat = 44
+        var body: some View {
+            HStack(spacing: 0) {
+                if isEditing {
+                    Image(systemName: "line.3.horizontal")
+                        .foregroundColor(palette.secondaryText())
+                        .padding(.trailing, Self.moveHandleSpacing)
+                        .frame(minWidth: Self.moveHandleMinWidth, minHeight: Self.moveHandleMinHeight)
+                        .accessibilityLabel(LocalizedStringKey(L10n.homeSortHandle))
+                        .accessibilityAddTraits(.isButton)
+                }
+                OperationRowView(
+                    operation: operation,
+                    palette: palette,
+                    onEdit: onEdit,
+                    onDelete: {}
+                )
+                .disabled(isEditing)
+            }
+            .contentShape(Rectangle())
+            .onLongPressGesture(perform: onLongPress)
+            .accessibilityAddTraits(.isButton)
+        }
     }
 
     private struct OperationRowView: View {

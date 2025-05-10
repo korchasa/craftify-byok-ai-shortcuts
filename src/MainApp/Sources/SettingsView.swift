@@ -22,21 +22,34 @@ public struct SettingsView: View {
             title: LocalizedStringKey(L10n.settingsTitle),
             content: {
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
-                    Section(header: Text(L10n.settingsApiKey).font(.craftifyTitle).fontWeight(.bold)) {
-                        SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
-                    }
-                    Section(header: Text(L10n.settingsNativeLanguage).font(.craftifyTitle).fontWeight(.bold), footer: Text(L10n.settingsNativeLanguageSection).font(.craftifyFootnote)) {
+                    Text(L10n.settingsApiKey)
+                        .font(.craftifyTitle)
+                        .fontWeight(.bold)
+                    SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
+
+                    HStack {
+                        Text(L10n.settingsNativeLanguage)
+                            .font(.craftifyTitle)
+                            .fontWeight(.bold)
+                        Spacer()
                         Picker(L10n.settingsNativeLanguage, selection: $viewModel.selectedNativeLanguage) {
                             ForEach(viewModel.supportedLanguages, id: \.code) { lang in
                                 Text(lang.name).tag(lang.code)
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
+                        .frame(maxWidth: .infinity, alignment: .trailing)
                     }
-                    Section {
-                        SettingsErrorSection(errorMessage: viewModel.errorMessage)
-                    }
+                    Text(L10n.settingsNativeLanguageSection)
+                        .font(.craftifyFootnote)
+                        .fontWeight(.regular)
+                        .foregroundColor(palette.secondaryText())
+                        .padding(.top, 2)
+
+                    SettingsErrorSection(errorMessage: viewModel.errorMessage)
                 }
+                .padding(.leading, FormStyleConstants.formLeadingPadding)
+                .padding(.trailing, FormStyleConstants.formTrailingPadding)
             },
             buttons: {
                 SettingsFormButtons(viewModel: viewModel, dismiss: dismiss, shouldDismiss: $shouldDismiss)
