@@ -37,8 +37,6 @@ public struct SettingsView: View {
                         SettingsErrorSection(errorMessage: viewModel.errorMessage)
                     }
                 }
-                .padding(.leading, FormStyleConstants.formLeadingPadding)
-                .padding(.trailing, FormStyleConstants.formTrailingPadding)
             },
             buttons: {
                 SettingsFormButtons(viewModel: viewModel, dismiss: dismiss, shouldDismiss: $shouldDismiss)
@@ -92,23 +90,6 @@ public struct SettingsView: View {
             SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
                 .focused($isTextFieldFocused)
                 .accessibilityLabel(L10n.settingsApiKey)
-            if viewModel.isKeyPresent {
-                Text(viewModel.maskedApiKey)
-                    .font(.craftifyFootnote)
-                    .fontWeight(.semibold)
-                    .foregroundColor(palette.secondaryText())
-                    .lineLimit(ViewConstants.unlimitedLineLimit)
-                    .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
-            }
-            if viewModel.isKeyPresent {
-                Button(role: .destructive, action: { Task { await viewModel.deleteKey() } }) {
-                    Text(L10n.homeDelete)
-                        .font(.craftifyBody)
-                        .fontWeight(.bold)
-                        .foregroundColor(palette.destructive())
-                }
-                .accessibilityLabel(L10n.homeDelete + " ключ")
-            }
         }
     }
 
