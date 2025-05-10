@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Primary button style for ShareExtension
-public struct ShareExtensionPrimaryButtonStyle: ButtonStyle {
+/// Secondary button style for ShareExtension
+public struct ShareExtensionSecondaryButtonStyle: ButtonStyle {
     @Environment(\.shareExtensionColorPalette) private var palette
 
     public func makeBody(configuration: Configuration) -> some View {
@@ -9,8 +9,8 @@ public struct ShareExtensionPrimaryButtonStyle: ButtonStyle {
             .fontWeight(.bold)
             .padding()
             .frame(maxWidth: .infinity)
-            .background(palette.primaryButton())
-            .foregroundColor(palette.primaryButtonText())
+            .background(palette.secondaryButton())
+            .foregroundColor(palette.secondaryButtonText())
             .cornerRadius(ShareExtensionButtonConstants.buttonCornerRadius)
             .scaleEffect(configuration.isPressed ? ShareExtensionButtonConstants.buttonPressedScale : 1.0)
     }

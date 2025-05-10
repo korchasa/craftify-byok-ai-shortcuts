@@ -177,7 +177,7 @@ public struct ShareExtensionView: View {
                 HStack(spacing: hStackSpacing) {
                     ZStack {
                         Image(systemName: op.operation.sfSymbol)
-                            .foregroundColor(palette.primaryButtonText())
+                            .foregroundColor(Color(hex: "#17171c"))
                             .font(.system(size: ColorPaletteConstants.circleSize * symbolScale))
                             .fontWeight(.semibold)
                             .accessibilityLabel("SF Symbol for operation: \(op.operation.rawValue)")
@@ -345,7 +345,7 @@ public struct ShareExtensionView: View {
                 .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 .foregroundColor(palette.primaryButtonText())
         }
-        .buttonStyle(CraftifySecondaryButtonStyle())
+        .buttonStyle(ShareExtensionSecondaryButtonStyle())
         .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
         .padding(.bottom, CraftifyButtonConstants.bottomPadding)
     }

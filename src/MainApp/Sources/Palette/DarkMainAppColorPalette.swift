@@ -26,9 +26,9 @@ public struct DarkMainAppColorPalette: MainAppColorPaletteProviding {
     public func primaryText() -> Color { Color.white }
     public func secondaryText() -> Color { Color(red: ColorPaletteConstants.secondaryTextRed, green: ColorPaletteConstants.secondaryTextGreen, blue: ColorPaletteConstants.secondaryTextBlue) }
     public func primaryButton() -> Color { background() }
-    public func primaryButtonText() -> Color { Color.white }
+    public func primaryButtonText() -> Color { Color(hex: "#17171c") }
     public func secondaryButton() -> Color { background() }
-    public func secondaryButtonText() -> Color { Color.white }
+    public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
     public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveRed, green: ColorPaletteConstants.destructiveGreen, blue: ColorPaletteConstants.destructiveBlue) }
-    public func link() -> Color { Color(red: ColorPaletteConstants.linkRed, green: ColorPaletteConstants.linkGreen, blue: ColorPaletteConstants.linkBlue) }
+    public func link() -> Color { Color.white }
 }

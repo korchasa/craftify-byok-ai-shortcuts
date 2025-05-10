@@ -53,6 +53,28 @@
                ReferencedContainer = "container:Craftify.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "2B930E7C733BF2F51B606A18"
+               BuildableName = "ShareExtensionUnitTests.xctest"
+               BlueprintName = "ShareExtensionUnitTests"
+               ReferencedContainer = "container:Craftify.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A906371E20AA6747B02D1680"
+               BuildableName = "CommonUnitTests.xctest"
+               BlueprintName = "CommonUnitTests"
+               ReferencedContainer = "container:Craftify.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
