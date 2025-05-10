@@ -47,9 +47,9 @@ public struct DarkShareExtensionColorPalette: ShareExtensionColorPaletteProvidin
     }
 
     public func primaryButton() -> Color { Color(red: ColorPaletteConstants.primaryRed, green: ColorPaletteConstants.primaryGreen, blue: ColorPaletteConstants.primaryBlue) }
-    public func primaryButtonText() -> Color { background() }
+    public func primaryButtonText() -> Color { Color(hex: "#17171c") }
     public func secondaryButton() -> Color { Color(red: ColorPaletteConstants.secondaryRed, green: ColorPaletteConstants.secondaryGreen, blue: ColorPaletteConstants.secondaryBlue) }
-    public func secondaryButtonText() -> Color { background() }
+    public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
     public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveRed, green: ColorPaletteConstants.destructiveGreen, blue: ColorPaletteConstants.destructiveBlue) }
     public func link() -> Color { Color(red: ColorPaletteConstants.linkRed, green: ColorPaletteConstants.linkGreen, blue: ColorPaletteConstants.linkBlue) }
 }

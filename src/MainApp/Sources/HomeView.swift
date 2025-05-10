@@ -106,6 +106,7 @@ public struct HomeView: View {
                         }
                     }
                 )
+                .listRowBackground(palette.background())
             }
             .onMove { indices, newOffset in
                 viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
@@ -167,6 +168,11 @@ public struct HomeView: View {
             }
             .contentShape(Rectangle())
             .onLongPressGesture(perform: onLongPress)
+            .onTapGesture {
+                if !isEditing {
+                    onEdit()
+                }
+            }
             .accessibilityAddTraits(.isButton)
         }
     }
@@ -186,7 +192,6 @@ public struct HomeView: View {
                     OperationLabelText(type: operation.operation)
                     Spacer()
                     OperationParamsText(operation: operation, palette: palette)
-                        .padding(.trailing, FormStyleConstants.operationParamsTrailingPadding)
                 }
                 .contentShape(Rectangle())
             }
@@ -206,7 +211,7 @@ public struct HomeView: View {
                     .frame(width: palette.circleSize, height: palette.circleSize)
                     .accessibilityLabel("Цвет операции")
                 Image(systemName: kind.sfSymbol)
-                    .foregroundColor(palette.primaryButtonText())
+                    .foregroundColor(palette.background())
                     .font(.system(size: palette.circleSize * OperationIconCircle.symbolScale))
                     .fontWeight(.semibold)
                     .accessibilityLabel("SF Symbol for operation: \(kind.rawValue)")

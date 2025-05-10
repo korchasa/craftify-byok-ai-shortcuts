@@ -17,8 +17,6 @@ public enum FormStyleConstants {
     public static let dividerBottomPadding: CGFloat = 8
     /// Вертикальный отступ между секциями формы
     public static let sectionSpacing: CGFloat = 16
-    /// Фиксированный правый отступ для параметров операции в списке
-    public static let operationParamsTrailingPadding: CGFloat = 16
     /// Отступ сверху для секции родного языка в настройках
     public static let nativeLanguageSectionTopPadding: CGFloat = 2
 }

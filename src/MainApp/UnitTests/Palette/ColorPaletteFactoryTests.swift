@@ -23,9 +23,9 @@ public final class ColorPaletteFactoryTests: XCTestCase {
     public func testLightPaletteColors() {
         let palette = LightMainAppColorPalette()
         XCTAssertEqual(palette.background(), Color.white)
-        XCTAssertEqual(palette.primaryButtonText(), Color.black)
+        XCTAssertEqual(palette.primaryButtonText(), Color(hex: "#17171c"))
         XCTAssertEqual(palette.primaryButton(), Color.white)
-        XCTAssertEqual(palette.secondaryButtonText(), Color.black)
+        XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
         XCTAssertEqual(palette.secondaryButton(), Color.white)
     }
 
@@ -34,9 +34,9 @@ public final class ColorPaletteFactoryTests: XCTestCase {
         let palette = DarkMainAppColorPalette()
         let darkBg = Color(red: 0.09, green: 0.09, blue: 0.11)
         XCTAssertEqual(palette.background(), darkBg)
-        XCTAssertEqual(palette.primaryButtonText(), Color.white)
+        XCTAssertEqual(palette.primaryButtonText(), Color(hex: "#17171c"))
         XCTAssertEqual(palette.primaryButton(), darkBg)
-        XCTAssertEqual(palette.secondaryButtonText(), Color.white)
+        XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
         XCTAssertEqual(palette.secondaryButton(), darkBg)
     }
 }

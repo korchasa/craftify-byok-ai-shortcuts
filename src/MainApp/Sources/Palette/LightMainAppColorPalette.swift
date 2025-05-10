@@ -26,9 +26,9 @@ public struct LightMainAppColorPalette: MainAppColorPaletteProviding {
     public func primaryText() -> Color { Color.black }
     public func secondaryText() -> Color { Color(white: ColorPaletteConstants.secondaryTextWhite) }
     public func primaryButton() -> Color { Color.white }
-    public func primaryButtonText() -> Color { Color.black }
+    public func primaryButtonText() -> Color { Color(hex: "#17171c") }
     public func secondaryButton() -> Color { Color.white }
-    public func secondaryButtonText() -> Color { Color.black }
+    public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
     public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveLightRed, green: ColorPaletteConstants.destructiveLightGreen, blue: ColorPaletteConstants.destructiveLightBlue) }
-    public func link() -> Color { Color(red: ColorPaletteConstants.linkLightRed, green: ColorPaletteConstants.linkLightGreen, blue: ColorPaletteConstants.linkLightBlue) }
+    public func link() -> Color { Color.black }
 }
