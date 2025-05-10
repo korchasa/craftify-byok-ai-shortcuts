@@ -31,6 +31,8 @@ public struct AddOperationView: View {
                         .padding(.top, FormStyleConstants.sectionSpacing)
                     AddOperationColorPalette(viewModel: viewModel)
                 }
+                .padding(.leading, FormStyleConstants.formLeadingPadding)
+                .padding(.trailing, FormStyleConstants.formTrailingPadding)
             },
             buttons: {
                 AddOperationButtons(viewModel: viewModel, onSave: onSave, dismiss: dismiss)

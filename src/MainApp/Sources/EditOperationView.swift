@@ -68,6 +68,8 @@ public struct EditOperationView: View {
                     )
                 }
             }
+            .padding(.leading, FormStyleConstants.formLeadingPadding)
+            .padding(.trailing, FormStyleConstants.formTrailingPadding)
         }
     }
 

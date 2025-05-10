@@ -11,6 +11,8 @@
 "home_settings" = "Настройки";
 "home_edit" = "Редактировать";
 "home_delete" = "Удалить";
+"homeSortHandle" = "Перетащить для сортировки";
+"homeSortHint" = "Для сортировки удерживайте и перетаскивайте операцию.";
 
 /* AddOperationView */
 "add_operation_title" = "Добавить операцию";

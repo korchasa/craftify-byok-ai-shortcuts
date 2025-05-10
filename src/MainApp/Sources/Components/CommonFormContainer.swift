@@ -28,8 +28,6 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
                     .padding(.bottom, FormStyleConstants.dividerBottomPadding)
                 VStack(spacing: 0) {
                     content()
-                        .padding(.leading, FormStyleConstants.formLeadingPadding)
-                        .padding(.trailing, FormStyleConstants.formTrailingPadding)
                         .background(palette.background())
                 }
                 .padding(.top, FormStyleConstants.formContentTopPadding)

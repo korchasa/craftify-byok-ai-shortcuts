@@ -11,6 +11,8 @@
 "home_settings" = "Settings";
 "home_edit" = "Edit";
 "home_delete" = "Delete";
+"homeSortHandle" = "Drag to reorder";
+"homeSortHint" = "Long press and drag to reorder operations.";
 
 /* AddOperationView */
 "add_operation_title" = "Add Operation";
