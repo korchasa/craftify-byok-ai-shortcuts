@@ -119,7 +119,14 @@ public struct ShareExtensionView: View {
         .environment(\.shareExtensionColorPalette, palette)
         // ViewModel subscriptions & alerts
         .onReceive(viewModel.$errorMessage) { msg in
-            if let msg {
+            if let msg, !showAlert {
+                viewModel.manager.logManager.log(LogEntry(
+                    level: .error,
+                    module: "ShareExtensionView",
+                    message: "Presenting alert with message: \(msg)",
+                    metadata: [:],
+                    timestamp: Date()
+                ))
                 alertMessage = msg
                 showAlert = true
             }
@@ -140,6 +147,13 @@ public struct ShareExtensionView: View {
         }
         .alert(isPresented: $showAlert) {
             Alert(title: Text(L10n.error), message: Text(alertMessage), dismissButton: .default(Text(LocalizedStringKey("OK"))))
+        }
+        .onChange(of: showAlert) { newValue in
+            if !newValue, !alertMessage.isEmpty {
+                // alert был закрыт, инициируем закрытие расширения
+                viewModel.shouldCloseExtension = true
+                alertMessage = ""
+            }
         }
     }
 

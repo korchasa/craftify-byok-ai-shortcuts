@@ -52,39 +52,39 @@ public final class ShareExtensionManager {
     /// - Parameters:
     ///   - text: Исходный текст для обработки.
     ///   - operation: Операция из inventory (InventoryOperation?).
-    /// - Returns: Кортеж (успех: Bool, ошибка: String?) или nil, если операция не выполнена.
-    public func process(text: String, operation: InventoryOperation?) async -> (success: Bool, error: String?)? {
+    /// - Returns: Кортеж (успех: Bool, ошибка: UserFacingError?) или nil, если операция не выполнена.
+    public func process(text: String, operation: InventoryOperation?) async -> (success: Bool, error: UserFacingError?)? {
         if isCancelled {
             isCancelled = false
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
-            return (false, L10n.errorCancelled)
+            return (false, UserFacingError(messageKey: .errorCancelled, adviceKey: .adviceTryAgainLater))
         }
         guard !text.isEmpty else {
             logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "No text to process", metadata: [:]))
-            return (false, L10n.errorNoText)
+            return (false, UserFacingError(messageKey: .errorNoText, adviceKey: .adviceTryAgainLater))
         }
         if text.count > Self.maxTextLength {
             logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "Text too long to process", metadata: ["length": "\(text.count)"]))
-            return (false, L10n.errorTextTooLong)
+            return (false, UserFacingError(messageKey: .errorTextTooLong, adviceKey: .adviceTryAgainLater))
         }
         if !consentManager.getConsent() {
             logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "User consent required", metadata: [:]))
-            return (false, L10n.errorConsentRequired)
+            return (false, UserFacingError(messageKey: .errorConsentRequired, adviceKey: .adviceContactSupport))
         }
         let apiKey: String?
         do {
             apiKey = try await authManager.getAPIKey()
         } catch {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "API key access error", metadata: ["error": "\(error)"]))
-            return (false, L10n.errorApiKeyAccess)
+            return (false, UserFacingError(messageKey: .errorApiKeyAccess, adviceKey: .adviceCheckApiKey))
         }
         guard let key = apiKey, key.starts(with: "sk-") else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Invalid API key", metadata: ["key": authManager.maskedAPIKey(apiKey)]))
-            return (false, L10n.errorInvalidApiKey)
+            return (false, UserFacingError(messageKey: .errorInvalidApiKey, adviceKey: .adviceCheckApiKey))
         }
         guard let op = operation else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "No operation to process", metadata: [:]))
-            return (false, L10n.errorNoOperation)
+            return (false, UserFacingError(messageKey: .errorNoOperation, adviceKey: .adviceUnknownError))
         }
         self.lastOperationKind = op.operation
         logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Start processing", metadata: ["operation": "\(op.operation)"]))
@@ -98,12 +98,15 @@ public final class ShareExtensionManager {
             }
             guard let result = stubResult else {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: [:]))
-                return (false, L10n.errorProcessing)
+                return (false, UserFacingError(messageKey: .errorProcessing, adviceKey: .adviceTryAgainLater))
             }
             switch result {
             case let .failure(err):
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: ["error": err.localizedDescription]))
-                return (false, err.localizedDescription)
+                if let userError = err as? UserFacingError {
+                    return (false, userError)
+                }
+                return (false, UserFacingError.unknown(underlyingError: err))
             case let .success(str):
                 processedText = str
             }
@@ -113,16 +116,19 @@ public final class ShareExtensionManager {
                 processedText = try await processAsync(pm: pm, text: text, operation: op)
             } catch {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: ["error": error.localizedDescription]))
-                return (false, error.localizedDescription)
+                if let userError = error as? UserFacingError {
+                    return (false, userError)
+                }
+                return (false, UserFacingError.unknown(underlyingError: error))
             }
         } else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing manager unavailable", metadata: [:]))
-            return (false, L10n.errorProcessingManagerUnavailable)
+            return (false, UserFacingError(messageKey: .errorProcessingManagerUnavailable, adviceKey: .adviceContactSupport))
         }
         if isCancelled {
             isCancelled = false
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
-            return (false, L10n.errorCancelled)
+            return (false, UserFacingError(messageKey: .errorCancelled, adviceKey: .adviceTryAgainLater))
         }
         // Настройка режима обработки результата и сохранение результата
         let mode = OperationFactory.make(kind: op.operation).resultMode
@@ -135,16 +141,16 @@ public final class ShareExtensionManager {
         if let cb = clipboardManager as? ClipboardManagerStub {
             if !cb.copy(text: processedText) {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
-                return (false, L10n.errorClipboard)
+                return (false, UserFacingError(messageKey: .errorClipboard, adviceKey: .adviceTryAgainLater))
             }
         } else if let cb = clipboardManager as? ClipboardManaging {
             if !cb.copy(text: processedText) {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
-                return (false, L10n.errorClipboard)
+                return (false, UserFacingError(messageKey: .errorClipboard, adviceKey: .adviceTryAgainLater))
             }
         } else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error (type)", metadata: [:]))
-            return (false, L10n.errorClipboard)
+            return (false, UserFacingError(messageKey: .errorClipboard, adviceKey: .adviceTryAgainLater))
         }
         logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Result copied to clipboard successfully", metadata: [:]))
         return (true, nil)

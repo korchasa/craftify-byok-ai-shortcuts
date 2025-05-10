@@ -152,8 +152,11 @@ public final class OperationModelsTests: XCTestCase {
         let op = TranslateOperation()
         let input = OperationInput(url: "https://test.com")
         XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
-            let nsError = error as NSError
-            XCTAssertEqual(nsError.domain, "TranslateOperation")
+            guard let userError = error as? UserFacingError else {
+                XCTFail("Ожидался UserFacingError, получено: \(type(of: error))")
+                return
+            }
+            XCTAssertEqual(userError.messageKey, .errorUrlNotSupported)
         }
     }
 
@@ -168,8 +171,11 @@ public final class OperationModelsTests: XCTestCase {
         let op = SimplifyOperation()
         let input = OperationInput(url: "https://test.com")
         XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
-            let nsError = error as NSError
-            XCTAssertEqual(nsError.domain, "SimplifyOperation")
+            guard let userError = error as? UserFacingError else {
+                XCTFail("Ожидался UserFacingError, получено: \(type(of: error))")
+                return
+            }
+            XCTAssertEqual(userError.messageKey, .errorUrlNotSupported)
         }
     }
 
@@ -184,8 +190,11 @@ public final class OperationModelsTests: XCTestCase {
         let op = CorrectOperation()
         let input = OperationInput(url: "https://test.com")
         XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
-            let nsError = error as NSError
-            XCTAssertEqual(nsError.domain, "CorrectOperation")
+            guard let userError = error as? UserFacingError else {
+                XCTFail("Ожидался UserFacingError, получено: \(type(of: error))")
+                return
+            }
+            XCTAssertEqual(userError.messageKey, .errorUrlNotSupported)
         }
     }
 
@@ -200,8 +209,11 @@ public final class OperationModelsTests: XCTestCase {
         let op = ExplainOperation()
         let input = OperationInput(url: "https://test.com")
         XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
-            let nsError = error as NSError
-            XCTAssertEqual(nsError.domain, "ExplainOperation")
+            guard let userError = error as? UserFacingError else {
+                XCTFail("Ожидался UserFacingError, получено: \(type(of: error))")
+                return
+            }
+            XCTAssertEqual(userError.messageKey, .errorUrlNotSupported)
         }
     }
 

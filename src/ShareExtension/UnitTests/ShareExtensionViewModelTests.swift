@@ -164,6 +164,55 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.operations.count, 1)
         XCTAssertEqual(viewModel.operations.first?.operation, .summarize)
     }
+
+    func testProcess_ErrorAndTimeoutRace_OnlyOneError() async {
+        // Arrange: Менеджер, который завершает обработку с ошибкой чуть позже таймаута
+        class RacingProcessingManagerStub: NSObject, ProcessingManaging {
+            func process(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+                // Завершить с ошибкой через 0.2 сек
+                DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) {
+                    completion(.failure(UserFacingError(messageKey: .errorParsing, adviceKey: .adviceTryAgainLater)))
+                }
+            }
+
+            func cancel() {}
+        }
+        let inventoryManager = InventoryManagerStub()
+        let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")
+        let clipboardManager = ClipboardManagerStub()
+        let processingManager = RacingProcessingManagerStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: inventoryManager,
+            authManager: authManager,
+            clipboardManager: clipboardManager,
+            processingManager: processingManager,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+        viewModel.processingTimeoutSeconds = 0.1 // таймаут сработает чуть раньше
+        let op = InventoryOperation(operation: .translate, params: Data())
+        manager.inputText = "Hello"
+        // Act
+        let exp = expectation(description: "Only one error should be set")
+        var errorCount = 0
+        var cancellable: AnyCancellable?
+        cancellable = viewModel.$errorMessage.sink { msg in
+            if msg != nil { errorCount += 1 }
+        }
+        viewModel.process(operation: op)
+        // Ждем чуть больше, чем оба события
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            exp.fulfill()
+        }
+        await fulfillment(of: [exp], timeout: 1.0)
+        cancellable?.cancel()
+        // Assert: Ошибка должна быть установлена только один раз
+        XCTAssertEqual(errorCount, 1)
+        XCTAssertEqual(viewModel.errorMessage, "Время обработки истекло")
+    }
 }
 
 // Stub для медленной обработки

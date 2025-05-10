@@ -22,6 +22,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     public var progressTimer: Timer?
     public var processingTimeoutSeconds: Double = 30
     public var logContentLength: Int = 100
+    private var hasCompleted = false
 
     private var logManager: LogManagerShared { manager.logManager }
 
@@ -36,7 +37,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         manager.logManager.log(LogEntry(
             level: .debug,
             module: "ShareExtensionViewModel",
-            message: "Инициализация ShareExtensionViewModel, исходный ввод: '\(inputPreview)'",
+            message: "Initializing ShareExtensionViewModel, initial input: '\(inputPreview)'",
             metadata: ["input_length": String(input.count)],
             timestamp: Date()
         ))
@@ -50,6 +51,7 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     public func process(operation: InventoryOperation) {
         guard !isProcessing else { return }
+        hasCompleted = false
 
         logProcessingStart()
 
@@ -92,7 +94,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         manager.logManager.log(LogEntry(
             level: .debug,
             module: "ShareExtensionViewModel",
-            message: "Начинаем обработку, текущий ввод: '\(inputPreview)'",
+            message: "Starting processing, current input: '\(inputPreview)'",
             metadata: [
                 "isURL": String(isURL),
                 "operation": "N/A",
@@ -104,7 +106,15 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     private func validateInputTextLength() -> Bool {
         if manager.inputText.count > ShareExtensionViewModelConstants.maxInputTextLength {
-            errorMessage = "Текст слишком длинный для обработки"
+            logManager.log(LogEntry(
+                level: .error,
+                module: "ShareExtensionViewModel",
+                message: "errorMessage set in validateInputTextLength: Text too long to process",
+                metadata: [:],
+                timestamp: Date()
+            ))
+            // swiftlint:disable:next nslocalizedstring_key
+            errorMessage = NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
             return true
         }
         return false
@@ -131,17 +141,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 await runProcessingWithTimeout(operation: operation, resolvedText: resolvedText)
             } catch {
                 await MainActor.run {
-                    self.isProcessing = false
-                    self.errorMessage = error.localizedDescription
-
-                    // Логируем ошибку
-                    self.manager.logManager.log(LogEntry(
-                        level: .error,
-                        module: "ShareExtensionViewModel",
-                        message: "Ошибка при обработке: \(error.localizedDescription)",
-                        metadata: [:],
-                        timestamp: Date()
-                    ))
+                    self.handleProcessingError(error)
                 }
             }
         }
@@ -183,7 +183,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         self.manager.logManager.log(LogEntry(
             level: .debug,
             module: "ShareExtensionViewModel",
-            message: "Сформирован OperationInput",
+            message: "OperationInput created",
             metadata: [
                 "isURL": String(OperationInput.isHttpURL(string: manager.inputText)),
                 "url": input.url ?? "nil",
@@ -197,7 +197,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         self.manager.logManager.log(LogEntry(
             level: .debug,
             module: "ShareExtensionViewModel",
-            message: "Результат resolveInput: '\(String(resolvedText.prefix(100)))'",
+            message: "resolveInput result: '\(String(resolvedText.prefix(100)))'",
             metadata: ["resolved_length": String(resolvedText.count)],
             timestamp: Date()
         ))
@@ -209,7 +209,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         manager.logManager.log(LogEntry(
             level: .info,
             module: "ShareExtensionViewModel",
-            message: "Обновлен входной текст: '\(inputPreview)'",
+            message: "Input text updated: '\(inputPreview)'",
             metadata: [
                 "isURL": String(isURL),
                 "input_length": String(text.count),
@@ -229,7 +229,7 @@ public final class ShareExtensionViewModel: ObservableObject {
             manager.logManager.log(LogEntry(
                 level: .info,
                 module: "ShareExtensionViewModel",
-                message: "Отфильтрованы операции для URL, доступно: \(self.operations.count)",
+                message: "Operations filtered for URL, available: \(self.operations.count)",
                 metadata: ["operations": self.operations.map(\.operation.rawValue).joined(separator: ", ")],
                 timestamp: Date()
             ))
@@ -239,7 +239,7 @@ public final class ShareExtensionViewModel: ObservableObject {
             manager.logManager.log(LogEntry(
                 level: .info,
                 module: "ShareExtensionViewModel",
-                message: "Загружены все операции для текста, доступно: \(self.operations.count)",
+                message: "All operations loaded for text, available: \(self.operations.count)",
                 metadata: ["operations": self.operations.map(\.operation.rawValue).joined(separator: ", ")],
                 timestamp: Date()
             ))
@@ -248,8 +248,8 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     private func runProcessingWithTimeout(operation: InventoryOperation, resolvedText: String) async {
         // Запускаем две задачи: обработка и таймер
-        await withTaskGroup(of: (finishedFirst: Int, result: (success: Bool, error: String?)?).self) { group in
-            let processingTask = Task<(success: Bool, error: String?)?, Never> {
+        await withTaskGroup(of: (finishedFirst: Int, result: (success: Bool, error: UserFacingError?)?).self) { group in
+            let processingTask = Task<(success: Bool, error: UserFacingError?)?, Never> {
                 await self.manager.process(text: resolvedText, operation: operation)
             }
             let timeoutTask = Task<Void, Never> {
@@ -273,11 +273,21 @@ public final class ShareExtensionViewModel: ObservableObject {
         }
     }
 
-    private func handleProcessingCompletion(finishedFirst: Int, result: (success: Bool, error: String?)?) {
+    private func handleProcessingCompletion(finishedFirst: Int, result: (success: Bool, error: UserFacingError?)?) {
+        guard !hasCompleted else { return }
+        hasCompleted = true
         progressTimer?.invalidate()
         isProcessing = false
         if finishedFirst == 1 {
-            errorMessage = "Время обработки истекло"
+            logManager.log(LogEntry(
+                level: .error,
+                module: "ShareExtensionViewModel",
+                message: "errorMessage set in handleProcessingCompletion: Processing timeout",
+                metadata: [:],
+                timestamp: Date()
+            ))
+            // swiftlint:disable:next nslocalizedstring_key
+            errorMessage = NSLocalizedString("error_timeout", bundle: .main, comment: "")
             manager.cancelProcessing()
             progress = 0.0
         } else {
@@ -288,9 +298,17 @@ public final class ShareExtensionViewModel: ObservableObject {
         }
     }
 
-    private func handleResult(result: (success: Bool, error: String?)?) {
+    private func handleResult(result: (success: Bool, error: UserFacingError?)?) {
         if let error = result?.error {
-            errorMessage = error
+            let msg = handleUserFacingError(error)
+            logManager.log(LogEntry(
+                level: .error,
+                module: "ShareExtensionViewModel",
+                message: "errorMessage set in handleResult: \(msg)",
+                metadata: [:],
+                timestamp: Date()
+            ))
+            errorMessage = msg
         } else if result?.success == true {
             if currentResultMode == .display {
                 displayResult = manager.lastResult
@@ -299,6 +317,88 @@ public final class ShareExtensionViewModel: ObservableObject {
                 shouldCloseExtension = true
             }
         }
+    }
+
+    private func handleUserFacingError(_ error: UserFacingError) -> String {
+        let message: String = switch error.messageKey {
+        case .error: NSLocalizedString("error", bundle: .main, comment: "")
+        case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
+        case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
+        case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
+        case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
+        case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
+        case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
+        case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
+        case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
+        case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
+        case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
+        case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
+        case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
+        case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
+        case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
+        case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
+        case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
+        case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
+        case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
+        case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
+        case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+        }
+        // swiftlint:disable:next nslocalizedstring_key
+        let advice = NSLocalizedString(error.adviceKey.rawValue, bundle: .main, comment: "")
+        var details = ""
+        if let underlying = error.underlyingError {
+            // Локализуем details для FetchError и UserFacingError
+            if let fetchError = underlying as? FetchError {
+                let userError = fetchError.userFacingError
+                // swiftlint:disable:next nslocalizedstring_key
+                let localized = NSLocalizedString(userError.messageKey.rawValue, bundle: .main, comment: "")
+                details = "\n\n\(localized)"
+            } else if let userError = underlying as? UserFacingError {
+                // swiftlint:disable:next nslocalizedstring_key
+                let localized = NSLocalizedString(userError.messageKey.rawValue, bundle: .main, comment: "")
+                details = "\n\n\(localized)"
+            }
+        }
+        return "\(message)\n\n\(advice)\(details)"
+    }
+
+    private func handleProcessingError(_ error: Error) {
+        guard !hasCompleted else { return }
+        hasCompleted = true
+        let errorType = String(describing: type(of: error))
+        var errorMsg: String? = nil
+        if let userError = error as? UserFacingError {
+            errorMsg = self.handleUserFacingError(userError)
+        } else if let fetchError = error as? FetchError {
+            errorMsg = self.handleUserFacingError(fetchError.userFacingError)
+        } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {
+            errorMsg = desc
+        } else {
+            errorMsg = UserFacingError.unknown(underlyingError: error).errorDescription
+        }
+        logManager.log(LogEntry(
+            level: .error,
+            module: "ShareExtensionViewModel",
+            message: "errorMessage set in handleProcessingError: \(errorMsg ?? "nil")",
+            metadata: [:],
+            timestamp: Date()
+        ))
+        self.errorMessage = errorMsg
+        self.manager.logManager.log(LogEntry(
+            level: .error,
+            module: "ShareExtensionViewModel",
+            message: "catch error: type=\(errorType), error=\(error), errorMessage=\(errorMsg ?? "nil")",
+            metadata: [:],
+            timestamp: Date()
+        ))
+        // Логируем ошибку (старый лог оставляю для совместимости)
+        self.manager.logManager.log(LogEntry(
+            level: .error,
+            module: "ShareExtensionViewModel",
+            message: "Error during processing: \(self.errorMessage ?? String(describing: error))",
+            metadata: [:],
+            timestamp: Date()
+        ))
     }
 
     deinit {

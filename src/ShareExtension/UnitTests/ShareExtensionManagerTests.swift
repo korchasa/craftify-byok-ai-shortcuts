@@ -43,7 +43,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
         let op = InventoryOperation(operation: .translate, params: Data())
         let result = await manager.process(text: "Hello", operation: op)
         XCTAssertTrue(result?.success == false)
-        XCTAssertEqual(result?.error, L10n.errorConsentRequired)
+        XCTAssertEqual(result?.error, UserFacingError(messageKey: .errorConsentRequired, adviceKey: .adviceContactSupport))
     }
 
     public func testProcess_TextTooLong() async {
@@ -65,7 +65,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
         let longText = String(repeating: "a", count: ShareExtensionManager.maxTextLength + 1)
         let result = await manager.process(text: longText, operation: op)
         XCTAssertTrue(result?.success == false)
-        XCTAssertEqual(result?.error, L10n.errorTextTooLong)
+        XCTAssertEqual(result?.error, UserFacingError(messageKey: .errorTextTooLong, adviceKey: .adviceTryAgainLater))
     }
 
     public func testProcess_TextAtLimit() async {

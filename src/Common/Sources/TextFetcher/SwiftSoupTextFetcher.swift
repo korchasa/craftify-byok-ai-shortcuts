@@ -12,6 +12,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
 
     deinit {}
 
+    /// Загружает и извлекает текст из HTML по URL. Бросает подробные ошибки для пользователя.
     public func fetchText(from urlString: String) async throws -> String {
         let start = Date()
         logManager?.log(LogEntry(
@@ -22,7 +23,12 @@ public final class SwiftSoupTextFetcher: TextFetching {
             timestamp: start
         ))
         guard let url = URL(string: urlString) else { throw FetchError.badURL }
-        let (data, _) = try await session.data(from: url)
+        let data: Data
+        do {
+            (data, _) = try await session.data(from: url)
+        } catch {
+            throw FetchError.downloadFailed
+        }
         let afterNetwork = Date()
         let htmlSize = data.count
         logManager?.log(LogEntry(
@@ -42,6 +48,9 @@ public final class SwiftSoupTextFetcher: TextFetching {
             let document = try SwiftSoup.parse(html)
             guard let body = document.body() else { throw FetchError.parseError }
             let text = try body.text()
+            if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                throw FetchError.emptyText
+            }
             let afterParse = Date()
             logManager?.log(LogEntry(
                 level: .debug,
@@ -57,7 +66,24 @@ public final class SwiftSoupTextFetcher: TextFetching {
             ))
             return text
         } catch {
-            throw FetchError.parseError
+            let userError = FetchError.parseError.userFacingError
+            let detailedError = UserFacingError(
+                messageKey: userError.messageKey,
+                adviceKey: userError.adviceKey,
+                titleKey: userError.titleKey,
+                underlyingError: error
+            )
+            logManager?.log(LogEntry(
+                level: .error,
+                module: "TextFetcher",
+                message: "SwiftSoup parsing failed: \(error.localizedDescription)",
+                metadata: [
+                    "url": urlString,
+                    "swiftSoupError": String(describing: error)
+                ],
+                timestamp: Date()
+            ))
+            throw detailedError
         }
     }
 

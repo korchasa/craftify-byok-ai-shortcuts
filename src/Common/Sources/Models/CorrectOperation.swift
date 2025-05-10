@@ -50,7 +50,10 @@ public struct CorrectOperation: OperationType {
 
     public func parse(responseData: Data) throws -> String {
         guard let str = String(data: responseData, encoding: .utf8) else {
-            throw NSError(domain: "CorrectOperation", code: -1, userInfo: nil)
+            throw UserFacingError(
+                messageKey: .errorParsing,
+                adviceKey: .adviceTryAgainLater
+            )
         }
         return str
     }
@@ -60,9 +63,15 @@ public struct CorrectOperation: OperationType {
             return text
         }
         if let url = input.url, !url.isEmpty {
-            throw NSError(domain: "CorrectOperation", code: Self.ERROR_CODE_URL_NOT_SUPPORTED, userInfo: [NSLocalizedDescriptionKey: "URL input is not supported for CorrectOperation"])
+            throw UserFacingError(
+                messageKey: .errorUrlNotSupported,
+                adviceKey: .adviceCheckConnection
+            )
         }
-        throw NSError(domain: "CorrectOperation", code: Self.ERROR_CODE_NO_TEXT, userInfo: [NSLocalizedDescriptionKey: "No text provided"])
+        throw UserFacingError(
+            messageKey: .errorNoText,
+            adviceKey: .adviceCheckConnection
+        )
     }
 
     public func decodeInput(from data: Data) throws -> OperationInput {
