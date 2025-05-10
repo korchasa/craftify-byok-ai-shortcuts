@@ -126,6 +126,7 @@ public struct HomeView: View {
                     OperationLabelText(type: operation.operation)
                     Spacer()
                     OperationParamsText(operation: operation, palette: palette)
+                        .padding(.trailing, FormStyleConstants.operationParamsTrailingPadding)
                 }
                 .contentShape(Rectangle())
             }
