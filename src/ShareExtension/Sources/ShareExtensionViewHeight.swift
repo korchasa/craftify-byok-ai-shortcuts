@@ -14,7 +14,7 @@ public enum ShareExtensionViewHeight {
     /// - Parameter count: Количество операций
     /// - Returns: Рекомендуемая высота окна
     public static func calculate(count: Int) -> CGFloat {
-        let rowHeight = ColorPaletteConstants.circleSize * Constants.rowHeightMultiplier
+        let rowHeight = ColorPickerLayoutConstants.circleSize * Constants.rowHeightMultiplier
         let headerHeight = ShareExtensionViewConstants.topPadding + Constants.headerFontHeight
         let bottomPadding = ShareExtensionViewConstants.bottomPadding
         let minHeight = Constants.minHeight

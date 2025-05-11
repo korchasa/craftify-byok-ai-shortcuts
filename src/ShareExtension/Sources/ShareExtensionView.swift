@@ -39,7 +39,7 @@ public struct ShareExtensionView: View {
 
     private enum ShareExtensionViewLocalConstants {
         static let operationHeightMultiplier: CGFloat = 1.5
-        static let operationMinHeight: CGFloat = ColorPaletteConstants.circleSize * operationHeightMultiplier
+        static let operationMinHeight: CGFloat = ColorPickerLayoutConstants.circleSize * operationHeightMultiplier
         static let gridColumns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible())]
         static let toastPadding: CGFloat = 8
         static let mainContentTopSpacer: CGFloat = 12

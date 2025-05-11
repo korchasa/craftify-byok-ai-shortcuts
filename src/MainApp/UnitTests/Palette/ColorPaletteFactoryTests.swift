@@ -22,21 +22,28 @@ public final class ColorPaletteFactoryTests: XCTestCase {
     /// Проверяет цвета светлой палитры
     public func testLightPaletteColors() {
         let palette = LightMainAppColorPalette()
-        XCTAssertEqual(palette.background(), Color.white)
+        XCTAssertEqual(palette.background(), Color(hex: "#ffffff"))
+        XCTAssertEqual(palette.primaryText(), Color(hex: "#17171c"))
+        XCTAssertEqual(palette.secondaryText(), Color(hex: "#8e8e93"))
+        XCTAssertEqual(palette.primaryButton(), Color(hex: "#ffd166"))
         XCTAssertEqual(palette.primaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.primaryButton(), Color.white)
+        XCTAssertEqual(palette.secondaryButton(), Color(hex: "#83d483"))
         XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.secondaryButton(), Color.white)
+        XCTAssertEqual(palette.destructive(), Color(hex: "#ef476f"))
+        XCTAssertEqual(palette.link(), Color(hex: "#17171c"))
     }
 
     /// Проверяет цвета тёмной палитры
     public func testDarkPaletteColors() {
         let palette = DarkMainAppColorPalette()
-        let darkBg = Color(red: 0.09, green: 0.09, blue: 0.11)
-        XCTAssertEqual(palette.background(), darkBg)
+        XCTAssertEqual(palette.background(), Color(hex: "#17171c"))
+        XCTAssertEqual(palette.primaryText(), Color(hex: "#ffffff"))
+        XCTAssertEqual(palette.secondaryText(), Color(hex: "#8e8e93"))
+        XCTAssertEqual(palette.primaryButton(), Color(hex: "#ffd166"))
         XCTAssertEqual(palette.primaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.primaryButton(), darkBg)
+        XCTAssertEqual(palette.secondaryButton(), Color(hex: "#83d483"))
         XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.secondaryButton(), darkBg)
+        XCTAssertEqual(palette.destructive(), Color(hex: "#ef476f"))
+        XCTAssertEqual(palette.link(), Color(hex: "#17171c"))
     }
 }

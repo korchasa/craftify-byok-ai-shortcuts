@@ -285,14 +285,14 @@ public struct EditOperationView: View {
         @Environment(\.colorPalette) private var palette
         var body: some View {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: palette.circleSpacing) {
+                HStack(spacing: ColorPickerLayoutConstants.circleSpacing) {
                     ForEach(viewModel.palette, id: \.self) { hex in
                         Circle()
                             .fill(Color(hex: hex))
-                            .frame(width: palette.circleSize, height: palette.circleSize)
+                            .frame(width: ColorPickerLayoutConstants.circleSize, height: ColorPickerLayoutConstants.circleSize)
                             .overlay(
                                 Circle()
-                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: palette.borderWidth)
+                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: ColorPickerLayoutConstants.borderWidth)
                             )
                             .onTapGesture {
                                 viewModel.selectedColorHex = hex
@@ -301,7 +301,7 @@ public struct EditOperationView: View {
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }
                 }
-                .padding(.vertical, palette.verticalSpacing)
+                .padding(.vertical, ColorPickerLayoutConstants.verticalSpacing)
             }
         }
     }

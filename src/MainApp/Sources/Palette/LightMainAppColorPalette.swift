@@ -22,14 +22,14 @@ public struct LightMainAppColorPalette: MainAppColorPaletteProviding {
 
     // MARK: - MainAppColorPaletteProviding
 
-    public func background() -> Color { Color.white }
-    public func primaryText() -> Color { Color.black }
-    public func secondaryText() -> Color { Color(white: ColorPaletteConstants.secondaryTextWhite) }
-    public func primaryButton() -> Color { Color.white }
+    public func background() -> Color { Color(hex: "#ffffff") }
+    public func primaryText() -> Color { Color(hex: "#17171c") }
+    public func secondaryText() -> Color { Color(hex: "#8e8e93") }
+    public func primaryButton() -> Color { Color(hex: "#ffd166") }
     public func primaryButtonText() -> Color { Color(hex: "#17171c") }
-    public func secondaryButton() -> Color { Color.white }
+    public func secondaryButton() -> Color { Color(hex: "#83d483") }
     public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
-    public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveLightRed, green: ColorPaletteConstants.destructiveLightGreen, blue: ColorPaletteConstants.destructiveLightBlue) }
-    public func link() -> Color { Color.black }
+    public func destructive() -> Color { Color(hex: "#ef476f") }
+    public func link() -> Color { Color(hex: "#17171c") }
     public func operationSymbolColor() -> Color { Color(hex: "#17171c") }
 }
