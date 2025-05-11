@@ -108,6 +108,16 @@ function lint() {
     exit 1
   fi
   _end_section
+  _start_section "Running Periphery (dead code analysis)"
+  if ! command -v periphery &>/dev/null; then
+    echo -e "${YELLOW}Periphery not found, skipping dead code analysis. Install with: brew install peripheryapp/periphery/periphery${NC}"
+  else
+    periphery scan --config .periphery.yml --format xcode --strict --quiet || {
+      echo -e "${RED}Periphery found dead code!${NC}"
+      exit 1
+    }
+  fi
+  _end_section
 }
 
 function size_report() {

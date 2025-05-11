@@ -65,6 +65,7 @@
 - Coverage ≥ 80% for key modules.
 - Unit-тесты проверяют корректность смены языка, генерации промптов, сериализации параметров операций.
 - Добавлен тест, гарантирующий, что смена языка влияет на promptTemplate во всех операциях.
+- **2024-06-09: All test targets and configs removed from Xcode project. Only production code remains. Dead code is now detected by Periphery in lint.**
 
 ## Share Extension Architecture
 - All managers are injected via DI, including OSLogManagerShared.
@@ -146,6 +147,7 @@ graph TD
 - Only include code in `dependencies` that is directly used by the target.
 - Test dependencies (ViewInspector, XCTest, etc.) must be listed only in UnitTest targets.
 - This prevents accidental autolinking of test frameworks and ensures clean, production-ready builds.
+- **2024-06-09: All test targets and their dependencies have been removed from the project.**
 
 ## References
 - [Project Overview](project.md)

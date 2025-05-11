@@ -3,8 +3,6 @@ import Foundation
 /// In-memory реализация LogManagerShared для тестов
 public final class LogManagerSharedInMemory: LogManagerShared {
     public static let defaultMaxLogCount = 1_000
-    private static let minKeyLength = 8
-    private static let maskLength = 4
     private var logs: [LogEntry] = []
     public let maxLogCount: Int
 

@@ -27,10 +27,10 @@ public enum ColorPaletteConstants {
     public static let argb32BitLength = 8
     /// Множитель для 12-битного RGB (17), используется для преобразования компоненты цвета из 12-битного формата.
     /// - Note: Используется только для внутренних преобразований.
-    private static let RGB12BitMultiplierValue: UInt64 = 17
+    /// private static let RGB12BitMultiplierValue: UInt64 = 17
     /// Множитель для 12-битного RGB (17), используется для преобразования компоненты цвета из 12-битного формата.
     /// - Note: Используется только для внутренних преобразований.
-    private static let RGB12BitMultiplierValue2: UInt64 = 17
+    /// private static let RGB12BitMultiplierValue2: UInt64 = 17
     /// Множитель для 12-битного RGB (17), используется для преобразования компоненты цвета из 12-битного формата.
     public static let rgb12BitMultiplier: UInt64 = 17
     /// Множитель для 24-битного RGB (1), используется для преобразования компоненты цвета из 24-битного формата.

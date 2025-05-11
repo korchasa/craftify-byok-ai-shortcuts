@@ -5,9 +5,6 @@ public struct AddOperationView: View {
     @ObservedObject public var viewModel: AddOperationViewModel
     @Environment(\.dismiss) private var dismiss
     public var onSave: ((InventoryOperation) -> Void)? = nil
-    @Environment(\.colorPalette) private var palette
-
-    private let colorPaletteVerticalPadding: CGFloat = 8
 
     public init(viewModel: AddOperationViewModel, onSave: ((InventoryOperation) -> Void)? = nil) {
         self.viewModel = viewModel
@@ -232,7 +229,6 @@ public struct AddOperationView: View {
 
     private struct AddOperationColorPalette: View {
         @ObservedObject var viewModel: AddOperationViewModel
-        @Environment(\.colorPalette) private var palette
         var body: some View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: ColorPickerLayoutConstants.circleSpacing) {

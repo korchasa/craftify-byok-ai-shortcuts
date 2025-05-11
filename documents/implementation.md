@@ -24,6 +24,7 @@
 - TDD (unit tests for all error branches)
 - Поддержка всех языков ISO-639-1 и ряда искусственных языков (Klingon, Sindarin, Quenya, Lojban, Toki Pona, Interlingua, Dothraki, Valyrian, Na'vi) через структуру SupportedLanguages
 - Для промптов LLM всегда используется английское название языка (englishName)
+- **2024-06-09: Periphery (dead code analyzer) added to lint. All test targets and configs removed. DI and ViewModels simplified.**
 
 ## Environment Setup
 1. Clone the repository.
@@ -120,11 +121,9 @@ The command outputs logs from the unified log (os_log) for the last day, filteri
 
 ## Project Schemas
 - MainApp
-- MainAppUnitTests
 - ShareExtension
-- ShareExtensionUnitTests
-- CommonUnitTests
 - ShareExtensionSizeReport
+- **2024-06-09: All test targets and their configs removed from the project.**
 
 ## Share Extension UI
 

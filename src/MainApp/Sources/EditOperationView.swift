@@ -9,10 +9,6 @@ public struct EditOperationView: View {
     @Environment(\.colorPalette) private var palette
     @State private var showDeleteConfirmation = false
 
-    private let colorPaletteVerticalPadding: CGFloat = 8
-    private static let dividerVerticalPadding: CGFloat = 8
-    private static let deleteButtonTopPadding: CGFloat = 16
-
     public init(viewModel: EditOperationViewModel, onSave: ((InventoryOperation) -> Void)? = nil, onDelete: (() -> Void)? = nil) {
         self.viewModel = viewModel
         self.onSave = onSave
@@ -45,8 +41,6 @@ public struct EditOperationView: View {
         let onDelete: (() -> Void)?
         @Binding var showDeleteConfirmation: Bool
         var dismiss: DismissAction
-        static let dividerVerticalPadding: CGFloat = 8
-        static let deleteButtonTopPadding: CGFloat = 16
         var body: some View {
             VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                 HStack {
@@ -78,10 +72,8 @@ public struct EditOperationView: View {
         let onDelete: () -> Void
         var dismiss: DismissAction
         @Environment(\.colorPalette) private var palette
-        static let dividerVerticalPadding: CGFloat = 8
-        static let deleteButtonTopPadding: CGFloat = 16
         var body: some View {
-            Divider().padding(.vertical, Self.dividerVerticalPadding)
+            Divider()
             Button(role: .destructive, action: {
                 showDeleteConfirmation = true
             }) {
@@ -91,7 +83,7 @@ public struct EditOperationView: View {
                     .foregroundColor(palette.destructive())
             }
             .accessibilityLabel(L10n.homeDelete)
-            .padding(.top, Self.deleteButtonTopPadding)
+            .padding(.top, FormStyleConstants.sectionSpacing)
             .alert(
                 LocalizedStringKey(L10n.homeDelete),
                 isPresented: $showDeleteConfirmation,
@@ -282,7 +274,6 @@ public struct EditOperationView: View {
 
     private struct EditOperationColorPalette: View {
         @ObservedObject var viewModel: EditOperationViewModel
-        @Environment(\.colorPalette) private var palette
         var body: some View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: ColorPickerLayoutConstants.circleSpacing) {

@@ -212,9 +212,8 @@ src/
 
 ## Targets and Schemes
 - MainApp
-- MainAppUnitTests
 - ShareExtension
-- ShareExtensionUnitTests
+- ShareExtensionSizeReport
 
 ## Logging
 - Все логи пишутся через Unified Log (os_log, subsystem: Internal, только message + metadata).

@@ -19,9 +19,6 @@ public final class ShareExtensionManager {
     public static let maxTextLength = 20000
     /// Входной текст для обработки (устанавливается из UI)
     public var inputText: String = ""
-    private enum Constants {
-        static let resultPreviewLength = 128
-    }
 
     /// Инициализация менеджера Share Extension
     /// - Parameters:

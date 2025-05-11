@@ -98,7 +98,6 @@ public struct SettingsView: View {
     private struct SettingsApiKeySection: View {
         @ObservedObject var viewModel: SettingsViewModel
         @FocusState var isTextFieldFocused: Bool
-        @Environment(\.colorPalette) private var palette
         var body: some View {
             SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
                 .focused($isTextFieldFocused)
@@ -118,17 +117,6 @@ public struct SettingsView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(ViewConstants.unlimitedLineLimit)
                     .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
-            }
-        }
-    }
-
-    private struct SettingsLoadingOverlay: View {
-        var isLoading: Bool
-        var body: some View {
-            if isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .scaleEffect(SettingsViewConstants.loadingScale)
             }
         }
     }

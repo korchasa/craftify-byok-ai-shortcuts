@@ -7,7 +7,6 @@ public struct SummarizeOperation: OperationType {
     private let textFetcher: TextFetching
     private let logManager: LogManagerShared?
 
-    private static let errorCodeNoTextOrURL = -2
     private static let errorCodeParse = -1
 
     public init(textFetcher: TextFetching? = nil, logManager: LogManagerShared? = nil) {

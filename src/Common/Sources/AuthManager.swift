@@ -4,9 +4,6 @@ import Security
 /// Production-реализация AuthManaging с поддержкой Keychain Sharing (App Group)
 public final class AuthManager: AuthManaging, @unchecked Sendable {
     private static let validKeyLength = 16
-    private static let maskLength = 8
-    private static let prefixLength = 3
-    private static let suffixLength = 4
     private let service = "dev.korchasa.Craftify.OpenAIKey"
     private let accessGroup = "78M3ZDR5UH.group.dev.korchasa.Craftify"
 

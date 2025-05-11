@@ -10,8 +10,6 @@ public struct ShareExtensionView: View {
     @State private var alertMessage = ""
     @State private var isProcessing = false
     @State private var progress: Double = 0.0
-    @State private var contentHeight: CGFloat = 0
-    public var onContentHeightChange: ((CGFloat) -> Void)? = nil
     @Environment(\.colorScheme) private var colorScheme
     private var palette: ShareExtensionColorPaletteProviding {
         ShareExtensionColorPaletteFactory.palette(for: colorScheme)
@@ -37,29 +35,16 @@ public struct ShareExtensionView: View {
         ("中文", "zh")
     ]
 
-    private enum ShareExtensionViewLocalConstants {
-        static let operationHeightMultiplier: CGFloat = 1.5
-        static let operationMinHeight: CGFloat = ColorPickerLayoutConstants.circleSize * operationHeightMultiplier
-        static let gridColumns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible())]
-        static let toastPadding: CGFloat = 8
-        static let mainContentTopSpacer: CGFloat = 12
-        static let cardCornerRadius: CGFloat = 12
-        static let closeButtonTopPadding: CGFloat = 12
-        static let closeButtonBottomPadding: CGFloat = 24
-        static let vStackSpacing: CGFloat = 0
-        static let closeButtonBackgroundOpacity: CGFloat = 0.15
-    }
-
     public init(viewModel: ShareExtensionViewModel) {
         self.viewModel = viewModel
     }
 
     // Add a helper property for the main content
     private var mainContentVStack: some View {
-        VStack(spacing: ShareExtensionViewLocalConstants.vStackSpacing) {
+        VStack(spacing: 0) {
             Rectangle()
                 .fill(Color.clear)
-                .frame(height: ShareExtensionViewLocalConstants.mainContentTopSpacer)
+                .frame(height: ShareExtensionViewConstants.copiedToastVerticalSpacing)
 
             if viewModel.displayResult != nil {
                 Text(displayOperationTitle())
@@ -81,8 +66,7 @@ public struct ShareExtensionView: View {
 
             if viewModel.displayResult != nil {
                 DisplayResultView(
-                    text: viewModel.displayResult ?? "",
-                    onClose: { viewModel.shouldCloseExtension = true }
+                    text: viewModel.displayResult ?? ""
                 )
             } else {
                 operationsGrid
@@ -158,11 +142,11 @@ public struct ShareExtensionView: View {
     }
 
     private var operationsGrid: some View {
-        let cardCornerRadius: CGFloat = ShareExtensionViewLocalConstants.cardCornerRadius
+        let cardCornerRadius: CGFloat = 12
         let symbolScale: CGFloat = 0.5
         let vStackSpacing: CGFloat = 4
         let hStackSpacing: CGFloat = 6
-        return LazyVGrid(columns: ShareExtensionViewLocalConstants.gridColumns, spacing: ShareExtensionViewConstants.gridSpacing) {
+        return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: ShareExtensionViewConstants.gridSpacing) {
             ForEach(viewModel.operations, id: \ .id) { op in
                 operationButton(for: op, cardCornerRadius: cardCornerRadius, symbolScale: symbolScale, vStackSpacing: vStackSpacing, hStackSpacing: hStackSpacing)
             }
@@ -193,7 +177,7 @@ public struct ShareExtensionView: View {
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, minHeight: ShareExtensionViewLocalConstants.operationMinHeight)
+            .frame(maxWidth: .infinity, minHeight: ShareExtensionViewConstants.operationMinHeight)
             .padding()
             .background(color)
             .foregroundColor(palette.primaryButtonText())
@@ -282,11 +266,11 @@ public struct ShareExtensionView: View {
         VStack {
             Rectangle()
                 .fill(Color.clear)
-                .frame(height: ShareExtensionViewLocalConstants.toastPadding)
+                .frame(height: ShareExtensionViewConstants.copiedToastVerticalSpacing)
             HStack {
                 Rectangle()
                     .fill(Color.clear)
-                    .frame(width: ShareExtensionViewLocalConstants.toastPadding)
+                    .frame(width: ShareExtensionViewConstants.copiedToastHorizontalSpacing)
                 Text(L10n.copiedToClipboard)
                     .font(.craftifyBody)
                     .fontWeight(.bold)
@@ -299,7 +283,7 @@ public struct ShareExtensionView: View {
                     .shadow(radius: ShareExtensionViewConstants.copiedToastShadowRadius)
                 Rectangle()
                     .fill(Color.clear)
-                    .frame(width: ShareExtensionViewLocalConstants.toastPadding)
+                    .frame(width: ShareExtensionViewConstants.copiedToastHorizontalSpacing)
             }
             Rectangle()
                 .fill(Color.clear)
@@ -331,7 +315,6 @@ public struct ShareExtensionView: View {
     /// View для отображения результата и кнопки закрытия
     private struct DisplayResultView: View {
         let text: String
-        let onClose: () -> Void
         var body: some View {
             Text(text)
                 .frame(maxWidth: .infinity, alignment: .topLeading)
