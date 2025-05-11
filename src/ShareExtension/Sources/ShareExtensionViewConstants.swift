@@ -34,6 +34,10 @@ public enum ShareExtensionViewConstants {
     public static let copiedToastHorizontalSpacing: CGFloat = 16
     /// Задержка скрытия copiedToast (секунды)
     public static let copiedToastHideDelay: TimeInterval = 2
+    /// Множитель высоты для кнопки операции
+    public static let operationHeightMultiplier: CGFloat = 1.5
+    /// Минимальная высота кнопки операции
+    public static let operationMinHeight: CGFloat = operationHeightMultiplier * ColorPickerLayoutConstants.circleSize
 }
 
 /// Расширение для уведомлений ShareExtension

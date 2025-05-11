@@ -3,13 +3,6 @@ import SwiftUI
 public struct DarkShareExtensionColorPalette: ShareExtensionColorPaletteProviding {
     // MARK: - ColorPaletteProviding
 
-    private static let backgroundRed: Double = ColorPaletteConstants.backgroundDarkRed
-    private static let backgroundGreen: Double = ColorPaletteConstants.backgroundDarkGreen
-    private static let backgroundBlue: Double = ColorPaletteConstants.backgroundDarkBlue
-    private static let secondaryTextRed: Double = ColorPaletteConstants.secondaryTextRed
-    private static let secondaryTextGreen: Double = ColorPaletteConstants.secondaryTextGreen
-    private static let secondaryTextBlue: Double = ColorPaletteConstants.secondaryTextBlue
-
     public func backgroundColor() -> Color { background() }
     public func textColor() -> Color { primaryText() }
     public func secondaryTextColor() -> Color { secondaryText() }

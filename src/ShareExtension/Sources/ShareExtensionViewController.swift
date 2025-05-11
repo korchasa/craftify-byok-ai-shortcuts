@@ -5,13 +5,6 @@ import UniformTypeIdentifiers
 /// NSExtensionPrincipalClass для Share Extension
 public final class ShareExtensionViewController: UIViewController {
     private var hostingController: UIHostingController<ShareExtensionView>?
-    private var contentHeightObservation: NSKeyValueObservation?
-    private enum Constants {
-        static let minHeight: CGFloat = 220
-        static let maxHeightMultiplier: CGFloat = 0.7
-        static let sheetCornerRadius: CGFloat = 16
-        static let popoverWidth: CGFloat = 400
-    }
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +47,7 @@ public final class ShareExtensionViewController: UIViewController {
         // Ограничение высоты через sheet detents (iOS 15+)
         if let sheet = self.sheetPresentationController {
             sheet.prefersGrabberVisible = true
-            sheet.preferredCornerRadius = Constants.sheetCornerRadius
+            sheet.preferredCornerRadius = ShareExtensionViewConstants.overlayCornerRadius
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             let customDetent = UISheetPresentationController.Detent.custom(identifier: .init("fixedHeight")) { _ in
                 initialHeight
@@ -64,7 +57,7 @@ public final class ShareExtensionViewController: UIViewController {
         } else if traitCollection.userInterfaceIdiom == .pad {
             // Для iPad — popover
             self.modalPresentationStyle = .popover
-            self.preferredContentSize = CGSize(width: Constants.popoverWidth, height: initialHeight)
+            self.preferredContentSize = CGSize(width: ShareExtensionViewConstants.progressWidth, height: initialHeight)
             if let pop = self.popoverPresentationController {
                 pop.sourceView = view
                 pop.sourceRect = CGRect(x: view.bounds.midX, y: view.bounds.midY, width: 0, height: 0)

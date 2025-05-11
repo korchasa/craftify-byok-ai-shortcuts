@@ -5,9 +5,6 @@ public final class AuthManagerStub: AuthManaging {
     // MARK: - Constants
 
     private static let validKeyLength = 16
-    private static let maskLength = 8
-    private static let prefixLength = 3
-    private static let suffixLength = 4
 
     // MARK: - Properties
 

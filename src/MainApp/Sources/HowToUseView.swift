@@ -19,7 +19,7 @@ public struct HowToUseView: View {
             HowToUseConsentToggle(viewModel: viewModel)
             HowToUsePrivacyLink()
             Spacer()
-            HowToUseDoneButton(viewModel: viewModel, onConsent: onConsent, handleDoneTapped: handleDoneTapped, bottomPadding: Self.bottomPadding)
+            HowToUseDoneButton(viewModel: viewModel, handleDoneTapped: handleDoneTapped, bottomPadding: Self.bottomPadding)
         }
         .padding()
         .background(palette.background())
@@ -71,7 +71,6 @@ public struct HowToUseView: View {
 
     private struct HowToUseDoneButton: View {
         @ObservedObject var viewModel: HowToUseViewModel
-        var onConsent: (() -> Void)?
         var handleDoneTapped: () -> Void
         let bottomPadding: CGFloat
         @Environment(\.colorPalette) private var palette

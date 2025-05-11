@@ -52,6 +52,14 @@ Users waste time copying text between apps for translation, simplification, or c
 - All tests updated to match new logic
 - Share Extension now supports sharing links (public.url) and text (public.text), both processed as text (priority: text)
 - [See also: Implementation Details](implementation.md)
+- **2024-06-09: Major refactoring:**
+    - Removed unused private constants, properties, and dead code in models, palettes, managers, View and ViewModel.
+    - Deleted obsolete and unused files (e.g., AddOperationViewConstants.swift).
+    - All test targets and their configs removed from Xcode project.
+    - Periphery (dead code analyzer) added to lint script.
+    - Dependency injection and initialization in CraftifyApp and Views simplified.
+    - Views and models are now simpler, with less duplication and fewer dependencies.
+    - Documentation updated in all files.
 
 ### URL Text Fetcher for SummarizeOperation
 - SummarizeOperation can accept a URL; the system downloads HTML, extracts meaningful text from `<body>` using SwiftSoup, and summarizes it

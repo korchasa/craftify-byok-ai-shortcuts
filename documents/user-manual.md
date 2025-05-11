@@ -7,6 +7,7 @@
 - Tests cover all error branches, including race conditions between error and timeout.
 - FetchError and UserFacingError have been refactored and relocated for clarity.
 - All changes are covered by unit and UI tests; project is stable and up to date.
+- **2024-06-09: Major refactoring — all test targets and configs removed, dead code deleted, Periphery added to lint, interface and documentation simplified.**
 
 # Craftify User Manual
 
@@ -61,6 +62,7 @@
 ## Instruction Relevance
 - Build, test, and update instructions are always current in [developer-manual.md](developer-manual.md).
 - App structure and documentation fully match the current project state.
+- **2024-06-09: All documentation updated to reflect the removal of test targets, dead code, and interface simplification.**
 
 ## Processing Time Limit
 - If text processing takes too long (over 30 seconds), a timeout message appears.

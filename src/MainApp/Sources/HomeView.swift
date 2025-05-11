@@ -5,7 +5,6 @@ public struct HomeView: View {
     @ObservedObject public var viewModel: HomeViewModel
     @State private var showAddOperation = false
     @State private var showSettings = false
-    @State private var showEditOperation = false
     @State private var editOperationViewModel: InventoryOperation? = nil
     @State private var editingIndex: Int? = nil
     @Environment(\.colorScheme) private var colorScheme
@@ -65,12 +64,7 @@ public struct HomeView: View {
                     }
                     editingIndex = nil
                 },
-                onDelete: {
-                    if let idx = editingIndex {
-                        viewModel.removeOperation(at: idx)
-                    }
-                    editingIndex = nil
-                }
+                onDelete: {}
             )
             .environment(\.colorPalette, palette)
         })
@@ -161,8 +155,7 @@ public struct HomeView: View {
                 OperationRowView(
                     operation: operation,
                     palette: palette,
-                    onEdit: onEdit,
-                    onDelete: {}
+                    onEdit: onEdit
                 )
                 .disabled(isEditing)
             }
@@ -181,7 +174,6 @@ public struct HomeView: View {
         let operation: InventoryOperation
         let palette: MainAppColorPaletteProviding
         let onEdit: () -> Void
-        let onDelete: () -> Void
         private static let iconToLabelSpacing: CGFloat = 12
 
         var body: some View {

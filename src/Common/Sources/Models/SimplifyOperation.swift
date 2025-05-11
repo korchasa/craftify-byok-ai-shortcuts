@@ -3,8 +3,6 @@ import Foundation
 public struct SimplifyOperation: OperationType {
     public let identifier = OperationKind.simplify.rawValue
     public let colorHex: String = ""
-    private static let ERROR_CODE_URL_NOT_SUPPORTED = -100
-    private static let ERROR_CODE_NO_TEXT = -101
 
     public init() {}
 

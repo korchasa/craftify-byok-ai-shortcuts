@@ -18,6 +18,7 @@
    ./run init
    ```
    This installs: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen (via Homebrew).
+   - **2024-06-09: Periphery (dead code analyzer) is now required for lint.**
 
 ## Building the Project
 - Generate the project: `./run generate` (uses tuist generate and swiftgen)
@@ -26,6 +27,7 @@
 ## Running Tests
 - Unit and UI tests: `./run check`
 - Coverage is checked automatically in CI
+- **2024-06-09: All test targets and configs removed. Only production code is built and checked.**
 
 ## Linting and Formatting
 - Lint: `./run lint`
@@ -34,6 +36,7 @@
 ## CI/CD
 - All checks and builds are automated via GitHub Actions (`.github/workflows/ci.yml`).
 - ShareExtension size and test coverage (≥ 80%) are required for successful builds.
+- **2024-06-09: Periphery is now run in lint. Test targets and configs removed.**
 
 ## Deployment
 - Release build and publishing via Fastlane (see repository instructions).
@@ -42,6 +45,7 @@
 ## Testing and CI Results
 - All instructions for running and testing are up-to-date.
 - Test coverage and ShareExtension size are automatically checked in CI.
+- **2024-06-09: All test targets and configs removed. Only production code is checked.**
 
 ## Processing Timeout Testing
 - Timeout is implemented only in ShareExtensionViewModel (default 30 seconds).
@@ -110,6 +114,7 @@ Button(action: ...) {
 - Use `embedAppExtensions` for including extensions, not `dependencies`.
 - Test dependencies (ViewInspector, XCTest, etc.) must be listed only in UnitTest targets.
 - If you encounter linker errors related to test frameworks, run `./run clean` and check your target dependencies.
+- **2024-06-09: All test targets and their dependencies have been removed from the project.**
 
 ## References
 - [Project Overview](project.md)
