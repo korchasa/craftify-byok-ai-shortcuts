@@ -177,7 +177,7 @@ public struct ShareExtensionView: View {
                 HStack(spacing: hStackSpacing) {
                     ZStack {
                         Image(systemName: op.operation.sfSymbol)
-                            .foregroundColor(Color(hex: "#17171c"))
+                            .foregroundColor(palette.operationSymbolColor())
                             .font(.system(size: ColorPaletteConstants.circleSize * symbolScale))
                             .fontWeight(.semibold)
                             .accessibilityLabel("SF Symbol for operation: \(op.operation.rawValue)")

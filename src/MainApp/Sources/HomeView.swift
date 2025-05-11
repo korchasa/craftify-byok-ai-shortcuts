@@ -211,7 +211,7 @@ public struct HomeView: View {
                     .frame(width: palette.circleSize, height: palette.circleSize)
                     .accessibilityLabel("Цвет операции")
                 Image(systemName: kind.sfSymbol)
-                    .foregroundColor(palette.background())
+                    .foregroundColor(palette.operationSymbolColor())
                     .font(.system(size: palette.circleSize * OperationIconCircle.symbolScale))
                     .fontWeight(.semibold)
                     .accessibilityLabel("SF Symbol for operation: \(kind.rawValue)")

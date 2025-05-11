@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Craftify – App Store Reviewer Documentation</title>
+    <style>
+        body { font-family: system-ui, sans-serif; margin: 0; padding: 0; background: #f8f9fa; color: #222; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; padding: 2rem 2.5rem 3rem 2.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border-radius: 12px; margin-top: 2rem; margin-bottom: 2rem; }
+        h1, h2, h3 { color: #1a365d; }
+        h1 { font-size: 2.2rem; margin-bottom: 0.5em; }
+        h2 { font-size: 1.5rem; margin-top: 2em; margin-bottom: 0.5em; }
+        h3 { font-size: 1.1rem; margin-top: 1.5em; margin-bottom: 0.5em; }
+        ul, ol { margin-left: 1.5em; }
+        code, pre { background: #f3f3f3; border-radius: 4px; padding: 2px 6px; }
+        .section { margin-bottom: 2em; }
+        .note { background: #e6f7ff; border-left: 4px solid #1890ff; padding: 1em; margin: 1em 0; border-radius: 6px; }
+        .contact { background: #f9fbe7; border-left: 4px solid #cddc39; padding: 1em; margin: 1em 0; border-radius: 6px; }
+        .privacy { background: #fff3e0; border-left: 4px solid #ff9800; padding: 1em; margin: 1em 0; border-radius: 6px; }
+        .screenshot { border: 1px solid #eee; border-radius: 8px; max-width: 100%; margin: 1em 0; }
+        .table { width: 100%; border-collapse: collapse; margin: 1em 0; }
+        .table th, .table td { border: 1px solid #ddd; padding: 8px; }
+        .table th { background: #f0f4f8; }
+        .important { color: #b71c1c; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Craftify – App Store Reviewer Documentation</h1>
+    <div class="section">
+        <h2>1. App Overview</h2>
+        <p><strong>Craftify</strong> is an iOS application with a Share Extension for contextual text processing using an external LLM API (such as OpenAI). <span class="important">To use the app, the user must provide their own LLM API key in the settings.</span> All text processing requests are securely sent to the external LLM provider for processing. The app allows users to perform operations such as translation, simplification, correction, explanation, and summarization of selected text from any app, directly or via the Share Extension.</p>
+        <ul>
+            <li><strong>App Name:</strong> Craftify</li>
+            <li><strong>Bundle ID:</strong> <em>group.dev.korchasa.Craftify</em></li>
+            <li><strong>Platforms:</strong> iOS (iPhone, iPad)</li>
+            <li><strong>Supported Languages:</strong> English, Russian (UI is fully localized)</li>
+            <li><strong>App Group:</strong> group.dev.korchasa.Craftify</li>
+            <li><strong>Keychain Sharing:</strong> group.dev.korchasa.Craftify</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>2. Key Features</h2>
+        <ul>
+            <li>Contextual text processing via external LLM API (e.g., OpenAI) for translation, simplification, correction, explanation, summarization</li>
+            <li>User must provide their own LLM API key in the app settings</li>
+            <li>Share Extension for processing text from any app</li>
+            <li>Customizable operation list (add, edit, reorder, delete operations)</li>
+            <li>Localized user interface and user-facing strings</li>
+            <li>Settings screen with log export and privacy options</li>
+            <li>All user data and logs are stored securely in the App Group container</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>3. Technical Details</h2>
+        <ul>
+            <li><strong>Architecture:</strong> Modular (MainApp, ShareExtension, Common SPM module)</li>
+            <li><strong>CI/CD:</strong> Automated via GitHub Actions, all builds and tests are reproducible via CLI</li>
+            <li><strong>Dependencies:</strong> External LLM API (e.g., OpenAI), SwiftUI, New Relic SDK (for crash reporting in MainApp only)</li>
+            <li><strong>Minimum iOS Version:</strong> 16.0</li>
+            <li><strong>App Group Storage:</strong> Used for sharing data and logs between MainApp and Share Extension</li>
+            <li><strong>Keychain Sharing:</strong> Used for secure API key storage</li>
+            <li><strong>LLM API Key:</strong> Required. The user must enter their own LLM API key (e.g., OpenAI) in the app settings. The key is stored securely in the keychain and never shared.</li>
+            <li><strong>External Requests:</strong> All text processing requests are sent to the external LLM provider specified by the user's API key.</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>4. Privacy Policy</h2>
+        <div class="privacy">
+            <p><strong>Data Collection:</strong> Craftify does not collect or transmit any personal data to third parties. <span class="important">However, all text processing requests are sent to the external LLM provider (such as OpenAI) specified by the user's API key, for the sole purpose of processing the user's request.</span> All logs are stored locally in the App Group container and are never shared externally. API keys are masked in logs and stored securely in the keychain.</p>
+            <p><strong>Crash Reporting:</strong> Crash reports are sent only from the MainApp via New Relic SDK. No crash data is sent from the Share Extension.</p>
+            <p><strong>Log Export:</strong> Users can export logs from the Settings screen. Logs contain only the last 1000 entries and all sensitive data (API keys) is masked.</p>
+            <p><strong>Permissions:</strong> The app does not request access to contacts, photos, location, or other sensitive user data.</p>
+            <p><strong>Privacy Policy URL:</strong> <a href="https://github.com/korchasa/Craftify/blob/main/documents/privacy-policy.md">https://github.com/korchasa/Craftify/blob/main/documents/privacy-policy.md</a></p>
+        </div>
+    </div>
+    <div class="section">
+        <h2>5. Contact Information</h2>
+        <div class="contact">
+            <p><strong>Developer:</strong> Alexander Korchasa</p>
+            <p><strong>Email:</strong> <a href="mailto:korchasa@gmail.com">korchasa@gmail.com</a></p>
+            <p><strong>Support URL:</strong> <a href="https://github.com/korchasa/Craftify">https://github.com/korchasa/Craftify</a></p>
+        </div>
+    </div>
+    <div class="section">
+        <h2>6. Testing Instructions</h2>
+        <ol>
+            <li>Install the app on a device running iOS 16.0 or later.</li>
+            <li>Launch Craftify MainApp. The home screen displays the list of available operations.</li>
+            <li>Open the <strong>Settings</strong> screen and enter your LLM API key (e.g., OpenAI API Key). The app will not function without a valid key.</li>
+            <li>Tap <strong>+</strong> to add a new operation (e.g., Translate, Simplify, etc.).</li>
+            <li>Use the <strong>Settings</strong> button to access the settings screen. Here you can export logs and view privacy information.</li>
+            <li>To test the Share Extension:
+                <ul>
+                    <li>Select any text in another app (e.g., Safari, Notes).</li>
+                    <li>Tap <strong>Share</strong> and select <strong>Craftify</strong> from the share sheet.</li>
+                    <li>The extension will process the selected text using the chosen operation.</li>
+                </ul>
+            </li>
+            <li>All user-facing strings are localized. To test localization, change the device language in iOS settings and relaunch the app.</li>
+            <li>Logs can be exported from the Settings screen for review.</li>
+        </ol>
+        <div class="note">
+            <strong>Note:</strong> No login or demo account is required. All features are available after entering a valid LLM API key.
+        </div>
+    </div>
+    <div class="section">
+        <h2>7. App Store Reviewer Notes</h2>
+        <ul>
+            <li>The user must provide their own LLM API key in the settings. All text processing requests are sent to the external LLM provider for processing.</li>
+            <li>No in-app purchases or subscriptions are present.</li>
+            <li>All user data remains on device except for text sent to the LLM provider for processing, as initiated by the user.</li>
+            <li>App supports both light and dark mode.</li>
+            <li>All user-facing text is localized and uses <code>NSLocalizedString</code> with explicit bundle.</li>
+            <li>App is fully functional on iPhone and iPad.</li>
+            <li>App does not use private APIs or require special entitlements.</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>8. Screenshots</h2>
+        <p>See App Store Connect for full-resolution screenshots for all supported devices and languages.</p>
+        <img src="icon.png" alt="App Icon" class="screenshot" style="max-width:120px;">
+    </div>
+    <div class="section">
+        <h2>9. Version History & Changelog</h2>
+        <ul>
+            <li><strong>1.0.0</strong> – Initial release. All core features implemented and tested.</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>10. Legal & Compliance</h2>
+        <ul>
+            <li>All third-party libraries are used in compliance with their licenses.</li>
+            <li>App does not use or collect any protected health, financial, or sensitive personal data.</li>
+            <li>App complies with all App Store Review Guidelines as of April 2025.</li>
+        </ul>
+    </div>
+    <div class="section">
+        <h2>11. Additional Notes</h2>
+        <ul>
+            <li>For any questions or additional information, please contact the developer at the email above.</li>
+            <li>All documentation is available in the <code>documents/</code> directory of the project repository.</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

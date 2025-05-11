@@ -20,4 +20,6 @@ public protocol ShareExtensionColorPaletteProviding: ColorPaletteProviding {
     func destructive() -> Color
     /// Цвет для ссылок
     func link() -> Color
+    /// Цвет символа операции (всегда темно-серый)
+    func operationSymbolColor() -> Color
 }

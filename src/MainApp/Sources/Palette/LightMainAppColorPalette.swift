@@ -31,4 +31,5 @@ public struct LightMainAppColorPalette: MainAppColorPaletteProviding {
     public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
     public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveLightRed, green: ColorPaletteConstants.destructiveLightGreen, blue: ColorPaletteConstants.destructiveLightBlue) }
     public func link() -> Color { Color.black }
+    public func operationSymbolColor() -> Color { Color(hex: "#17171c") }
 }
