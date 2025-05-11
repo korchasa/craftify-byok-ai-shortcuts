@@ -31,4 +31,5 @@ public struct LightShareExtensionColorPalette: ShareExtensionColorPaletteProvidi
     public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
     public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveLightRed, green: ColorPaletteConstants.destructiveLightGreen, blue: ColorPaletteConstants.destructiveLightBlue) }
     public func link() -> Color { Color(red: ColorPaletteConstants.linkLightRed, green: ColorPaletteConstants.linkLightGreen, blue: ColorPaletteConstants.linkLightBlue) }
+    public func operationSymbolColor() -> Color { Color(hex: "#17171c") }
 }
