@@ -29,29 +29,14 @@ public struct DarkShareExtensionColorPalette: ShareExtensionColorPaletteProvidin
 
     // MARK: - ShareExtensionColorPaletteProviding
 
-    public func background() -> Color {
-        Color(
-            red: Self.backgroundRed,
-            green: Self.backgroundGreen,
-            blue: Self.backgroundBlue
-        )
-    }
-
-    public func primaryText() -> Color { Color.white }
-    public func secondaryText() -> Color {
-        Color(
-            red: Self.secondaryTextRed,
-            green: Self.secondaryTextGreen,
-            blue: Self.secondaryTextBlue
-        )
-    }
-
-    public func primaryButton() -> Color { Color(red: ColorPaletteConstants.primaryRed, green: ColorPaletteConstants.primaryGreen, blue: ColorPaletteConstants.primaryBlue) }
+    public func background() -> Color { Color(hex: "#17171c") }
+    public func primaryText() -> Color { Color(hex: "#ffffff") }
+    public func secondaryText() -> Color { Color(hex: "#8e8e93") }
+    public func primaryButton() -> Color { Color(hex: "#ffd166") }
     public func primaryButtonText() -> Color { Color(hex: "#17171c") }
-    public func secondaryButton() -> Color { Color(red: ColorPaletteConstants.secondaryRed, green: ColorPaletteConstants.secondaryGreen, blue: ColorPaletteConstants.secondaryBlue) }
+    public func secondaryButton() -> Color { Color(hex: "#83d483") }
     public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
-    public func destructive() -> Color { Color(red: ColorPaletteConstants.destructiveRed, green: ColorPaletteConstants.destructiveGreen, blue: ColorPaletteConstants.destructiveBlue) }
-    public func link() -> Color { Color(red: ColorPaletteConstants.linkRed, green: ColorPaletteConstants.linkGreen, blue: ColorPaletteConstants.linkBlue) }
-
+    public func destructive() -> Color { Color(hex: "#ef476f") }
+    public func link() -> Color { Color(hex: "#118ab2") }
     public func operationSymbolColor() -> Color { Color(hex: "#17171c") }
 }

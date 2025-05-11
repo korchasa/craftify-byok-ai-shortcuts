@@ -14,28 +14,28 @@ public final class ShareExtensionColorPaletteTests: XCTestCase {
 
     public func testLightPaletteColors() {
         let palette = LightShareExtensionColorPalette()
-        XCTAssertEqual(palette.background(), Color.white)
-        XCTAssertEqual(palette.primaryText(), Color.black)
-        XCTAssertEqual(palette.secondaryText(), Color(white: ColorPaletteConstants.secondaryTextWhite))
-        XCTAssertEqual(palette.primaryButton(), Color(red: ColorPaletteConstants.primaryRed, green: ColorPaletteConstants.primaryGreen, blue: ColorPaletteConstants.primaryBlue))
+        XCTAssertEqual(palette.background(), Color(hex: "#ffffff"))
+        XCTAssertEqual(palette.primaryText(), Color(hex: "#000000"))
+        XCTAssertEqual(palette.secondaryText(), Color(hex: "#8e8e93"))
+        XCTAssertEqual(palette.primaryButton(), Color(hex: "#ffd166"))
         XCTAssertEqual(palette.primaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.secondaryButton(), Color(red: ColorPaletteConstants.secondaryRed, green: ColorPaletteConstants.secondaryGreen, blue: ColorPaletteConstants.secondaryBlue))
+        XCTAssertEqual(palette.secondaryButton(), Color(hex: "#83d483"))
         XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.destructive(), Color(red: ColorPaletteConstants.destructiveLightRed, green: ColorPaletteConstants.destructiveLightGreen, blue: ColorPaletteConstants.destructiveLightBlue))
-        XCTAssertEqual(palette.link(), Color(red: ColorPaletteConstants.linkLightRed, green: ColorPaletteConstants.linkLightGreen, blue: ColorPaletteConstants.linkLightBlue))
+        XCTAssertEqual(palette.destructive(), Color(hex: "#ef476f"))
+        XCTAssertEqual(palette.link(), Color(hex: "#118ab2"))
     }
 
     public func testDarkPaletteColors() {
         let palette = DarkShareExtensionColorPalette()
-        XCTAssertEqual(palette.background(), Color(red: ColorPaletteConstants.backgroundDarkRed, green: ColorPaletteConstants.backgroundDarkGreen, blue: ColorPaletteConstants.backgroundDarkBlue))
-        XCTAssertEqual(palette.primaryText(), Color.white)
-        XCTAssertEqual(palette.secondaryText(), Color(red: ColorPaletteConstants.secondaryTextRed, green: ColorPaletteConstants.secondaryTextGreen, blue: ColorPaletteConstants.secondaryTextBlue))
-        XCTAssertEqual(palette.primaryButton(), Color(red: ColorPaletteConstants.primaryRed, green: ColorPaletteConstants.primaryGreen, blue: ColorPaletteConstants.primaryBlue))
+        XCTAssertEqual(palette.background(), Color(hex: "#17171c"))
+        XCTAssertEqual(palette.primaryText(), Color(hex: "#ffffff"))
+        XCTAssertEqual(palette.secondaryText(), Color(hex: "#8e8e93"))
+        XCTAssertEqual(palette.primaryButton(), Color(hex: "#ffd166"))
         XCTAssertEqual(palette.primaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.secondaryButton(), Color(red: ColorPaletteConstants.secondaryRed, green: ColorPaletteConstants.secondaryGreen, blue: ColorPaletteConstants.secondaryBlue))
+        XCTAssertEqual(palette.secondaryButton(), Color(hex: "#83d483"))
         XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
-        XCTAssertEqual(palette.destructive(), Color(red: ColorPaletteConstants.destructiveRed, green: ColorPaletteConstants.destructiveGreen, blue: ColorPaletteConstants.destructiveBlue))
-        XCTAssertEqual(palette.link(), Color(red: ColorPaletteConstants.linkRed, green: ColorPaletteConstants.linkGreen, blue: ColorPaletteConstants.linkBlue))
+        XCTAssertEqual(palette.destructive(), Color(hex: "#ef476f"))
+        XCTAssertEqual(palette.link(), Color(hex: "#118ab2"))
     }
 
     public func testPaletteConstants() {
