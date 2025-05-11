@@ -3,75 +3,60 @@
 ---
 
 ## Purpose
-Craftify is an iOS application (iOS 16+) with a Share Extension for contextual text processing (translation, simplification, correction, explanation) via the OpenAI API. It enables users to process text from any app without switching between services.
+- iOS app (iOS 16+) + Share Extension for contextual text processing (translate, simplify, correct, explain) via OpenAI API
+- Process text from any app, no switching
 
-## Problem Statement
-Users waste time copying text between apps for translation, simplification, or correction. This manual process is inefficient and error-prone.
+## Problem
+- Manual copy-paste for text processing is slow, error-prone
 
-## Solution Overview
-- Result processing mode (`resultMode`) for operations: results can be copied to the clipboard or displayed in a popup window (e.g., Explain operation).
-- All operations except Explain copy the result to the clipboard; Explain displays the result directly in the extension window.
-- Modular architecture with a shared Swift Package (Common).
-- Secure API key storage in Keychain with Keychain Sharing.
-- Unified logging and flexible configuration.
-- Comprehensive test coverage.
+## Solution
+- `resultMode`: clipboard/display for operations
+- All ops except Explain → clipboard; Explain → popup
+- Modular: shared SwiftPM module
+- Secure API key in Keychain (sharing enabled)
+- Unified logging, flexible config
+- Full test coverage
 
-## Goals and Objectives
-- Seamless integration of text processing.
-- Increased productivity and user convenience.
-- Modular, maintainable architecture.
-- Secure and privacy-compliant data handling.
-- All key user scenarios covered by tests, including edge and negative cases.
+## Goals
+- Seamless text processing
+- ↑ Productivity, convenience
+- Modular, maintainable
+- Secure, privacy-compliant
+- All user scenarios tested (incl. edge/negative)
 
-## Target Audience
+## Audience
 - Multilingual users
-- Students and professionals
-- Anyone needing quick text explanation or simplification
+- Students, professionals
+- Anyone needing quick text explanation/simplification
 
-## Success Criteria
-- Average response time ≤ 3s for short texts (≤1000 characters)
-- Share Extension size ≤ 20 MB
-- Test coverage ≥ 80%
-- All key scenarios covered by tests
-- Simplicity and ease of use
-- Compliance with security and privacy requirements
+## Success
+- Avg. response ≤3s (≤1000 chars)
+- ShareExt ≤20MB
+- Test coverage ≥80%
+- All key scenarios tested
+- Simple, easy to use
+- Security/privacy compliant
 
-## Key Features
-- Color selection for each operation from a palette
-- Operation color is saved and displayed in both the main app and Share Extension
-- Result processing mode (clipboard/display) for operations
-- Explain operation displays result in a scrollable popup window
-- Share Extension supports both text and URLs (public.text, public.url) via NSExtensionActivationRule in project.yml (XcodeGen)
-- Both types are processed as plain text, with priority given to text
-- All features are covered by unit and UI tests
+## Features
+- Color selection per operation
+- Color shown in app & ShareExt
+- `resultMode` per op
+- Explain → popup
+- ShareExt: text & URL (priority: text)
+- All features tested
 
-## Solved Problems
-- Added `resultMode` attribute for operations, supporting result display mode
-- Removed `stylePreservationLevel` from the correct operation; style is always maximally preserved
-- UI and ViewModel updated: Stepper and related fields removed
-- All tests updated to match new logic
-- Share Extension now supports sharing links (public.url) and text (public.text), both processed as text (priority: text)
-- [See also: Implementation Details](implementation.md)
-- **2024-06-09: Major refactoring:**
-    - Removed unused private constants, properties, and dead code in models, palettes, managers, View and ViewModel.
-    - Deleted obsolete and unused files (e.g., AddOperationViewConstants.swift).
-    - All test targets and their configs removed from Xcode project.
-    - Periphery (dead code analyzer) added to lint script.
-    - Dependency injection and initialization in CraftifyApp and Views simplified.
-    - Views and models are now simpler, with less duplication and fewer dependencies.
-    - Documentation updated in all files.
+## Solved
+- `resultMode` added
+- `stylePreservationLevel` removed
+- UI/ViewModel: Stepper, fields removed
+- Tests updated
+- ShareExt: supports text/URL
+- Refactored: removed dead code, simplified DI, updated docs
 
-### URL Text Fetcher for SummarizeOperation
-- SummarizeOperation can accept a URL; the system downloads HTML, extracts meaningful text from `<body>` using SwiftSoup, and summarizes it
-- Only HTTPS URLs are supported (App Transport Security)
-- Only visible `<body>` text is extracted; scripts/styles are ignored
-- No manual copy-paste required for web content
+## SummarizeOperation URL Fetcher
+- Accepts URL, downloads HTML, extracts <body> text (SwiftSoup), summarizes
+- Only HTTPS, visible <body> text
 
-## UI Requirements
-- All screens must have a strictly white background (`Color.white`)
-- System or gray backgrounds (including default List, Form, ScrollView, and safe area backgrounds) are not allowed
-- Applies to all main and auxiliary screens, including Share Extension
-- All user-facing surfaces must maintain a clean, white background for visual consistency and clarity
 
 ## References
 - [Architecture](architecture.md)
@@ -80,48 +65,38 @@ Users waste time copying text between apps for translation, simplification, or c
 - [Developer Manual](developer-manual.md)
 - [User Manual](user-manual.md)
 
-## Migration to Tuist
+## Tuist Migration
+- All config in Project.swift, Workspace.swift
+- XcodeGen, .xcodeproj, .xcworkspace removed
+- All builds/tests via tuist, CLI
+- Reproducible, DevOps/CI/CD-friendly
 
-The project is now fully managed by Tuist:
-- All targets, dependencies, resources, and schemes are described in Project.swift and Workspace.swift.
-- XcodeGen, project.yml, .xcodeproj, and .xcworkspace are removed.
-- All builds and tests are performed via tuist and CLI scripts (see ./run).
-- This ensures reproducible, DevOps-friendly, and CI/CD-compatible workflows.
-- All configuration is file-based, no manual Xcode GUI work required.
+## DevOps
+- All config/code-based
+- No manual steps
+- Onboarding: `./run init && ./run generate`
 
-## DevOps-friendly flow
-- All project structure and configuration are described in code (Project.swift, Workspace.swift, configs).
-- No manual steps: all builds, tests, and code generation are automated.
-- Easy onboarding: just run ./run init and ./run generate.
+## AppSettingsManager
+- Centralized settings (incl. language)
+- Ops always use current language
+- No duplication in params
+- All changes logged
+- All tests pass, docs updated
 
-## Goals and Requirements
-- Все настройки приложения (включая язык) централизованы в AppSettingsManager.
-- Операции (Summarize, Explain и др.) всегда используют актуальный язык из настроек пользователя.
-- После смены языка все операции используют новое значение без пересоздания.
-- Нет дублирования и устаревших полей в OperationInput и параметрах операций.
-- Все изменения настроек логируются централизованно.
-- Все тесты проходят, документация обновлена.
+## Use Cases
+- Users: quick language/interface change
+- Devs: centralized settings, transparent logging
 
-## Target Audience and Use Cases
-- Пользователи, которым важно быстро менять язык интерфейса и операций без перезапуска приложения.
-- Разработчики, которым важно централизованное управление настройками и прозрачное логирование изменений.
+## Metrics
+- Ops use only current language
+- No param duplication
+- All tests/checks pass
+- Docs reflect current state
 
-## Success Metrics and Constraints
-- Все операции используют только актуальный язык из AppSettingsManager.
-- Нет дублирования и устаревших полей в параметрах.
-- Все тесты и проверки проходят без ошибок.
-- Документация отражает текущее состояние архитектуры и реализации.
-
-## Current State (April 2024)
-
-- Error handling has been significantly improved in both MainApp and ShareExtension:
-  - All errors are now returned as UserFacingError with localization keys and user advice.
-  - New localization keys for advice and errors (en/ru) have been added.
-  - Error messages are always localized and include actionable advice.
-- Alert display and closing logic in ShareExtensionView has been improved.
-- Logs now use English messages for consistency.
-- Tests have been updated and expanded:
-  - Error and timeout handling is thoroughly tested.
-  - Race conditions between error and timeout are covered.
-- Refactoring of FetchError and UserFacingError (moved, updated).
-- The project is stable, all tests pass, and documentation is up to date.
+## State
+- Error handling: UserFacingError, localized, actionable
+- Alert logic improved
+- Logs: English only
+- Tests: error/timeout/race conditions covered
+- Refactored errors
+- Stable, all tests pass, docs up to date
