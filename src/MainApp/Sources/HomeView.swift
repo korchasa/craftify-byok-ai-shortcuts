@@ -208,11 +208,11 @@ public struct HomeView: View {
             ZStack {
                 Circle()
                     .fill(Color(hex: colorHex))
-                    .frame(width: palette.circleSize, height: palette.circleSize)
+                    .frame(width: ColorPickerLayoutConstants.circleSize, height: ColorPickerLayoutConstants.circleSize)
                     .accessibilityLabel("Цвет операции")
                 Image(systemName: kind.sfSymbol)
                     .foregroundColor(palette.operationSymbolColor())
-                    .font(.system(size: palette.circleSize * OperationIconCircle.symbolScale))
+                    .font(.system(size: ColorPickerLayoutConstants.circleSize * OperationIconCircle.symbolScale))
                     .fontWeight(.semibold)
                     .accessibilityLabel("SF Symbol for operation: \(kind.rawValue)")
             }
