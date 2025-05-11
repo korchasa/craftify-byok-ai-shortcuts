@@ -13,100 +13,94 @@
 
 ---
 
-## Getting Started
-1. Open Craftify after installation.
-2. On first launch, review the instructions and provide consent for text processing (checkbox).
-3. Add desired operations (translate, simplify, correct, explain) via HomeView.
-4. Enter your OpenAI API key in SettingsView.
+## Start
+1. Open app
+2. On 1st launch: review, consent (checkbox)
+3. Add ops (translate, simplify, correct, explain) via HomeView
+4. Enter OpenAI API key in SettingsView
 5. To process text:
-   - Select text in any app.
-   - Invoke Craftify via the "Share" menu.
-   - Choose the desired operation.
-   - Receive the result:
-     - For most operations, the result is automatically copied to the clipboard (with notification).
-     - For Explain, the result is displayed directly in a scrollable popup window.
+   - Select text in any app
+   - Share → Craftify
+   - Choose op
+   - Result:
+     - Most ops: auto-copy to clipboard (notify)
+     - Explain: show in popup
 
-## Processing Result Modes
-- Each operation supports a result processing mode:
-  - **Clipboard**: result is copied to the clipboard (default for all operations).
-  - **Display**: result is shown in a popup window (used for Explain).
-- For Explain, the result is not copied automatically, but shown in the extension window.
+## Result Modes
+- Each op: resultMode
+  - Clipboard: copy (default)
+  - Display: popup (Explain)
 
-## Testing
-- All main scenarios are tested automatically (unit, UI), including Explain (display) and clipboard operations.
-- For manual testing: use the Share Extension with different text types and parameters, check both modes (copy and display).
+## Test
+- All main scenarios: auto-tested (unit, UI)
+- Manual: ShareExt, try text types/params, check both modes
 
-## Build and Deployment
-- For self-building: follow instructions in [developer-manual.md](developer-manual.md).
-- For updates: use App Store or TestFlight (if available).
+## Build/Deploy
+- Build: see [developer-manual.md](developer-manual.md)
+- Update: App Store/TestFlight
 
-## Notes
-- All data (key, inventory) is stored only on the device.
-- A valid OpenAI API key is required.
-- The app does not store request history or analyze clipboard content.
+## Data
+- All data (key, inventory): device only
+- OpenAI API key required
+- No request history/clipboard analysis
 
-## User Testing Results
-- All user scenarios for the Share Extension are tested and work as documented.
-- Edge-case scenarios (no text, too long text, network errors, invalid key, etc.) are handled correctly.
-- Verified that Explain displays the result, and other operations copy to the clipboard.
+## User Test Results
+- All ShareExt scenarios tested
+- Edge cases (no text, too long, network error, invalid key, etc.): handled
+- Explain: shows result; others: copy
 
-## What's New in Share Extension
-- Support for all main operations (translate, simplify, correct, explain) with parameters.
-- Automatic text length check and processing block if limit exceeded.
-- All errors (no text, too long, network errors, invalid key, clipboard errors) are handled with clear messages.
+## ShareExt: What's New
+- All main ops (translate, simplify, correct, explain) + params
+- Auto text length check, block if limit
+- All errors: clear messages
 - Result:
-  - For most operations — copied to clipboard and confirmed by notification.
-  - For Explain — displayed in a scrollable popup window.
-- All actions and errors are logged (FIFO, view via `./run logs`).
+  - Most: copy + notify
+  - Explain: popup
+- All actions/errors logged (FIFO, `./run logs`)
 
 ## Instruction Relevance
-- Build, test, and update instructions are always current in [developer-manual.md](developer-manual.md).
-- App structure and documentation fully match the current project state.
-- **2024-06-09: All documentation updated to reflect the removal of test targets, dead code, and interface simplification.**
+- Build/test/update: always current in [developer-manual.md](developer-manual.md)
+- App structure/docs match state
 
-## Processing Time Limit
-- If text processing takes too long (over 30 seconds), a timeout message appears.
-- Timeout is implemented only in the Share Extension. No time limit in the main app.
+## Timeout
+- If processing >30s: timeout message
+- Timeout: only in ShareExt
 
-## Log Viewing
-All actions and errors are logged via Unified Log (os_log, subsystem: Internal, message + metadata only). To view logs, use:
-```sh
-./run logs
-```
-Logs are filtered by subsystem Internal, all levels, MainApp and ShareExtension. Log export is not supported; view only via system tools (Console.app, log stream) or `./run logs`.
+## Logs
+- All actions/errors: Unified Log (os_log, subsystem: Internal)
+- View: `./run logs` (filter: Internal, MainApp, ShareExt)
+- No export
 
-## Operation Color Selection
-- When adding or editing an operation, you can select a color from the palette. The color is shown on the operation card on the main screen and in the Share Extension.
-- The correct operation always preserves style at maximum; the user cannot select the style preservation level.
+## Op Color
+- Add/edit op: select color from palette
+- Color shown on op card (main, ShareExt)
+- Correct: always max style
 
-## Welcome Screen and Consent
-On first launch, Craftify displays a welcome screen with instructions and a consent checkbox. Until the user checks the box and presses "Done", app features are unavailable. After consent, the main screen opens automatically. Consent is saved and not requested again on subsequent launches.
+## Welcome/Consent
+- 1st launch: welcome, consent checkbox
+- Until checked: features unavailable
+- After: main screen auto-opens
+- Consent saved, not re-asked
 
-## Using the Share Extension
-- The close button is always available at the bottom, regardless of content length.
-- All other content (operations, result) is scrollable if it does not fit on the screen.
-- The button does not overlap content, even with lots of content.
-- The interface is adapted for all devices and supports accessibility.
-- All actions are tested, stability is guaranteed.
+## ShareExt UI
+- Close: always at bottom
+- All content: scrollable
+- Button never overlaps content
+- Adapted for all devices, accessibility
+- All tested
 
-## Sharing Links (URLs)
-- You can now share links (URLs) to Craftify via the "Share" menu from any app.
-- Just select "Share" → Craftify, and the link will be processed as plain text.
-- If both text and a link are shared, text takes priority.
-- Length limit (5000 characters) applies to links as well.
+## Share Links
+- Share links (URLs) via Share menu
+- If both text+link: text priority
+- 5000 char limit
 
-## Unified Button Styles
-All buttons in the application have a unified look and feel:
-- Consistent color scheme
-- Rounded corners
-- Uniform padding and spacing
-- Responsive press effect
+## Button Styles
+- Unified: color, corners, padding, press effect
+- Consistent across screens
 
-This ensures a predictable and visually pleasing experience across all screens.
-
-## Production Build Safety
-- The application is built so that no test dependencies (ViewInspector, XCTest, etc.) are included in the production app or extension.
-- If you encounter build or linker errors, run `./run clean` and rebuild.
+## Prod Build Safety
+- No test deps in prod app/ext
+- Build/link error: `./run clean` + rebuild
 
 ## References
 - [Project Overview](project.md)
@@ -115,31 +109,29 @@ This ensures a predictable and visually pleasing experience across all screens.
 - [File Structure](file_structure.md)
 - [Developer Manual](developer-manual.md)
 
-## Additional Notes
-- In the app settings, you can select the native language from the full list of supported languages (ISO-639-1 and artificial languages). This language will be used by default for operations Summarize and Explain.
-- For the Translate operation, this same list of languages is also available.
+## Language
+- Settings: select language (ISO-639-1 + artificial)
+- Used for Summarize, Explain, Translate
+- Change: open Settings, select, Save
+- All ops use current language
+- Change applies instantly, no restart
 
-## Using Craftify
-- To change the language of the interface and operations, open Settings, select the desired language from the dropdown list, and click Save. The language will change in all operations only after saving.
-- All operations (Summarize, Explain, etc.) use only the current language from the settings, selected in Settings.
-- After changing the language, new operations immediately use the new value, without the need to restart the application.
+## Logs of Settings
+- All changes (incl. language): logged, view via `./run logs`
 
-## Logs of settings changes
-- All settings changes (including language) are recorded in the system log and can be analyzed via ./run logs.
+## Test Language Change
+1. Open Settings, select new language, Save
+2. Run any op: result in new language
+3. To revert: repeat
 
-## How to test language change
-1. Open Settings, select a new language, click Save.
-2. Perform any operation (Summarize, Explain, etc.) — the result will be in the new language.
-3. To return to the previous language, repeat the steps.
+## Build/Run
+- Quick: `./run check`
+- Simulator: `./run sim`
+- Logs: `./run logs`
 
-## How to build and run
-- For quick testing: `./run check`
-- For running on a simulator: `./run sim`
-- For viewing logs: `./run logs`
-
-## How to update settings
-- All settings are centralized in AppSettingsManager and saved in App Group, accessible from MainApp and ShareExtension.
-- Changes take effect only after clicking Save in Settings.
+## Update Settings
+- All settings: AppSettingsManager, App Group
+- Changes: only after Save
 
 ## Appearance
-- The text color of buttons always matches the application theme, as it is centrally set through the palette.
+- Btn text color: always matches theme, set via palette
