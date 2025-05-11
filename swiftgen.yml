@@ -5,5 +5,5 @@ strings:
         output: src/MainApp/Resources/Generated/Strings.swift
   - inputs: src/ShareExtension/Resources/en.lproj
     outputs:
-      - templatePath: swiftgen-structured-swift5.stencil
+      - templateName: structured-swift5
         output: src/ShareExtension/Resources/Generated/Strings.swift
