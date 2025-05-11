@@ -1,8 +1,8 @@
 import Foundation
 
 public struct SummarizeParams: Codable, Equatable {
-    public let sentenceCountRange: SentenceCountRange
-    public init(sentenceCountRange: SentenceCountRange) {
-        self.sentenceCountRange = sentenceCountRange
+    public let length: String
+    public init(length: String) {
+        self.length = length
     }
 }

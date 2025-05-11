@@ -103,5 +103,32 @@ public final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(self.inventoryStub?.inventory, expected)
     }
 
+    public func testDeleteOperationViaEditViewRemovesFromList() {
+        // Arrange: добавляем три операции
+        let operation1 = InventoryOperation(
+            operation: .translate,
+            params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
+            colorHex: "3288bd"
+        )
+        let operation2 = InventoryOperation(
+            operation: .simplify,
+            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .student)),
+            colorHex: "fdae61"
+        )
+        let operation3 = InventoryOperation(
+            operation: .correct,
+            params: try! JSONEncoder().encode(CorrectParams()),
+            colorHex: "d53e4f"
+        )
+        inventoryStub?.saveInventory([operation1, operation2, operation3])
+        viewModel?.loadInventory()
+        // Act: удаляем вторую операцию (index 1)
+        viewModel?.removeOperation(at: 1)
+        // Assert: операция удалена из списка
+        let expected = [operation1, operation3]
+        XCTAssertEqual(self.viewModel?.operations, expected)
+        XCTAssertEqual(self.inventoryStub?.inventory, expected)
+    }
+
     deinit {}
 }

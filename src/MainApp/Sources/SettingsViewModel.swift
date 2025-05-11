@@ -41,50 +41,50 @@ public final class SettingsViewModel: ObservableObject {
             isKeyPresent = false
             if let userError = error as? UserFacingError {
                 let message: String = switch userError.messageKey {
-                case .error: NSLocalizedString("error", bundle: .main, comment: "")
-                case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
-                case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
-                case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
-                case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
-                case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
-                case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
-                case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
-                case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
-                case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
-                case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
-                case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
-                case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
-                case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
-                case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
-                case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
-                case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
-                case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
-                case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
-                case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
-                case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
                 }
                 let advice: String = switch userError.adviceKey {
-                case .error: NSLocalizedString("error", bundle: .main, comment: "")
-                case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
-                case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
-                case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
-                case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
-                case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
-                case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
-                case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
-                case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
-                case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
-                case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
-                case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
-                case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
-                case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
-                case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
-                case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
-                case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
-                case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
-                case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
-                case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
-                case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
                 }
                 errorMessage = "\(message)\n\n\(advice)"
             } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {
@@ -118,50 +118,50 @@ public final class SettingsViewModel: ObservableObject {
         } catch {
             if let userError = error as? UserFacingError {
                 let message: String = switch userError.messageKey {
-                case .error: NSLocalizedString("error", bundle: .main, comment: "")
-                case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
-                case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
-                case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
-                case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
-                case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
-                case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
-                case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
-                case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
-                case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
-                case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
-                case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
-                case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
-                case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
-                case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
-                case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
-                case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
-                case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
-                case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
-                case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
-                case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
                 }
                 let advice: String = switch userError.adviceKey {
-                case .error: NSLocalizedString("error", bundle: .main, comment: "")
-                case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
-                case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
-                case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
-                case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
-                case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
-                case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
-                case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
-                case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
-                case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
-                case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
-                case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
-                case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
-                case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
-                case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
-                case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
-                case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
-                case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
-                case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
-                case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
-                case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
                 }
                 errorMessage = "\(message)\n\n\(advice)"
             } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {
@@ -185,50 +185,50 @@ public final class SettingsViewModel: ObservableObject {
         } catch {
             if let userError = error as? UserFacingError {
                 let message: String = switch userError.messageKey {
-                case .error: NSLocalizedString("error", bundle: .main, comment: "")
-                case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
-                case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
-                case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
-                case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
-                case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
-                case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
-                case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
-                case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
-                case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
-                case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
-                case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
-                case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
-                case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
-                case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
-                case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
-                case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
-                case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
-                case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
-                case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
-                case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
                 }
                 let advice: String = switch userError.adviceKey {
-                case .error: NSLocalizedString("error", bundle: .main, comment: "")
-                case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
-                case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
-                case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
-                case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
-                case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
-                case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
-                case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
-                case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
-                case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
-                case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
-                case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
-                case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
-                case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
-                case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
-                case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
-                case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
-                case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
-                case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
-                case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
-                case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
                 }
                 errorMessage = "\(message)\n\n\(advice)"
             } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {

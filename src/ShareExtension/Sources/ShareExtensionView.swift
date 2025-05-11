@@ -229,17 +229,9 @@ public struct ShareExtensionView: View {
             return ""
         case .summarize:
             if let params = try? JSONDecoder().decode(SummarizeParams.self, from: op.params) {
-                return sentenceCountRangeLabel(params.sentenceCountRange)
+                return params.length
             }
             return ""
-        }
-    }
-
-    private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
-        switch range {
-        case .twoToThree: L10n.sentenceCount23
-        case .fiveToSix: L10n.sentenceCount56
-        case .nineToTen: L10n.sentenceCount910
         }
     }
 

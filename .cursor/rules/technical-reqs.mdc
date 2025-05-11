@@ -5,15 +5,15 @@ alwaysApply: true
 ---
 ## Technical Requirements
 
-- Use existing libraries when available—don’t build from scratch.
+- Use existing libraries when available—don't build from scratch.
 - All user-facing text must support localization (l10n).
-- Don’t manually edit `Info.plist` or entitlements—make changes only in `Project.swift` (handled by Tuist).
-- Don’t add files from `Common` manually—they’re already included by `Project.swift`.
+- Don't manually edit `Info.plist` or entitlements—make changes only in `Project.swift` (handled by Tuist).
+- Don't add files from `Common` manually—they're already included by `Project.swift`.
 - Use logging instead of `print` for output.
 
 ## DevOps-Friendly Flow (Must Follow)
 
-- No manual setup in Xcode’s GUI.
+- No manual setup in Xcode's GUI.
 - All settings must be defined in files (`Project.swift`, `.xcconfig`, `.plist`, etc.).
 - Builds must be reproducible using `tuist generate` and `xcodebuild`.
 - Automate signing, provisioning, and versioning.

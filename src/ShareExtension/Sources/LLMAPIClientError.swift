@@ -50,19 +50,19 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
     public var errorDescription: String? {
         switch self {
         case .unauthorized:
-            "401: " + NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
+            "401: " + L10n.errorInvalidApiKey
         case .tooManyRequests:
-            "429: " + NSLocalizedString("error_network", bundle: .main, comment: "")
+            "429: " + L10n.errorNetwork
         case .serverError:
-            "500: " + NSLocalizedString("error_processing", bundle: .main, comment: "")
+            "500: " + L10n.errorProcessing
         case .cancelled:
-            NSLocalizedString("error_cancelled", bundle: .main, comment: "")
+            L10n.errorCancelled
         case let .invalidResponse(msg):
-            NSLocalizedString("error_parsing", bundle: .main, comment: "") + ": " + msg
+            L10n.errorParsing + ": " + msg
         case let .unknown(code):
             "Unknown error (code: \(code))"
         case let .network(error):
-            NSLocalizedString("error_network", bundle: .main, comment: "") + ": " + error.localizedDescription
+            L10n.errorNetwork + ": " + error.localizedDescription
         }
     }
 

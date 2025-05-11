@@ -7,24 +7,24 @@ alwaysApply: true
 
 ### General
 - Always set access level (e.g., `public`, `private`) for every declaration.
-- Don’t use implicitly unwrapped optionals (`!`).
+- Don't use implicitly unwrapped optionals (`!`).
 - Replace magic numbers with named constants.
 - Closure bodies must be 30 lines max (excluding comments/blank lines).
-- Don’t use `async` unless you also use `await`.
-- Don’t use `async let` inside `withTaskGroup`.
-- Don’t write `self` in closures unless it’s needed.
-- Don’t use `guard let self`; use `guard self != nil`.
-- Don’t use `Data(_:)` for string-to-data conversion—it returns optional.
+- Don't use `async` unless you also use `await`.
+- Don't use `async let` inside `withTaskGroup`.
+- Don't write `self` in closures unless it's needed.
+- Don't use `guard let self`; use `guard self != nil`.
+- Don't use `Data(_:)` for string-to-data conversion—it returns optional.
 - Treat all SwiftLint and compiler warnings as errors.
 - Replace unused parameters with `_` or remove them.
 - Only one type per file.
 - Every class must have a `deinit`.
-- Never import `Common`—it’s auto-included by `Project.swift`.
+- Never import `Common`—it's auto-included by `Project.swift`.
 
 ### Tests
 - Test classes must have both `setUp` and `tearDown`.
 - In `CommonUnitTests`, use only `XCTAssert`, `XCTFail`, etc.—no third-party assertions.
-- Don’t change code just to make a test pass—fix the real issue.
+- Don't change code just to make a test pass—fix the real issue.
 - Place tests in the module they test. They can use private methods.
 
 ### Buttons and Styles
@@ -60,6 +60,6 @@ public extension MyType {
 - Wrap callback-based APIs using `withCheckedThrowingContinuation`.
 
 ### Exceptions
-- SwiftGen files: ACL and naming rules may be skipped if needed.
+- SwiftGen files: ACL may be skipped if needed.
 - In `Project.swift` and `Workspace.swift`: file/type name mismatch and missing ACL for `let project`/`workspace` are OK.
 - Tuist-generated files (e.g., `TuistBundle+*.swift`): can skip file name rules.

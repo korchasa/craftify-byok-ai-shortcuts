@@ -64,7 +64,12 @@ public struct HomeView: View {
                     }
                     editingIndex = nil
                 },
-                onDelete: {}
+                onDelete: {
+                    if let idx = editingIndex {
+                        viewModel.removeOperation(at: idx)
+                    }
+                    editingIndex = nil
+                }
             )
             .environment(\.colorPalette, palette)
         })
@@ -258,7 +263,7 @@ public struct HomeView: View {
                 }
             case .summarize:
                 if let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params) {
-                    return sentenceCountRangeLabel(params.sentenceCountRange)
+                    return params.length
                 }
             }
             return ""
@@ -279,14 +284,6 @@ public struct HomeView: View {
             case .teenager: L10n.operationValueTeenager
             case .student: L10n.operationValueStudent
             case .adult: L10n.operationValueAdult
-            }
-        }
-
-        private func sentenceCountRangeLabel(_ range: SentenceCountRange) -> String {
-            switch range {
-            case .twoToThree: L10n.sentenceCount23
-            case .fiveToSix: L10n.sentenceCount56
-            case .nineToTen: L10n.sentenceCount910
             }
         }
     }

@@ -10,27 +10,22 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
                 targetLanguage = supportedLanguages.first?.code ?? ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
             case .simplify:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
             case .correct:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
             case .explain:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
             case .summarize:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
             }
         }
     }
@@ -39,7 +34,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     @Published public var complexityLevel: ComplexityLevel = .schoolchild
     @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String
-    @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
+    @Published public var length: String = "2-3 sentences"
 
     public let originalOperation: InventoryOperation
     private let originalTargetLanguage: String
@@ -98,8 +93,8 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             self.originalComplexityLevel = .schoolchild
         case .summarize:
             let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params)
-            let range = params?.sentenceCountRange ?? .twoToThree
-            self.sentenceCountRange = range
+            let length = params?.length ?? "2-3 sentences"
+            self.length = length
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
             self.complexityLevel = .schoolchild
@@ -117,7 +112,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange
+            length: length
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
@@ -130,7 +125,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         self.complexityLevel = originalComplexityLevel
         self.detailLevel = originalDetailLevel
         self.selectedColorHex = originalColorHex
-        self.sentenceCountRange = .twoToThree
+        self.length = "2-3 sentences"
     }
 
     deinit {}
@@ -147,7 +142,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange
+            length: length
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.isValid(input: input)
