@@ -9,27 +9,27 @@ public final class AddOperationViewModel: ObservableObject {
                 targetLanguage = supportedLanguages.first?.code ?? ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
+                length = "2-3 sentences"
             case .simplify:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
+                length = "2-3 sentences"
             case .correct:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
+                length = "2-3 sentences"
             case .explain:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
+                length = "2-3 sentences"
             case .summarize:
                 targetLanguage = ""
                 complexityLevel = .schoolchild
                 detailLevel = .schoolchild
-                sentenceCountRange = .twoToThree
+                length = "2-3 sentences"
             }
         }
     }
@@ -38,7 +38,7 @@ public final class AddOperationViewModel: ObservableObject {
     @Published public var complexityLevel: ComplexityLevel = .schoolchild
     @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String
-    @Published public var sentenceCountRange: SentenceCountRange = .twoToThree
+    @Published public var length: String = "2-3 sentences"
 
     /// Проверяет, могут ли данные создать операцию
     public var isValid: Bool {
@@ -47,7 +47,7 @@ public final class AddOperationViewModel: ObservableObject {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange
+            length: length
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.isValid(input: input)
@@ -68,7 +68,7 @@ public final class AddOperationViewModel: ObservableObject {
             targetLanguage: targetLanguage,
             complexityLevel: complexityLevel,
             detailLevel: detailLevel,
-            sentenceCountRange: sentenceCountRange
+            length: length
         )
         let operation = OperationFactory.make(kind: kind)
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
@@ -81,7 +81,7 @@ public final class AddOperationViewModel: ObservableObject {
         complexityLevel = .schoolchild
         detailLevel = .schoolchild
         selectedColorHex = palette.first!
-        sentenceCountRange = .twoToThree
+        length = "2-3 sentences"
     }
 
     deinit {}

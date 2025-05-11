@@ -47,19 +47,19 @@ public final class AddOperationViewModelTests: XCTestCase {
         vm.targetLanguage = "ru"
         vm.complexityLevel = .adult
         vm.detailLevel = .adult
-        vm.sentenceCountRange = .nineToTen
+        vm.length = "9-10 sentences"
         // Смена типа
         vm.selectedKind = .simplify
         XCTAssertEqual(vm.targetLanguage, "")
         XCTAssertEqual(vm.complexityLevel, .schoolchild)
         XCTAssertEqual(vm.detailLevel, .schoolchild)
-        XCTAssertEqual(vm.sentenceCountRange, .twoToThree)
+        XCTAssertEqual(vm.length, "2-3 sentences")
         // Смена на translate снова
         vm.selectedKind = .translate
         XCTAssertEqual(vm.targetLanguage, vm.supportedLanguages.first?.code ?? "")
         XCTAssertEqual(vm.complexityLevel, .schoolchild)
         XCTAssertEqual(vm.detailLevel, .schoolchild)
-        XCTAssertEqual(vm.sentenceCountRange, .twoToThree)
+        XCTAssertEqual(vm.length, "2-3 sentences")
     }
 
     public func testDefaultSelectedKindIsNotNilAndFormIsValid() {

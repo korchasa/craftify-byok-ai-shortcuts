@@ -2,6 +2,7 @@ import Combine
 import Foundation
 import SwiftUI
 
+@MainActor
 public final class ShareExtensionViewModel: ObservableObject {
     // MARK: - Published Properties
 
@@ -113,8 +114,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 metadata: [:],
                 timestamp: Date()
             ))
-            // swiftlint:disable:next nslocalizedstring_key
-            errorMessage = NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
+            errorMessage = L10n.errorTextTooLong
             return true
         }
         return false
@@ -151,8 +151,10 @@ public final class ShareExtensionViewModel: ObservableObject {
         progressTimer?.invalidate()
         progressTimer = Timer.scheduledTimer(withTimeInterval: ShareExtensionViewModelConstants.progressInterval, repeats: true) { [weak self] _ in
             guard let self else { return }
-            if progress < ShareExtensionViewModelConstants.maxProgress {
-                progress += ShareExtensionViewModelConstants.progressStep
+            Task { @MainActor in
+                if self.progress < ShareExtensionViewModelConstants.maxProgress {
+                    self.progress += ShareExtensionViewModelConstants.progressStep
+                }
             }
         }
     }
@@ -163,7 +165,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 targetLanguage: "",
                 complexityLevel: .schoolchild,
                 detailLevel: .schoolchild,
-                sentenceCountRange: .twoToThree,
+                length: "2-3 sentences",
                 url: manager.inputText,
                 text: nil
             )
@@ -172,7 +174,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 targetLanguage: "",
                 complexityLevel: .schoolchild,
                 detailLevel: .schoolchild,
-                sentenceCountRange: .twoToThree,
+                length: "2-3 sentences",
                 url: nil,
                 text: manager.inputText
             )
@@ -286,20 +288,18 @@ public final class ShareExtensionViewModel: ObservableObject {
                 metadata: [:],
                 timestamp: Date()
             ))
-            // swiftlint:disable:next nslocalizedstring_key
             if errorMessage == nil {
-                errorMessage = NSLocalizedString("error_timeout", bundle: .main, comment: "")
+                errorMessage = L10n.errorTimeout
             }
             manager.cancelProcessing()
             progress = 0.0
         } else {
             progress = ShareExtensionViewModelConstants.completeProgress
-            Task { [weak self] in
-                self?.handleResult(result: result)
-            }
+            handleResult(result: result)
         }
     }
 
+    @MainActor
     private func handleResult(result: (success: Bool, error: UserFacingError?)?) {
         if let error = result?.error {
             let msg = handleUserFacingError(error)
@@ -325,41 +325,103 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     private func handleUserFacingError(_ error: UserFacingError) -> String {
         let message: String = switch error.messageKey {
-        case .error: NSLocalizedString("error", bundle: .main, comment: "")
-        case .adviceUnknownError: NSLocalizedString("advice_unknown_error", bundle: .main, comment: "")
-        case .adviceContactSupport: NSLocalizedString("advice_contact_support", bundle: .main, comment: "")
-        case .errorNoOperation: NSLocalizedString("error_no_operation", bundle: .main, comment: "")
-        case .adviceCheckConnection: NSLocalizedString("advice_check_connection", bundle: .main, comment: "")
-        case .errorNoText: NSLocalizedString("error_no_text", bundle: .main, comment: "")
-        case .adviceTryAgainLater: NSLocalizedString("advice_try_again_later", bundle: .main, comment: "")
-        case .errorParsing: NSLocalizedString("error_parsing", bundle: .main, comment: "")
-        case .errorInvalidApiKey: NSLocalizedString("error_invalid_api_key", bundle: .main, comment: "")
-        case .adviceCheckApiKey: NSLocalizedString("advice_check_api_key", bundle: .main, comment: "")
-        case .errorNetwork: NSLocalizedString("error_network", bundle: .main, comment: "")
-        case .errorProcessing: NSLocalizedString("error_processing", bundle: .main, comment: "")
-        case .errorCancelled: NSLocalizedString("error_cancelled", bundle: .main, comment: "")
-        case .errorUrlNotSupported: NSLocalizedString("error_url_not_supported", bundle: .main, comment: "")
-        case .errorDownloadFailed: NSLocalizedString("error_download_failed", bundle: .main, comment: "")
-        case .errorExtractText: NSLocalizedString("error_extract_text", bundle: .main, comment: "")
-        case .errorTextTooLong: NSLocalizedString("error_text_too_long", bundle: .main, comment: "")
-        case .errorConsentRequired: NSLocalizedString("error_consent_required", bundle: .main, comment: "")
-        case .errorApiKeyAccess: NSLocalizedString("error_api_key_access", bundle: .main, comment: "")
-        case .errorProcessingManagerUnavailable: NSLocalizedString("error_processing_manager_unavailable", bundle: .main, comment: "")
-        case .errorClipboard: NSLocalizedString("error_clipboard", bundle: .main, comment: "")
+        case .error: L10n.error
+        case .adviceUnknownError: L10n.adviceUnknownError
+        case .adviceContactSupport: L10n.adviceContactSupport
+        case .errorNoOperation: L10n.errorNoOperation
+        case .adviceCheckConnection: L10n.adviceCheckConnection
+        case .errorNoText: L10n.errorNoText
+        case .adviceTryAgainLater: L10n.adviceTryAgainLater
+        case .errorParsing: L10n.errorParsing
+        case .errorInvalidApiKey: L10n.errorInvalidApiKey
+        case .adviceCheckApiKey: L10n.adviceCheckApiKey
+        case .errorNetwork: L10n.errorNetwork
+        case .errorProcessing: L10n.errorProcessing
+        case .errorCancelled: L10n.errorCancelled
+        case .errorUrlNotSupported: L10n.errorUrlNotSupported
+        case .errorDownloadFailed: L10n.errorDownloadFailed
+        case .errorExtractText: L10n.errorExtractText
+        case .errorTextTooLong: L10n.errorTextTooLong
+        case .errorConsentRequired: L10n.errorConsentRequired
+        case .errorApiKeyAccess: L10n.errorApiKeyAccess
+        case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+        case .errorClipboard: L10n.errorClipboard
         }
-        // swiftlint:disable:next nslocalizedstring_key
-        let advice = NSLocalizedString(error.adviceKey.rawValue, bundle: .main, comment: "")
+        let advice = switch error.adviceKey {
+        case .error: L10n.error
+        case .adviceUnknownError: L10n.adviceUnknownError
+        case .adviceContactSupport: L10n.adviceContactSupport
+        case .errorNoOperation: L10n.errorNoOperation
+        case .adviceCheckConnection: L10n.adviceCheckConnection
+        case .errorNoText: L10n.errorNoText
+        case .adviceTryAgainLater: L10n.adviceTryAgainLater
+        case .errorParsing: L10n.errorParsing
+        case .errorInvalidApiKey: L10n.errorInvalidApiKey
+        case .adviceCheckApiKey: L10n.adviceCheckApiKey
+        case .errorNetwork: L10n.errorNetwork
+        case .errorProcessing: L10n.errorProcessing
+        case .errorCancelled: L10n.errorCancelled
+        case .errorUrlNotSupported: L10n.errorUrlNotSupported
+        case .errorDownloadFailed: L10n.errorDownloadFailed
+        case .errorExtractText: L10n.errorExtractText
+        case .errorTextTooLong: L10n.errorTextTooLong
+        case .errorConsentRequired: L10n.errorConsentRequired
+        case .errorApiKeyAccess: L10n.errorApiKeyAccess
+        case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+        case .errorClipboard: L10n.errorClipboard
+        }
         var details = ""
         if let underlying = error.underlyingError {
-            // Локализуем details для FetchError и UserFacingError
             if let fetchError = underlying as? FetchError {
                 let userError = fetchError.userFacingError
-                // swiftlint:disable:next nslocalizedstring_key
-                let localized = NSLocalizedString(userError.messageKey.rawValue, bundle: .main, comment: "")
+                let localized = switch userError.messageKey {
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
+                }
                 details = "\n\n\(localized)"
             } else if let userError = underlying as? UserFacingError {
-                // swiftlint:disable:next nslocalizedstring_key
-                let localized = NSLocalizedString(userError.messageKey.rawValue, bundle: .main, comment: "")
+                let localized = switch userError.messageKey {
+                case .error: L10n.error
+                case .adviceUnknownError: L10n.adviceUnknownError
+                case .adviceContactSupport: L10n.adviceContactSupport
+                case .errorNoOperation: L10n.errorNoOperation
+                case .adviceCheckConnection: L10n.adviceCheckConnection
+                case .errorNoText: L10n.errorNoText
+                case .adviceTryAgainLater: L10n.adviceTryAgainLater
+                case .errorParsing: L10n.errorParsing
+                case .errorInvalidApiKey: L10n.errorInvalidApiKey
+                case .adviceCheckApiKey: L10n.adviceCheckApiKey
+                case .errorNetwork: L10n.errorNetwork
+                case .errorProcessing: L10n.errorProcessing
+                case .errorCancelled: L10n.errorCancelled
+                case .errorUrlNotSupported: L10n.errorUrlNotSupported
+                case .errorDownloadFailed: L10n.errorDownloadFailed
+                case .errorExtractText: L10n.errorExtractText
+                case .errorTextTooLong: L10n.errorTextTooLong
+                case .errorConsentRequired: L10n.errorConsentRequired
+                case .errorApiKeyAccess: L10n.errorApiKeyAccess
+                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
+                case .errorClipboard: L10n.errorClipboard
+                }
                 details = "\n\n\(localized)"
             }
         }

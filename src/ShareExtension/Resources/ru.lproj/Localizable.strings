@@ -1,10 +1,3 @@
-/* HowToUseView */
-"howtouse_title" = "Как использовать Craftify";
-"howtouse_instruction" = "Выделите текст в любом приложении, поделитесь через Craftify, выберите операцию и мгновенно получите результат.";
-"howtouse_consent" = "Я согласен(на) на отправку текста для обработки в облачный сервис OpenAI";
-"howtouse_privacy_policy" = "Политика конфиденциальности";
-"howtouse_done" = "Готово";
-
 /* HomeView */
 "home_title" = "Craftify — Операции";
 "home_add_operation" = "Операция";
@@ -15,14 +8,10 @@
 /* AddOperationView */
 "add_operation_title" = "Добавить операцию";
 "add_operation_type" = "Тип операции";
-"add_operation_save" = "Сохранить";
-"add_operation_cancel" = "Отмена";
-"addOperationColor" = "Цвет";
 "add_operation_type_label" = "Выберите тип операции";
 
 /* EditOperationView */
 "edit_operation_title" = "Редактировать операцию";
-"edit_operation_save" = "Сохранить";
 "edit_operation_cancel" = "Отмена";
 "edit_operation_type_label" = "Выберите тип операции";
 
@@ -72,15 +61,11 @@
 
 "processing" = "Обработка...";
 "error" = "Ошибка";
-"save" = "Сохранить";
-"delete" = "Удалить";
 "copied_to_clipboard" = "Скопировано в буфер";
 
 "sentence_count_2_3" = "2–3 предложения";
 "sentence_count_5_6" = "5–6 предложений";
 "sentence_count_9_10" = "9–10 предложений";
-
-"color" = "Цвет";
 
 "error_no_text" = "Нет текста для обработки";
 "error_text_too_long" = "Текст слишком длинный для обработки";
@@ -100,6 +85,7 @@
 "error_download_failed" = "Не удалось получить содержимое страницы";
 "error_extract_text" = "Не удалось извлечь текст из страницы";
 "error_timeout" = "Время обработки истекло";
+"error_url_not_supported" = "URL не поддерживается";
 
 "advice_check_connection" = "Проверьте подключение к интернету и попробуйте снова.";
 "advice_check_api_key" = "Проверьте API-ключ в настройках.";

@@ -6,6 +6,3 @@ targets:
 - MainApp
 - ShareExtension
 workspace: Craftify.xcworkspace
-report_exclude:
-- src/MainApp/Resources/Generated/**
-- src/ShareExtension/Resources/Generated/**

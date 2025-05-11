@@ -25,12 +25,12 @@ alwaysApply: true
 ## Test Rules
 
 - Put tests in the same package as the code being tested. It's okay to test private methods.
-- Don’t write code just to satisfy tests unless it fixes real issues.
-- Don’t use stubs—write real, working code.
+- Don't write code just to satisfy tests unless it fixes real issues.
+- Don't use stubs—write real, working code.
 - You can rerun specific tests to save time, but always run all tests before finishing.
 
 ### CommonUnitTests Rules
 
-- Don’t use Nimble or other third-party assertion tools in CommonUnitTests.
+- Don't use Nimble or other third-party assertion tools in CommonUnitTests.
 - Use only standard tools like `XCTAssert`, `XCTFail`, and `XCTAssertThrowsError`.
-- Reason: Nimble doesn’t work with the current Swift/Xcode setup for the Common module.
+- Reason: Nimble doesn't work with the current Swift/Xcode setup for the Common module.

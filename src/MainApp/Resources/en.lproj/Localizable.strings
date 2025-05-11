@@ -9,7 +9,6 @@
 "home_title" = "Operations";
 "home_add_operation" = "Operation";
 "home_settings" = "Settings";
-"home_edit" = "Edit";
 "home_delete" = "Delete";
 "homeSortHandle" = "Drag to reorder";
 "homeSortHint" = "Long press and drag to reorder operations.";
@@ -19,14 +18,11 @@
 "add_operation_type" = "Operation Type";
 "add_operation_save" = "Save";
 "add_operation_cancel" = "Cancel";
-"addOperationColor" = "Color";
-"add_operation_type_label" = "Select operation type";
 
 /* EditOperationView */
 "edit_operation_title" = "Edit Operation";
 "edit_operation_save" = "Save";
 "edit_operation_cancel" = "Cancel";
-"edit_operation_type_label" = "Select operation type";
 
 /* SettingsView */
 "settings_title" = "Settings";
@@ -35,28 +31,16 @@
 "settings_native_language" = "Native language";
 "settings_native_language_section" = "Select your native language. It will be used as the main language for summarize and explain operations.";
 
-/* Share Extension UI */
-"share_title" = "Craftify";
-"share_cancel" = "Cancel";
-"share_copied" = "Copied to clipboard";
-"share_close" = "Close";
-
 /* Operation Params Labels */
 "operation_param_target_language" = "Target language";
 "operation_param_complexity_level" = "Complexity level";
-"operation_param_style_preservation" = "Style preservation";
 "operation_param_detail_level" = "Detail level";
 
 /* Picker Values */
-"operation_value_beginner" = "Beginner";
-"operation_value_intermediate" = "Intermediate";
-"operation_value_advanced" = "Advanced";
-"operation_value_school" = "School";
 "operation_value_schoolchild" = "Schoolchild";
 "operation_value_teenager" = "Teenager";
 "operation_value_student" = "Student";
 "operation_value_adult" = "Adult";
-"operation_value_expert" = "Expert";
 
 /* Operation Labels */
 "operation_label_translate" = "Translate";
@@ -65,26 +49,13 @@
 "operation_label_explain" = "Explain";
 "operation_label_summarize" = "Summarize";
 
-/* Language Names */
-"language_russian" = "Russian";
-"language_english" = "English";
-"language_spanish" = "Spanish";
-"language_french" = "French";
-"language_german" = "German";
-"language_chinese" = "Chinese";
-"language_japanese" = "Japanese";
-
-"processing" = "Processing...";
 "error" = "Error";
-"save" = "Save";
-"delete" = "Delete";
-"copied_to_clipboard" = "Copied to clipboard";
+"color" = "Color";
 
 "sentence_count_2_3" = "2–3 sentences";
 "sentence_count_5_6" = "5–6 sentences";
 "sentence_count_9_10" = "9–10 sentences";
-
-"color" = "Color";
+"sentence_count_18_20" = "18–20 sentences";
 
 "error_no_text" = "No text to process";
 "error_text_too_long" = "Text too long to process";
@@ -98,8 +69,9 @@
 "error_no_operation" = "No operation to process";
 "error_api_key_access" = "API key access error";
 "error_processing_manager_unavailable" = "Processing manager unavailable";
-"error_result_mode_display" = "Result mode: display result";
-"error_result_copied" = "Result copied to clipboard successfully";
+"error_url_not_supported" = "URL is not supported";
+"error_download_failed" = "Failed to load page content";
+"error_extract_text" = "Failed to extract text from the page";
 
 "advice_check_connection" = "Check your internet connection and try again.";
 "advice_check_api_key" = "Please check your API key in Settings.";

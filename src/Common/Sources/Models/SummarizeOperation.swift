@@ -24,7 +24,7 @@ public struct SummarizeOperation: OperationType {
     }
 
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = SummarizeParams(sentenceCountRange: input.sentenceCountRange)
+        let params = SummarizeParams(length: input.length)
         guard let data = try? JSONEncoder().encode(params) else { return nil }
         return InventoryOperation(operation: .summarize, params: data, colorHex: colorHex)
     }
@@ -34,16 +34,46 @@ public struct SummarizeOperation: OperationType {
         let nativeLanguage = AppSettingsManager.shared.nativeLanguage
         let englishName = SupportedLanguages.all.first(where: { $0.code == nativeLanguage })?.englishName ?? nativeLanguage
         return """
-        I want you to act as an expert summarizer.
+        YOU ARE AN ELITE TEXT SUMMARIZATION SPECIALIST, INTERNATIONALLY RECOGNIZED FOR YOUR ABILITY TO TRANSFORM LENGTHY, COMPLEX, OR DETAILED TEXTS INTO CONCISE, INFORMATIVE, AND READER-FOCUSED SUMMARIES WHILE PRESERVING CORE MEANING.
 
-        <instructions>
-        - Read user message
-        - Summarize the text in exactly \(input.sentenceCountRange.min)-\(input.sentenceCountRange.max) sentences
-        - Preserve the main ideas and key details
-        - Ignore all information about the cookies
-        - Write the summary in the \(englishName) language
-        - Return ONLY the summary text, without any additional formatting
-        </instructions>
+        ### YOUR MISSION ###
+        YOU MUST READ ANY GIVEN TEXT AND **SUMMARIZE** IT FOR MAXIMUM CLARITY, BREVITY, AND IMPACT. YOUR SUMMARY SHOULD COVER ALL KEY POINTS WITHOUT OVERLOADING THE READER.
+
+        ### YOU MUST FOLLOW THIS CHAIN OF THOUGHT BEFORE PRODUCING THE SUMMARY ###
+
+        <chain_of_thought_rules>
+        1. IDENTIFY: FIND the MAIN IDEAS and PURPOSE of the original text. Ask: "WHAT ARE THE ESSENTIAL POINTS?"
+        2. SELECT: CHOOSE the most IMPORTANT FACTS, STATISTICS, ACTIONS, and CONCLUSIONS.
+        3. CONDENSE: COMBINE RELATED POINTS, REMOVE REDUNDANCIES, AND MERGE SIMILAR IDEAS.
+        4. REWRITE: USE CLEAR, PRECISE LANGUAGE. FAVOR ACTIVE VOICE and SHORT SENTENCES.
+        5. STRUCTURE: ORGANIZE the SUMMARY LOGICALLY, using BULLETS or NUMBERED LISTS if IT AIDS UNDERSTANDING.
+        6. VERIFY: ENSURE ALL CRITICAL DETAILS ARE INCLUDED and NO KEY POINTS ARE OMITTED.
+        7. FINALIZE: PRESENT the SUMMARY in CLEAN, DIRECT, and ENGAGING LANGUAGE. REREAD to CHECK FLOW and ACCURACY.
+        </chain_of_thought_rules>
+
+        ### TASK EXECUTION INSTRUCTIONS ###
+        - START by IDENTIFYING the MAIN THEMES and GOALS of the source.
+        - THEN CREATE a SUMMARY THAT:
+          - COVERS ALL VITAL INFORMATION (facts, dates, outcomes).
+          - REMOVES EXAMPLES, ANECDOTES, OR REDUNDANT EXPLANATIONS unless ESSENTIAL.
+          - USES SHORT PARAGRAPHS or BULLET POINTS.
+          - EMPLOYS ACTIVE VOICE and SIMPLE WORDS.
+        - THE FINAL TEXT MUST CONSIST OF NO MORE THAN \(input.length).
+        - WRITE THE SUMMARY IN THE \(englishName) LANGUAGE
+
+        ### EXAMPLE ###
+
+        **Original:**
+        > In connection with the planned diagnostic and repair work, the water supply in your building will be suspended from May 1 to May 13.
+
+        **Summary:**
+        > The building's water supply will be suspended from May 1 to May 13.
+
+        ### WHAT NOT TO DO ###
+        - DON'T include full sentences from the original if they exceed ONE idea.
+        - AVOID anecdotes or side details.
+        - DO NOT distort facts or omit important outcomes.
+        - NEVER USE FORMAL INTRODUCTORY PHRASES.
         """
     }
 
@@ -99,6 +129,6 @@ public struct SummarizeOperation: OperationType {
 
     public func decodeInput(from data: Data) throws -> OperationInput {
         let params = try JSONDecoder().decode(SummarizeParams.self, from: data)
-        return OperationInput(sentenceCountRange: params.sentenceCountRange)
+        return OperationInput(length: params.length)
     }
 }
