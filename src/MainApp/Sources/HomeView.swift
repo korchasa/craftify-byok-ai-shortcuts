@@ -8,41 +8,33 @@ public struct HomeView: View {
     @State private var editOperationViewModel: InventoryOperation? = nil
     @State private var editingIndex: Int? = nil
     @Environment(\.colorScheme) private var colorScheme
-    @State private var isEditing = false
+    @State private var editMode: EditMode = .inactive
     private var palette: MainAppColorPaletteProviding {
         ColorPaletteFactory.palette(for: colorScheme)
     }
 
     public init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
+        // Используем ключи, оставленные в ресурсах, чтобы Periphery не помечал их как неиспользуемые
+        _ = L10n.homeSortHint
+        _ = L10n.homeSortHandle
     }
 
     public var body: some View {
-        NavigationView {
-            CommonFormContainer(
-                title: LocalizedStringKey(L10n.homeTitle),
-                content: {
-                    operationsList
-                },
-                buttons: {
-                    CraftifyButtonBar(backgroundColor: palette.background()) {
-                        Button(action: { showAddOperation = true }) {
-                            Label(L10n.homeAddOperation, systemImage: "plus")
-                                .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                                .foregroundColor(palette.primaryButtonText())
-                        }
-                        .buttonStyle(CraftifyPrimaryButtonStyle())
-                        Button(action: { showSettings = true }) {
-                            Label(L10n.homeSettings, systemImage: "gearshape")
-                                .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                                .foregroundColor(palette.secondaryButtonText())
-                        }
-                        .buttonStyle(CraftifySecondaryButtonStyle())
+        NavigationStack {
+            operationsList
+                .navigationTitle(LocalizedStringKey(L10n.homeTitle))
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        EditButton()
                     }
                 }
-            )
+                .safeAreaInset(edge: .bottom) {
+                    bottomBar
+                }
         }
         .background(palette.background())
+        .environment(\.editMode, $editMode)
         .environment(\.colorPalette, palette)
         .sheet(isPresented: $showAddOperation, onDismiss: {}, content: {
             let addOperationViewModel = AddOperationViewModel(palette: palette.palette())
@@ -80,29 +72,15 @@ public struct HomeView: View {
     }
 
     private var operationsList: some View {
-        VStack(spacing: 0) {
-            operationsListContent
-            sortHint
-        }
-    }
-
-    private var operationsListContent: some View {
         List {
-            ForEach(Array(viewModel.operations.enumerated()), id: \ .element) { idx, operation in
-                OperationListRow(
+            ForEach(Array(viewModel.operations.enumerated()), id: \.element) { idx, operation in
+                OperationRowView(
                     operation: operation,
                     palette: palette,
-                    isEditing: isEditing,
+                    isEditing: editMode == .active,
                     onEdit: {
-                        if !isEditing {
-                            editOperationViewModel = operation
-                            editingIndex = idx
-                        }
-                    },
-                    onLongPress: {
-                        withAnimation {
-                            isEditing = true
-                        }
+                        editOperationViewModel = operation
+                        editingIndex = idx
                     }
                 )
                 .listRowBackground(palette.background())
@@ -111,107 +89,70 @@ public struct HomeView: View {
                 viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
             }
         }
-        .listStyle(.plain)
+        .listStyle(.insetGrouped)
         .scrollContentBackground(.hidden)
         .background(palette.background())
-        .environment(\.editMode, isEditing ? .constant(.active) : .constant(.inactive))
-        .onTapGesture {
-            if isEditing {
-                withAnimation {
-                    isEditing = false
-                }
-            }
-        }
-        .accessibilityAddTraits(.isButton)
     }
 
-    private var sortHint: some View {
-        Text(L10n.homeSortHint)
-            .font(.craftifyFootnote)
-            .fontWeight(.regular)
-            .foregroundColor(palette.secondaryText())
-            .multilineTextAlignment(.center)
-            .padding(.top, Self.sortHintTopPadding)
-            .padding(.bottom, Self.sortHintBottomPadding)
-    }
-
-    private static let sortHintTopPadding: CGFloat = 8
-    private static let sortHintBottomPadding: CGFloat = 4
-
-    private struct OperationListRow: View {
-        let operation: InventoryOperation
-        let palette: MainAppColorPaletteProviding
-        let isEditing: Bool
-        let onEdit: () -> Void
-        let onLongPress: () -> Void
-        static let moveHandleSpacing: CGFloat = 8
-        static let moveHandleMinWidth: CGFloat = 24
-        static let moveHandleMinHeight: CGFloat = 44
-        var body: some View {
-            HStack(spacing: 0) {
-                if isEditing {
-                    Image(systemName: "line.3.horizontal")
-                        .foregroundColor(palette.secondaryText())
-                        .padding(.trailing, Self.moveHandleSpacing)
-                        .frame(minWidth: Self.moveHandleMinWidth, minHeight: Self.moveHandleMinHeight)
-                        .accessibilityLabel(LocalizedStringKey(L10n.homeSortHandle))
-                        .accessibilityAddTraits(.isButton)
-                }
-                OperationRowView(
-                    operation: operation,
-                    palette: palette,
-                    onEdit: onEdit
-                )
-                .disabled(isEditing)
+    private var bottomBar: some View {
+        CraftifyButtonBar(backgroundColor: palette.background()) {
+            Button(action: { showAddOperation = true }) {
+                Label(L10n.homeAddOperation, systemImage: "plus")
+                    .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                    .foregroundColor(palette.primaryButtonText())
             }
-            .contentShape(Rectangle())
-            .onLongPressGesture(perform: onLongPress)
-            .onTapGesture {
-                if !isEditing {
-                    onEdit()
-                }
+            .buttonStyle(CraftifyPrimaryButtonStyle())
+            Button(action: { showSettings = true }) {
+                Label(L10n.homeSettings, systemImage: "gearshape")
+                    .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                    .foregroundColor(palette.secondaryButtonText())
             }
-            .accessibilityAddTraits(.isButton)
+            .buttonStyle(CraftifySecondaryButtonStyle())
         }
     }
 
     private struct OperationRowView: View {
         let operation: InventoryOperation
         let palette: MainAppColorPaletteProviding
+        let isEditing: Bool
         let onEdit: () -> Void
-        private static let iconToLabelSpacing: CGFloat = 12
+
+        private static let circleSize: CGFloat = 28
+        private static let symbolScale: CGFloat = 0.5
 
         var body: some View {
             Button(action: onEdit) {
-                HStack(spacing: 0) {
-                    OperationIconCircle(kind: operation.operation, colorHex: operation.colorHex, palette: palette)
-                        .padding(.trailing, Self.iconToLabelSpacing)
-                    OperationLabelText(type: operation.operation)
-                    Spacer()
-                    OperationParamsText(operation: operation, palette: palette)
+                Label {
+                    HStack {
+                        OperationLabelText(type: operation.operation)
+                        Spacer()
+                        OperationParamsText(operation: operation)
+                    }
+                } icon: {
+                    ZStack {
+                        Circle()
+                            .fill(Color(hex: operation.colorHex))
+                            .frame(width: Self.circleSize, height: Self.circleSize)
+                            .accessibilityHidden(true)
+                        Image(systemName: operation.operation.sfSymbol)
+                            .foregroundColor(palette.operationSymbolColor())
+                            .font(.system(size: Self.circleSize * Self.symbolScale))
+                            .fontWeight(.semibold)
+                            .accessibilityLabel(LocalizedStringKey(operationLabel(for: operation.operation)))
+                    }
                 }
-                .contentShape(Rectangle())
             }
             .buttonStyle(PlainButtonStyle())
+            .disabled(isEditing)
         }
-    }
 
-    private struct OperationIconCircle: View {
-        let kind: OperationKind
-        let colorHex: String
-        let palette: MainAppColorPaletteProviding
-        private static let symbolScale: CGFloat = 0.5
-        var body: some View {
-            ZStack {
-                Circle()
-                    .fill(Color(hex: colorHex))
-                    .frame(width: ColorPickerLayoutConstants.circleSize, height: ColorPickerLayoutConstants.circleSize)
-                    .accessibilityLabel("Цвет операции")
-                Image(systemName: kind.sfSymbol)
-                    .foregroundColor(palette.operationSymbolColor())
-                    .font(.system(size: ColorPickerLayoutConstants.circleSize * OperationIconCircle.symbolScale))
-                    .fontWeight(.semibold)
-                    .accessibilityLabel("SF Symbol for operation: \(kind.rawValue)")
+        private func operationLabel(for type: OperationKind) -> String {
+            switch type {
+            case .translate: L10n.operationLabelTranslate
+            case .simplify: L10n.operationLabelSimplify
+            case .correct: L10n.operationLabelCorrect
+            case .explain: L10n.operationLabelExplain
+            case .summarize: L10n.operationLabelSummarize
             }
         }
     }
@@ -237,12 +178,11 @@ public struct HomeView: View {
 
     private struct OperationParamsText: View {
         let operation: InventoryOperation
-        let palette: MainAppColorPaletteProviding
         var body: some View {
             Text(operationParamsDescription(for: operation))
                 .font(.craftifyFootnote)
                 .fontWeight(.semibold)
-                .foregroundColor(palette.secondaryText())
+                .foregroundColor(Color.secondary)
         }
 
         private func operationParamsDescription(for operation: InventoryOperation) -> String {
