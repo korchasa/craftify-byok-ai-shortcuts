@@ -2,9 +2,9 @@
 set -euo pipefail
 
 # Default iOS Simulator UDID (override SIMULATOR_ID env var)
-SIMULATOR_ID="EE50483C-9861-438F-82D0-52FFB8FDF92C"
+SIMULATOR_ID="442113FE-1B01-46F6-82FA-203D9317AD2A"
 # Simulator for tests
-TEST_SIMULATOR_ID="6744E479-4BE1-4288-B7F2-B022EDE64947"
+TEST_SIMULATOR_ID="3B103AF0-92C8-4707-9D34-7D9916D4B798"
 
 # Colors for output
 RED='\033[0;31m'
@@ -150,8 +150,16 @@ function size_report() {
 }
 
 function _boot_and_wait_simulator() {
+  # Verify that the simulator with the given UDID exists
   local sim_status
   sim_status=$(xcrun simctl list -j | jq -r '.devices[] | .[] | select(.udid=="'${SIMULATOR_ID}'") | .state')
+
+  if [[ -z "$sim_status" ]]; then
+    echo -e "${RED}Simulator with UDID ${SIMULATOR_ID} not found.\nPlease set SIMULATOR_ID to an existing device (e.g. iOS 16.4 simulator).${NC}"
+    echo -e "${YELLOW}Tip: Run \`xcrun simctl list devices available\` to see available simulators and their UDIDs.${NC}"
+    exit 1
+  fi
+
   _start_section "Simulator ${SIMULATOR_ID} status: $sim_status"
   if [[ "$sim_status" != "Booted" ]]; then
     _start_section "Booting simulator ${SIMULATOR_ID}..."
@@ -228,6 +236,7 @@ function fast_check_build_analyze_test() {
 }
 
 function deploy_simulator() {
+  set -ex
   _start_section "Opening Simulator"
   open -a Simulator
   _end_section
@@ -244,6 +253,10 @@ function deploy_simulator() {
   _start_section "Launching app in simulator: $app_path"
   xcrun simctl launch "${SIMULATOR_ID}" "dev.korchasa.Craftify"
   _end_section
+  if [[ "$SKIP_LOG_STREAM" == "1" ]]; then
+    echo "Skipping log stream tail due to SKIP_LOG_STREAM=1"
+    return
+  fi
   _start_section "Starting log stream to emulator.log (background)"
   xcrun simctl spawn booted log stream --predicate '(subsystem == "Internal") && (process == "MainApp" OR process == "ShareExtension")' --style syslog --level=debug > emulator.log 2>&1 &
   LOG_STREAM_PID=$!
