@@ -11,7 +11,7 @@ public struct LightShareExtensionColorPalette: ShareExtensionColorPaletteProvidi
     public func secondaryColor() -> Color { secondaryButton() }
     public func palette() -> [String] { [
         "ef476f", "f78c6b", "ffd166", "83d483", "06d6a0",
-        "0cb0a9", "118ab2", "0c637f", "073b4c"
+        "0cb0a9", "118ab2"
     ] }
     public let circleSize: CGFloat = ColorPaletteConstants.circleSize
     public let circleSpacing: CGFloat = 12

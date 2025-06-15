@@ -23,7 +23,7 @@ public struct DarkColorPalette: ColorPaletteProviding {
     private static let linkBlue: Double = 1.0
     private static let paletteHex: [String] = [
         "ef476f", "f78c6b", "ffd166", "83d483", "06d6a0",
-        "0cb0a9", "118ab2", "0c637f", "073b4c"
+        "0cb0a9", "118ab2"
     ]
 
     // MARK: - UI Constants
