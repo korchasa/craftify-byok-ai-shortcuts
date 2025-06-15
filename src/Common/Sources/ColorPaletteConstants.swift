@@ -70,7 +70,7 @@ public enum ColorPaletteConstants {
     /// Список hex-кодов доступных цветов.
     public static let palette: [String] = [
         "ef476f", "f78c6b", "ffd166", "83d483", "06d6a0",
-        "0cb0a9", "118ab2", "0c637f", "073b4c"
+        "0cb0a9", "118ab2"
     ]
     /// Значение компоненты цвета по умолчанию (0), используется для инициализации цвета, если hex-строка некорректна.
     public static let defaultComponent: UInt64 = 0
