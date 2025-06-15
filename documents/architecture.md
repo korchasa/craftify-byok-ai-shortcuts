@@ -1,15 +1,4 @@
-# Current State (April 2024)
-
-- Error handling is now fully centralized via UserFacingError in both MainApp and ShareExtension.
-- All user-facing errors are localized (en/ru) and provide actionable advice.
-- Alert logic in ShareExtensionView is improved for reliability and user experience.
-- Logging uses English messages for consistency across modules.
-- Tests cover all error branches, including race conditions between error and timeout.
-- FetchError and UserFacingError have been refactored and relocated for clarity.
-- All changes are covered by unit and UI tests; project is stable and up to date.
-
 # Craftify Architecture
----
 
 ## System Overview
 - MainApp (SwiftUI) and Share Extension both use the shared Common module (SwiftPM).
@@ -107,9 +96,9 @@ graph TD
 
 ## Onboarding Flow
 - CraftifyApp uses global AppState (ObservableObject), which stores the user's consent flag.
-- If consent is not given, HowToUseView with a checkbox and consent button is shown.
-- After consent, the main HomeView screen is automatically displayed.
-- Consent is stored in App Group UserDefaults via ConsentManager.
+- On first launch, HowToUseView displays the full Privacy Policy text followed by an **Accept & Continue** button.
+- The user must tap **Accept & Continue** to grant consent; after that, the main HomeView screen is automatically shown.
+- Consent is stored in App Group UserDefaults via **ConsentManager** and is not requested again.
 
 ## UI Architecture
 - All main content (title, result, list of operations) is placed inside a ScrollView.

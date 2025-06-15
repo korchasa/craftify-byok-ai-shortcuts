@@ -1,13 +1,3 @@
-# Current State (April 2024)
-
-- Error handling is now fully centralized via UserFacingError in both MainApp and ShareExtension.
-- All user-facing errors are localized (en/ru) and provide actionable advice.
-- Alert logic in ShareExtensionView is improved for reliability and user experience.
-- Logging uses English messages for consistency across modules.
-- Tests cover all error branches, including race conditions between error and timeout.
-- FetchError and UserFacingError have been refactored and relocated for clarity.
-- All changes are covered by unit and UI tests; project is stable and up to date.
-
 # Craftify Developer Manual
 
 ---
@@ -44,58 +34,35 @@
 - `./run logs`: Unified Log (os_log, subsystem: Internal)
 - Change period: `log show --predicate 'subsystem == "Internal"' --style syslog --last 2h`
 
-## Operation Color & ResultMode
-- InventoryOperation: colorHex
-- All ops: resultMode (clipboard/display)
-- Tests: InventoryManagerStub, InventoryOperation, Add/EditOperationView, ShareExtensionView
+## Manual TestFlight Upload via Xcode
+1. **Prepare the build**
+   - Open the `MainApp` target in Xcode.
+   - Bump the *Marketing Version* or *Build* in **General ▸ Version / Build** as needed.
+   - Select **Any iOS Device (arm64)** or a real device—not a simulator.
 
-## ShareExt UI
-- Main: `src/ShareExtension/Sources/ShareExtensionView.swift`
-- Close: fixed bottom via .safeAreaInset
-- All content: ScrollView
-- All tested
+2. **Archive**
+   - In the top menu choose **Product ▸ Archive**.
+   - Wait until the **Organizer** window opens with the newly created archive.
 
-## Activation for URLs
-- ShareExt: public.text, public.url (NSExtensionActivationRule in Project.swift)
-- Both: text priority
-- All tested
+3. **Validate & Upload**
+   - In **Organizer ▸ Archives** select the latest archive.
+   - Click **Distribute App** ➝ **App Store Connect** ➝ **Upload**.
+   - Keep **Rebuild from bitcode** unchecked (Apple removed bitcode).
+   - Confirm the correct *Distribution Certificate* and *Provisioning Profile*.
+   - Follow the wizard until **Upload** begins; wait for the green *Upload Succeeded* message.
 
-## Button Style Guide
-- Use only CraftifyButtonConstants for btn params (color, radius, padding, scale)
-- Use only ColorPaletteConstants.palette for color
-- No local consts in views/VMs
-- Example:
-```swift
-Button(action: ...) {
-    Text("...")
-}
-.buttonStyle(CraftifyPrimaryButtonStyle())
-.padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-.padding(.bottom, CraftifyButtonConstants.bottomPadding)
-.cornerRadius(CraftifyButtonConstants.cornerRadius)
-```
-- **Primary**: main actions, `.buttonStyle(CraftifyPrimaryButtonStyle())`
-- **GraySecondary**: cancel/extra, `.buttonStyle(GraySecondaryButtonStyle())`
-- **Cancel**: secondary + white text
-- **SettingsPrimary**: primary actions on Settings screen, `.buttonStyle(SettingsPrimaryButtonStyle())`
-- **Destructive**: secondary + `.foregroundColor(.red)`
-- No local ButtonStyle
+4. **Processing in App Store Connect**
+   - Open https://appstoreconnect.apple.com ▸ **My Apps ▸ Craftify ▸ TestFlight ▸ Builds**.
+   - The build appears after Apple finishes *Processing* (≈5-20 min).
 
-## Dependency/Test Isolation
-- Prod targets: no test-only deps
-- Use embedAppExtensions, not deps
-- Test deps: only in UnitTest targets
+5. **Publish to testers**
+   - Select the processed build ➝ **Add Internal Testers** (immediate) **or** **Submit for Beta Review** for external testers.
+   - Fill in compliance & export encryption questions if prompted.
+   - Once approved, toggle the build *ON* for selected tester groups.
 
-## References
-- [Project Overview](project.md)
-- [Architecture](architecture.md)
-- [Implementation](implementation.md)
-- [File Structure](file_structure.md)
-- [User Manual](user-manual.md)
+6. **Troubleshooting**
+   - If the build never appears, check **App Store Connect ▸ Activity ▸ All Builds** for errors.
+   - Common issues: outdated certificates, missing export compliance, or entitlements mismatch.
 
-- To add new language: add to SupportedLanguages.all (src/Common/Sources/Models/SupportedLanguages.swift). LLM prompts: always englishName.
-- Btn text color: set via palette.primaryButtonText()/secondaryButtonText() in calling code, not in buttonStyle.
+> This manual path is intended for quick, ad-hoc TestFlight updates. CI/CD with Fastlane remains the canonical flow for repeatable releases.
 
-- Для поддержки нового языка добавьте его в массив SupportedLanguages.all (src/Common/Sources/Models/SupportedLanguages.swift). Для промптов LLM всегда используется englishName.
-
-- Цвет текста кнопок задается явно через palette.primaryButtonText()/secondaryButtonText() в вызывающем коде, а не внутри buttonStyle.

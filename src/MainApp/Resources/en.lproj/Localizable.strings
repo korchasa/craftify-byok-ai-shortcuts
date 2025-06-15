@@ -1,9 +1,8 @@
 /* HowToUseView */
 "howtouse_title" = "How to use Craftify";
 "howtouse_instruction" = "Select text in any app, share to Craftify, choose an operation, and get the result instantly.";
-"howtouse_consent" = "I consent to sending text to the OpenAI cloud service";
-"howtouse_privacy_policy" = "Privacy Policy";
-"howtouse_done" = "Done";
+"howtouse_consent" = "I agree that my selected text will be sent to the chosen LLM provider as described in the Privacy Policy";
+"howtouse_done" = "Accept & Continue";
 
 /* HomeView */
 "home_title" = "Operations";
@@ -79,3 +78,6 @@
 "advice_try_again_later" = "Try again later.";
 "advice_contact_support" = "If the problem persists, contact support.";
 "advice_unknown_error" = "An unknown error occurred. Try again or contact support.";
+
+/* Privacy Policy Full */
+"privacy_policy_full" = "Privacy Policy\n\n1. Overview\nCraftify processes only the text you explicitly share. This text is sent directly to the LLM provider you choose to perform the selected operation and is discarded immediately after the result is returned. Craftify never stores, logs or analyses this text.\n\n2. Collected Data\nCraftify neither collects nor stores personal data. The input text travels straight from your device to the chosen LLM provider and is not retained by Craftify.\n\n3. Storage & Security\nThe application does not store any user data except settings. If you configure an API key for an LLM provider, it is kept encrypted locally in the iOS Keychain on your device and never leaves it. All network traffic is protected with HTTPS (TLS 1.2+).\n\n4. Third-Party Sharing\nWe do not share any data with third parties, except for securely transmitting the input text to the chosen LLM provider to fulfil your request.\n";
