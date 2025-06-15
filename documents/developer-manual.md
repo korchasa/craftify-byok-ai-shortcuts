@@ -13,7 +13,7 @@
 ---
 
 ## Install
-- `./run init`: install CLI tools (xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen, periphery)
+- `./run init`: install CLI tools (tuist, swiftlint, swiftformat, xcbeautify, swiftgen, periphery)
 
 ## Build
 - `./run generate`: tuist, swiftgen
