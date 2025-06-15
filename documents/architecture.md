@@ -17,7 +17,7 @@
 - Logging is centralized via LogManagerShared (SPM), using os_log.
 - All operations support a result processing mode (`resultMode`):
   - `.clipboard`: result is copied to the clipboard (default)
-  - `.display`: result is shown in a popup window (used for Explain)
+  - `.display`: result is shown in a popup window (used for Explain and Summarize)
 
 ## System Layers
 - **UI Layer**: SwiftUI Views и ViewModel'и. Все ViewModel'и получают настройки только через AppSettingsManager, не хранят копии языка в OperationInput.
@@ -44,7 +44,7 @@
 - ProcessingManager forms the request, calls LLMAPIClient.
 - LLMAPIClient sends HTTP POST to OpenAI, parses the response via ResponseParser.
 - ClipboardManager copies the result to UIPasteboard.
-- If the operation has resultMode `.display` (Explain) — the result is saved and displayed in the view, not copied to the clipboard.
+- If the operation has resultMode `.display` (Explain or Summarize) — the result is saved and displayed in the view, not copied to the clipboard.
 - All actions are logged via LogManagerShared.
 - ViewModel читает и пишет настройки через AppSettingsManager.shared.
 - Операции (SummarizeOperation, ExplainOperation и др.) получают язык только через AppSettingsManager.shared.nativeLanguage.
@@ -60,8 +60,8 @@
 
 ## Testing Strategy
 - Unit tests for all managers and models.
-- UI tests for all main scenarios, including Explain (display) and clipboard operations.
-- Checks that Explain displays the result, and other operations copy to the clipboard.
+- UI tests for all main scenarios, including Explain and Summarize (display) and clipboard operations.
+- Checks that Explain and Summarize display the result, and other operations copy to the clipboard.
 - Coverage ≥ 80% for key modules.
 - Unit-тесты проверяют корректность смены языка, генерации промптов, сериализации параметров операций.
 - Добавлен тест, гарантирующий, что смена языка влияет на promptTemplate во всех операциях.
@@ -100,7 +100,7 @@ graph TD
 - Added resultMode (clipboard/display) for operations.
 - InventoryOperation serialization/deserialization supports colorHex and result processing mode.
 - UI (HomeView, ShareExtensionView) displays operation color and correctly handles clipboard/display modes.
-- For Explain, the result is displayed in a scrollable popup window.
+- For Explain and Summarize, the result is displayed in a scrollable popup window.
 - Covered by unit and UI tests (display, selection, saving color, result processing modes).
 - The correct operation no longer contains the stylePreservationLevel parameter, always uses the maximum style preservation level.
 - UI does not display elements for selecting style preservation level.

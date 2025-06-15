@@ -16,7 +16,7 @@
 ## Start
 1. Open app
 2. On 1st launch: review, consent (checkbox)
-3. Add ops (translate, simplify, correct, explain) via HomeView
+3. Add ops (translate, simplify, correct, explain, summarize) via HomeView
 4. Enter OpenAI API key in SettingsView
 5. To process text:
    - Select text in any app
@@ -24,12 +24,12 @@
    - Choose op
    - Result:
      - Most ops: auto-copy to clipboard (notify)
-     - Explain: show in popup
+     - Explain & Summarize: show in popup
 
 ## Result Modes
 - Each op: resultMode
   - Clipboard: copy (default)
-  - Display: popup (Explain)
+  - Display: popup (Explain, Summarize)
 
 ## Test
 - All main scenarios: auto-tested (unit, UI)
@@ -50,12 +50,12 @@
 - Explain: shows result; others: copy
 
 ## ShareExt: What's New
-- All main ops (translate, simplify, correct, explain) + params
+- All main ops (translate, simplify, correct, explain, summarize) + params
 - Auto text length check, block if limit
 - All errors: clear messages
 - Result:
   - Most: copy + notify
-  - Explain: popup
+  - Explain & Summarize: popup
 - All actions/errors logged (FIFO, `./run logs`)
 
 ## Instruction Relevance

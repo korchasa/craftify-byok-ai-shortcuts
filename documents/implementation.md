@@ -112,7 +112,7 @@ graph TD
 - If both: text priority
 - 5000 char limit
 - UI: only ops with URL support shown
-- Summarize: only for URLs
+- Summarize: text or URL
 
 ## ShareExtensionViewModel
 - Async data load (URL/text)
@@ -185,7 +185,7 @@ graph TD
 - Swift 5.9, SwiftUI, MVVM
 - UserDefaults + App Group
 - OSLogManagerShared для логирования
-- SwiftGen, Tuist, XcodeGen
+- SwiftGen, Tuist
 - Unit-тесты через XCTest
 
 ## Среда разработки и настройка

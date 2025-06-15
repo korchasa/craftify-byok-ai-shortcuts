@@ -7,20 +7,20 @@ Craftify — iOS приложение с Share Extension для контекст
 1. Клонируйте репозиторий:
 ```sh
 git clone <repo-url>
-cd Craftify-Cursor
+cd Craftify
 ```
 2. Установите все необходимые CLI инструменты:
 ```sh
 ./run init
 ```
-Это установит через Homebrew: xcodegen, swiftlint, swiftformat, xcbeautify, swiftgen.
+Это установит через Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
 3. Сгенерируйте проект:
 ```sh
 ./run generate
 ```
 4. Соберите и запустите проект:
 ```sh
-./run deploy:simulator
+./run sim
 ```
 5. Для запуска проверок:
 ```sh
@@ -29,7 +29,7 @@ cd Craftify-Cursor
 
 ## Основные команды
 - `./run init` — установка всех CLI инструментов
-- `./run deploy:simulator` — сборка и запуск в симуляторе
+- `./run sim` — сборка и запуск в симуляторе
 - `./run check` — запуск всех проверок
 - `./run clean` — очистка артефактов сборки
 - `./run logs` — просмотр логов
