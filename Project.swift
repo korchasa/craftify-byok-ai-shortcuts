@@ -93,7 +93,20 @@ public let project = Project(
             product: .appExtension,
             bundleId: "dev.korchasa.Craftify.ShareExtension",
             deploymentTargets: .iOS("16.0"),
-            infoPlist: .file(path: "src/ShareExtension/Config/Info.plist"),
+            infoPlist: .extendingDefault(with: [
+                "CFBundleDisplayName": .string("Craftify Share"),
+                "NSExtension": .dictionary([
+                    "NSExtensionAttributes": .dictionary([
+                        "NSExtensionActivationRule": .dictionary([
+                            "NSExtensionActivationSupportsText": .boolean(true),
+                            "NSExtensionActivationSupportsWebURLWithMaxCount": .integer(1),
+                            "NSExtensionActivationSupportsURLWithMaxCount": .integer(1)
+                        ])
+                    ]),
+                    "NSExtensionPointIdentifier": .string("com.apple.share-services"),
+                    "NSExtensionPrincipalClass": .string("$(PRODUCT_MODULE_NAME).ShareExtensionViewController")
+                ])
+            ]),
             sources: [
                 "src/Common/Sources/**",
                 "src/ShareExtension/Sources/**",
