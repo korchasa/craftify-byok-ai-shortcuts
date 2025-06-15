@@ -22,7 +22,7 @@
 
 /* Share Extension UI */
 "share_title" = "Craftify";
-"share_cancel" = "Cancel";
+"share_cancel" = "Close";
 //"share_copied" = "Copied to clipboard";
 "share_copy_close" = "Copy & Close";
 

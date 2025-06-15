@@ -4,9 +4,9 @@
   <rect width="256" height="256" fill="#00C0B6"/>
 
   <!-- Black circle -->
-  <circle cx="128" cy="128" r="100" fill="#000000"/>
+  <circle cx="128" cy="128" r="96" fill="#000000"/>
 
-  <circle cx="128" cy="128" r="65" fill="#00C0B6"/>
+  <circle cx="128" cy="128" r="64" fill="#00C0B6"/>
 
   <!-- Cut-out sector (90° on the right) to form the letter C -->
   <!-- The path starts at the centre, goes to the top-right point on the circle (-45°),

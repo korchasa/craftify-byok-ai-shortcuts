@@ -22,7 +22,7 @@
 
 /* Share Extension UI */
 "share_title" = "Craftify";
-"share_cancel" = "Отмена";
+"share_cancel" = "Закрыть";
 "share_copied" = "Скопировано в буфер";
 "share_copy_close" = "Скопировать и закрыть";
 
