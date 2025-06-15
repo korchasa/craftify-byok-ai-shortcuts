@@ -87,6 +87,17 @@ public final class ShareExtensionViewModel: ObservableObject {
         shouldCloseExtension = true
     }
 
+    /// Copies currently displayed result to clipboard and closes extension with toast.
+    public func copyDisplayedResultAndClose() {
+        guard let text = displayResult, !text.isEmpty else { return }
+        if manager.copyToClipboard(text) {
+            showCopiedToast = true
+            shouldCloseExtension = true
+        } else {
+            errorMessage = L10n.errorClipboard
+        }
+    }
+
     // MARK: - Private Methods
 
     private func logProcessingStart() {

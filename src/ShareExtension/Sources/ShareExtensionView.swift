@@ -90,9 +90,9 @@ public struct ShareExtensionView: View {
                 copiedToast
             }
         }
-        // Pin the close button above the bottom safe area with fixed padding
+        // Pin action buttons above the bottom safe area with fixed padding
         .safeAreaInset(edge: .bottom) {
-            closeButton
+            bottomButtons
                 .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
                 .padding(.bottom, ShareExtensionButtonConstants.bottomPadding)
                 .background(palette.background())
@@ -321,7 +321,28 @@ public struct ShareExtensionView: View {
                 .foregroundColor(palette.primaryButtonText())
         }
         .buttonStyle(ShareExtensionSecondaryButtonStyle())
-        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
-        .padding(.bottom, CraftifyButtonConstants.bottomPadding)
+    }
+
+    private var copyAndCloseButton: some View {
+        Button(action: { viewModel.copyDisplayedResultAndClose() }) {
+            Label(L10n.shareCopyClose, systemImage: "doc.on.doc")
+                .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                .foregroundColor(palette.primaryButtonText())
+        }
+        .buttonStyle(ShareExtensionPrimaryButtonStyle())
+    }
+
+    /// Returns appropriate bottom button stack depending on whether result is displayed
+    private var bottomButtons: some View {
+        Group {
+            if viewModel.displayResult != nil {
+                HStack(spacing: ShareExtensionButtonConstants.horizontalPadding) {
+                    copyAndCloseButton
+                    closeButton
+                }
+            } else {
+                closeButton
+            }
+        }
     }
 }
