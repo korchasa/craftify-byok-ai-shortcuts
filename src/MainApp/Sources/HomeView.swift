@@ -18,6 +18,7 @@ public struct HomeView: View {
         // Используем ключи, оставленные в ресурсах, чтобы Periphery не помечал их как неиспользуемые
         _ = L10n.homeSortHint
         _ = L10n.homeSortHandle
+        _ = L10n.homeOrder
     }
 
     public var body: some View {
@@ -26,13 +27,7 @@ public struct HomeView: View {
                 .navigationTitle(LocalizedStringKey(L10n.homeTitle))
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        Button(action: {
-                            withAnimation {
-                                editMode = (editMode == .active) ? .inactive : .active
-                            }
-                        }) {
-                            Text(LocalizedStringKey(editMode == .active ? L10n.howtouseDone : L10n.homeOrder))
-                        }
+                        EditButton()
                     }
                 }
                 .safeAreaInset(edge: .bottom) {
@@ -93,6 +88,11 @@ public struct HomeView: View {
             }
             .onMove { indices, newOffset in
                 viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
+            }
+            .onDelete { indices in
+                for index in indices {
+                    viewModel.removeOperation(at: index)
+                }
             }
         }
         .listStyle(.plain)

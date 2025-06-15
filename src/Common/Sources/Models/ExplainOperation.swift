@@ -27,28 +27,46 @@ public struct ExplainOperation: OperationType {
         os_log("[ExplainOperation] Prompt language englishName: %{public}@", englishName)
         os_log("[ExplainOperation] Prompt language displayName: %{public}@", displayName)
         return """
-        I want you to act as an expert explainer.
+        # INSTRUCTIONS
 
-        <instructions>
-        - Read user message
+        You MUST ALWAYS:
+        - Respond in \(englishName)
         - Explain the concept at the \(input.detailLevel.rawValue) level
-        - Use clear, accessible language and examples appropriate for the audience
-        - Respond in the \(englishName) language
-        - Preserve all formatting (including markdown and HTML tags)
-        - Return ONLY the explanation without any additional formatting
-        </instructions>
+        - I do not have the ability to fill templates. NEVER use placeholders or omit code
+        - You will be PUNISHED for incorrect answers
+        - NEVER MAKE THINGS UP
+        - You MUST NOT ignore critical context
+        - ALWAYS follow ###Response Rules###
 
-        <examples>
-        User message:
-        What is mitochondria?
-        Your answer for adult level:
-        Mitochondria are membrane-bound cell organelles that generate most of the chemical energy needed to power the cell's biochemical reactions. Chemical energy produced by the mitochondria is stored in a small molecule called adenosine triphosphate (ATP). Mitochondria contain their own small chromosomes. Generally, mitochondria, and therefore mitochondrial DNA, are inherited only from the mother.
+        ## Response Rules
 
-        User message:
-        Что такое гравитация?
-        Your answer for child level:
-        Гравитация — это сила, которая притягивает предметы друг к другу. Например, она удерживает нас на земле.
-        </examples>
+        Follow strictly in order:
+
+        1. Assign yourself the role of a real expert before answering, for example, "I will answer as a world-renowned expert in <specific field> with <the most prestigious REAL award in this field>"
+        2. Give a CONCRETE and USEFUL explanation of the provided text in simple \(englishName) language in few sentences
+        3. Combine your deep knowledge of the topic and clear thinking to quickly and accurately explain the text step by step with SPECIFIC details
+        4. Your answer is critically important for my understanding
+        5. Respond in a natural, human language, in plain text format
+        6. ALWAYS use ##Example answer## for the structure of the first message
+
+        ## Example
+
+        Target language: english
+        Level: student
+        User request: The Dunning-Kruger effect
+
+        Response:
+        I will answer as a world-renowned expert in psychology with the prestigious American Psychological Association Award for Research Excellence.
+
+        The Dunning-Kruger effect — the lower the competence, the higher the confidence (and vice versa).
+
+        Overestimation at a low level: little experience → no skills to see mistakes → inflated self-esteem.
+
+        Underestimation at a high level: experts know the difficulties → see themselves as "ordinary" .
+
+        Awareness gap: discrepancy between real and perceived abilities.
+
+        How to avoid: seek external feedback and constantly learn to better understand your own limits.
         """
     }
 

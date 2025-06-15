@@ -23,6 +23,11 @@ public struct ShareExtensionView: View {
         static let copiedToast: Double = 2
     }
 
+    private enum ContentPaddingConstants {
+        static let doubleBottomPadding: CGFloat = CraftifyButtonConstants.bottomPadding + CraftifyButtonConstants.bottomPadding
+        static let bottomExtra: CGFloat = CraftifyButtonConstants.minButtonHeight + doubleBottomPadding
+    }
+
     private static let supportedLanguages: [(name: String, code: String)] = [
         ("български", "bg"),
         ("deutsch", "de"),
@@ -73,6 +78,7 @@ public struct ShareExtensionView: View {
             }
         }
         .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
+        .padding(.bottom, ContentPaddingConstants.bottomExtra)
     }
 
     public var body: some View {
@@ -90,15 +96,20 @@ public struct ShareExtensionView: View {
                 copiedToast
             }
         }
-        // Pin action buttons above the bottom safe area with fixed padding
+        // Pin action buttons above the bottom safe area using common button bar
         .safeAreaInset(edge: .bottom) {
-            bottomButtons
-                .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
-                .padding(.bottom, ShareExtensionButtonConstants.bottomPadding)
-                .background(palette.background())
+            CraftifyButtonBar(backgroundColor: palette.background()) {
+                if viewModel.displayResult != nil {
+                    closeButton
+                    copyAndCloseButton
+                } else {
+                    closeButton
+                }
+            }
+            // Bottom padding handled by CraftifyButtonBar + safe area; no extra
         }
         .background(palette.background())
-        .ignoresSafeArea(edges: .bottom)
+        // Keep safe area so bottom inset matches Main screen
         .zIndex(ZIndexConstants.copiedToast)
         .environment(\.shareExtensionColorPalette, palette)
         // ViewModel subscriptions & alerts
@@ -330,19 +341,5 @@ public struct ShareExtensionView: View {
                 .foregroundColor(palette.primaryButtonText())
         }
         .buttonStyle(ShareExtensionPrimaryButtonStyle())
-    }
-
-    /// Returns appropriate bottom button stack depending on whether result is displayed
-    private var bottomButtons: some View {
-        Group {
-            if viewModel.displayResult != nil {
-                HStack(spacing: ShareExtensionButtonConstants.horizontalPadding) {
-                    copyAndCloseButton
-                    closeButton
-                }
-            } else {
-                closeButton
-            }
-        }
     }
 }
