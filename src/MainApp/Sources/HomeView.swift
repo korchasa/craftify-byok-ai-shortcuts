@@ -26,7 +26,13 @@ public struct HomeView: View {
                 .navigationTitle(LocalizedStringKey(L10n.homeTitle))
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
+                        Button(action: {
+                            withAnimation {
+                                editMode = (editMode == .active) ? .inactive : .active
+                            }
+                        }) {
+                            Text(LocalizedStringKey(editMode == .active ? L10n.howtouseDone : L10n.homeOrder))
+                        }
                     }
                 }
                 .safeAreaInset(edge: .bottom) {
@@ -89,7 +95,7 @@ public struct HomeView: View {
                 viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
             }
         }
-        .listStyle(.insetGrouped)
+        .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .background(palette.background())
     }
@@ -107,7 +113,7 @@ public struct HomeView: View {
                     .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                     .foregroundColor(palette.secondaryButtonText())
             }
-            .buttonStyle(CraftifySecondaryButtonStyle())
+            .buttonStyle(SettingsPrimaryButtonStyle())
         }
     }
 
@@ -119,16 +125,11 @@ public struct HomeView: View {
 
         private static let circleSize: CGFloat = 28
         private static let symbolScale: CGFloat = 0.5
+        private static let horizontalSpacing: CGFloat = 12
 
         var body: some View {
             Button(action: onEdit) {
-                Label {
-                    HStack {
-                        OperationLabelText(type: operation.operation)
-                        Spacer()
-                        OperationParamsText(operation: operation)
-                    }
-                } icon: {
+                HStack(spacing: Self.horizontalSpacing) {
                     ZStack {
                         Circle()
                             .fill(Color(hex: operation.colorHex))
@@ -140,7 +141,12 @@ public struct HomeView: View {
                             .fontWeight(.semibold)
                             .accessibilityLabel(LocalizedStringKey(operationLabel(for: operation.operation)))
                     }
+                    OperationLabelText(type: operation.operation)
+                    Spacer()
+                    OperationParamsText(operation: operation)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
             }
             .buttonStyle(PlainButtonStyle())
             .disabled(isEditing)

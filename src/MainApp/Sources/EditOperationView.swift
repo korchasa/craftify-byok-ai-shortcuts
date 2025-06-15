@@ -120,7 +120,7 @@ public struct EditOperationView: View {
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                         .foregroundColor(palette.secondaryButtonText())
                 }
-                .buttonStyle(CraftifySecondaryButtonStyle())
+                .buttonStyle(GraySecondaryButtonStyle())
                 Button(action: {
                     if let op = viewModel.makeOperation() {
                         onSave(op)

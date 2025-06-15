@@ -10,6 +10,7 @@
 "home_add_operation" = "Операция";
 "home_settings" = "Настройки";
 "home_delete" = "Удалить";
+"home_order" = "Сортировка";
 "homeSortHandle" = "Тянуть для сортировки";
 "homeSortHint" = "Долго нажмите и тяните для сортировки.";
 
