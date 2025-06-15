@@ -82,7 +82,7 @@
 "error_processing_manager_unavailable" = "Processing manager unavailable";
 // "error_result_mode_display" = "Result mode: display result";
 // "error_result_copied" = "Result copied to clipboard successfully";
-// "percent_format" = "%d%%";
+"percent_format" = "%d%%";
 
 "advice_check_connection" = "Check your internet connection and try again.";
 "advice_check_api_key" = "Please check your API key in Settings.";
