@@ -47,7 +47,7 @@
             <li>Share Extension for processing text from any app</li>
             <li>Customizable operation list (add, edit, reorder, delete operations)</li>
             <li>Localized user interface and user-facing strings</li>
-            <li>Settings screen with log export and privacy options</li>
+            <li>Settings screen with privacy options</li>
             <li>All user data and logs are stored securely in the App Group container</li>
         </ul>
     </div>
@@ -69,7 +69,6 @@
         <div class="privacy">
             <p><strong>Data Collection:</strong> Craftify does not collect or transmit any personal data to third parties. <span class="important">However, all text processing requests are sent to the external LLM provider (such as OpenAI) specified by the user's API key, for the sole purpose of processing the user's request.</span> All logs are stored locally in the App Group container and are never shared externally. API keys are masked in logs and stored securely in the keychain.</p>
             <p><strong>Crash Reporting:</strong> Crash reports are sent only from the MainApp via New Relic SDK. No crash data is sent from the Share Extension.</p>
-            <p><strong>Log Export:</strong> Users can export logs from the Settings screen. Logs contain only the last 1000 entries and all sensitive data (API keys) is masked.</p>
             <p><strong>Permissions:</strong> The app does not request access to contacts, photos, location, or other sensitive user data.</p>
             <p><strong>Privacy Policy URL:</strong> <a href="https://github.com/korchasa/Craftify/blob/main/documents/privacy-policy.md">https://github.com/korchasa/Craftify/blob/main/documents/privacy-policy.md</a></p>
         </div>
@@ -89,7 +88,7 @@
             <li>Launch Craftify MainApp. The home screen displays the list of available operations.</li>
             <li>Open the <strong>Settings</strong> screen and enter your LLM API key (e.g., OpenAI API Key). The app will not function without a valid key.</li>
             <li>Tap <strong>+</strong> to add a new operation (e.g., Translate, Simplify, etc.).</li>
-            <li>Use the <strong>Settings</strong> button to access the settings screen. Here you can export logs and view privacy information.</li>
+            <li>Use the <strong>Settings</strong> button to access the settings screen. Here you can view privacy information.</li>
             <li>To test the Share Extension:
                 <ul>
                     <li>Select any text in another app (e.g., Safari, Notes).</li>
@@ -98,7 +97,6 @@
                 </ul>
             </li>
             <li>All user-facing strings are localized. To test localization, change the device language in iOS settings and relaunch the app.</li>
-            <li>Logs can be exported from the Settings screen for review.</li>
         </ol>
         <div class="note">
             <strong>Note:</strong> No login or demo account is required. All features are available after entering a valid LLM API key.

@@ -4,33 +4,48 @@ import SwiftUI
 public struct HowToUseView: View {
     private static let verticalSpacing: CGFloat = 24
     private static let topPadding: CGFloat = 32
-    private static let bottomPadding: CGFloat = 32
+    private static let dividerVerticalPadding: CGFloat = 8
+    private static let bottomPadding: CGFloat = 24
 
     @ObservedObject private var viewModel: HowToUseViewModel
     private var onConsent: (() -> Void)?
     @Environment(\.colorPalette) private var palette
 
     public var body: some View {
-        VStack(spacing: Self.verticalSpacing) {
-            HowToUseTitle(topPadding: Self.topPadding)
-            Divider()
-                .padding(.bottom, FormStyleConstants.dividerBottomPadding)
-            HowToUseInstruction()
-            HowToUseConsentToggle(viewModel: viewModel)
-            HowToUsePrivacyLink()
-            Spacer()
-            HowToUseDoneButton(viewModel: viewModel, handleDoneTapped: handleDoneTapped, bottomPadding: Self.bottomPadding)
+        ZStack {
+            // Background covers full screen but keeps content in safe area
+            palette.background()
+                .ignoresSafeArea()
+
+            ScrollView {
+                VStack(spacing: Self.verticalSpacing) {
+                    HowToUseTitle(topPadding: Self.topPadding)
+                    HowToUseInstruction()
+                    Divider()
+                        .padding(.vertical, Self.dividerVerticalPadding)
+                    HowToUsePrivacyPolicyFullView()
+
+                    // Consent text placed just above the button
+                    Text(L10n.howtouseConsent)
+                        .font(Font.craftifyBody)
+                        .fontWeight(.semibold)
+                        .multilineTextAlignment(.leading)
+                        .padding(.horizontal)
+
+                    HowToUseAcceptButton(handleAcceptTapped: handleDoneTapped)
+                        .padding(.horizontal)
+                        .padding(.bottom, Self.bottomPadding)
+                }
+                .padding(.horizontal)
+            }
         }
-        .padding()
-        .background(palette.background())
-        .ignoresSafeArea()
     }
 
     private struct HowToUseTitle: View {
         let topPadding: CGFloat
         var body: some View {
             Text(L10n.howtouseTitle)
-                .font(.craftifyTitle)
+                .font(Font.craftifyTitle)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
                 .padding(.top, topPadding)
@@ -40,53 +55,41 @@ public struct HowToUseView: View {
     private struct HowToUseInstruction: View {
         var body: some View {
             Text(L10n.howtouseInstruction)
-                .font(.craftifyBody)
+                .font(Font.craftifyBody)
                 .fontWeight(.semibold)
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
+                .dynamicTypeSize(.medium ... .accessibility5)
         }
     }
 
-    private struct HowToUseConsentToggle: View {
-        @ObservedObject var viewModel: HowToUseViewModel
+    /// Privacy policy text with dynamic type and selectable content
+    private struct HowToUsePrivacyPolicyFullView: View {
         var body: some View {
-            Toggle(isOn: $viewModel.consentGiven) {
-                Text(L10n.howtouseConsent)
-                    .font(.craftifyBody)
-                    .fontWeight(.semibold)
-            }
-            .padding(.horizontal)
+            Text(L10n.privacyPolicyFull)
+                .font(.body)
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal)
+                .dynamicTypeSize(.small ... .accessibility5)
+                .textSelection(.enabled)
+                .accessibilityIdentifier("privacyPolicyText")
         }
     }
 
-    private struct HowToUsePrivacyLink: View {
+    private struct HowToUseAcceptButton: View {
+        var handleAcceptTapped: () -> Void
         @Environment(\.colorPalette) private var palette
         var body: some View {
-            Link(L10n.howtousePrivacyPolicy, destination: URL(string: "https://korchasa.dev/privacy")!)
-                .font(.craftifyFootnote)
-                .fontWeight(.semibold)
-                .foregroundColor(palette.link())
-        }
-    }
-
-    private struct HowToUseDoneButton: View {
-        @ObservedObject var viewModel: HowToUseViewModel
-        var handleDoneTapped: () -> Void
-        let bottomPadding: CGFloat
-        @Environment(\.colorPalette) private var palette
-        var body: some View {
-            Button(action: handleDoneTapped) {
+            Button(action: handleAcceptTapped) {
                 Text(L10n.howtouseDone)
-                    .font(.craftifyBody)
+                    .font(Font.craftifyBody)
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                     .foregroundColor(palette.primaryButtonText())
             }
-            .disabled(!viewModel.consentGiven)
             .accessibilityLabel(L10n.howtouseDone)
             .buttonStyle(CraftifyPrimaryButtonStyle())
-            .padding(.horizontal)
-            .padding(.bottom, bottomPadding)
         }
     }
 
@@ -98,9 +101,8 @@ public struct HowToUseView: View {
     }
 
     private func handleDoneTapped() {
+        viewModel.consentGiven = true
         viewModel.saveConsent()
-        if viewModel.consentGiven {
-            onConsent?()
-        }
+        onConsent?()
     }
 }

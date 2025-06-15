@@ -1,22 +1,9 @@
-# Current State (April 2024)
-
-- Error handling is now fully centralized via UserFacingError in both MainApp and ShareExtension.
-- All user-facing errors are localized (en/ru) and provide actionable advice.
-- Alert logic in ShareExtensionView is improved for reliability and user experience.
-- Logging uses English messages for consistency across modules.
-- Tests cover all error branches, including race conditions between error and timeout.
-- FetchError and UserFacingError have been refactored and relocated for clarity.
-- All changes are covered by unit and UI tests; project is stable and up to date.
-- **2024-06-09: Major refactoring — all test targets and configs removed, dead code deleted, Periphery added to lint, interface and documentation simplified.**
-
 # Craftify User Manual
-
----
 
 ## Start
 1. Open app
-2. On 1st launch: review, consent (checkbox)
-3. Add ops (translate, simplify, correct, explain, summarize) via HomeView
+2. On first launch: review full Privacy Policy and tap **Accept & Continue** to grant consent
+3. Add operations (Translate, Simplify, Correct, Explain, Summarize) via HomeView
 4. Enter OpenAI API key in SettingsView
 5. To process text:
    - Select text in any app
@@ -77,10 +64,9 @@
 - Correct: always max style
 
 ## Welcome/Consent
-- 1st launch: welcome, consent checkbox
-- Until checked: features unavailable
-- After: main screen auto-opens
-- Consent saved, not re-asked
+- On first launch, HowToUseView shows the full Privacy Policy followed by an **Accept & Continue** button.
+- Craftify features remain unavailable until the user taps **Accept & Continue**.
+- Once accepted, the main HomeView loads automatically and consent is stored (never re-asked).
 
 ## ShareExt UI
 - Close: always at bottom

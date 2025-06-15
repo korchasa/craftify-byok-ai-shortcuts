@@ -108,3 +108,6 @@ cd Craftify
 - Максимальная длина ввода: 5000 символов (контролируется в Share Extension).
 - Ввод URL принимается **только** Summarize. Другие операции при получении URL показывают ошибку пользователю.
 - Все операции учитывают текущий язык приложения через `AppSettingsManager`.
+
+## TestFlight Release
+- https://appstoreconnect.apple.com/apps/6745511563/distribution
