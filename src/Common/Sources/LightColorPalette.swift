@@ -21,7 +21,7 @@ public struct LightColorPalette: ColorPaletteProviding {
     private static let linkBlue: Double = 1.0
     private static let paletteHex: [String] = [
         "ef476f", "f78c6b", "ffd166", "83d483", "06d6a0",
-        "0cb0a9", "118ab2"
+        "0cb0a9", "88cce2"
     ]
 
     // MARK: - UI Constants

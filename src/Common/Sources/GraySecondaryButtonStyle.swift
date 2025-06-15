@@ -39,6 +39,6 @@ public struct GraySecondaryButtonStyle: ButtonStyle {
 
     private func backgroundColor() -> Color {
         let opacity = colorScheme == .dark ? Constants.darkModeOpacity : Constants.lightModeOpacity
-        return Color.gray.opacity(opacity)
+        return Color(hex: "#B5B5B8").opacity(opacity)
     }
 }

@@ -11,7 +11,7 @@ public struct DarkShareExtensionColorPalette: ShareExtensionColorPaletteProvidin
     public func secondaryColor() -> Color { secondaryButton() }
     public func palette() -> [String] { [
         "ef476f", "f78c6b", "ffd166", "83d483", "06d6a0",
-        "0cb0a9", "118ab2"
+        "0cb0a9", "88cce2"
     ] }
     public let circleSize: CGFloat = ColorPaletteConstants.circleSize
     public let circleSpacing: CGFloat = 12
@@ -30,6 +30,6 @@ public struct DarkShareExtensionColorPalette: ShareExtensionColorPaletteProvidin
     public func secondaryButton() -> Color { Color(hex: "#83d483") }
     public func secondaryButtonText() -> Color { Color(hex: "#17171c") }
     public func destructive() -> Color { Color(hex: "#ef476f") }
-    public func link() -> Color { Color(hex: "#118ab2") }
+    public func link() -> Color { Color(hex: "#88cce2") }
     public func operationSymbolColor() -> Color { Color(hex: "#17171c") }
 }

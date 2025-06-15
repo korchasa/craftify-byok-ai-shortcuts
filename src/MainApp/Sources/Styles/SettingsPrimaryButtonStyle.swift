@@ -1,12 +1,12 @@
 import SwiftUI
 
 /// Button style used exclusively for the Save/Done action on SettingsView.
-/// Applies a distinct accent colour (#118AB2) without affecting other buttons.
+/// Applies a distinct accent colour (#88CCE2) without affecting other buttons.
 public struct SettingsPrimaryButtonStyle: ButtonStyle {
     // MARK: - Constants
 
     private enum Constants {
-        static let hexColour: String = "#118AB2"
+        static let hexColour: String = "#88CCE2"
         static let cornerRadius: CGFloat = CraftifyButtonConstants.cornerRadius
         static let pressedScale: CGFloat = CraftifyButtonConstants.pressedScale
     }

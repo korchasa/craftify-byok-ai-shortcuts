@@ -22,7 +22,7 @@ public final class ShareExtensionColorPaletteTests: XCTestCase {
         XCTAssertEqual(palette.secondaryButton(), Color(hex: "#83d483"))
         XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
         XCTAssertEqual(palette.destructive(), Color(hex: "#ef476f"))
-        XCTAssertEqual(palette.link(), Color(hex: "#118ab2"))
+        XCTAssertEqual(palette.link(), Color(hex: "#88cce2"))
     }
 
     public func testDarkPaletteColors() {
@@ -35,7 +35,7 @@ public final class ShareExtensionColorPaletteTests: XCTestCase {
         XCTAssertEqual(palette.secondaryButton(), Color(hex: "#83d483"))
         XCTAssertEqual(palette.secondaryButtonText(), Color(hex: "#17171c"))
         XCTAssertEqual(palette.destructive(), Color(hex: "#ef476f"))
-        XCTAssertEqual(palette.link(), Color(hex: "#118ab2"))
+        XCTAssertEqual(palette.link(), Color(hex: "#88cce2"))
     }
 
     public func testPaletteConstants() {

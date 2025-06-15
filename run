@@ -36,6 +36,7 @@ Commands:
   logs                Stream MainApp logs
   check               Run all checks (clean, generate, comment-scan, fmt, lint, analyze, build, test)
   test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
+  icons               Generate all PNG files for AppIcon from documents/icon.svg and update both targets
   help                Show this help
 EOF
 }
@@ -348,6 +349,53 @@ function _get_device_by_uuid() {
   xcrun simctl list devices | grep "$uuid" | sed -E 's/^\s*([^\(]+) \(.*/\1/' | xargs
 }
 
+function icons() {
+  _start_section "Generating App Icons via Docker"
+
+  local SRC="documents/icon.svg"
+
+  if [[ ! -f "$SRC" ]]; then
+    echo -e "${RED}Source SVG not found at $SRC${NC}"
+    exit 1
+  fi
+
+  if ! command -v docker &>/dev/null; then
+    echo -e "${RED}Docker CLI is required but not found. Install Docker Desktop first.${NC}"
+    exit 1
+  fi
+
+  docker run --rm \
+    -v "$(pwd)":/work \
+    -w /work \
+    alpine:3.21 \
+    sh -euxo pipefail -c '
+      apk add --no-cache librsvg rsvg-convert jq python3 > /dev/null
+      SRC="'$SRC'"
+      # Find all AppIcon.appiconset directories explicitly
+      for json in src/*/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json; do
+        dest=$(dirname "$json")
+        if [ ! -f "$json" ]; then
+          echo "Skipping $dest, no Contents.json"
+          continue
+        fi
+        echo "→ Processing $dest"
+        jq -c ".images[] | select(.filename != null)" "$json" | while read -r entry; do
+          filename=$(echo "$entry" | jq -r ".filename")
+          size=$(echo "$entry" | jq -r ".size" | cut -d"x" -f1)
+          scale=$(echo "$entry" | jq -r ".scale" | tr -d "x")
+          px=$(python3 - <<PY
+import math
+print(int(round(float("${size}")*int("${scale}"))))
+PY
+          )
+          rsvg-convert -w "$px" -h "$px" "$SRC" -o "$dest/$filename"
+        done
+      done'
+
+  _end_section
+  echo -e "${GREEN}App icons regenerated (Docker).${NC}"
+}
+
 CMD="${1:-}"
 shift || true
 
@@ -385,5 +433,6 @@ case "$CMD" in
     comment_scan || { echo -e "${RED}===CHECK_FAILED=== (comment_scan)${NC}"; exit 1; }
     deploy_simulator || { echo -e "${RED}===CHECK_FAILED=== (deploy_simulator)${NC}"; exit 1; }
     ;;
+  icons) icons "$@" ;;
   help|*) usage ;;
 esac
