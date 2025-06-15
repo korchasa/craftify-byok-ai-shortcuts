@@ -75,7 +75,7 @@ public struct SettingsView: View {
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                         .foregroundColor(palette.secondaryButtonText())
                 }
-                .buttonStyle(CraftifySecondaryButtonStyle())
+                .buttonStyle(GraySecondaryButtonStyle())
                 Button(action: {
                     Task {
                         viewModel.saveNativeLanguage()
@@ -91,6 +91,7 @@ public struct SettingsView: View {
                 }
                 .buttonStyle(CraftifyPrimaryButtonStyle())
                 .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
+                .accessibilityIdentifier("settings_save_button")
             }
         }
     }

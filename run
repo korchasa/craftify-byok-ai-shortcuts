@@ -13,6 +13,10 @@ YELLOW='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
+# Skip attaching detailed simulator log stream unless explicitly enabled.
+# This avoids failures when SKIP_LOG_STREAM is not defined while `set -u` is active.
+SKIP_LOG_STREAM="${SKIP_LOG_STREAM:-0}"
+
 SCRIPT_NAME=$(basename "${0}")
 
 # Default parallel testing worker count

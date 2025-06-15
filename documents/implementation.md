@@ -137,12 +137,12 @@ graph TD
 | pressedScale                    | Pressed scale       | 0.97         |
 
 ## Button Styles
-| Style      | Bg Color      | Text | Font             | Radius | Padding | Scale | Usage           |
-|------------|--------------|------|------------------|--------|---------|-------|-----------------|
-| Primary    | #ff807d       | W    | .craftifyBody B  | 20     | 16      | 0.97  | Save, Confirm   |
-| Secondary  | #89e1c5       | B    | .craftifyBody B  | 20     | 16      | 0.97  | Cancel, Sec.    |
-| Cancel     | #89e1c5       | W    | .craftifyBody B  | 20     | 16      | 0.97  | Cancel, Close   |
-| Destructive| Transparent   | R    | .craftifyBody B  | 20     | 16      | 0.97  | Delete, Danger  |
+| Style                       | Bg Color  | Text | Font             | Radius | Padding | Scale | Usage                                |
+|-----------------------------|-----------|------|------------------|--------|---------|-------|--------------------------------------|
+| CraftifyPrimaryButtonStyle  | #ff807d   | W    | .craftifyBody B  | 20     | 16      | 0.97  | Save, Confirm, primary actions       |
+| GraySecondaryButtonStyle    | #ececec   | B    | .craftifyBody B  | 20     | 16      | 0.97  | Cancel/secondary actions in forms    |
+| SettingsPrimaryButtonStyle  | #89e1c5   | W    | .craftifyBody B  | 20     | 16      | 0.97  | Primary action on Settings screen    |
+| Destructive (Secondary+Red) | Clear     | R    | .craftifyBody B  | 20     | 16      | 0.97  | Delete, irreversible actions         |
 
 ## DevOps
 - Minimal, isolated target deps
@@ -157,11 +157,12 @@ graph TD
 - [User Manual](user-manual.md)
 
 ## Components
-| Component                  | Purpose                                 |
-|----------------------------|-----------------------------------------|
-| CraftifyPrimaryButtonStyle | Main action btn style                   |
-| CraftifySecondaryButtonStyle| Secondary action btn style              |
-| CraftifyButtonBar          | Btn group container (bottom, spacing)   |
+| Component                     | Purpose                                            |
+|-------------------------------|----------------------------------------------------|
+| CraftifyPrimaryButtonStyle    | Main action button style                            |
+| GraySecondaryButtonStyle      | Gray secondary style used for cancel buttons        |
+| SettingsPrimaryButtonStyle    | Primary action style specifically for Settings view |
+| CraftifyButtonBar             | Button group container (bottom, spacing)            |
 
 ## SupportedLanguages
 - `SupportedLanguages.all`: all supported (ISO-639-1 + artificial)

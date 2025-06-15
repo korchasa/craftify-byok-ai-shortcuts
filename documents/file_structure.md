@@ -57,6 +57,7 @@ graph TD
   - OperationInput.swift: URL/text fields for ops
   - SummarizeOperation.swift: uses TextFetcher, AppSettingsManager.shared.nativeLanguage
   - CraftifyButtonConstants.swift: btn style consts
+  - GraySecondaryButtonStyle.swift: gray secondary button style
   - ColorPaletteConstants.swift: color palette consts
   - SupportedLanguages.swift: all supported langs
   - AppSettingsManager.swift: settings, logs
@@ -156,6 +157,7 @@ src/
       OperationInput.swift         # Added fields `url: String?`, `text: String?` for passing URL or text in operations, not containing nativeLanguage
       SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL, uses AppSettingsManager.shared.nativeLanguage
       CraftifyButtonConstants.swift # Единые константы для стилей кнопок (цвета, радиус, отступы, масштаб)
+      GraySecondaryButtonStyle.swift  # Серый вторичный стиль кнопок (используется для Cancel в формах)
       ColorPaletteConstants.swift   # Единые константы для палитры цветов операций (размеры, список цветов, отступы, маски)
       SupportedLanguages.swift      # Contains the SupportedLanguages structure and a list of all supported languages (ISO-639-1 + artificial), used for language selection in settings and operations.
       AppSettingsManager.swift       # Centralized service for all application settings, stores language and logs changes
@@ -173,6 +175,8 @@ src/
       Strings.swift            # SwiftGen-generated localization code
     Docs/
       SwiftLintFormattingExamples.md # Code style examples
+    Styles/                       # Отдельные стили для MainApp UI
+      SettingsPrimaryButtonStyle.swift # Стиль кнопки Settings (вторичный фон, основной текст)
 
   MainApp/           # Main iOS application (SwiftUI views, view models, UI logic), uses AppSettingsManager for access to settings
     Sources/

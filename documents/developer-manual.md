@@ -75,9 +75,10 @@ Button(action: ...) {
 .cornerRadius(CraftifyButtonConstants.cornerRadius)
 ```
 - **Primary**: main actions, `.buttonStyle(CraftifyPrimaryButtonStyle())`
-- **Secondary**: cancel/extra, `.buttonStyle(CraftifySecondaryButtonStyle())`
+- **GraySecondary**: cancel/extra, `.buttonStyle(GraySecondaryButtonStyle())`
 - **Cancel**: secondary + white text
-- **Destructive**: secondary + `.foregroundColor(.red)`/`.tint(.red)`
+- **SettingsPrimary**: primary actions on Settings screen, `.buttonStyle(SettingsPrimaryButtonStyle())`
+- **Destructive**: secondary + `.foregroundColor(.red)`
 - No local ButtonStyle
 
 ## Dependency/Test Isolation

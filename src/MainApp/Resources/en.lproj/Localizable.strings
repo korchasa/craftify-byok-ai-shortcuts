@@ -10,6 +10,7 @@
 "home_add_operation" = "Operation";
 "home_settings" = "Settings";
 "home_delete" = "Delete";
+"home_order" = "Order";
 "homeSortHandle" = "Drag to reorder";
 "homeSortHint" = "Long press and drag to reorder operations.";
 
