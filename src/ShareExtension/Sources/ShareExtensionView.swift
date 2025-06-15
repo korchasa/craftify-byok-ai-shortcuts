@@ -316,11 +316,11 @@ public struct ShareExtensionView: View {
 
     private var closeButton: some View {
         Button(action: { viewModel.shouldCloseExtension = true }) {
-            Label(L10n.shareClose, systemImage: "xmark")
+            Label(L10n.shareCancel, systemImage: "xmark")
                 .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 .foregroundColor(palette.primaryButtonText())
         }
-        .buttonStyle(ShareExtensionSecondaryButtonStyle())
+        .buttonStyle(GraySecondaryButtonStyle())
     }
 
     private var copyAndCloseButton: some View {
