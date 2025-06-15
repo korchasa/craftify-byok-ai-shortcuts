@@ -25,6 +25,7 @@
 //"share_cancel" = "Cancel";
 //"share_copied" = "Copied to clipboard";
 "share_close" = "Close";
+"share_copy_close" = "Copy & Close";
 
 /* Operation Params Labels */
 // "operation_param_target_language" = "Target language";

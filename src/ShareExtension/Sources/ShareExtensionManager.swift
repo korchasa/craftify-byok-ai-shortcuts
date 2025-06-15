@@ -16,7 +16,7 @@ public final class ShareExtensionManager {
     /// Тип последней выполненной операции
     public private(set) var lastOperationKind: OperationKind?
     /// Максимальная длина входного текста для обработки (используется для валидации)
-    public static let maxTextLength = 20000
+    public static let maxTextLength = 100000
     /// Входной текст для обработки (устанавливается из UI)
     public var inputText: String = ""
 
@@ -169,6 +169,21 @@ public final class ShareExtensionManager {
     /// Устанавливает флаг отмены обработки
     public func cancelProcessing() {
         isCancelled = true
+    }
+
+    // MARK: - Clipboard Helper
+
+    /// Copies provided text to clipboard using injected clipboard manager.
+    /// - Parameter text: Text to copy.
+    /// - Returns: `true` if the copy succeeded, `false` otherwise.
+    public func copyToClipboard(_ text: String) -> Bool {
+        if let cb = clipboardManager as? ClipboardManagerStub {
+            return cb.copy(text: text)
+        }
+        if let cb = clipboardManager as? ClipboardManaging {
+            return cb.copy(text: text)
+        }
+        return false
     }
 
     deinit {}

@@ -218,6 +218,37 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertNotNil(viewModel.errorMessage)
         XCTAssertEqual(errorCount, 1)
     }
+
+    func testCopyDisplayedResultAndClose_CopiesAndCloses() {
+        // Arrange
+        let inventoryManager = InventoryManagerStub()
+        let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")
+        let clipboardManager = ClipboardManagerStub()
+        let processingManager = ProcessingManagerStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: inventoryManager,
+            authManager: authManager,
+            clipboardManager: clipboardManager,
+            processingManager: processingManager,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+
+        // Предварительно устанавливаем отображаемый результат
+        let expectedText = "Result text"
+        viewModel.displayResult = expectedText
+
+        // Act
+        viewModel.copyDisplayedResultAndClose()
+
+        // Assert
+        XCTAssertEqual(clipboardManager.copiedText, expectedText)
+        XCTAssertTrue(viewModel.showCopiedToast)
+        XCTAssertTrue(viewModel.shouldCloseExtension)
+    }
 }
 
 // Stub для медленной обработки
