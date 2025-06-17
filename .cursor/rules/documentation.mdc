@@ -3,36 +3,36 @@ description:
 globs:
 alwaysApply: true
 ---
-## DOCUMENTATION
+## DOCUMENTATION (directory `documents`)
 
-1. `./documents/whiteboard.md`:
+1. @documents/whiteboard.md:
 - Temporary notes
 - Ongoing plans and progress marks.
 - The only file for in-progress notes.
 
-2. `./documents/project.md`
+2. [project.md](mdc:documents/project.md)
 - Project overview, goals and requirements
 - Problems solved and solutions provided
 - Target audience and use cases
 - Success metrics and constraints
 
-3. `./documents/architecture.md`
+3. [architecture.md](mdc:documents/architecture.md)
 - System architecture and layers
 - Key design patterns and principles
 - Component interactions
 - Error handling and testing strategies
 
-4. `./documents/implementation.md`
+4. [implementation.md](mdc:documents/implementation.md)
 - Commands and their functionality (in table format)
 - Technology stack and dependencies
 - Development environment and setup
 
-5. `./documents/file_structure.md`
+5. [file_structure.md](mdc:documents/file_structure.md)
 - Directory organization
 - Key file purposes and relationships
 - File organization patterns
 
-6. `./documents/developer-manual.md`
+6. [developer-manual.md](mdc:documents/developer-manual.md)
 - Developer manual for the project
 - How to install dependencies
 - How to run the project
@@ -40,19 +40,9 @@ alwaysApply: true
 - How to build the project
 - How to deploy the project
 
-7. `./documents/user-manual.md`
+7. [user-manual.md](mdc:documents/user-manual.md)
 - User manual for the project
 - How to use the project
 - How to test the project
 - How to build the project
 - How to deploy the project
-
-[project.md](mdc:documents/project.md)
-
-[architecture.md](mdc:documents/architecture.md)
-
-[implementation.md](mdc:documents/implementation.md)
-
-[file_structure.md](mdc:documents/file_structure.md)
-
-[whiteboard.md](mdc:documents/whiteboard.md)
