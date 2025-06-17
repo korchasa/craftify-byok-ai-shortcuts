@@ -18,7 +18,11 @@ public let project = Project(
             "ENABLE_BITCODE": "NO",
             "SWIFT_OPTIMIZATION_LEVEL": "-Onone",
             "CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION": "YES",
-            "SWIFT_TREAT_WARNINGS_AS_ERRORS": "YES"
+            "SWIFT_TREAT_WARNINGS_AS_ERRORS": "YES",
+            "MARKETING_VERSION": "1.1.0",
+            "CURRENT_PROJECT_VERSION": "1",
+            "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
+            "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "YES"
         ],
         configurations: [
             .debug(name: "Debug", xcconfig: "Configs/Debug.xcconfig"),
@@ -28,11 +32,23 @@ public let project = Project(
     targets: [
         .target(
             name: "MainApp",
-            destinations: [.iPhone],
+            destinations: [.iPhone, .iPad],
             product: .app,
             bundleId: "dev.korchasa.Craftify",
             deploymentTargets: .iOS("16.0"),
-            infoPlist: .file(path: "src/MainApp/Config/Info.plist"),
+            infoPlist: .extendingDefault(with: [
+                "CFBundleDisplayName": .string("Craftify"),
+                "CFBundleIconName": .string("AppIcon"),
+                "UILaunchStoryboardName": .string("LaunchScreen"),
+                "UIRequiresFullScreen": .boolean(true),
+                "UISupportedInterfaceOrientations": .array([
+                    .string("UIInterfaceOrientationPortrait"),
+                    .string("UIInterfaceOrientationLandscapeLeft"),
+                    .string("UIInterfaceOrientationLandscapeRight")
+                ]),
+                "CFBundleShortVersionString": .string("$(MARKETING_VERSION)"),
+                "CFBundleVersion": .string("1")
+            ]),
             sources: [
                 "src/Common/Sources/**",
                 "src/MainApp/Sources/**",
@@ -58,7 +74,7 @@ public let project = Project(
         ),
         .target(
             name: "MainAppUnitTests",
-            destinations: [.iPhone],
+            destinations: [.iPhone, .iPad],
             product: .unitTests,
             bundleId: "dev.korchasa.CraftifyUnitTests",
             deploymentTargets: .iOS("16.0"),
@@ -89,12 +105,14 @@ public let project = Project(
         ),
         .target(
             name: "ShareExtension",
-            destinations: [.iPhone],
+            destinations: [.iPhone, .iPad],
             product: .appExtension,
             bundleId: "dev.korchasa.Craftify.ShareExtension",
             deploymentTargets: .iOS("16.0"),
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": .string("Craftify Share"),
+                "CFBundleShortVersionString": .string("$(MARKETING_VERSION)"),
+                "CFBundleVersion": .string("1"),
                 "NSExtension": .dictionary([
                     "NSExtensionAttributes": .dictionary([
                         "NSExtensionActivationRule": .dictionary([
@@ -131,7 +149,7 @@ public let project = Project(
         ),
         .target(
             name: "ShareExtensionUnitTests",
-            destinations: [.iPhone],
+            destinations: [.iPhone, .iPad],
             product: .unitTests,
             bundleId: "dev.korchasa.Craftify.ShareExtensionUnitTests",
             deploymentTargets: .iOS("16.0"),
@@ -161,7 +179,7 @@ public let project = Project(
         ),
         .target(
             name: "CommonUnitTests",
-            destinations: [.iPhone],
+            destinations: [.iPhone, .iPad],
             product: .unitTests,
             bundleId: "dev.korchasa.Craftify.CommonUnitTests",
             deploymentTargets: .iOS("16.0"),
