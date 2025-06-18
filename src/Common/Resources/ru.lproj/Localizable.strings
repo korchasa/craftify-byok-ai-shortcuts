@@ -10,8 +10,6 @@
 "error_no_operation" = "Нет операции для обработки";
 "error_api_key_access" = "Ошибка доступа к API-ключу";
 "error_processing_manager_unavailable" = "Менеджер обработки недоступен";
-"error_result_mode_display" = "Режим результата: показать результат";
-"error_result_copied" = "Результат успешно скопирован в буфер обмена";
 "OK" = "ОК";
 "percent_format" = "%d%%";
 "error_timeout" = "Время обработки истекло";

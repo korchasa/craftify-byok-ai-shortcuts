@@ -1,0 +1,86 @@
+/* HowToUseView */
+"howtouse_title" = "Як користуватися Craftify";
+"howtouse_instruction" = "Виділіть текст у будь-якому додатку, поділіться ним із Craftify, виберіть операцію та миттєво отримайте результат.";
+"howtouse_consent" = "Я погоджуюся, що мій вибраний текст буде надісланий обраному постачальнику LLM, як описано в Політиці конфіденційності";
+"howtouse_done" = "Прийняти та продовжити";
+
+/* HomeView */
+"home_title" = "Операції";
+"home_add_operation" = "Операція";
+"home_settings" = "Налаштування";
+"home_delete" = "Видалити";
+"home_order" = "Порядок";
+"homeSortHandle" = "Перетягніть для зміни порядку";
+"homeSortHint" = "Довге натискання та перетягування для зміни порядку операцій.";
+
+/* AddOperationView */
+"add_operation_title" = "Додати операцію";
+"add_operation_type" = "Тип операції";
+"add_operation_save" = "Зберегти";
+"add_operation_cancel" = "Скасувати";
+
+/* EditOperationView */
+"edit_operation_title" = "Редагувати операцію";
+"edit_operation_save" = "Зберегти";
+"edit_operation_cancel" = "Скасувати";
+
+/* SettingsView */
+"settings_title" = "Налаштування";
+"settings_llm_api_key" = "API-ключ LLM";
+"settings_done" = "Скасувати";
+"settings_native_language" = "Рідна мова";
+"settings_native_language_section" = "Виберіть вашу рідну мову. Вона буде використана як основна мова для операцій \"Підсумувати\" та \"Пояснити\".";
+
+/* Operation Params Labels */
+"operation_param_target_language" = "Мова перекладу";
+"operation_param_complexity_level" = "Рівень складності";
+"operation_param_detail_level" = "Рівень деталізації";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Школяр";
+"operation_value_teenager" = "Підліток";
+"operation_value_student" = "Студент";
+"operation_value_adult" = "Дорослий";
+
+/* Operation Labels */
+"operation_label_translate" = "Перекласти";
+"operation_label_simplify" = "Спростити";
+"operation_label_correct" = "Виправити";
+"operation_label_explain" = "Пояснити";
+"operation_label_summarize" = "Скоротити";
+
+"error" = "Помилка";
+"color" = "Колір";
+
+"sentence_count_2_3" = "2–3 речення";
+"sentence_count_5_6" = "5–6 речень";
+"sentence_count_9_10" = "9–10 речень";
+"sentence_count_18_20" = "18–20 речень";
+
+"error_no_text" = "Немає тексту для обробки";
+"error_text_too_long" = "Текст занадто довгий для обробки";
+"error_consent_required" = "Потрібна згода користувача";
+"error_invalid_api_key" = "Неправильний API-ключ";
+"error_clipboard" = "Помилка доступу до буфера обміну";
+"error_cancelled" = "Операцію скасовано";
+"error_network" = "Мережева помилка";
+"error_parsing" = "Помилка розбору";
+"error_processing" = "Помилка обробки";
+"error_no_operation" = "Немає операції для обробки";
+"error_api_key_access" = "Помилка доступу до API-ключа";
+"error_processing_manager_unavailable" = "Менеджер обробки недоступний";
+"error_url_not_supported" = "URL не підтримується";
+"error_download_failed" = "Не вдалося отримати вміст сторінки";
+"error_extract_text" = "Не вдалося витягти текст зі сторінки";
+
+"advice_check_connection" = "Перевірте підключення до інтернету та спробуйте ще раз.";
+"advice_check_api_key" = "Перевірте API-ключ у налаштуваннях.";
+"advice_try_again_later" = "Спробуйте пізніше.";
+"advice_contact_support" = "Якщо проблема не зникає, зверніться до підтримки.";
+"advice_unknown_error" = "Сталася невідома помилка. Спробуйте ще раз або зверніться до підтримки.";
+
+/* Privacy Policy Full */
+"privacy_policy_full" = "Політика конфіденційності\n\n1. Огляд\nCraftify обробляє лише текст, який ви явно надаєте. Цей текст надсилається безпосередньо вибраному вами постачальнику LLM для виконання обраної операції та видаляється одразу після отримання результату. Craftify ніколи не зберігає, не реєструє та не аналізує цей текст.\n\n2. Дані, що збираються\nCraftify не збирає та не зберігає персональні дані. Вхідний текст передається прямо з вашого пристрою до вибраного постачальника LLM і не зберігається Craftify.\n\n3. Зберігання та безпека\nДодаток не зберігає жодних даних користувача, окрім налаштувань. Якщо ви налаштуєте API-ключ для постачальника LLM, він зберігається зашифрованим локально в iOS Keychain на вашому пристрої й ніколи не покидає його. Весь мережевий трафік захищено протоколом HTTPS (TLS 1.2+).\n\n4. Передача третім сторонам\nМи не передаємо дані третім сторонам, за винятком безпечної передачі вхідного тексту вибраному постачальнику LLM для виконання вашого запиту.\n";
+
+/* LLM Provider */
+"settings_llm_provider" = "Постачальник LLM";

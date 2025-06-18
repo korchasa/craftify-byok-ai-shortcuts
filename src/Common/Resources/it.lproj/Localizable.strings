@@ -1,0 +1,14 @@
+"error_no_text" = "Nessun testo da elaborare";
+"error_text_too_long" = "Testo troppo lungo da elaborare";
+"error_consent_required" = "Consenso dell'utente richiesto";
+"error_invalid_api_key" = "Chiave API non valida";
+"error_clipboard" = "Errore di accesso agli appunti";
+"error_cancelled" = "Operazione annullata";
+"error_network" = "Errore di rete";
+"error_parsing" = "Errore di analisi";
+"error_processing" = "Errore di elaborazione";
+"error_no_operation" = "Nessuna operazione da eseguire";
+"error_api_key_access" = "Errore di accesso alla chiave API";
+"error_processing_manager_unavailable" = "Gestore di elaborazione non disponibile";
+"OK" = "OK";
+"percent_format" = "%d%%";
