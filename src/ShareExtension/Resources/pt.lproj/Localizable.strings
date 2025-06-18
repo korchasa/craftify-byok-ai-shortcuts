@@ -1,0 +1,44 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "Close";
+"share_copy_close" = "Copy & Close";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Criança em idade escolar";
+"operation_value_teenager" = "Adolescente";
+"operation_value_student" = "Estudante";
+"operation_value_adult" = "Adulto";
+
+/* Operation Labels */
+"operation_label_translate" = "Traduzir";
+"operation_label_simplify" = "Simplificar";
+"operation_label_correct" = "Corrigir";
+"operation_label_explain" = "Explicar";
+"operation_label_summarize" = "Resumir";
+
+"processing" = "Processing...";
+"error" = "Error";
+"copied_to_clipboard" = "Copied to clipboard";
+
+"error_no_text" = "No text to process";
+"error_text_too_long" = "Text is too long to process";
+"error_consent_required" = "User consent required";
+"error_invalid_api_key" = "Invalid API key";
+"error_clipboard" = "Clipboard access error";
+"error_cancelled" = "Operation cancelled";
+"error_network" = "Network error";
+"error_parsing" = "Parsing error";
+"error_processing" = "Processing error";
+"error_no_operation" = "No operation to process";
+"error_api_key_access" = "API key access error";
+"error_processing_manager_unavailable" = "Processing manager unavailable";
+"percent_format" = "%d%%";
+"advice_check_connection" = "Check your internet connection and try again.";
+"advice_check_api_key" = "Please check your API key in Settings.";
+"advice_try_again_later" = "Try again later.";
+"advice_contact_support" = "If the problem persists, contact support.";
+"advice_unknown_error" = "An unknown error occurred. Try again or contact support.";
+"error_download_failed" = "Failed to load page content";
+"error_extract_text" = "Failed to extract text from the page";
+"error_timeout" = "Processing timeout";
+"error_url_not_supported" = "URL is not supported";
