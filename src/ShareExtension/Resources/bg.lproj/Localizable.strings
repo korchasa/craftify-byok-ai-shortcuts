@@ -1,0 +1,44 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "Затвори";
+"share_copy_close" = "Копирай и затвори";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Ученик";
+"operation_value_teenager" = "Тийнейджър";
+"operation_value_student" = "Студент";
+"operation_value_adult" = "Възрастен";
+
+/* Operation Labels */
+"operation_label_translate" = "Преведи";
+"operation_label_simplify" = "Опрости";
+"operation_label_correct" = "Коригирай";
+"operation_label_explain" = "Обясни";
+"operation_label_summarize" = "Обобщи";
+
+"processing" = "Обработва се...";
+"error" = "Грешка";
+"copied_to_clipboard" = "Копирано в клипборда";
+
+"error_no_text" = "Няма текст за обработка";
+"error_text_too_long" = "Текстът е твърде дълъг за обработка";
+"error_consent_required" = "Необходимо е съгласие на потребителя";
+"error_invalid_api_key" = "Невалиден API ключ";
+"error_clipboard" = "Грешка при достъп до клипборда";
+"error_cancelled" = "Операцията е отменена";
+"error_network" = "Мрежова грешка";
+"error_parsing" = "Грешка при анализ";
+"error_processing" = "Грешка при обработка";
+"error_no_operation" = "Няма операция за обработка";
+"error_api_key_access" = "Грешка при достъп до API ключ";
+"error_processing_manager_unavailable" = "Мениджърът за обработка е недостъпен";
+"percent_format" = "%d%%";
+"advice_check_connection" = "Проверете интернет връзката си и опитайте отново.";
+"advice_check_api_key" = "Моля, проверете вашия API ключ в Настройки.";
+"advice_try_again_later" = "Опитайте отново по-късно.";
+"advice_contact_support" = "Ако проблемът продължи, свържете се с поддръжка.";
+"advice_unknown_error" = "Възникна неизвестна грешка. Опитайте отново или се свържете с поддръжка.";
+"error_download_failed" = "Неуспешно зареждане на съдържанието на страницата";
+"error_extract_text" = "Неуспешно извличане на текст от страницата";
+"error_timeout" = "Времето за обработка изтече";
+"error_url_not_supported" = "URL не се поддържа";
