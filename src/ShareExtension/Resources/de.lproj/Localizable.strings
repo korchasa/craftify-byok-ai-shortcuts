@@ -1,0 +1,44 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "Schließen";
+"share_copy_close" = "Kopieren & schließen";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Schulkind";
+"operation_value_teenager" = "Teenager";
+"operation_value_student" = "Student";
+"operation_value_adult" = "Erwachsener";
+
+/* Operation Labels */
+"operation_label_translate" = "Übersetzen";
+"operation_label_simplify" = "Vereinfachen";
+"operation_label_correct" = "Korrigieren";
+"operation_label_explain" = "Erklären";
+"operation_label_summarize" = "Zusammenfassen";
+
+"processing" = "Verarbeitung...";
+"error" = "Fehler";
+"copied_to_clipboard" = "In die Zwischenablage kopiert";
+
+"error_no_text" = "Kein Text zum Verarbeiten";
+"error_text_too_long" = "Text ist zu lang, um verarbeitet zu werden";
+"error_consent_required" = "Benutzerzustimmung erforderlich";
+"error_invalid_api_key" = "Ungültiger API-Schlüssel";
+"error_clipboard" = "Zwischenablage-Zugriffsfehler";
+"error_cancelled" = "Vorgang abgebrochen";
+"error_network" = "Netzwerkfehler";
+"error_parsing" = "Analysefehler";
+"error_processing" = "Verarbeitungsfehler";
+"error_no_operation" = "Kein Vorgang zum Verarbeiten";
+"error_api_key_access" = "API-Schlüssel-Zugriffsfehler";
+"error_processing_manager_unavailable" = "Verarbeitungsmanager nicht verfügbar";
+"percent_format" = "%d%%";
+"advice_check_connection" = "Überprüfe deine Internetverbindung und versuche es erneut.";
+"advice_check_api_key" = "Bitte prüfe deinen API-Schlüssel in den Einstellungen.";
+"advice_try_again_later" = "Versuche es später noch einmal.";
+"advice_contact_support" = "Wenn das Problem weiterhin besteht, kontaktiere den Support.";
+"advice_unknown_error" = "Ein unbekannter Fehler ist aufgetreten. Versuche es erneut oder kontaktiere den Support.";
+"error_download_failed" = "Seiteninhalt konnte nicht geladen werden";
+"error_extract_text" = "Text konnte nicht von der Seite extrahiert werden";
+"error_timeout" = "Zeitüberschreitung bei der Verarbeitung";
+"error_url_not_supported" = "URL wird nicht unterstützt";

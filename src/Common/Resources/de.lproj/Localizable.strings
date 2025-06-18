@@ -1,0 +1,17 @@
+/* Common Error Messages */
+"error_no_text" = "Kein Text zum Verarbeiten";
+"error_text_too_long" = "Text ist zu lang, um verarbeitet zu werden";
+"error_consent_required" = "Benutzerzustimmung erforderlich";
+"error_invalid_api_key" = "Ungültiger API-Schlüssel";
+"error_clipboard" = "Zwischenablage-Zugriffsfehler";
+"error_cancelled" = "Vorgang abgebrochen";
+"error_network" = "Netzwerkfehler";
+"error_parsing" = "Analysefehler";
+"error_processing" = "Verarbeitungsfehler";
+"error_no_operation" = "Kein Vorgang zum Verarbeiten";
+"error_api_key_access" = "API-Schlüssel-Zugriffsfehler";
+"error_processing_manager_unavailable" = "Verarbeitungsmanager nicht verfügbar";
+
+/* Misc */
+"OK" = "OK";
+"percent_format" = "%d%%";

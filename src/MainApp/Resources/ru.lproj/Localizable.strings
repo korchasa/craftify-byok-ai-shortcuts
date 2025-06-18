@@ -47,7 +47,7 @@
 "operation_label_simplify" = "Упростить";
 "operation_label_correct" = "Исправить";
 "operation_label_explain" = "Объяснить";
-"operation_label_summarize" = "Резюме";
+"operation_label_summarize" = "Сократить";
 
 "error" = "Ошибка";
 "color" = "Цвет";

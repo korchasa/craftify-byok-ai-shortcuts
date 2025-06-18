@@ -1,0 +1,86 @@
+/* HowToUseView */
+"howtouse_title" = "Come usare Craftify";
+"howtouse_instruction" = "Seleziona il testo in qualsiasi app, condividilo con Craftify, scegli un'operazione e ottieni subito il risultato.";
+"howtouse_consent" = "Accetto che il mio testo selezionato venga inviato al provider LLM scelto come descritto nell'Informativa sulla privacy";
+"howtouse_done" = "Accetta e continua";
+
+/* HomeView */
+"home_title" = "Operazioni";
+"home_add_operation" = "Operazione";
+"home_settings" = "Impostazioni";
+"home_delete" = "Elimina";
+"home_order" = "Ordina";
+"homeSortHandle" = "Trascina per riordinare";
+"homeSortHint" = "Tieni premuto a lungo e trascina per riordinare le operazioni.";
+
+/* AddOperationView */
+"add_operation_title" = "Aggiungi operazione";
+"add_operation_type" = "Tipo di operazione";
+"add_operation_save" = "Salva";
+"add_operation_cancel" = "Annulla";
+
+/* EditOperationView */
+"edit_operation_title" = "Modifica operazione";
+"edit_operation_save" = "Salva";
+"edit_operation_cancel" = "Annulla";
+
+/* SettingsView */
+"settings_title" = "Impostazioni";
+"settings_llm_api_key" = "Chiave API LLM";
+"settings_done" = "Annulla";
+"settings_native_language" = "Lingua madre";
+"settings_native_language_section" = "Seleziona la tua lingua madre. Verrà utilizzata come lingua principale per le operazioni di sintesi e spiegazione.";
+
+/* Operation Params Labels */
+"operation_param_target_language" = "Lingua di destinazione";
+"operation_param_complexity_level" = "Livello di complessità";
+"operation_param_detail_level" = "Livello di dettaglio";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Scolaro";
+"operation_value_teenager" = "Adolescente";
+"operation_value_student" = "Studente";
+"operation_value_adult" = "Adulto";
+
+/* Operation Labels */
+"operation_label_translate" = "Traduci";
+"operation_label_simplify" = "Semplifica";
+"operation_label_correct" = "Correggi";
+"operation_label_explain" = "Spiega";
+"operation_label_summarize" = "Riassumi";
+
+"error" = "Errore";
+"color" = "Colore";
+
+"sentence_count_2_3" = "2–3 frasi";
+"sentence_count_5_6" = "5–6 frasi";
+"sentence_count_9_10" = "9–10 frasi";
+"sentence_count_18_20" = "18–20 frasi";
+
+"error_no_text" = "Nessun testo da elaborare";
+"error_text_too_long" = "Testo troppo lungo da elaborare";
+"error_consent_required" = "Consenso dell'utente richiesto";
+"error_invalid_api_key" = "Chiave API non valida";
+"error_clipboard" = "Errore di accesso agli appunti";
+"error_cancelled" = "Operazione annullata";
+"error_network" = "Errore di rete";
+"error_parsing" = "Errore di analisi";
+"error_processing" = "Errore di elaborazione";
+"error_no_operation" = "Nessuna operazione da eseguire";
+"error_api_key_access" = "Errore di accesso alla chiave API";
+"error_processing_manager_unavailable" = "Gestore di elaborazione non disponibile";
+"error_url_not_supported" = "URL non supportato";
+"error_download_failed" = "Impossibile caricare il contenuto della pagina";
+"error_extract_text" = "Impossibile estrarre testo dalla pagina";
+
+"advice_check_connection" = "Controlla la connessione a Internet e riprova.";
+"advice_check_api_key" = "Controlla la tua chiave API in Impostazioni.";
+"advice_try_again_later" = "Riprova più tardi.";
+"advice_contact_support" = "Se il problema persiste, contatta il supporto.";
+"advice_unknown_error" = "Si è verificato un errore sconosciuto. Riprova o contatta il supporto.";
+
+/* Privacy Policy Full */
+"privacy_policy_full" = "Informativa sulla privacy\n\n1. Panoramica\nCraftify elabora solo il testo che condividi esplicitamente. Questo testo viene inviato direttamente al provider LLM che scegli per eseguire l'operazione selezionata e viene eliminato immediatamente dopo che il risultato è stato restituito. Craftify non memorizza, non registra né analizza questo testo.\n\n2. Dati raccolti\nCraftify non raccoglie né memorizza dati personali. Il testo in ingresso viaggia direttamente dal tuo dispositivo al provider LLM scelto e non viene conservato da Craftify.\n\n3. Archiviazione e sicurezza\nL'applicazione non memorizza dati dell'utente ad eccezione delle impostazioni. Se configuri una chiave API per un provider LLM, essa viene conservata localmente in forma criptata nel Portachiavi iOS del tuo dispositivo e non lascia mai il dispositivo. Tutto il traffico di rete è protetto con HTTPS (TLS 1.2+).\n\n4. Condivisione con terze parti\nNon condividiamo alcun dato con terze parti, ad eccezione della trasmissione sicura del testo in ingresso al provider LLM scelto per soddisfare la tua richiesta.";
+
+/* LLM Provider */
+"settings_llm_provider" = "Provider LLM";
