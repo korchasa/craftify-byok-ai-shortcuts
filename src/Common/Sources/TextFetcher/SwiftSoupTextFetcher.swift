@@ -22,7 +22,9 @@ public final class SwiftSoupTextFetcher: TextFetching {
             metadata: ["url": urlString],
             timestamp: start
         ))
-        guard let url = URL(string: urlString) else { throw FetchError.badURL }
+        guard let url = URL(string: urlString), let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https" else {
+            throw FetchError.badURL
+        }
         let data: Data
         do {
             (data, _) = try await session.data(from: url)

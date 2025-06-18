@@ -23,7 +23,7 @@ public final class LLMAPIClientTests: XCTestCase {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: config)
-        let client = LLMAPIClient(session: session)
+        let client = OpenAIAPIClient(session: session)
         let expectedText = "Processed text"
         let responseJSON = Data(
             """
@@ -43,7 +43,7 @@ public final class LLMAPIClientTests: XCTestCase {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: config)
-        let client = LLMAPIClient(session: session)
+        let client = OpenAIAPIClient(session: session)
         let responseJSON = Data(
             """
             { "error": { "message": "Unauthorized", "type": "invalid_api_key" } }
@@ -67,7 +67,7 @@ public final class LLMAPIClientTests: XCTestCase {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: config)
-        let client = LLMAPIClient(session: session)
+        let client = OpenAIAPIClient(session: session)
         let responseJSON = Data(
             """
             { "error": { "message": "Too Many Requests", "type": "rate_limit_reached" } }
@@ -91,7 +91,7 @@ public final class LLMAPIClientTests: XCTestCase {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: config)
-        let client = LLMAPIClient(session: session)
+        let client = OpenAIAPIClient(session: session)
         let responseJSON = Data(
             """
             { "error": { "message": "Internal Server Error", "type": "server_error" } }
@@ -115,7 +115,7 @@ public final class LLMAPIClientTests: XCTestCase {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: config)
-        let client = LLMAPIClient(session: session)
+        let client = OpenAIAPIClient(session: session)
         URLProtocolStub.data = nil
         URLProtocolStub.response = nil
         URLProtocolStub.error = URLError(.cancelled)

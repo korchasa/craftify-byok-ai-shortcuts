@@ -18,7 +18,7 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: config)
-        let llm = LLMAPIClient(session: session)
+        let llm = OpenAIAPIClient(session: session)
         let log = LogManagerSharedInMemory()
         let auth = AuthManagerStub(key: "sk-test-key")
         return ProcessingManager(llmClient: llm, logManager: log, authManager: auth)

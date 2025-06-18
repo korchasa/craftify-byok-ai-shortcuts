@@ -26,7 +26,7 @@
 
 /* SettingsView */
 "settings_title" = "Settings";
-"settings_api_key" = "OpenAI API Key";
+"settings_llm_api_key" = "LLM API Key";
 "settings_done" = "Cancel";
 "settings_native_language" = "Native language";
 "settings_native_language_section" = "Select your native language. It will be used as the main language for summarize and explain operations.";
@@ -81,3 +81,6 @@
 
 /* Privacy Policy Full */
 "privacy_policy_full" = "Privacy Policy\n\n1. Overview\nCraftify processes only the text you explicitly share. This text is sent directly to the LLM provider you choose to perform the selected operation and is discarded immediately after the result is returned. Craftify never stores, logs or analyses this text.\n\n2. Collected Data\nCraftify neither collects nor stores personal data. The input text travels straight from your device to the chosen LLM provider and is not retained by Craftify.\n\n3. Storage & Security\nThe application does not store any user data except settings. If you configure an API key for an LLM provider, it is kept encrypted locally in the iOS Keychain on your device and never leaves it. All network traffic is protected with HTTPS (TLS 1.2+).\n\n4. Third-Party Sharing\nWe do not share any data with third parties, except for securely transmitting the input text to the chosen LLM provider to fulfil your request.\n";
+
+/* LLM Provider */
+"settings_llm_provider" = "LLM provider";

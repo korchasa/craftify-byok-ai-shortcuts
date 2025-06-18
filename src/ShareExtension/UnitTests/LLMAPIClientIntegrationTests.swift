@@ -20,7 +20,7 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [URLProtocolStub.self]
         let session = URLSession(configuration: config)
-        let client = LLMAPIClient(session: session)
+        let client = OpenAIAPIClient(session: session)
         let expectedText = "Processed text"
         let responseJSON = Data(
             """
