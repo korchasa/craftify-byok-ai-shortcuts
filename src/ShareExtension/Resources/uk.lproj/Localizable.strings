@@ -1,0 +1,44 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "Закрити";
+"share_copy_close" = "Копіювати та закрити";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Школяр";
+"operation_value_teenager" = "Підліток";
+"operation_value_student" = "Студент";
+"operation_value_adult" = "Дорослий";
+
+/* Operation Labels */
+"operation_label_translate" = "Перекласти";
+"operation_label_simplify" = "Спростити";
+"operation_label_correct" = "Виправити";
+"operation_label_explain" = "Пояснити";
+"operation_label_summarize" = "Скоротити";
+
+"processing" = "Обробка...";
+"error" = "Помилка";
+"copied_to_clipboard" = "Скопійовано до буфера";
+
+"error_no_text" = "Немає тексту для обробки";
+"error_text_too_long" = "Текст занадто довгий для обробки";
+"error_consent_required" = "Потрібна згода користувача";
+"error_invalid_api_key" = "Неправильний API-ключ";
+"error_clipboard" = "Помилка доступу до буфера обміну";
+"error_cancelled" = "Операцію скасовано";
+"error_network" = "Мережева помилка";
+"error_parsing" = "Помилка розбору";
+"error_processing" = "Помилка обробки";
+"error_no_operation" = "Немає операції для обробки";
+"error_api_key_access" = "Помилка доступу до API-ключа";
+"error_processing_manager_unavailable" = "Менеджер обробки недоступний";
+"percent_format" = "%d%%";
+"advice_check_connection" = "Перевірте підключення до інтернету та спробуйте ще раз.";
+"advice_check_api_key" = "Перевірте API-ключ у налаштуваннях.";
+"advice_try_again_later" = "Спробуйте пізніше.";
+"advice_contact_support" = "Якщо проблема не зникає, зверніться до підтримки.";
+"advice_unknown_error" = "Сталася невідома помилка. Спробуйте ще раз або зверніться до підтримки.";
+"error_download_failed" = "Не вдалося отримати вміст сторінки";
+"error_extract_text" = "Не вдалося витягти текст зі сторінки";
+"error_timeout" = "Час обробки вичерпано";
+"error_url_not_supported" = "URL не підтримується";

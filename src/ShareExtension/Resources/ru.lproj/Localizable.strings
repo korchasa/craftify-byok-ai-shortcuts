@@ -10,11 +10,11 @@
 "operation_value_adult" = "Взрослый";
 
 /* Operation Labels */
-"operation_label_translate" = "Перевод";
-"operation_label_simplify" = "Упрощение";
-"operation_label_correct" = "Коррекция";
-"operation_label_explain" = "Объяснение";
-"operation_label_summarize" = "Суммаризация";
+"operation_label_translate" = "Перевести";
+"operation_label_simplify" = "Упростить";
+"operation_label_correct" = "Исправить";
+"operation_label_explain" = "Объяснить";
+"operation_label_summarize" = "Сократить";
 
 "processing" = "Обработка...";
 "error" = "Ошибка";
