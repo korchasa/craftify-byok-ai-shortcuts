@@ -12,6 +12,10 @@ public enum LLMClientFactory {
             OpenAIAPIClient()
         case .claude:
             ClaudeAPIClient()
+        case .mistral:
+            MistralAPIClient()
+        case .openRouter:
+            OpenRouterAPIClient()
         }
     }
 }

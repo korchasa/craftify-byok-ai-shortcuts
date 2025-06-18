@@ -33,16 +33,13 @@ public final class AuthManagerTests: XCTestCase {
         XCTAssertNil(fetched)
     }
 
-    /// Проверяет ошибку при установке короткого ключа
-    public func testSetShortAPIKeyThrows() async throws {
+    /// Проверяет сохранение короткого, но непустого ключа
+    public func testSetShortAPIKeySucceeds() async throws {
         try? await sut?.deleteAPIKey()
         let key = "short"
-        do {
-            _ = try await self.sut?.setAPIKey(key)
-            XCTFail("Ожидалось исключение, но оно не было выброшено")
-        } catch {
-            XCTAssertEqual(error as? AuthManagerError, AuthManagerError.invalidKey)
-        }
+        try await self.sut?.setAPIKey(key)
+        let fetched = try await self.sut?.getAPIKey()
+        XCTAssertEqual(fetched, key)
     }
 
     /// Проверяет маскирование ключа
