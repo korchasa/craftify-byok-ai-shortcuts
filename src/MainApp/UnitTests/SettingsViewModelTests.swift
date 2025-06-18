@@ -45,8 +45,8 @@ public final class SettingsViewModelTests: XCTestCase {
         }
         await MainActor.run { viewModel.apiKey = "short" }
         await viewModel.saveKey()
-        XCTAssertFalse(viewModel.isKeyPresent)
-        XCTAssertNotNil(viewModel.errorMessage)
+        XCTAssertTrue(viewModel.isKeyPresent)
+        XCTAssertNil(viewModel.errorMessage)
     }
 
     public func testDeleteKey() async {

@@ -3,7 +3,6 @@ import Security
 
 /// Production-реализация AuthManaging с поддержкой Keychain Sharing (App Group)
 public final class AuthManager: AuthManaging, @unchecked Sendable {
-    private static let validKeyLength = 16
     private let service = "dev.korchasa.Craftify.OpenAIKey"
     private let accessGroup = "78M3ZDR5UH.group.dev.korchasa.Craftify"
 
@@ -76,7 +75,7 @@ public final class AuthManager: AuthManaging, @unchecked Sendable {
     }
 
     private func setAPIKeySync(_ key: String) throws {
-        guard key.count >= Self.validKeyLength else {
+        guard !key.isEmpty else {
             throw AuthManagerError.invalidKey
         }
         let data = key.data(using: .utf8) ?? Data()

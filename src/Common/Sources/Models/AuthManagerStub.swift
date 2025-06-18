@@ -2,10 +2,6 @@ import Foundation
 
 /// Заглушка для AuthManager, используемая в тестах
 public final class AuthManagerStub: AuthManaging {
-    // MARK: - Constants
-
-    private static let validKeyLength = 16
-
     // MARK: - Properties
 
     public var shouldThrow: AuthManagerError?
@@ -52,7 +48,7 @@ public final class AuthManagerStub: AuthManaging {
         if let error = shouldThrow {
             throw error
         }
-        guard key.count >= Self.validKeyLength else {
+        guard !key.isEmpty else {
             throw AuthManagerError.invalidKey
         }
         self.key = key

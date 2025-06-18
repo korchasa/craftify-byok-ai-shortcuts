@@ -16,6 +16,8 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var isKeyPresent: Bool = false
     /// Выбранный язык пользователя (реактивно для Picker)
     @Published public var selectedNativeLanguage: String = AppSettingsManager.shared.nativeLanguage
+    /// Selected LLM provider tag
+    @Published public var selectedProvider: LLMProvider = AppSettingsManager.shared.llmProvider
 
     private let authManager: AuthManaging
 
@@ -35,6 +37,7 @@ public final class SettingsViewModel: ObservableObject {
             apiKey = key ?? ""
             maskedApiKey = authManager.maskedAPIKey(key)
             isKeyPresent = (key != nil)
+            selectedProvider = AppSettingsManager.shared.llmProvider
         } catch {
             apiKey = ""
             maskedApiKey = authManager.maskedAPIKey(nil)
@@ -237,6 +240,11 @@ public final class SettingsViewModel: ObservableObject {
                 errorMessage = UserFacingError.unknown(underlyingError: error).errorDescription
             }
         }
+    }
+
+    /// Save selected provider to app settings
+    public func saveProvider() {
+        AppSettingsManager.shared.llmProvider = selectedProvider
     }
 
     public var supportedLanguages: [SupportedLanguage] {

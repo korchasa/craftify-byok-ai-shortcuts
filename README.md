@@ -1,123 +1,113 @@
 # Craftify
 
-Craftify — iOS приложение с Share Extension для контекстной обработки текста через OpenAI API.
+Craftify — iOS application with Share Extension for contextual text processing via multiple Large Language Models (OpenAI GPT-4o, Anthropic Claude, …).
 
-## Установка и запуск
+## Installation and Launch
 
-1. Клонируйте репозиторий:
+1. Clone the repository:
 ```sh
 git clone <repo-url>
 cd Craftify
 ```
-2. Установите все необходимые CLI инструменты:
+2. Install all necessary CLI tools:
 ```sh
 ./run init
 ```
-Это установит через Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
-3. Сгенерируйте проект:
+This will install via Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
+3. Generate the project:
 ```sh
 ./run generate
 ```
-4. Соберите и запустите проект:
+4. Build and run the project:
 ```sh
 ./run sim
 ```
-5. Для запуска проверок:
+5. To run checks:
 ```sh
 ./run check
 ```
 
-## Основные команды
-- `./run init` — установка всех CLI инструментов
-- `./run sim` — сборка и запуск в симуляторе
-- `./run check` — запуск всех проверок
-- `./run clean` — очистка артефактов сборки
-- `./run logs` — просмотр логов
+## Main Commands
+- `./run init` — install all CLI tools
+- `./run sim` — build and run in simulator
+- `./run check` — run all checks
+- `./run clean` — clean build artifacts
+- `./run logs` — view logs
 
 ## CI/CD
-- Все проверки и сборки автоматизированы через GitHub Actions (`.github/workflows/ci.yml`)
-- Проверка размера Share Extension и покрытия тестами ≥ 80% обязательны для успешной сборки
+- All checks and builds are automated via GitHub Actions (`.github/workflows/ci.yml`)
+- Checking Share Extension size and test coverage ≥ 80% are mandatory for successful build
 
-## Архитектура
-- Модули: MainApp, ShareExtension, Common (SPM)
+## Architecture
+- Modules: MainApp, ShareExtension, Common (SPM)
 - App Group: `group.dev.korchasa.Craftify`
-- Совместное использование Keychain: `group.dev.korchasa.Craftify`
+- Shared Keychain: `group.dev.korchasa.Craftify`
 
-## Документация
-- Подробная документация находится в директории `documents/`
+## Documentation
+- Detailed documentation is located in the `documents/` directory
 
-> После выполнения шага 2 все файлы-заглушки и тесты-заглушки удаляются. Проект полностью соответствует требованиям линтера и готов к реализации Common.
+> After completing step 2, all stub files and stub tests are removed. The project fully complies with linter requirements and is ready for Common implementation.
 
 ## Tuist
 
-Проект полностью управляется Tuist:
-- Все таргеты, зависимости, ресурсы и схемы описаны в Project.swift и Workspace.swift.
-- XcodeGen, project.yml, .xcodeproj и .xcworkspace удалены (заменены манифестами Tuist).
-- Все сборки и тесты выполняются через tuist и CLI-скрипты (см. ./run).
-- Это обеспечивает воспроизводимые, DevOps-дружественные и совместимые с CI/CD рабочие процессы.
+The project is fully managed by Tuist:
+- All targets, dependencies, resources, and schemes are described in Project.swift and Workspace.swift.
+- XcodeGen, project.yml, .xcodeproj, and .xcworkspace are removed (replaced by Tuist manifests).
+- All builds and tests are run via tuist and CLI scripts (see ./run).
+- This ensures reproducible, DevOps-friendly, and CI/CD-compatible workflows.
 
-## DevOps-дружественный процесс
-- Вся структура проекта и конфигурация описаны в коде (Project.swift, Workspace.swift, конфиги).
-- Нет ручных шагов: все сборки, тесты и генерация кода автоматизированы.
-- Легкий вход в проект: просто выполните ./run init и ./run generate.
+## DevOps-friendly Process
+- The entire project structure and configuration are described in code (Project.swift, Workspace.swift, configs).
+- No manual steps: all builds, tests, and code generation are automated.
+- Easy project onboarding: just run ./run init and ./run generate.
 
-## ToDo
+## Operations
 
-- [ ] Поддержка iPad
-- [ ] !!! Изменить описание приложения, чтобы было понятно, что оно работает только с ключем пользователя.
-- [ ] Включить simplify для URL и Youtube
-- [ ] Постепенный вывод результата для Explain, Summarize и simplify
-- [ ] Улучшение следования заданному родному языку в simplify
-- [ ] Динамическая команда с выбором операции и параметров
-- [ ] Операция с пользовательским промптом
+### Translate (`translate`)
+File: [TranslateOperation.swift](src/Common/Sources/Models/TranslateOperation.swift)
 
-## Операции
+• Supported input: **text only**
+• Parameters: `targetLanguage` – ISO-639-1 code of the desired language
+• Result mode: **Clipboard** (copies translated text)
+• Description: Translates input text to the target language, preserving meaning, tone, and formatting (Markdown/HTML).
 
-### Перевод (`translate`)
-Файл: [TranslateOperation.swift](src/Common/Sources/Models/TranslateOperation.swift)
+### Simplify (`simplify`)
+File: [SimplifyOperation.swift](src/Common/Sources/Models/SimplifyOperation.swift)
 
-• Поддерживаемый ввод: **только текст**
-• Параметры: `targetLanguage` – ISO-639-1 код желаемого языка
-• Режим результата: **Буфер обмена** (копирует переведенный текст)
-• Описание: Переводит входной текст на целевой язык, сохраняя смысл, тон и форматирование (Markdown/HTML).
+• Supported input: **text only**
+• Parameters: `complexityLevel` – audience level (child, teenager, adult)
+• Result mode: **Clipboard**
+• Description: Rewrites text using simpler vocabulary and structure adapted to the specified audience, preserving formatting.
 
-### Упрощение (`simplify`)
-Файл: [SimplifyOperation.swift](src/Common/Sources/Models/SimplifyOperation.swift)
+### Correct (`correct`)
+File: [CorrectOperation.swift](src/Common/Sources/Models/CorrectOperation.swift)
 
-• Поддерживаемый ввод: **только текст**
-• Параметры: `complexityLevel` – уровень аудитории (ребенок, подросток, взрослый)
-• Режим результата: **Буфер обмена**
-• Описание: Переписывает текст, используя более простой словарный запас и структуру, адаптированную под указанную аудиторию, сохраняя форматирование.
+• Supported input: **text only**
+• Parameters: —
+• Result mode: **Clipboard**
+• Description: Corrects spelling, grammar, and punctuation errors, considering the original language and formatting.
 
-### Коррекция (`correct`)
-Файл: [CorrectOperation.swift](src/Common/Sources/Models/CorrectOperation.swift)
+### Explain (`explain`)
+File: [ExplainOperation.swift](src/Common/Sources/Models/ExplainOperation.swift)
 
-• Поддерживаемый ввод: **только текст**
-• Параметры: —
-• Режим результата: **Буфер обмена**
-• Описание: Исправляет орфографические, грамматические и пунктуационные ошибки, учитывая исходный язык и форматирование.
+• Supported input: **text only**
+• Parameters: `detailLevel` – explanation depth (child, teenager, adult)
+• Result mode: **Display** (shows explanation in a popup)
+• Description: Provides a clear explanation of a concept for the selected audience level in the current interface language.
 
-### Объяснение (`explain`)
-Файл: [ExplainOperation.swift](src/Common/Sources/Models/ExplainOperation.swift)
+### Summarize (`summarize`)
+File: [SummarizeOperation.swift](src/Common/Sources/Models/SummarizeOperation.swift)
 
-• Поддерживаемый ввод: **только текст**
-• Параметры: `detailLevel` – глубина объяснения (ребенок, подросток, взрослый)
-• Режим результата: **Отображение** (показывает объяснение в всплывающем окне)
-• Описание: Предоставляет понятное объяснение концепции для выбранного уровня аудитории на текущем языке интерфейса.
+• Supported input: **text or URL**
+• Parameters: `length` – length limit (e.g., "≤ 200 words")
+• Result mode: **Display**
+• Description: Generates a brief summary covering all key points. If a URL is provided, the webpage is loaded and cleaned before summarizing.
 
-### Резюмирование (`summarize`)
-Файл: [SummarizeOperation.swift](src/Common/Sources/Models/SummarizeOperation.swift)
-
-• Поддерживаемый ввод: **текст или URL**
-• Параметры: `length` – ограничение по длине (например, "≤ 200 слов")
-• Режим результата: **Отображение**
-• Описание: Генерирует краткое резюме, охватывающее все ключевые моменты. Если предоставлен URL, веб-страница загружается и очищается перед резюмированием.
-
-**Ключевые правила:**
-- По умолчанию `resultMode` — `clipboard`; Explain и Summarize переопределяют его на `display`.
-- Максимальная длина ввода: 5000 символов (контролируется в Share Extension).
-- Ввод URL принимается **только** Summarize. Другие операции при получении URL показывают ошибку пользователю.
-- Все операции учитывают текущий язык приложения через `AppSettingsManager`.
+**Key rules:**
+- Default `resultMode` is `clipboard`; Explain and Summarize override it to `display`.
+- Maximum input length: 5000 characters (controlled in Share Extension).
+- URL input is accepted **only** by Summarize. Other operations show an error to the user if URL is received.
+- All operations consider the current app language via `AppSettingsManager`.
 
 ## TestFlight Release
 - https://appstoreconnect.apple.com/apps/6745511563/distribution

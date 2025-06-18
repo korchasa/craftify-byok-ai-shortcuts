@@ -75,7 +75,7 @@ public final class ShareExtensionManager {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "API key access error", metadata: ["error": "\(error)"]))
             return (false, UserFacingError(messageKey: .errorApiKeyAccess, adviceKey: .adviceCheckApiKey))
         }
-        guard let key = apiKey, key.starts(with: "sk-") else {
+        guard let key = apiKey, !key.isEmpty else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Invalid API key", metadata: ["key": authManager.maskedAPIKey(apiKey)]))
             return (false, UserFacingError(messageKey: .errorInvalidApiKey, adviceKey: .adviceCheckApiKey))
         }
