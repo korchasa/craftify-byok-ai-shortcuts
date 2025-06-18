@@ -10,7 +10,5 @@
 "error_no_operation" = "No operation to process";
 "error_api_key_access" = "API key access error";
 "error_processing_manager_unavailable" = "Processing manager unavailable";
-"error_result_mode_display" = "Result mode: display result";
-"error_result_copied" = "Result copied to clipboard successfully";
 "OK" = "OK";
 "percent_format" = "%d%%";

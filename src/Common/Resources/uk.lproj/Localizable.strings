@@ -1,0 +1,14 @@
+"error_no_text" = "Немає тексту для обробки";
+"error_text_too_long" = "Текст занадто довгий для обробки";
+"error_consent_required" = "Потрібна згода користувача";
+"error_invalid_api_key" = "Неправильний API-ключ";
+"error_clipboard" = "Помилка доступу до буфера обміну";
+"error_cancelled" = "Операцію скасовано";
+"error_network" = "Мережева помилка";
+"error_parsing" = "Помилка розбору";
+"error_processing" = "Помилка обробки";
+"error_no_operation" = "Немає операції для обробки";
+"error_api_key_access" = "Помилка доступу до API-ключа";
+"error_processing_manager_unavailable" = "Менеджер обробки недоступний";
+"OK" = "ОК";
+"percent_format" = "%d%%";

@@ -1,0 +1,86 @@
+/* HowToUseView */
+"howtouse_title" = "Как да използвате Craftify";
+"howtouse_instruction" = "Изберете текст във всяко приложение, споделете го с Craftify, изберете операция и получете резултата мигновено.";
+"howtouse_consent" = "Съгласявам се избраният от мен текст да бъде изпратен до избрания LLM доставчик, както е описано в Политиката за поверителност";
+"howtouse_done" = "Приеми и продължи";
+
+/* HomeView */
+"home_title" = "Операции";
+"home_add_operation" = "Операция";
+"home_settings" = "Настройки";
+"home_delete" = "Изтрий";
+"home_order" = "Ред";
+"homeSortHandle" = "Плъзнете за пренареждане";
+"homeSortHint" = "Натиснете и задръжте, след това плъзнете за пренареждане на операциите.";
+
+/* AddOperationView */
+"add_operation_title" = "Добавяне на операция";
+"add_operation_type" = "Тип операция";
+"add_operation_save" = "Запази";
+"add_operation_cancel" = "Отказ";
+
+/* EditOperationView */
+"edit_operation_title" = "Редактиране на операция";
+"edit_operation_save" = "Запази";
+"edit_operation_cancel" = "Отказ";
+
+/* SettingsView */
+"settings_title" = "Настройки";
+"settings_llm_api_key" = "LLM API ключ";
+"settings_done" = "Отказ";
+"settings_native_language" = "Роден език";
+"settings_native_language_section" = "Изберете вашия роден език. Той ще се използва като основен език за операции обобщаване и обяснение.";
+
+/* Operation Params Labels */
+"operation_param_target_language" = "Целеви език";
+"operation_param_complexity_level" = "Ниво на сложност";
+"operation_param_detail_level" = "Ниво на детайлност";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Ученик";
+"operation_value_teenager" = "Тийнейджър";
+"operation_value_student" = "Студент";
+"operation_value_adult" = "Възрастен";
+
+/* Operation Labels */
+"operation_label_translate" = "Преведи";
+"operation_label_simplify" = "Опрости";
+"operation_label_correct" = "Коригирай";
+"operation_label_explain" = "Обясни";
+"operation_label_summarize" = "Обобщи";
+
+"error" = "Грешка";
+"color" = "Цвят";
+
+"sentence_count_2_3" = "2–3 изречения";
+"sentence_count_5_6" = "5–6 изречения";
+"sentence_count_9_10" = "9–10 изречения";
+"sentence_count_18_20" = "18–20 изречения";
+
+"error_no_text" = "Няма текст за обработка";
+"error_text_too_long" = "Текстът е твърде дълъг за обработка";
+"error_consent_required" = "Необходимо е съгласие на потребителя";
+"error_invalid_api_key" = "Невалиден API ключ";
+"error_clipboard" = "Грешка при достъп до клипборда";
+"error_cancelled" = "Операцията е отменена";
+"error_network" = "Мрежова грешка";
+"error_parsing" = "Грешка при анализ";
+"error_processing" = "Грешка при обработка";
+"error_no_operation" = "Няма операция за обработка";
+"error_api_key_access" = "Грешка при достъп до API ключ";
+"error_processing_manager_unavailable" = "Мениджърът за обработка е недостъпен";
+"error_url_not_supported" = "URL не се поддържа";
+"error_download_failed" = "Неуспешно зареждане на съдържанието на страницата";
+"error_extract_text" = "Неуспешно извличане на текст от страницата";
+
+"advice_check_connection" = "Проверете интернет връзката си и опитайте отново.";
+"advice_check_api_key" = "Моля, проверете вашия API ключ в Настройки.";
+"advice_try_again_later" = "Опитайте отново по-късно.";
+"advice_contact_support" = "Ако проблемът продължи, свържете се с поддръжка.";
+"advice_unknown_error" = "Възникна неизвестна грешка. Опитайте отново или се свържете с поддръжка.";
+
+/* Privacy Policy Full */
+"privacy_policy_full" = "Политика за поверителност\n\n1. Общ преглед\nCraftify обработва само текста, който изрично споделяте. Този текст се изпраща директно до избрания от вас LLM доставчик за извършване на избраната операция и се изтрива незабавно след връщане на резултата. Craftify никога не съхранява, регистрира или анализира този текст.\n\n2. Събирани данни\nCraftify не събира и не съхранява лични данни. Въведеният текст пътува директно от вашето устройство до избрания LLM доставчик и не се запазва от Craftify.\n\n3. Съхранение и сигурност\nПриложението не съхранява никакви потребителски данни, с изключение на настройките. Ако конфигурирате API ключ за LLM доставчик, той се съхранява криптиран локално в iOS Keychain на вашето устройство и никога не го напуска. Целият мрежов трафик е защитен чрез HTTPS (TLS 1.2+).\n\n4. Споделяне с трети страни\nНие не споделяме никакви данни с трети страни, освен за безопасно предаване на въведения текст към избрания LLM доставчик, за да изпълни вашата заявка.";
+
+/* LLM Provider */
+"settings_llm_provider" = "LLM доставчик";

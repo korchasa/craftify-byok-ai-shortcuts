@@ -1,0 +1,14 @@
+"error_no_text" = "Няма текст за обработка";
+"error_text_too_long" = "Текстът е твърде дълъг за обработка";
+"error_consent_required" = "Необходимо е съгласие на потребителя";
+"error_invalid_api_key" = "Невалиден API ключ";
+"error_clipboard" = "Грешка при достъп до клипборда";
+"error_cancelled" = "Операцията е отменена";
+"error_network" = "Мрежова грешка";
+"error_parsing" = "Грешка при анализ";
+"error_processing" = "Грешка при обработка";
+"error_no_operation" = "Няма операция за обработка";
+"error_api_key_access" = "Грешка при достъп до API ключ";
+"error_processing_manager_unavailable" = "Мениджърът за обработка е недостъпен";
+"OK" = "OK";
+"percent_format" = "%d%%";

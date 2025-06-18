@@ -1,0 +1,44 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "Chiudi";
+"share_copy_close" = "Copia e chiudi";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Scolaro";
+"operation_value_teenager" = "Adolescente";
+"operation_value_student" = "Studente";
+"operation_value_adult" = "Adulto";
+
+/* Operation Labels */
+"operation_label_translate" = "Traduci";
+"operation_label_simplify" = "Semplifica";
+"operation_label_correct" = "Correggi";
+"operation_label_explain" = "Spiega";
+"operation_label_summarize" = "Riassumi";
+
+"processing" = "Elaborazione...";
+"error" = "Errore";
+"copied_to_clipboard" = "Copiato negli appunti";
+
+"error_no_text" = "Nessun testo da elaborare";
+"error_text_too_long" = "Testo troppo lungo da elaborare";
+"error_consent_required" = "Consenso dell'utente richiesto";
+"error_invalid_api_key" = "Chiave API non valida";
+"error_clipboard" = "Errore di accesso agli appunti";
+"error_cancelled" = "Operazione annullata";
+"error_network" = "Errore di rete";
+"error_parsing" = "Errore di analisi";
+"error_processing" = "Errore di elaborazione";
+"error_no_operation" = "Nessuna operazione da eseguire";
+"error_api_key_access" = "Errore di accesso alla chiave API";
+"error_processing_manager_unavailable" = "Gestore di elaborazione non disponibile";
+"percent_format" = "%d%%";
+"advice_check_connection" = "Controlla la connessione a Internet e riprova.";
+"advice_check_api_key" = "Controlla la tua chiave API in Impostazioni.";
+"advice_try_again_later" = "Riprova più tardi.";
+"advice_contact_support" = "Se il problema persiste, contatta il supporto.";
+"advice_unknown_error" = "Si è verificato un errore sconosciuto. Riprova o contatta il supporto.";
+"error_download_failed" = "Impossibile caricare il contenuto della pagina";
+"error_extract_text" = "Impossibile estrarre testo dalla pagina";
+"error_timeout" = "Timeout di elaborazione";
+"error_url_not_supported" = "URL non supportato";
