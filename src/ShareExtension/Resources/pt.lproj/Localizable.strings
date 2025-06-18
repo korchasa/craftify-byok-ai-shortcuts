@@ -4,17 +4,17 @@
 "share_copy_close" = "Copy & Close";
 
 /* Picker Values */
-"operation_value_schoolchild" = "Schoolchild";
-"operation_value_teenager" = "Teenager";
-"operation_value_student" = "Student";
-"operation_value_adult" = "Adult";
+"operation_value_schoolchild" = "Criança em idade escolar";
+"operation_value_teenager" = "Adolescente";
+"operation_value_student" = "Estudante";
+"operation_value_adult" = "Adulto";
 
 /* Operation Labels */
-"operation_label_translate" = "Translate";
-"operation_label_simplify" = "Simplify";
-"operation_label_correct" = "Correct";
-"operation_label_explain" = "Explain";
-"operation_label_summarize" = "Summarize";
+"operation_label_translate" = "Traduzir";
+"operation_label_simplify" = "Simplificar";
+"operation_label_correct" = "Corrigir";
+"operation_label_explain" = "Explicar";
+"operation_label_summarize" = "Resumir";
 
 "processing" = "Processing...";
 "error" = "Error";

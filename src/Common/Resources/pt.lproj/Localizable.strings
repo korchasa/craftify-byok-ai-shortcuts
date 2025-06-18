@@ -1,0 +1,14 @@
+"error_no_text" = "Nenhum texto para processar";
+"error_text_too_long" = "Texto muito longo para processar";
+"error_consent_required" = "Consentimento do usuário necessário";
+"error_invalid_api_key" = "Chave de API inválida";
+"error_clipboard" = "Erro de acesso à área de transferência";
+"error_cancelled" = "Operação cancelada";
+"error_network" = "Erro de rede";
+"error_parsing" = "Erro de análise";
+"error_processing" = "Erro de processamento";
+"error_no_operation" = "Nenhuma operação para processar";
+"error_api_key_access" = "Erro de acesso à chave de API";
+"error_processing_manager_unavailable" = "Gerenciador de processamento indisponível";
+"OK" = "OK";
+"percent_format" = "%d%%";

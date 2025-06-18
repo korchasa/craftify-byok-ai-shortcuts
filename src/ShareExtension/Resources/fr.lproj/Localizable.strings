@@ -1,0 +1,44 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "Fermer";
+"share_copy_close" = "Copier et fermer";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Écolier";
+"operation_value_teenager" = "Adolescent";
+"operation_value_student" = "Étudiant";
+"operation_value_adult" = "Adulte";
+
+/* Operation Labels */
+"operation_label_translate" = "Traduire";
+"operation_label_simplify" = "Simplifier";
+"operation_label_correct" = "Corriger";
+"operation_label_explain" = "Expliquer";
+"operation_label_summarize" = "Résumer";
+
+"processing" = "Traitement...";
+"error" = "Erreur";
+"copied_to_clipboard" = "Copié dans le presse-papiers";
+
+"error_no_text" = "Aucun texte à traiter";
+"error_text_too_long" = "Texte trop long pour être traité";
+"error_consent_required" = "Consentement de l'utilisateur requis";
+"error_invalid_api_key" = "Clé API invalide";
+"error_clipboard" = "Erreur d'accès au presse-papiers";
+"error_cancelled" = "Opération annulée";
+"error_network" = "Erreur réseau";
+"error_parsing" = "Erreur d'analyse";
+"error_processing" = "Erreur de traitement";
+"error_no_operation" = "Aucune opération à traiter";
+"error_api_key_access" = "Erreur d'accès à la clé API";
+"error_processing_manager_unavailable" = "Gestionnaire de traitement indisponible";
+"percent_format" = "%d%%";
+"advice_check_connection" = "Vérifiez votre connexion Internet et réessayez.";
+"advice_check_api_key" = "Veuillez vérifier votre clé API dans les paramètres.";
+"advice_try_again_later" = "Réessayez plus tard.";
+"advice_contact_support" = "Si le problème persiste, contactez le support.";
+"advice_unknown_error" = "Une erreur inconnue est survenue. Réessayez ou contactez le support.";
+"error_download_failed" = "Échec du chargement du contenu de la page";
+"error_extract_text" = "Impossible d'extraire le texte de la page";
+"error_timeout" = "Délai de traitement dépassé";
+"error_url_not_supported" = "URL non prise en charge";

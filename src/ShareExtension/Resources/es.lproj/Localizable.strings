@@ -1,0 +1,44 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "Cerrar";
+"share_copy_close" = "Copiar y cerrar";
+
+/* Picker Values */
+"operation_value_schoolchild" = "Escolar";
+"operation_value_teenager" = "Adolescente";
+"operation_value_student" = "Estudiante";
+"operation_value_adult" = "Adulto";
+
+/* Operation Labels */
+"operation_label_translate" = "Traducir";
+"operation_label_simplify" = "Simplificar";
+"operation_label_correct" = "Corregir";
+"operation_label_explain" = "Explicar";
+"operation_label_summarize" = "Resumir";
+
+"processing" = "Procesando...";
+"error" = "Error";
+"copied_to_clipboard" = "Copiado al portapapeles";
+
+"error_no_text" = "No hay texto para procesar";
+"error_text_too_long" = "El texto es demasiado largo para procesar";
+"error_consent_required" = "Se requiere consentimiento del usuario";
+"error_invalid_api_key" = "Clave API no válida";
+"error_clipboard" = "Error de acceso al portapapeles";
+"error_cancelled" = "Operación cancelada";
+"error_network" = "Error de red";
+"error_parsing" = "Error de análisis";
+"error_processing" = "Error de procesamiento";
+"error_no_operation" = "No hay operación para procesar";
+"error_api_key_access" = "Error de acceso a la clave API";
+"error_processing_manager_unavailable" = "Administrador de procesamiento no disponible";
+"percent_format" = "%d%%";
+"advice_check_connection" = "Verifique su conexión a Internet y vuelva a intentarlo.";
+"advice_check_api_key" = "Por favor, verifique su clave API en Configuración.";
+"advice_try_again_later" = "Inténtelo de nuevo más tarde.";
+"advice_contact_support" = "Si el problema persiste, contacte con soporte.";
+"advice_unknown_error" = "Ocurrió un error desconocido. Inténtelo de nuevo o contacte con soporte.";
+"error_download_failed" = "No se pudo cargar el contenido de la página";
+"error_extract_text" = "No se pudo extraer texto de la página";
+"error_timeout" = "Tiempo de procesamiento agotado";
+"error_url_not_supported" = "La URL no es compatible";

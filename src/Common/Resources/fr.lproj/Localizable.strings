@@ -1,0 +1,14 @@
+"error_no_text" = "Aucun texte à traiter";
+"error_text_too_long" = "Texte trop long pour être traité";
+"error_consent_required" = "Consentement de l'utilisateur requis";
+"error_invalid_api_key" = "Clé API invalide";
+"error_clipboard" = "Erreur d'accès au presse-papiers";
+"error_cancelled" = "Opération annulée";
+"error_network" = "Erreur réseau";
+"error_parsing" = "Erreur d'analyse";
+"error_processing" = "Erreur de traitement";
+"error_no_operation" = "Aucune opération à traiter";
+"error_api_key_access" = "Erreur d'accès à la clé API";
+"error_processing_manager_unavailable" = "Gestionnaire de traitement indisponible";
+"OK" = "OK";
+"percent_format" = "%d%%";
