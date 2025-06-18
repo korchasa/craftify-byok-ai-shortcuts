@@ -4,7 +4,7 @@
 1. Open app
 2. On first launch: review full Privacy Policy and tap **Accept & Continue** to grant consent
 3. Add operations (Translate, Simplify, Correct, Explain, Summarize) via HomeView
-4. Enter OpenAI API key in SettingsView
+4. Choose **LLM provider** (OpenAI or Claude) and enter the corresponding **API key** in SettingsView
 5. To process text:
    - Select text in any app
    - Share → Craftify
@@ -28,7 +28,7 @@
 
 ## Data
 - All data (key, inventory): device only
-- OpenAI API key required
+- LLM API key required for the selected provider
 - No request history/clipboard analysis
 
 ## User Test Results

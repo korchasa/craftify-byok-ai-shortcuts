@@ -1,6 +1,6 @@
 import Foundation
 
-/// Ошибки клиента LLMAPIClient для OpenAI API
+/// Common error types for LLM API clients (OpenAI, Claude, etc.)
 public enum LLMAPIClientError: Error, LocalizedError, Equatable {
     case unauthorized
     case tooManyRequests

@@ -22,7 +22,9 @@ public struct SettingsView: View {
             title: LocalizedStringKey(L10n.settingsTitle),
             content: {
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
-                    Text(L10n.settingsApiKey)
+                    SettingsProviderSection(viewModel: viewModel)
+
+                    Text(L10n.settingsLlmApiKey)
                         .font(.craftifyBody)
                         .fontWeight(.bold)
                     SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
@@ -79,6 +81,7 @@ public struct SettingsView: View {
                 Button(action: {
                     Task {
                         viewModel.saveNativeLanguage()
+                        viewModel.saveProvider()
                         await viewModel.saveKey()
                         if viewModel.errorMessage == nil {
                             shouldDismiss = true
@@ -100,9 +103,9 @@ public struct SettingsView: View {
         @ObservedObject var viewModel: SettingsViewModel
         @FocusState var isTextFieldFocused: Bool
         var body: some View {
-            SecureField(L10n.settingsApiKey, text: $viewModel.apiKey)
+            SecureField(L10n.settingsLlmApiKey, text: $viewModel.apiKey)
                 .focused($isTextFieldFocused)
-                .accessibilityLabel(L10n.settingsApiKey)
+                .accessibilityLabel(L10n.settingsLlmApiKey)
         }
     }
 
@@ -118,6 +121,25 @@ public struct SettingsView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(ViewConstants.unlimitedLineLimit)
                     .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
+            }
+        }
+    }
+
+    private struct SettingsProviderSection: View {
+        @ObservedObject var viewModel: SettingsViewModel
+        var body: some View {
+            HStack {
+                Text(LocalizedStringKey(L10n.settingsLlmProvider))
+                    .font(.craftifyBody)
+                    .fontWeight(.bold)
+                Spacer()
+                Picker(L10n.settingsLlmProvider, selection: $viewModel.selectedProvider) {
+                    ForEach(LLMProvider.allCases, id: \.rawValue) { provider in
+                        Text(provider.displayName).tag(provider)
+                    }
+                }
+                .pickerStyle(MenuPickerStyle())
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
     }

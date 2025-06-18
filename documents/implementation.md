@@ -38,7 +38,7 @@
 | setAPIKey(_ key) async throws  | Save API key (validate length)     |
 | deleteAPIKey() async throws    | Delete API key                     |
 | maskedAPIKey(_ key)           | Mask for logs (sk-****abcd)        |
-- All async/await, errors handled, masking: 3+4 chars
+- All async/await, errors handled, masking: 3+4 chars (works for any LLM provider)
 
 ## API: LogManagerShared
 | Method         | Description                |
@@ -170,6 +170,17 @@ graph TD
 - Все операции и ViewModel'и получают язык только через AppSettingsManager.shared.nativeLanguage.
 - Все изменения настроек логируются через LogManagerShared.
 - Реактивное обновление UI: выбранный язык хранится в @Published-свойстве ViewModel, применяется глобально только по кнопке Save.
+
+## LLM Provider & Factory
+
+- `LLMProvider` (enum) lists supported providers: `openAI`, `claude`.
+  Stored in `AppSettingsManager.llmProvider` and selectable in **SettingsView** via a `Picker`.
+- `LLMClienting` protocol defines a single `send(text:promptTemplate:apiKey:)` async method.
+- `OpenAIAPIClient` and `ClaudeAPIClient` conform to `LLMClienting` and wrap the respective REST APIs (retry logic, time-outs, JSON parsing).
+- `LLMClientFactory` instantiates the proper client based on the selected provider.
+  By default `ProcessingManager` asks the factory every time to stay in sync with user choice.
+
+This refactor removes the hard dependency on OpenAI and enables quick addition of new vendors.
 
 ## Технологический стек и зависимости
 - Swift 5.9, SwiftUI, MVVM

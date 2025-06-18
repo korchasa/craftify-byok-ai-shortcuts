@@ -15,7 +15,7 @@ public final class ShareExtensionViewController: UIViewController {
         let clipboardManager = ClipboardManager()
         let logManager = OSLogManagerShared(category: "ShareExtension")
         let processingManager = ProcessingManager(
-            llmClient: LLMAPIClient(),
+            llmClient: LLMClientFactory.make(provider: AppSettingsManager.shared.llmProvider),
             logManager: logManager,
             authManager: authManager
         )

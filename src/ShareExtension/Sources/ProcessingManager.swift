@@ -1,7 +1,7 @@
 import Foundation
 
 public final class ProcessingManager: ProcessingManaging {
-    private let llmClient: LLMAPIClient
+    private let llmClient: LLMClienting
     private let logManager: LogManagerShared
     private let authManager: AuthManaging
     private var isCancelled = false
@@ -9,8 +9,13 @@ public final class ProcessingManager: ProcessingManaging {
         static let resultPreviewLength = 128
     }
 
+    /// Creates `ProcessingManager` with a concrete `LLMClienting` instance.
+    /// - Parameters:
+    ///   - llmClient: Specific LLM client implementation. Defaults to factory value based on saved provider.
+    ///   - logManager: Logger.
+    ///   - authManager: API-key manager.
     public init(
-        llmClient: LLMAPIClient = LLMAPIClient(),
+        llmClient: LLMClienting = LLMClientFactory.make(provider: AppSettingsManager.shared.llmProvider),
         logManager: LogManagerShared = OSLogManagerShared(category: "ProcessingManager"),
         authManager: AuthManaging = AuthManager()
     ) {
@@ -43,7 +48,7 @@ public final class ProcessingManager: ProcessingManaging {
         logManager.log(LogEntry(
             level: .debug,
             module: "ProcessingManager",
-            message: "Request to OpenAI API",
+            message: "Request to LLM API",
             metadata: [
                 "operation": operation.operation.rawValue,
                 "params": paramsString,
@@ -58,7 +63,7 @@ public final class ProcessingManager: ProcessingManaging {
         logManager.log(LogEntry(
             level: .debug,
             module: "ProcessingManager",
-            message: "Response from OpenAI API",
+            message: "Response from LLM API",
             metadata: [
                 "operation": operation.operation.rawValue,
                 "resultPreview": String(result.prefix(Constants.resultPreviewLength)),
@@ -71,7 +76,7 @@ public final class ProcessingManager: ProcessingManaging {
         logManager.log(LogEntry(
             level: .error,
             module: "ProcessingManager",
-            message: "OpenAI API error",
+            message: "LLM API error",
             metadata: [
                 "error": error.localizedDescription
             ]

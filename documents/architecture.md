@@ -4,6 +4,7 @@
 - MainApp (SwiftUI) and Share Extension both use the shared Common module (SwiftPM).
 - Modules interact via App Group (UserDefaults) and Keychain Sharing.
 - Logging is centralized via LogManagerShared (SPM), using os_log.
+- - A provider-agnostic factory (`LLMClientFactory`) resolves the current `LLMProvider` (e.g. **OpenAI**, **Claude**) stored in `AppSettingsManager.llmProvider` and returns the matching client (`OpenAIAPIClient`, `ClaudeAPIClient`, …).
 - All operations support a result processing mode (`resultMode`):
   - `.clipboard`: result is copied to the clipboard (default)
   - `.display`: result is shown in a popup window (used for Explain and Summarize)
@@ -29,9 +30,9 @@
 - Log export is not supported (system log limitation). Viewing is only via system tools or `./run logs`.
 
 ## Component Interaction
-- ShareExtensionManager reads inventory and API key, calls ProcessingManager.
-- ProcessingManager forms the request, calls LLMAPIClient.
-- LLMAPIClient sends HTTP POST to OpenAI, parses the response via ResponseParser.
+- ShareExtensionManager reads inventory and API key, calls `ProcessingManager`.
+- `ProcessingManager` asks `LLMClientFactory` for a concrete client that conforms to `LLMClienting`.
+- The concrete client (`OpenAIAPIClient`, `ClaudeAPIClient`, …) executes the network request to the selected provider and returns the generated text.
 - ClipboardManager copies the result to UIPasteboard.
 - If the operation has resultMode `.display` (Explain or Summarize) — the result is saved and displayed in the view, not copied to the clipboard.
 - All actions are logged via LogManagerShared.
@@ -70,12 +71,13 @@
 graph TD
   ShareExtension[Share Extension] -->|UserDefaults| AppGroup[UserDefaults (App Group)]
   ShareExtension --> ProcessingManager[Processing Manager]
-  ProcessingManager --> LLMAPIClient[LLM API Client]
-  LLMAPIClient --> UIPasteboard[UIPasteboard]
+  ProcessingManager --> LLMClientFactory[LLMClientFactory]
+  LLMClientFactory -->|creates| ConcreteLLMClient[OpenAI / Claude Client]
+  ConcreteLLMClient --> UIPasteboard[UIPasteboard]
   subgraph Shared
     LogManagerShared[Log Manager Shared]
   end
-  ShareExtension & ProcessingManager & LLMAPIClient & UIPasteboard -.-> LogManagerShared
+  ShareExtension & ProcessingManager & LLMClientFactory & ConcreteLLMClient & UIPasteboard -.-> LogManagerShared
   ShareExtension -->|resultMode .display| ShareExtensionView[ShareExtensionView: Display Result]
 ```
 

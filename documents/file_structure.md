@@ -51,6 +51,7 @@ graph TD
   - ColorPaletteConstants.swift: color palette consts
   - SupportedLanguages.swift: all supported langs
   - AppSettingsManager.swift: settings, logs
+  - LLMProvider.swift: Enum of supported LLM providers (openAI, claude)
 - **UnitTests/**: tests for all logic
 - **Config/**: SPM target config
 - **Resources/**: l10n
@@ -137,13 +138,14 @@ src/
         ResultMode.swift           # Режим обработки результата (clipboard/display)
         OperationType.swift        # Протокол операций с resultMode
         ExplainOperation.swift     # Операция Explain с режимом display
-        ...
+        LLMProvider.swift         # Enum of supported LLM providers (openAI, claude)
       InventoryOperation.swift      # Модель операции, теперь с colorHex и поддержкой resultMode
       InventoryManager.swift        # Управление инвентарём, поддержка colorHex и resultMode
       CorrectParams.swift           # Параметры операции correct (без stylePreservationLevel)
       TextFetcher/                 # Module for loading and extracting text from URL
         TextFetching.swift         # Protocol for loading text
         SwiftSoupTextFetcher.swift # Implementation using SwiftSoup and URLSession
+      LLMClienting.swift          # Protocol describing capabilities of LLM clients
       OperationInput.swift         # Added fields `url: String?`, `text: String?` for passing URL or text in operations, not containing nativeLanguage
       SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL, uses AppSettingsManager.shared.nativeLanguage
       CraftifyButtonConstants.swift # Единые константы для стилей кнопок (цвета, радиус, отступы, масштаб)
@@ -196,7 +198,9 @@ src/
     Sources/
       ShareExtensionManager.swift   # Reads inventory, API key, triggers processing (учитывает resultMode)
       ProcessingManager.swift       # Handles text processing logic
-      LLMAPIClient.swift            # OpenAI API client
+      OpenAIAPIClient.swift         # OpenAI API client (gpt-4o-mini)
+      ClaudeAPIClient.swift         # Anthropic Claude client (claude-sonnet-4-0)
+      LLMClientFactory.swift        # Factory returning concrete client based on `LLMProvider`
       ClipboardManager.swift        # Clipboard integration
       ShareExtensionView.swift      # SwiftUI UI for extension (поддержка display/clipboard)
       ShareExtensionViewController.swift # Hosting controller

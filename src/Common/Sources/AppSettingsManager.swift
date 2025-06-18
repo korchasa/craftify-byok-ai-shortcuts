@@ -9,6 +9,7 @@ public final class AppSettingsManager {
     public static let shared = AppSettingsManager(suiteName: "group.dev.korchasa.Craftify")
     private let userDefaults: UserDefaults
     private let nativeLanguageKey = "CraftifyNativeLanguage"
+    private let llmProviderKey = "CraftifyLLMProvider"
     private let logManager: LogManagerShared
 
     /// Initializes the settings manager
@@ -46,6 +47,27 @@ public final class AppSettingsManager {
                 message: "[SET] CraftifyNativeLanguage",
                 metadata: [
                     "newValue": newValue
+                ]
+            ))
+        }
+    }
+
+    /// Currently selected LLM provider.
+    public var llmProvider: LLMProvider {
+        get {
+            if let raw = userDefaults.string(forKey: llmProviderKey), let provider = LLMProvider(rawValue: raw) {
+                return provider
+            }
+            return .openAI // default
+        }
+        set {
+            userDefaults.set(newValue.rawValue, forKey: llmProviderKey)
+            logManager.log(LogEntry(
+                level: LogLevel.info,
+                module: "AppSettingsManager",
+                message: "[SET] CraftifyLLMProvider",
+                metadata: [
+                    "newValue": newValue.rawValue
                 ]
             ))
         }
