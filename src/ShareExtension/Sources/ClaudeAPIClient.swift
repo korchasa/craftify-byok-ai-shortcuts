@@ -40,7 +40,7 @@ public final class ClaudeAPIClient: LLMClienting {
 
     deinit {}
 
-    public func send(text: String, promptTemplate: String, apiKey: String) async throws -> String {
+    public func send(messages: [LLMMessage], apiKey: String) async throws -> String {
         var lastError: Error?
         for attempt in 0 ..< maxRetries {
             do {
@@ -50,18 +50,21 @@ public final class ClaudeAPIClient: LLMClienting {
                 request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
-                // Anthropic expects messages in its own role format.
+                // Anthropic expects system prompt separate and messages array without system role
+                let systemContent = messages.first(where: { $0.role == .system })?.content ?? ""
+                let userAssistantMessages = messages.filter { $0.role != .system }
+                let formattedMessages: [[String: Any]] = userAssistantMessages.map { msg in
+                    [
+                        "role": msg.role.rawValue,
+                        "content": [["type": "text", "text": msg.content]]
+                    ]
+                }
                 let body: [String: Any] = [
                     "model": model,
                     "temperature": temperature,
                     "max_tokens": maxTokens,
-                    "system": promptTemplate,
-                    "messages": [
-                        [
-                            "role": "user",
-                            "content": [["type": "text", "text": text]]
-                        ]
-                    ]
+                    "system": systemContent,
+                    "messages": formattedMessages
                 ]
                 request.httpBody = try JSONSerialization.data(withJSONObject: body)
 

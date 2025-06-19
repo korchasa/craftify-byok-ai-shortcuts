@@ -217,22 +217,26 @@ public final class OperationModelsTests: XCTestCase {
         }
     }
 
-    /// Проверяет, что смена языка влияет на promptTemplate в SummarizeOperation и ExplainOperation
-    func testPromptTemplateReflectsCurrentLanguage() {
+    /// Проверяет, что смена языка влияет на system-сообщение в makeMessages для SummarizeOperation и ExplainOperation
+    func testSystemMessageReflectsCurrentLanguage() {
         let manager = AppSettingsManager(suiteName: "group.dev.korchasa.Craftify")
-        manager.nativeLanguage = "en"
+        manager.nativeLanguage = "English" // Ensure english name
         let summarizeOp = SummarizeOperation()
         let explainOp = ExplainOperation()
         let input = OperationInput()
-        let summarizePromptEN = summarizeOp.promptTemplate(for: input)
-        let explainPromptEN = explainOp.promptTemplate(for: input)
-        XCTAssertTrue(summarizePromptEN.contains("English"), "Prompt должен содержать English для en")
-        XCTAssertTrue(explainPromptEN.contains("English"), "Prompt должен содержать English для en")
-        manager.nativeLanguage = "ru"
-        let summarizePromptRU = summarizeOp.promptTemplate(for: input)
-        let explainPromptRU = explainOp.promptTemplate(for: input)
-        XCTAssertTrue(summarizePromptRU.contains("Russian") || summarizePromptRU.contains("Русский"), "Prompt должен содержать Russian/Русский для ru")
-        XCTAssertTrue(explainPromptRU.contains("Russian") || explainPromptRU.contains("Русский"), "Prompt должен содержать Russian/Русский для ru")
+        let messagesSumEN = summarizeOp.makeMessages(input: input, text: "dummy")
+        let messagesExpEN = explainOp.makeMessages(input: input, text: "dummy")
+        let enSystemContains = { (messages: [LLMMessage], keyword: String) -> Bool in
+            messages.first(where: { $0.role == .system })?.content.contains(keyword) ?? false
+        }
+        XCTAssertTrue(enSystemContains(messagesSumEN, "English"))
+        XCTAssertTrue(enSystemContains(messagesExpEN, "English"))
+
+        manager.nativeLanguage = "Russian"
+        let messagesSumRU = summarizeOp.makeMessages(input: input, text: "dummy")
+        let messagesExpRU = explainOp.makeMessages(input: input, text: "dummy")
+        XCTAssertTrue(enSystemContains(messagesSumRU, "Russian") || enSystemContains(messagesSumRU, "Русский"))
+        XCTAssertTrue(enSystemContains(messagesExpRU, "Russian") || enSystemContains(messagesExpRU, "Русский"))
     }
 }
 

@@ -19,45 +19,32 @@ public struct ExplainOperation: OperationType {
     }
 
     /// Генерирует promptTemplate для данной операции с учётом текущего языка
-    public func promptTemplate(for input: OperationInput) -> String {
-        let nativeLanguage = AppSettingsManager.shared.nativeLanguage
-        let englishName = SupportedLanguages.all.first(where: { $0.code == nativeLanguage })?.englishName ?? nativeLanguage
-        let displayName = SupportedLanguages.all.first(where: { $0.code == nativeLanguage })?.name ?? nativeLanguage
-        os_log("[ExplainOperation] Prompt language code: %{public}@", nativeLanguage)
-        os_log("[ExplainOperation] Prompt language englishName: %{public}@", englishName)
-        os_log("[ExplainOperation] Prompt language displayName: %{public}@", displayName)
-        return """
+    public func makeMessages(input: OperationInput, text: String) -> [LLMMessage] {
+        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
+        let systemContent = """
         # INSTRUCTIONS
 
-        You MUST ALWAYS:
-        - Respond in \(englishName)
-        - Explain the concept at the \(input.detailLevel.rawValue) level
-        - I do not have the ability to fill templates. NEVER use placeholders or omit code
-        - You will be PUNISHED for incorrect answers
-        - NEVER MAKE THINGS UP
-        - You MUST NOT ignore critical context
-        - ALWAYS follow ###Response Rules###
-
-        ## Response Rules
+        CURRENT USER LANGUAGE: \(nativeLang)
 
         Follow strictly in order:
 
         1. Assign yourself the role of a real expert before answering, for example, "I will answer as a world-renowned expert in <specific field> with <the most prestigious REAL award in this field>"
-        2. Give a CONCRETE and USEFUL explanation of the provided text in simple \(englishName) language in few sentences
+        2. Give a CONCRETE and USEFUL explanation of the provided text in simple language in few sentences
         3. Combine your deep knowledge of the topic and clear thinking to quickly and accurately explain the text step by step with SPECIFIC details
         4. Your answer is critically important for my understanding
-        5. Respond in a natural, human language, in plain text format
-        6. ALWAYS use ##Example answer## for the structure of the first message
+        5. Adapt your answer to the specified level (teenager, expert, etc.)
+        6. Write your answer in a natural, human language
+        7. Respond in plain text format
 
-        ## Example
+        ## Examples
 
-        Target language: english
-        Level: student
-        User request: The Dunning-Kruger effect
+        ### Example 1:
+        Request:
+        - Target language: english
+        - Level: adult
+        - User request: The Dunning-Kruger effect
 
         Response:
-        I will answer as a world-renowned expert in psychology with the prestigious American Psychological Association Award for Research Excellence.
-
         The Dunning-Kruger effect — the lower the competence, the higher the confidence (and vice versa).
 
         Overestimation at a low level: little experience → no skills to see mistakes → inflated self-esteem.
@@ -67,7 +54,30 @@ public struct ExplainOperation: OperationType {
         Awareness gap: discrepancy between real and perceived abilities.
 
         How to avoid: seek external feedback and constantly learn to better understand your own limits.
+
+        ### Example 2:
+
+        Request:
+        - Target language: українська
+        - Level: школяр
+        - User request: Ефект Даннінґа-Крюґера
+
+        Response:
+        Ефект Даннінґа-Крюґера — це правило: чим менше ти знаєш, тим упевненіше себе почуваєш, і навпаки.
+            •	Переоцінка на початку: мало досвіду → не бачиш своїх помилок → здається, що ти геній.
+            •	Недооцінка у майстрів: справжні знавці бачать усі труднощі → вважають себе «звичайними».
+
+        «Ямка незнання»: різниця між тим, що ти справді вмієш, і тим, що про себе думаєш.
+
+        Як не потрапити у пастку: проси чесний відгук у інших і постійно вчися — так краще розумітимеш свої межі.
         """
+        let system = LLMMessage(role: .system, content: systemContent)
+        let user = LLMMessage(role: .user, content: """
+        - Target language: \(nativeLang)
+        - Level: \(input.detailLevel.rawValue)
+        - User request: \(text)
+        """)
+        return [system, user]
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {

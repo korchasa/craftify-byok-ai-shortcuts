@@ -86,7 +86,7 @@ public final class HomeViewModelTests: XCTestCase {
         )
         let operation2 = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .student)),
+            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .schoolchild)),
             colorHex: "fdae61"
         )
         let operation3 = InventoryOperation(
@@ -112,7 +112,7 @@ public final class HomeViewModelTests: XCTestCase {
         )
         let operation2 = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .student)),
+            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .schoolchild)),
             colorHex: "fdae61"
         )
         let operation3 = InventoryOperation(

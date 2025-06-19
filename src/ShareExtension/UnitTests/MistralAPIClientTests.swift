@@ -23,7 +23,11 @@ public final class MistralAPIClientTests: XCTestCase {
         URLProtocolStub.data = responseJSON
         URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.mistral.ai/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
-        let result = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test")
+        let messages = [
+            LLMMessage(role: .system, content: "Do something"),
+            LLMMessage(role: .user, content: "Hello")
+        ]
+        let result = try await client.send(messages: messages, apiKey: "sk-test")
         XCTAssertEqual(result, expectedText)
     }
 }

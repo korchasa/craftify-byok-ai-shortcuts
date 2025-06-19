@@ -39,7 +39,6 @@
 /* Picker Values */
 "operation_value_schoolchild" = "Écolier";
 "operation_value_teenager" = "Adolescent";
-"operation_value_student" = "Étudiant";
 "operation_value_adult" = "Adulte";
 
 /* Operation Labels */

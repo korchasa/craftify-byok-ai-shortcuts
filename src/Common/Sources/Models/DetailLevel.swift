@@ -4,6 +4,5 @@ import Foundation
 public enum DetailLevel: String, Codable, CaseIterable, Equatable {
     case schoolchild = "schoolchild"
     case teenager = "teenager"
-    case student = "student"
     case adult = "adult"
 }

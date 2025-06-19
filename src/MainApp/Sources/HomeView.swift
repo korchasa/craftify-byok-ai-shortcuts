@@ -219,7 +219,6 @@ public struct HomeView: View {
             switch level {
             case .schoolchild: L10n.operationValueSchoolchild
             case .teenager: L10n.operationValueTeenager
-            case .student: L10n.operationValueStudent
             case .adult: L10n.operationValueAdult
             }
         }
@@ -228,7 +227,6 @@ public struct HomeView: View {
             switch level {
             case .schoolchild: L10n.operationValueSchoolchild
             case .teenager: L10n.operationValueTeenager
-            case .student: L10n.operationValueStudent
             case .adult: L10n.operationValueAdult
             }
         }

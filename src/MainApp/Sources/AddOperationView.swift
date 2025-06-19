@@ -179,7 +179,6 @@ public struct AddOperationView: View {
             Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
                 Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
                 Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
-                Text(L10n.operationValueStudent).tag(ComplexityLevel.student)
                 Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
             }
             .pickerStyle(DefaultPickerStyle())
@@ -194,7 +193,6 @@ public struct AddOperationView: View {
             Picker("", selection: $viewModel.detailLevel) {
                 Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
                 Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
-                Text(L10n.operationValueStudent).tag(DetailLevel.student)
                 Text(L10n.operationValueAdult).tag(DetailLevel.adult)
             }
             .pickerStyle(DefaultPickerStyle())

@@ -241,7 +241,6 @@ function fast_check_build_analyze_test() {
 }
 
 function deploy_simulator() {
-  set -ex
   _start_section "Opening Simulator"
   open -a Simulator
   _end_section

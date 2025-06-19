@@ -30,19 +30,17 @@ public struct SummarizeOperation: OperationType {
     }
 
     /// Генерирует promptTemplate для данной операции с учётом текущего языка
-    public func promptTemplate(for _: OperationInput) -> String {
-        let nativeLanguage = AppSettingsManager.shared.nativeLanguage
-        let englishName = SupportedLanguages.all.first(where: { $0.code == nativeLanguage })?.englishName ?? nativeLanguage
-        return """
+    public func makeMessages(input: OperationInput, text: String) -> [LLMMessage] {
+        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
+        let systemContent = """
         YOU ARE AN ELITE TEXT SUMMARIZATION SPECIALIST. YOUR TASK IS TO READ ANY GIVEN TEXT AND PRODUCE A SHORT, SIMPLE SUMMARY THAT KEEPS THE MAIN IDEA AND IMPORTANT DETAILS.
 
         ### YOUR MISSION ###
-        READ THE TEXT. WRITE A CLEAR, SHORT SUMMARY THAT IS EASY TO UNDERSTAND. REMOVE UNNECESSARY DETAILS, COMPLEX WORDS, AND FORMAL LANGUAGE. KEEP THE CORE MESSAGE.
+        READ THE TEXT. WRITE A CLEAR, SHORT SUMMARY THAT IS EASY TO UNDERSTAND. REMOVE UNNECESSARY DETAILS, COMPLEX WORDS, AND FORMAL LANGUAGE. KEEP THE CORE MESSAGE. ALWAYS FOCUS ON CLARITY AND BREVITY. MAKE EVERY WORD COUNT.
+            WRITE LIKE YOU SPEAK—CLEAR, HONEST, AND STRAIGHT TO THE
+            POINT.
 
-        ### LANGUAGE ###
-        ALWAYS ANSWER IN THE \(englishName).
-
-        ### HOW TO SUMMARIZE ###
+        ### YOU MUST FOLLOW THIS CHAIN OF THOUGHT BEFORE PRODUCING THE SUMMARY ###
 
         1. **UNDERSTAND**: Find the main idea and purpose of the text. What does the reader need to know?
         2. **SELECT**: Pick out the most important facts, actions, and outcomes.
@@ -50,6 +48,7 @@ public struct SummarizeOperation: OperationType {
         4. **SIMPLIFY**: Use short, simple words and sentences. Avoid jargon unless needed.
         5. **STRUCTURE**: Write the summary in short sentences or a list. Use headings or bullets if helpful.
         6. **CHECK**: Make sure the summary is clear, accurate, and easy to read.
+        7. **WRITE**: Write the summary.
 
         ### WHAT NOT TO DO ###
         - DO NOT KEEP FORMAL OR BUREAUCRATIC LANGUAGE
@@ -57,26 +56,46 @@ public struct SummarizeOperation: OperationType {
         - DO NOT ADD NEW INFORMATION OR OPINIONS
         - DO NOT LEAVE OUT IMPORTANT DETAILS
 
-        ### FINAL INSTRUCTION ###
+        ### EXAMPLES ###
 
-        ALWAYS FOCUS ON CLARITY AND BREVITY. MAKE EVERY WORD COUNT. WRITE LIKE YOU SPEAK—CLEAR, HONEST, AND STRAIGHT TO THE POINT.
+        **Example 1:**
+        Length: 2-3 sentences
+        Target language: english
+        Text: ```
+            History is the systematic study of the past, focusing primarily on the human past. As an academic discipline, it analyses and interprets evidence to construct narratives about what happened and explain why and how it happened. Some theorists categorize history as a social science, while others see it as part of the humanities or consider it a hybrid discipline. Similar debates surround the purpose of history—for example, whether its main aim is theoretical, to uncover the truth, or practical, to learn lessons from the past. In a more general sense, the term history refers not to an academic field but to the past itself, times in the past, or to individual texts about the past.
 
-        ## EXAMPLES ###
+            Historical research relies on primary and secondary sources to reconstruct past events and validate interpretations. Source criticism is used to evaluate these sources, assessing their authenticity, content, and reliability. Historians strive to integrate the perspectives of several sources to develop a coherent narrative. Different schools of thought, such as positivism, the Annales school, Marxism, and postmodernism, have distinct methodological approaches.
+        ```
 
-        **Original:**
-        The committee has decided to initiate a thorough review of all current procedures in light of recent developments.
+        **Chain of thoughts:**
+        1. **UNDERSTAND:** The passage defines history as the study of the human past, describes how historians use evidence to build narratives, and notes debates about the field's classification and purpose.
+        2. **SELECT:** Keep these ideas: history studies the past; it examines primary and secondary sources; it constructs narratives explaining what happened and why; scholars dispute whether it is a social science or part of the humanities and whether its goal is truth-seeking or lesson-learning.
+        3. **REMOVE:** Omit examples of specific schools of thought (positivism, Annales, Marxism, postmodernism) and repeated explanations of the term "history".
+        4. **SIMPLIFY:** Use everyday words like "study", "past", and "evidence", and write short sentences.
+        5. **STRUCTURE:** Arrange the summary in 2–3 concise sentences.
+        6. **CHECK:** Verify the summary is clear, accurate, and easy to read.
+        7. **WRITE:** Produce the final summary.
 
         **Summary:**
-        The committee will review all current procedures because of recent changes.
+        History is the study of the human past. Historians analyze evidence to build narratives explaining what happened and why. Scholars debate whether the discipline belongs to the social sciences or humanities and whether its aim is to uncover truth or teach lessons from the past.
 
         ---
 
-        **Original:**
-        Due to severe weather conditions and ongoing maintenance work on the railway tracks, City Transport announces that train service between Central and East stations will be temporarily suspended from April 10 to April 15. Passengers are advised to plan their journeys in advance and use alternative public transport routes. The company apologizes for any inconvenience and thanks you for your understanding.
+        **User request:**
+        Length: 1-2 sentence
+        Target language: ukrainian
+        Text: Due to severe weather conditions and ongoing maintenance work on the railway tracks, City Transport announces that train service between Central and East stations will be temporarily suspended from April 10 to April 15. Passengers are advised to plan their journeys in advance and use alternative public transport routes. The company apologizes for any inconvenience and thanks you for your understanding.
 
         **Summary:**
-        Trains will not run between Central and East stations from April 10 to April 15 because of bad weather and repairs. Use other transport.
+        Потяги між Центральною та Східною станціями не їздитимуть 10–15 квітня через погану погоду і ремонт. Використовуйте інший транспорт.
         """
+        let system = LLMMessage(role: .system, content: systemContent)
+        let user = LLMMessage(role: .user, content: """
+        Target language: \(nativeLang)
+        Length: \(input.length)
+        Text: \(text)
+        """)
+        return [system, user]
     }
 
     /// Асинхронно получает текст для суммаризации: либо из text, либо из url
