@@ -39,7 +39,6 @@
 /* Picker Values */
 "operation_value_schoolchild" = "Ученик";
 "operation_value_teenager" = "Тийнейджър";
-"operation_value_student" = "Студент";
 "operation_value_adult" = "Възрастен";
 
 /* Operation Labels */

@@ -73,6 +73,16 @@ public final class AppSettingsManager {
         }
     }
 
+    /// English name for the current user's native language (e.g., "Russian" for "ru").
+    public var nativeLanguageEnglishName: String {
+        SupportedLanguages.all.first { $0.code == nativeLanguage }?.englishName ?? nativeLanguage
+    }
+
+    /// Native (localized) display name for the current user's native language (e.g., "русский язык" for "ru").
+    public var nativeLanguageDisplayName: String {
+        SupportedLanguages.all.first { $0.code == nativeLanguage }?.name ?? nativeLanguage
+    }
+
     /// Required deinitializer for SwiftLint compliance
     deinit {}
 }

@@ -7,6 +7,7 @@ public final class ProcessingManager: ProcessingManaging {
     private var isCancelled = false
     private enum Constants {
         static let resultPreviewLength = 128
+        static let systemPreviewLength: Int = 48
     }
 
     /// Creates `ProcessingManager` with a concrete `LLMClienting` instance.
@@ -35,16 +36,16 @@ public final class ProcessingManager: ProcessingManaging {
         }
     }
 
-    private func logRequest(text: String, operation: InventoryOperation, apiKey: String) {
+    private func logRequest(operation: InventoryOperation, apiKey: String, messages: [LLMMessage]) {
         let maskedKey = authManager.maskedAPIKey(apiKey)
         let paramsString = if let params = try? JSONSerialization.jsonObject(with: operation.params) {
             String(describing: params)
         } else {
             "<unparsable>"
         }
-        let opType = OperationFactory.make(kind: operation.operation)
-        let input = try? opType.decodeInput(from: operation.params)
-        let promptTemplate = input.map { opType.promptTemplate(for: $0) } ?? "<prompt unavailable>"
+        let inputTextLength = messages.first(where: { $0.role == .user })?.content.count ?? 0
+        // Build compact preview of system prompt if exists
+        let systemPreview = messages.first(where: { $0.role == .system })?.content.prefix(Constants.systemPreviewLength) ?? ""
         logManager.log(LogEntry(
             level: .debug,
             module: "ProcessingManager",
@@ -52,9 +53,9 @@ public final class ProcessingManager: ProcessingManaging {
             metadata: [
                 "operation": operation.operation.rawValue,
                 "params": paramsString,
-                "promptTemplate": promptTemplate,
+                "systemPreview": String(systemPreview),
                 "apiKey": maskedKey,
-                "inputTextLength": "\(text.count)"
+                "inputTextLength": "\(inputTextLength)"
             ]
         ))
     }
@@ -88,9 +89,9 @@ public final class ProcessingManager: ProcessingManaging {
             let apiKey = try await authManager.getAPIKey() ?? ""
             let opType = OperationFactory.make(kind: operation.operation)
             let input = try opType.decodeInput(from: operation.params)
-            let promptTemplate = opType.promptTemplate(for: input)
-            logRequest(text: text, operation: operation, apiKey: apiKey)
-            let result = try await llmClient.send(text: text, promptTemplate: promptTemplate, apiKey: apiKey)
+            let messages = opType.makeMessages(input: input, text: text)
+            logRequest(operation: operation, apiKey: apiKey, messages: messages)
+            let result = try await llmClient.send(messages: messages, apiKey: apiKey)
             logResponse(operation: operation, text: text, result: result)
             completion(.success(result))
         } catch {

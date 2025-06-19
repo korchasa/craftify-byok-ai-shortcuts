@@ -19,8 +19,8 @@ public protocol OperationType {
     /// Режим обработки результата операции: копировать в буфер обмена или отображать во всплывающем окне
     var resultMode: ResultMode { get }
 
-    /// Генерирует promptTemplate для данной операции с учётом текущего языка
-    func promptTemplate(for input: OperationInput) -> String
+    /// Creates full LLM chat messages based on operation parameters and user text.
+    func makeMessages(input: OperationInput, text: String) -> [LLMMessage]
 
     /// Асинхронно получает текст для отправки в LLM: по умолчанию только text, url не поддерживается
     /// - Parameter input: OperationInput с текстом или url

@@ -23,7 +23,11 @@ public final class OpenRouterAPIClientTests: XCTestCase {
         URLProtocolStub.data = responseJSON
         URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://openrouter.ai/api/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
-        let result = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test")
+        let messages = [
+            LLMMessage(role: .system, content: "Do something"),
+            LLMMessage(role: .user, content: "Hello")
+        ]
+        let result = try await client.send(messages: messages, apiKey: "sk-test")
         XCTAssertEqual(result, expectedText)
     }
 }

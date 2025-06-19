@@ -1,6 +1,5 @@
 // import ShareExtension
 
-// import Common
 import XCTest
 
 /// Тесты для LLMAPIClient
@@ -33,7 +32,8 @@ public final class LLMAPIClientTests: XCTestCase {
         URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         // Act
-        let result = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
+        let msgs = [LLMMessage(role: .system, content: "Translate the text"), LLMMessage(role: .user, content: "Hello")]
+        let result = try await client.send(messages: msgs, apiKey: "sk-test-key")
         // Assert
         XCTAssertEqual(result, expectedText)
     }
@@ -53,7 +53,8 @@ public final class LLMAPIClientTests: XCTestCase {
         URLProtocolStub.error = nil
         // Act & Assert
         do {
-            _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-invalid-key")
+            let msgs = [LLMMessage(role: .system, content: "Translate the text"), LLMMessage(role: .user, content: "Hello")]
+            _ = try await client.send(messages: msgs, apiKey: "sk-invalid-key")
             XCTFail("Expected error for 401, but got success")
         } catch let error as LLMAPIClientError {
             XCTAssertEqual(error.errorDescription, LLMAPIClientError.unauthorized.errorDescription)
@@ -77,7 +78,8 @@ public final class LLMAPIClientTests: XCTestCase {
         URLProtocolStub.error = nil
         // Act & Assert
         do {
-            _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
+            let msgs = [LLMMessage(role: .system, content: "Translate"), LLMMessage(role: .user, content: "Hello")]
+            _ = try await client.send(messages: msgs, apiKey: "sk-test-key")
             XCTFail("Expected error for 429, but got success")
         } catch let error as LLMAPIClientError {
             XCTAssertEqual(error.errorDescription, LLMAPIClientError.tooManyRequests.errorDescription)
@@ -101,7 +103,8 @@ public final class LLMAPIClientTests: XCTestCase {
         URLProtocolStub.error = nil
         // Act & Assert
         do {
-            _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
+            let msgs = [LLMMessage(role: .system, content: "Translate"), LLMMessage(role: .user, content: "Hello")]
+            _ = try await client.send(messages: msgs, apiKey: "sk-test-key")
             XCTFail("Expected error for 500, but got success")
         } catch let error as LLMAPIClientError {
             XCTAssertEqual(error.errorDescription, LLMAPIClientError.serverError.errorDescription)
@@ -121,7 +124,8 @@ public final class LLMAPIClientTests: XCTestCase {
         URLProtocolStub.error = URLError(.cancelled)
         // Act & Assert
         do {
-            _ = try await client.send(text: "Hello", promptTemplate: "Translate: {text}", apiKey: "sk-test-key")
+            let msgs = [LLMMessage(role: .system, content: "Translate"), LLMMessage(role: .user, content: "Hello")]
+            _ = try await client.send(messages: msgs, apiKey: "sk-test-key")
             XCTFail("Expected LLMAPIClientError.cancelled, but got success")
         } catch let error as LLMAPIClientError {
             XCTAssertEqual(error, .cancelled)

@@ -31,9 +31,9 @@ public struct TranslateOperation: OperationType {
     /// Генерирует promptTemplate для перевода.
     /// - Parameter input: Входные параметры (целевой язык).
     /// - Returns: Строка шаблона prompt для LLM.
-    public func promptTemplate(for input: OperationInput) -> String {
+    public func makeMessages(input: OperationInput, text: String) -> [LLMMessage] {
         let englishName = SupportedLanguages.all.first(where: { $0.code == input.targetLanguage })?.englishName ?? input.targetLanguage
-        return """
+        let system = LLMMessage(role: .system, content: """
         I want you to act as an expert translator.
 
         <instructions>
@@ -42,7 +42,9 @@ public struct TranslateOperation: OperationType {
         - Preserve the original meaning, tone, and formatting (including markdown and HTML tags).
         - Return ONLY the translated text without any additional formatting.
         </instructions>
-        """
+        """)
+        let user = LLMMessage(role: .user, content: text)
+        return [system, user]
     }
 
     /// Формирует URLRequest для отправки к LLM (stub).

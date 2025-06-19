@@ -221,7 +221,6 @@ public struct ShareExtensionView: View {
                 switch params.complexityLevel {
                 case .schoolchild: return L10n.operationValueSchoolchild
                 case .teenager: return L10n.operationValueTeenager
-                case .student: return L10n.operationValueStudent
                 case .adult: return L10n.operationValueAdult
                 }
             }
@@ -233,7 +232,6 @@ public struct ShareExtensionView: View {
                 switch params.detailLevel {
                 case .schoolchild: return L10n.operationValueSchoolchild
                 case .teenager: return L10n.operationValueTeenager
-                case .student: return L10n.operationValueStudent
                 case .adult: return L10n.operationValueAdult
                 }
             }

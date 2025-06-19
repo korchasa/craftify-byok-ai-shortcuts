@@ -6,7 +6,6 @@
 /* Picker Values */
 "operation_value_schoolchild" = "Scolaro";
 "operation_value_teenager" = "Adolescente";
-"operation_value_student" = "Studente";
 "operation_value_adult" = "Adulto";
 
 /* Operation Labels */

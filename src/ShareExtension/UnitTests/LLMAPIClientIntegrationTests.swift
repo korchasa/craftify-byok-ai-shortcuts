@@ -34,7 +34,11 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
             capturedRequest = request
         }
         // Act
-        let result = try await client.send(text: "Hello integration", promptTemplate: "Translate: {text}", apiKey: "sk-integration-key")
+        let messages = [
+            LLMMessage(role: .system, content: "Translate: {text}"),
+            LLMMessage(role: .user, content: "Hello integration")
+        ]
+        let result = try await client.send(messages: messages, apiKey: "sk-integration-key")
         // Assert
         XCTAssertEqual(result, expectedText)
         XCTAssertNotNil(capturedRequest)

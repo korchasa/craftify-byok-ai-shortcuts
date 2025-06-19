@@ -17,29 +17,29 @@ public struct CorrectOperation: OperationType {
         return InventoryOperation(operation: .correct, params: data, colorHex: colorHex)
     }
 
-    public func promptTemplate(for _: OperationInput) -> String {
-        """
-        I want you to act as an expert editor.
+    public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
+        let system = LLMMessage(role: .system, content: """
+        You will act as an EXPERT editor.
 
-        <instructions>
-        - Read user message
-        - Correct any spelling, grammar, and punctuation errors.
-        - Respect the original text language, structure, and formatting.
-        - Return ONLY the corrected text without any additional formatting.
-        </instructions>
+        FOLLOW these INSTRUCTIONS carefully for translating the text:
+        1. READ the provided text in the user's message.
+        2. Fix the text if it is not correct.
+        3. Write your answer
 
-        <examples>
+        ###EXAMPLE 1
         User message:
         Hi tis is a mesage with `markdown` and <b>tegs</b>
         Your answer:
         Hi, this is a message with `markdown` and <b>tags</b>
 
+        ###EXAMPLE 2
         User message:
         Привит это саобщение с `markdown`, и <b>тегими</b>
         Your answer:
         Привет, это сообщение с `markdown` и <b>тегами</b>
-        </examples>
-        """
+        """)
+        let user = LLMMessage(role: .user, content: text)
+        return [system, user]
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {

@@ -37,7 +37,7 @@ public final class OpenAIAPIClient: LLMClienting {
 
     deinit {}
 
-    public func send(text: String, promptTemplate: String, apiKey: String) async throws -> String {
+    public func send(messages: [LLMMessage], apiKey: String) async throws -> String {
         var lastError: Error?
         for attempt in 0 ..< maxRetries {
             do {
@@ -45,12 +45,10 @@ public final class OpenAIAPIClient: LLMClienting {
                 request.httpMethod = "POST"
                 request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                let messagesArray: [[String: String]] = messages.map { ["role": $0.role.rawValue, "content": $0.content] }
                 let body: [String: Any] = [
                     "model": model,
-                    "messages": [
-                        ["role": "system", "content": promptTemplate],
-                        ["role": "user", "content": text]
-                    ],
+                    "messages": messagesArray,
                     "temperature": temperature,
                     "max_tokens": maxTokens
                 ]
