@@ -28,13 +28,12 @@ public struct ExplainOperation: OperationType {
 
         Follow strictly in order:
 
-        1. Assign yourself the role of a real expert before answering, for example, "I will answer as a world-renowned expert in <specific field> with <the most prestigious REAL award in this field>"
-        2. Give a CONCRETE and USEFUL explanation of the provided text in simple language in few sentences
-        3. Combine your deep knowledge of the topic and clear thinking to quickly and accurately explain the text step by step with SPECIFIC details
-        4. Your answer is critically important for my understanding
-        5. Adapt your answer to the specified level (teenager, expert, etc.)
-        6. Write your answer in a natural, human language
-        7. Respond in plain text format
+        1. Give a CONCRETE and USEFUL explanation of the provided text in simple language in few sentences
+        2. Combine your deep knowledge of the topic and clear thinking to quickly and accurately explain the text step by step with SPECIFIC details
+        3. Your answer is critically important for my understanding
+        4. Adapt your answer to the specified level (teenager, expert, etc.)
+        5. Write your answer in a natural, human language
+        6. Respond in plain text format
 
         ## Examples
 

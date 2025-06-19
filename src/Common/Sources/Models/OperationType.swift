@@ -61,4 +61,25 @@ public extension OperationType {
 
     /// По умолчанию операция не поддерживает URL
     var supportsURL: Bool { false }
+
+    /// Default async resolveInput implementation: supports optional URL fetching using `URLInputResolver`.
+    /// Operations that set `supportsURL = true` automatically gain URL handling.
+    /// - Parameter input: OperationInput containing either `text` or `url`.
+    /// - Returns: Resolved plain text ready for the LLM.
+    /// - Throws: `UserFacingError` for empty input or fetch/parse issues.
+    func resolveInput(input: OperationInput) async throws -> String {
+        // If we already have plain text – just use it.
+        if let text = input.text, !text.isEmpty {
+            return text
+        }
+        // Handle URL only if the operation opted-in.
+        if supportsURL, let urlString = input.url, !urlString.isEmpty {
+            return try await URLInputResolver.resolve(urlString: urlString, logManager: nil)
+        }
+        // Fallback – mimic previous behaviour.
+        throw UserFacingError(
+            messageKey: .errorNoText,
+            adviceKey: .adviceCheckConnection
+        )
+    }
 }

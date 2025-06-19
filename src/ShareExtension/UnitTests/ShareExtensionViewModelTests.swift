@@ -119,9 +119,11 @@ final class ShareExtensionViewModelTests: XCTestCase {
         // 2. Обновляем inputText на URL и проверяем, что операции отфильтрованы
         viewModel.updateInputText("https://example.com")
 
-        // Должна остаться только SummarizeOperation
-        XCTAssertEqual(viewModel.operations.count, 1)
-        XCTAssertEqual(viewModel.operations.first?.operation, .summarize)
+        // Должны остаться только операции, поддерживающие URL (Summarize и Simplify)
+        XCTAssertEqual(viewModel.operations.count, 2)
+        let kindsForURL = viewModel.operations.map(\.operation)
+        XCTAssertTrue(kindsForURL.contains(.summarize))
+        XCTAssertTrue(kindsForURL.contains(.simplify))
 
         // 3. Обновляем inputText на обычный текст и проверяем, что отображаются все операции
         viewModel.updateInputText("Просто текст")
@@ -166,8 +168,10 @@ final class ShareExtensionViewModelTests: XCTestCase {
         // Assert - Флаг сброшен и операции отфильтрованы
         XCTAssertFalse(viewModel.isInputTextTooLong)
         XCTAssertEqual(manager.inputText, urlText)
-        XCTAssertEqual(viewModel.operations.count, 1)
-        XCTAssertEqual(viewModel.operations.first?.operation, .summarize)
+        XCTAssertEqual(viewModel.operations.count, 2)
+        let kindsURL2 = viewModel.operations.map(\.operation)
+        XCTAssertTrue(kindsURL2.contains(.summarize))
+        XCTAssertTrue(kindsURL2.contains(.simplify))
     }
 
     func testProcess_ErrorAndTimeoutRace_OnlyOneError() async {
@@ -238,7 +242,11 @@ final class ShareExtensionViewModelTests: XCTestCase {
         let viewModel = ShareExtensionViewModel(manager: manager)
 
         // Предварительно устанавливаем отображаемый результат
-        let expectedText = "Result text"
+        let expectedText = """
+        **Первый абзац:** Это *Markdown*-текст, который содержит **выделение** и `код`.
+
+        Второй абзац содержит ссылку: [Craftify](https://example.com).
+        """
         viewModel.displayResult = expectedText
 
         // Act

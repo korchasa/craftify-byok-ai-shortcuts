@@ -29,26 +29,10 @@ public final class AppSettingsManager {
     public var nativeLanguage: String {
         get {
             let value = userDefaults.string(forKey: nativeLanguageKey) ?? Locale.current.language.languageCode?.identifier ?? "en"
-            logManager.log(LogEntry(
-                level: LogLevel.info,
-                module: "AppSettingsManager",
-                message: "[GET] CraftifyNativeLanguage",
-                metadata: [
-                    "value": value
-                ]
-            ))
             return value
         }
         set {
             userDefaults.set(newValue, forKey: nativeLanguageKey)
-            logManager.log(LogEntry(
-                level: LogLevel.info,
-                module: "AppSettingsManager",
-                message: "[SET] CraftifyNativeLanguage",
-                metadata: [
-                    "newValue": newValue
-                ]
-            ))
         }
     }
 
