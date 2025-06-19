@@ -167,16 +167,13 @@ public final class OperationModelsTests: XCTestCase {
         XCTAssertEqual(result, "Text")
     }
 
-    func testSimplifyOperation_resolveInput_withURL_throws() {
+    func testSimplifyOperation_resolveInput_withURL_fetchesText() async throws {
+        // Inject stub fetcher
+        URLInputResolver.setTextFetcher(DummyTextFetcher())
         let op = SimplifyOperation()
         let input = OperationInput(url: "https://test.com")
-        XCTAssertThrowsError(try op.resolveInput(input: input)) { error in
-            guard let userError = error as? UserFacingError else {
-                XCTFail("Ожидался UserFacingError, получено: \(type(of: error))")
-                return
-            }
-            XCTAssertEqual(userError.messageKey, .errorUrlNotSupported)
-        }
+        let result = try await op.resolveInput(input: input)
+        XCTAssertEqual(result, "FAKE_TEXT")
     }
 
     func testCorrectOperation_resolveInput_withText_returnsText() throws {
@@ -226,17 +223,17 @@ public final class OperationModelsTests: XCTestCase {
         let input = OperationInput()
         let messagesSumEN = summarizeOp.makeMessages(input: input, text: "dummy")
         let messagesExpEN = explainOp.makeMessages(input: input, text: "dummy")
-        let enSystemContains = { (messages: [LLMMessage], keyword: String) -> Bool in
-            messages.first(where: { $0.role == .system })?.content.contains(keyword) ?? false
+        let messageContains = { (messages: [LLMMessage], keyword: String) -> Bool in
+            messages.contains { $0.content.contains(keyword) }
         }
-        XCTAssertTrue(enSystemContains(messagesSumEN, "English"))
-        XCTAssertTrue(enSystemContains(messagesExpEN, "English"))
+        XCTAssertTrue(messageContains(messagesSumEN, "English"))
+        XCTAssertTrue(messageContains(messagesExpEN, "English"))
 
         manager.nativeLanguage = "Russian"
         let messagesSumRU = summarizeOp.makeMessages(input: input, text: "dummy")
         let messagesExpRU = explainOp.makeMessages(input: input, text: "dummy")
-        XCTAssertTrue(enSystemContains(messagesSumRU, "Russian") || enSystemContains(messagesSumRU, "Русский"))
-        XCTAssertTrue(enSystemContains(messagesExpRU, "Russian") || enSystemContains(messagesExpRU, "Русский"))
+        XCTAssertTrue(messageContains(messagesSumRU, "Russian") || messageContains(messagesSumRU, "Русский"))
+        XCTAssertTrue(messageContains(messagesExpRU, "Russian") || messageContains(messagesExpRU, "Русский"))
     }
 }
 

@@ -121,21 +121,7 @@ public struct SimplifyOperation: OperationType {
         return str
     }
 
-    public func resolveInput(input: OperationInput) throws -> String {
-        if let text = input.text, !text.isEmpty {
-            return text
-        }
-        if let url = input.url, !url.isEmpty {
-            throw UserFacingError(
-                messageKey: .errorUrlNotSupported,
-                adviceKey: .adviceCheckConnection
-            )
-        }
-        throw UserFacingError(
-            messageKey: .errorNoText,
-            adviceKey: .adviceCheckConnection
-        )
-    }
+    public var supportsURL: Bool { true }
 
     public func decodeInput(from data: Data) throws -> OperationInput {
         let params = try JSONDecoder().decode(SimplifyParams.self, from: data)
