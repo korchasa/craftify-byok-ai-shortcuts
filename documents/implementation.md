@@ -6,7 +6,7 @@
 - Swift 5.7+, SwiftUI, SwiftPM, SwiftGen, GitHub Actions, SwiftSoup, URLSession
 - TDD: unit tests for all error branches
 - SupportedLanguages: ISO-639-1 + artificial (Klingon, Sindarin, etc.)
-- LLM prompts: always englishName
+- LLM message templates: `makeMessages()` always uses `AppSettingsManager.shared.nativeLanguageEnglishName` to localise system/user messages
 - Periphery: dead code analyzer in lint
 
 ## Setup
@@ -153,6 +153,8 @@ graph TD
 | GraySecondaryButtonStyle      | Gray secondary style used for cancel buttons        |
 | SettingsPrimaryButtonStyle    | Primary action style specifically for Settings view |
 | CraftifyButtonBar             | Button group container (bottom, spacing)            |
+| MarkdownLLMView              | SwiftUI view that renders Markdown responses from LLM |
+| URLInputResolver             | Shared helper that converts a URL into plain text via `TextFetching` |
 
 ## SupportedLanguages
 - `SupportedLanguages.all`: all supported (ISO-639-1 + artificial)
@@ -175,7 +177,7 @@ graph TD
 
 - `LLMProvider` (enum) lists supported providers: `openAI`, `claude`.
   Stored in `AppSettingsManager.llmProvider` and selectable in **SettingsView** via a `Picker`.
-- `LLMClienting` protocol defines a single `send(text:promptTemplate:apiKey:)` async method.
+- `LLMClienting` protocol defines a single `send(messages: [LLMMessage], apiKey: String) async` method that accepts a provider-agnostic chat history.
 - `OpenAIAPIClient` and `ClaudeAPIClient` conform to `LLMClienting` and wrap the respective REST APIs (retry logic, time-outs, JSON parsing).
 - `LLMClientFactory` instantiates the proper client based on the selected provider.
   By default `ProcessingManager` asks the factory every time to stay in sync with user choice.

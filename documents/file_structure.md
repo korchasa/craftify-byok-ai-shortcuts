@@ -52,6 +52,8 @@ graph TD
   - SupportedLanguages.swift: all supported langs
   - AppSettingsManager.swift: settings, logs
   - LLMProvider.swift: Enum of supported LLM providers (openAI, claude)
+  - MarkdownLLMView.swift: SwiftUI view for Markdown rendering of LLM responses
+  - URLInputResolver.swift: Resolves URL → plain text via pluggable TextFetching layer
 - **UnitTests/**: tests for all logic
 - **Config/**: SPM target config
 - **Resources/**: l10n
@@ -153,6 +155,8 @@ src/
       ColorPaletteConstants.swift   # Единые константы для палитры цветов операций (размеры, список цветов, отступы, маски)
       SupportedLanguages.swift      # Contains the SupportedLanguages structure and a list of all supported languages (ISO-639-1 + artificial), used for language selection in settings and operations.
       AppSettingsManager.swift       # Centralized service for all application settings, stores language and logs changes
+      MarkdownLLMView.swift         # SwiftUI view for Markdown rendering of LLM responses
+      URLInputResolver.swift        # Resolves URL → plain text via pluggable TextFetching layer
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests
