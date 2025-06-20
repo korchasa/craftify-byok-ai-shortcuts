@@ -1,4 +1,3 @@
-// @testable import Common
 import XCTest
 
 public final class EditOperationViewModelTests: XCTestCase {
@@ -17,7 +16,7 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithSimplifyOperationFillsFields() {
         let op = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams(complexityLevel: .adult)),
+            params: try! JSONEncoder().encode(SimplifyParams()),
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
@@ -40,7 +39,7 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithExplainOperationFillsFields() {
         let op = InventoryOperation(
             operation: .explain,
-            params: try! JSONEncoder().encode(ExplainParams(detailLevel: .teenager)),
+            params: try! JSONEncoder().encode(ExplainParams()),
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)

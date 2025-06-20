@@ -4,9 +4,6 @@
 "share_copy_close" = "Копіювати та закрити";
 
 /* Picker Values */
-"operation_value_schoolchild" = "Школяр";
-"operation_value_teenager" = "Підліток";
-"operation_value_adult" = "Дорослий";
 
 /* Operation Labels */
 "operation_label_translate" = "Перекласти";

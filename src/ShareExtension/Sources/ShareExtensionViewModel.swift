@@ -174,8 +174,6 @@ public final class ShareExtensionViewModel: ObservableObject {
         if isURL {
             OperationInput(
                 targetLanguage: "",
-                complexityLevel: .schoolchild,
-                detailLevel: .schoolchild,
                 length: "2-3 sentences",
                 url: manager.inputText,
                 text: nil
@@ -183,8 +181,6 @@ public final class ShareExtensionViewModel: ObservableObject {
         } else {
             OperationInput(
                 targetLanguage: "",
-                complexityLevel: .schoolchild,
-                detailLevel: .schoolchild,
                 length: "2-3 sentences",
                 url: nil,
                 text: manager.inputText

@@ -5,10 +5,10 @@ import Foundation
 public struct OperationInput {
     /// Целевой язык для операций перевода.
     public var targetLanguage: String
-    /// Уровень сложности для операций упрощения.
-    public var complexityLevel: ComplexityLevel
-    /// Уровень детализации для операций объяснения.
-    public var detailLevel: DetailLevel
+    /// Уровень сложности для операций упрощения (не используется в UI).
+    public var complexityLevel: ComplexityLevel = .schoolchild
+    /// Уровень детализации для операций объяснения (не используется в UI).
+    public var detailLevel: DetailLevel = .schoolchild
     /// Длина итогового текста для операций суммаризации.
     public var length: String
     /// URL для загрузки текста (опционально, только для summarize)
@@ -18,8 +18,8 @@ public struct OperationInput {
     /// Инициализатор контейнера параметров.
     /// - Parameters:
     ///   - targetLanguage: Целевой язык (по умолчанию пустая строка).
-    ///   - complexityLevel: Уровень сложности (по умолчанию .schoolchild).
-    ///   - detailLevel: Уровень детализации (по умолчанию .schoolchild).
+    ///   - complexityLevel: Уровень сложности для операций упрощения (не используется в UI).
+    ///   - detailLevel: Уровень детализации для операций объяснения (не используется в UI).
     ///   - length: Длина итогового текста (по умолчанию "2-3 sentences").
     ///   - url: URL для загрузки текста (по умолчанию nil)
     ///   - text: Текст для обработки (по умолчанию nil)

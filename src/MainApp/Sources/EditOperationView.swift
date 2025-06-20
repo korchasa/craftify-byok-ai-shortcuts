@@ -165,21 +165,19 @@ public struct EditOperationView: View {
     private struct EditOperationFields: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            Group {
-                switch viewModel.selectedKind {
-                case .translate:
-                    EditOperationTranslateSection(viewModel: viewModel)
-                case .simplify:
-                    EditOperationSimplifySection(viewModel: viewModel)
-                case .correct:
-                    EmptyView()
-                case .explain:
-                    EditOperationExplainSection(viewModel: viewModel)
-                case .summarize:
-                    EditOperationSummarizeSection(viewModel: viewModel)
-                case .none:
-                    EmptyView()
-                }
+            switch viewModel.selectedKind {
+            case .translate:
+                AnyView(EditOperationTranslateSection(viewModel: viewModel))
+            case .simplify:
+                AnyView(EmptyView())
+            case .correct:
+                AnyView(EmptyView())
+            case .explain:
+                AnyView(EditOperationExplainSection())
+            case .summarize:
+                AnyView(EditOperationSummarizeSection(viewModel: viewModel))
+            case .none:
+                AnyView(EmptyView())
             }
         }
     }
@@ -198,44 +196,6 @@ public struct EditOperationView: View {
                 }
                 .pickerStyle(DefaultPickerStyle())
                 .accessibilityLabel(L10n.operationParamTargetLanguage)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            }
-        }
-    }
-
-    private struct EditOperationSimplifySection: View {
-        @ObservedObject var viewModel: EditOperationViewModel
-        var body: some View {
-            HStack {
-                Text(L10n.operationParamComplexityLevel)
-                    .font(.craftifyBody).bold()
-                Spacer()
-                Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
-                    Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
-                    Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
-                    Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
-                }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamComplexityLevel)
-                .frame(maxWidth: .infinity, alignment: .trailing)
-            }
-        }
-    }
-
-    private struct EditOperationExplainSection: View {
-        @ObservedObject var viewModel: EditOperationViewModel
-        var body: some View {
-            HStack {
-                Text(L10n.operationParamDetailLevel)
-                    .font(.craftifyBody).bold()
-                Spacer()
-                Picker("", selection: $viewModel.detailLevel) {
-                    Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
-                    Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
-                    Text(L10n.operationValueAdult).tag(DetailLevel.adult)
-                }
-                .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationParamDetailLevel)
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
@@ -289,6 +249,12 @@ public struct EditOperationView: View {
                 }
                 .padding(.vertical, ColorPickerLayoutConstants.verticalSpacing)
             }
+        }
+    }
+
+    private struct EditOperationExplainSection: View {
+        var body: some View {
+            EmptyView()
         }
     }
 }

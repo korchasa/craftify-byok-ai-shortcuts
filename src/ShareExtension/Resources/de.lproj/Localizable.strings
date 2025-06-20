@@ -4,9 +4,6 @@
 "share_copy_close" = "Kopieren & schließen";
 
 /* Picker Values */
-"operation_value_schoolchild" = "Schulkind";
-"operation_value_teenager" = "Teenager";
-"operation_value_adult" = "Erwachsener";
 
 /* Operation Labels */
 "operation_label_translate" = "Übersetzen";

@@ -53,11 +53,15 @@ public struct MarkdownLLMView: View {
     public var body: some View {
         Text(cleaned) // SwiftUI parses Markdown natively
             .font(.body)
-            .lineSpacing(4)
+            .lineSpacing(Self.lineSpacing)
             .padding()
             .multilineTextAlignment(.leading)
             .tint(.blue)
             .textSelection(.enabled)
             .frame(maxWidth: .infinity, alignment: .topLeading)
     }
+
+    // MARK: - Constants
+
+    private static let lineSpacing: CGFloat = 4
 }

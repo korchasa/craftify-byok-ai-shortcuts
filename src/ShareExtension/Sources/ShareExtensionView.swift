@@ -217,24 +217,10 @@ public struct ShareExtensionView: View {
             }
             return ""
         case .simplify:
-            if let params = try? JSONDecoder().decode(SimplifyParams.self, from: op.params) {
-                switch params.complexityLevel {
-                case .schoolchild: return L10n.operationValueSchoolchild
-                case .teenager: return L10n.operationValueTeenager
-                case .adult: return L10n.operationValueAdult
-                }
-            }
             return ""
         case .correct:
             return ""
         case .explain:
-            if let params = try? JSONDecoder().decode(ExplainParams.self, from: op.params) {
-                switch params.detailLevel {
-                case .schoolchild: return L10n.operationValueSchoolchild
-                case .teenager: return L10n.operationValueTeenager
-                case .adult: return L10n.operationValueAdult
-                }
-            }
             return ""
         case .summarize:
             if let params = try? JSONDecoder().decode(SummarizeParams.self, from: op.params) {

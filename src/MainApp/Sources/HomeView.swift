@@ -198,37 +198,17 @@ public struct HomeView: View {
                     return "\u{2192} \(params.targetLanguage)"
                 }
             case .simplify:
-                if let params = try? JSONDecoder().decode(SimplifyParams.self, from: operation.params) {
-                    return labelForComplexityLevel(params.complexityLevel)
-                }
+                return ""
             case .correct:
                 return ""
             case .explain:
-                if let params = try? JSONDecoder().decode(ExplainParams.self, from: operation.params) {
-                    return labelForDetailLevel(params.detailLevel)
-                }
+                return ""
             case .summarize:
                 if let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params) {
                     return params.length
                 }
             }
             return ""
-        }
-
-        private func labelForComplexityLevel(_ level: ComplexityLevel) -> String {
-            switch level {
-            case .schoolchild: L10n.operationValueSchoolchild
-            case .teenager: L10n.operationValueTeenager
-            case .adult: L10n.operationValueAdult
-            }
-        }
-
-        private func labelForDetailLevel(_ level: DetailLevel) -> String {
-            switch level {
-            case .schoolchild: L10n.operationValueSchoolchild
-            case .teenager: L10n.operationValueTeenager
-            case .adult: L10n.operationValueAdult
-            }
         }
     }
 }
