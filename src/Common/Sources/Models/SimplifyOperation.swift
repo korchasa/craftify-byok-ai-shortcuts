@@ -72,7 +72,6 @@ public struct SimplifyOperation: OperationType {
         ## EXAMPLES
 
         **User request:**
-        Level: adult
         Target language: english
         Text: Due to severe weather conditions and ongoing maintenance work on the railway tracks, City Transport announces that train service between Central and East stations will be temporarily suspended from April 10 to April 15. Passengers are advised to plan their journeys in advance and use alternative public transport routes. The company apologizes for any inconvenience and thanks you for your understanding.
 
@@ -92,7 +91,6 @@ public struct SimplifyOperation: OperationType {
         ---
 
         **User request:**
-        Level: schoolchild
         Target language: ukrainian
         Text: Due to severe weather conditions and ongoing maintenance work on the railway tracks, City Transport announces that train service between Central and East stations will be temporarily suspended from April 10 to April 15. Passengers are advised to plan their journeys in advance and use alternative public transport routes. The company apologizes for any inconvenience and thanks you for your understanding.
 
