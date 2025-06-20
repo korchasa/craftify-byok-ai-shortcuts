@@ -195,7 +195,8 @@ public struct HomeView: View {
             switch operation.operation {
             case .translate:
                 if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
-                    return "\u{2192} \(params.targetLanguage)"
+                    let langName = SupportedLanguages.all.first { $0.code == params.targetLanguage }?.name ?? params.targetLanguage
+                    return "\u{2192} " + langName
                 }
             case .simplify:
                 return ""
