@@ -28,18 +28,6 @@ public struct ShareExtensionView: View {
         static let bottomExtra: CGFloat = CraftifyButtonConstants.minButtonHeight + doubleBottomPadding
     }
 
-    private static let supportedLanguages: [(name: String, code: String)] = [
-        ("български", "bg"),
-        ("deutsch", "de"),
-        ("english", "en"),
-        ("español", "es"),
-        ("français", "fr"),
-        ("日本語", "ja"),
-        ("русский", "ru"),
-        ("українська", "uk"),
-        ("中文", "zh")
-    ]
-
     public init(viewModel: ShareExtensionViewModel) {
         self.viewModel = viewModel
     }
@@ -212,7 +200,7 @@ public struct ShareExtensionView: View {
         switch op.operation {
         case .translate:
             if let params = try? JSONDecoder().decode(TranslateParams.self, from: op.params) {
-                let langName = ShareExtensionView.supportedLanguages.first(where: { $0.code == params.targetLanguage })?.name ?? params.targetLanguage
+                let langName = SupportedLanguages.all.first { $0.code == params.targetLanguage }?.name ?? params.targetLanguage
                 return "\u{2192} " + langName
             }
             return ""
