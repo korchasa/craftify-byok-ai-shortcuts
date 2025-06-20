@@ -75,9 +75,9 @@ File: [TranslateOperation.swift](src/Common/Sources/Models/TranslateOperation.sw
 File: [SimplifyOperation.swift](src/Common/Sources/Models/SimplifyOperation.swift)
 
 • Supported input: **text only**
-• Parameters: `complexityLevel` – audience level (child, teenager, adult)
+• Parameters: —
 • Result mode: **Clipboard**
-• Description: Rewrites text using simpler vocabulary and structure adapted to the specified audience, preserving formatting.
+• Description: Rewrites text using simpler vocabulary and structure, preserving formatting.
 
 ### Correct (`correct`)
 File: [CorrectOperation.swift](src/Common/Sources/Models/CorrectOperation.swift)
@@ -91,9 +91,9 @@ File: [CorrectOperation.swift](src/Common/Sources/Models/CorrectOperation.swift)
 File: [ExplainOperation.swift](src/Common/Sources/Models/ExplainOperation.swift)
 
 • Supported input: **text only**
-• Parameters: `detailLevel` – explanation depth (child, teenager, adult)
+• Parameters: —
 • Result mode: **Display** (shows explanation in a popup)
-• Description: Provides a clear explanation of a concept for the selected audience level in the current interface language.
+• Description: Provides a clear explanation of a concept in the current interface language.
 
 ### Summarize (`summarize`)
 File: [SummarizeOperation.swift](src/Common/Sources/Models/SummarizeOperation.swift)
