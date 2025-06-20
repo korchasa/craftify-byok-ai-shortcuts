@@ -12,14 +12,14 @@ public struct ExplainOperation: OperationType {
         true
     }
 
-    public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = ExplainParams(detailLevel: input.detailLevel)
+    public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
+        let params = ExplainParams()
         guard let data = try? JSONEncoder().encode(params) else { return nil }
         return InventoryOperation(operation: .explain, params: data, colorHex: colorHex)
     }
 
     /// Генерирует promptTemplate для данной операции с учётом текущего языка
-    public func makeMessages(input: OperationInput, text: String) -> [LLMMessage] {
+    public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
         let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
         let systemContent = """
         # INSTRUCTIONS
@@ -31,16 +31,14 @@ public struct ExplainOperation: OperationType {
         1. Give a CONCRETE and USEFUL explanation of the provided text in simple language in few sentences
         2. Combine your deep knowledge of the topic and clear thinking to quickly and accurately explain the text step by step with SPECIFIC details
         3. Your answer is critically important for my understanding
-        4. Adapt your answer to the specified level (teenager, expert, etc.)
-        5. Write your answer in a natural, human language
-        6. Respond in plain text format
+        4. Write your answer in a natural, human language
+        5. Respond in plain text format
 
         ## Examples
 
         ### Example 1:
         Request:
         - Target language: english
-        - Level: adult
         - User request: The Dunning-Kruger effect
 
         Response:
@@ -58,7 +56,6 @@ public struct ExplainOperation: OperationType {
 
         Request:
         - Target language: українська
-        - Level: школяр
         - User request: Ефект Даннінґа-Крюґера
 
         Response:
@@ -73,7 +70,6 @@ public struct ExplainOperation: OperationType {
         let system = LLMMessage(role: .system, content: systemContent)
         let user = LLMMessage(role: .user, content: """
         - Target language: \(nativeLang)
-        - Level: \(input.detailLevel.rawValue)
         - User request: \(text)
         """)
         return [system, user]
@@ -113,7 +109,7 @@ public struct ExplainOperation: OperationType {
     }
 
     public func decodeInput(from data: Data) throws -> OperationInput {
-        let params = try JSONDecoder().decode(ExplainParams.self, from: data)
-        return OperationInput(detailLevel: params.detailLevel)
+        _ = try JSONDecoder().decode(ExplainParams.self, from: data)
+        return OperationInput()
     }
 }

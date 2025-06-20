@@ -33,13 +33,8 @@
 
 /* Operation Params Labels */
 "operation_param_target_language" = "Язык";
-"operation_param_complexity_level" = "Сложность";
-"operation_param_detail_level" = "Подробность";
 
 /* Picker Values */
-"operation_value_schoolchild" = "Школьник";
-"operation_value_teenager" = "Подросток";
-"operation_value_adult" = "Взрослый";
 
 /* Operation Labels */
 "operation_label_translate" = "Перевести";

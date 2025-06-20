@@ -84,12 +84,12 @@ public final class InventoryManager: InventoryManaging {
         if let op = OperationFactory.make(kind: .correct).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
             defaults.append(op)
         }
-        // simplify teenager
-        if let op = OperationFactory.make(kind: .simplify).makeInventoryOperation(input: OperationInput(complexityLevel: .teenager), colorHex: nextColor()) {
+        // simplify
+        if let op = OperationFactory.make(kind: .simplify).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
             defaults.append(op)
         }
-        // explain teenager
-        if let op = OperationFactory.make(kind: .explain).makeInventoryOperation(input: OperationInput(detailLevel: .teenager), colorHex: nextColor()) {
+        // explain
+        if let op = OperationFactory.make(kind: .explain).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
             defaults.append(op)
         }
         // translate english

@@ -33,13 +33,8 @@
 
 /* Operation Params Labels */
 "operation_param_target_language" = "Целеви език";
-"operation_param_complexity_level" = "Ниво на сложност";
-"operation_param_detail_level" = "Ниво на детайлност";
 
 /* Picker Values */
-"operation_value_schoolchild" = "Ученик";
-"operation_value_teenager" = "Тийнейджър";
-"operation_value_adult" = "Възрастен";
 
 /* Operation Labels */
 "operation_label_translate" = "Преведи";

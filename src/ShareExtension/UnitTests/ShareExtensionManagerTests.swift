@@ -106,7 +106,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             logManager: LogManagerSharedInMemory()
         )
         // ExplainOperation должен возвращать режим .display
-        let params = ExplainParams(detailLevel: .adult)
+        let params = ExplainParams()
         let data = try! JSONEncoder().encode(params)
         let op = InventoryOperation(operation: .explain, params: data)
         let result = await manager.process(text: "Test", operation: op)

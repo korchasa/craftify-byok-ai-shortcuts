@@ -1,4 +1,3 @@
-// @testable import Common
 import XCTest
 
 public final class AddOperationViewModelTests: XCTestCase {
@@ -26,7 +25,6 @@ public final class AddOperationViewModelTests: XCTestCase {
     public func testSaveEmitsValidOperation() {
         let vm = AddOperationViewModel()
         vm.selectedKind = .simplify
-        vm.complexityLevel = .schoolchild
         XCTAssertTrue(vm.isValid)
         let op = vm.makeOperation()
         XCTAssertNotNil(op)
@@ -45,20 +43,14 @@ public final class AddOperationViewModelTests: XCTestCase {
         let vm = AddOperationViewModel()
         vm.selectedKind = .translate
         vm.targetLanguage = "ru"
-        vm.complexityLevel = .adult
-        vm.detailLevel = .adult
         vm.length = "9-10 sentences"
         // Смена типа
         vm.selectedKind = .simplify
         XCTAssertEqual(vm.targetLanguage, "")
-        XCTAssertEqual(vm.complexityLevel, .schoolchild)
-        XCTAssertEqual(vm.detailLevel, .schoolchild)
         XCTAssertEqual(vm.length, "2-3 sentences")
         // Смена на translate снова
         vm.selectedKind = .translate
         XCTAssertEqual(vm.targetLanguage, vm.supportedLanguages.first?.code ?? "")
-        XCTAssertEqual(vm.complexityLevel, .schoolchild)
-        XCTAssertEqual(vm.detailLevel, .schoolchild)
         XCTAssertEqual(vm.length, "2-3 sentences")
     }
 

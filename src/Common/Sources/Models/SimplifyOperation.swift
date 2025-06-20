@@ -11,13 +11,13 @@ public struct SimplifyOperation: OperationType {
         true
     }
 
-    public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = SimplifyParams(complexityLevel: input.complexityLevel)
+    public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
+        let params = SimplifyParams()
         guard let data = try? JSONEncoder().encode(params) else { return nil }
         return InventoryOperation(operation: .simplify, params: data, colorHex: colorHex)
     }
 
-    public func makeMessages(input: OperationInput, text: String) -> [LLMMessage] {
+    public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
         let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
         let system = LLMMessage(role: .system, content: """
         YOU ARE AN ELITE TEXT SIMPLIFICATION SPECIALIST, INTERNATIONALLY RECOGNIZED FOR YOUR ABILITY TO TRANSFORM COMPLEX, BUREAUCRATIC, OR UNCLEAR TEXTS INTO STRAIGHTFORWARD, CONCISE, AND READER-FOCUSED VERSIONS WHILE PRESERVING MEANING AND INTENT.
@@ -100,7 +100,6 @@ public struct SimplifyOperation: OperationType {
         З 10 до 15 квітня потяги між Центральною та Східною станціями не їздитимуть через погану погоду і ремонт. Будь ласка, обери інший транспорт.
         """)
         let user = LLMMessage(role: .user, content: """
-        Level: \(input.complexityLevel.rawValue)
         Target language: \(nativeLang)
         Text: \(text)
         """)
@@ -124,7 +123,7 @@ public struct SimplifyOperation: OperationType {
     public var supportsURL: Bool { true }
 
     public func decodeInput(from data: Data) throws -> OperationInput {
-        let params = try JSONDecoder().decode(SimplifyParams.self, from: data)
-        return OperationInput(complexityLevel: params.complexityLevel)
+        _ = try JSONDecoder().decode(SimplifyParams.self, from: data)
+        return OperationInput()
     }
 }

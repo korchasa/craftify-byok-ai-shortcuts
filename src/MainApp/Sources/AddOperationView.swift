@@ -109,7 +109,7 @@ public struct AddOperationView: View {
                 case .translate:
                     translateSection
                 case .simplify:
-                    simplifySection
+                    EmptyView()
                 case .correct:
                     EmptyView()
                 case .explain:
@@ -131,21 +131,10 @@ public struct AddOperationView: View {
             }
         }
 
-        private var simplifySection: some View {
-            HStack {
-                Text(L10n.operationParamComplexityLevel)
-                    .font(.craftifyBody).bold()
-                Spacer()
-                AddOperationSimplifySection(viewModel: viewModel)
-            }
-        }
-
         private var explainSection: some View {
             HStack {
-                Text(L10n.operationParamDetailLevel)
-                    .font(.craftifyBody).bold()
+                Text("")
                 Spacer()
-                AddOperationExplainSection(viewModel: viewModel)
             }
         }
 
@@ -169,34 +158,6 @@ public struct AddOperationView: View {
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationParamTargetLanguage)
-            .frame(maxWidth: .infinity, alignment: .trailing)
-        }
-    }
-
-    private struct AddOperationSimplifySection: View {
-        @ObservedObject var viewModel: AddOperationViewModel
-        var body: some View {
-            Picker(L10n.operationParamComplexityLevel, selection: $viewModel.complexityLevel) {
-                Text(L10n.operationValueSchoolchild).tag(ComplexityLevel.schoolchild)
-                Text(L10n.operationValueTeenager).tag(ComplexityLevel.teenager)
-                Text(L10n.operationValueAdult).tag(ComplexityLevel.adult)
-            }
-            .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.operationParamComplexityLevel)
-            .frame(maxWidth: .infinity, alignment: .trailing)
-        }
-    }
-
-    private struct AddOperationExplainSection: View {
-        @ObservedObject var viewModel: AddOperationViewModel
-        var body: some View {
-            Picker("", selection: $viewModel.detailLevel) {
-                Text(L10n.operationValueSchoolchild).tag(DetailLevel.schoolchild)
-                Text(L10n.operationValueTeenager).tag(DetailLevel.teenager)
-                Text(L10n.operationValueAdult).tag(DetailLevel.adult)
-            }
-            .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.operationParamDetailLevel)
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }

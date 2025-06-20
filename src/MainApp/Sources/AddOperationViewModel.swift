@@ -7,36 +7,24 @@ public final class AddOperationViewModel: ObservableObject {
             switch kind {
             case .translate:
                 targetLanguage = supportedLanguages.first?.code ?? ""
-                complexityLevel = .schoolchild
-                detailLevel = .schoolchild
                 length = "2-3 sentences"
             case .simplify:
                 targetLanguage = ""
-                complexityLevel = .schoolchild
-                detailLevel = .schoolchild
                 length = "2-3 sentences"
             case .correct:
                 targetLanguage = ""
-                complexityLevel = .schoolchild
-                detailLevel = .schoolchild
                 length = "2-3 sentences"
             case .explain:
                 targetLanguage = ""
-                complexityLevel = .schoolchild
-                detailLevel = .schoolchild
                 length = "2-3 sentences"
             case .summarize:
                 targetLanguage = ""
-                complexityLevel = .schoolchild
-                detailLevel = .schoolchild
                 length = "2-3 sentences"
             }
         }
     }
 
     @Published public var targetLanguage: String = ""
-    @Published public var complexityLevel: ComplexityLevel = .schoolchild
-    @Published public var detailLevel: DetailLevel = .schoolchild
     @Published public var selectedColorHex: String
     @Published public var length: String = "2-3 sentences"
 
@@ -45,8 +33,6 @@ public final class AddOperationViewModel: ObservableObject {
         guard let kind = selectedKind else { return false }
         let input = OperationInput(
             targetLanguage: targetLanguage,
-            complexityLevel: complexityLevel,
-            detailLevel: detailLevel,
             length: length
         )
         let operation = OperationFactory.make(kind: kind)
@@ -66,8 +52,6 @@ public final class AddOperationViewModel: ObservableObject {
         guard let kind = selectedKind else { return nil }
         let input = OperationInput(
             targetLanguage: targetLanguage,
-            complexityLevel: complexityLevel,
-            detailLevel: detailLevel,
             length: length
         )
         let operation = OperationFactory.make(kind: kind)
@@ -78,8 +62,6 @@ public final class AddOperationViewModel: ObservableObject {
     public func cancel() {
         selectedKind = nil
         targetLanguage = ""
-        complexityLevel = .schoolchild
-        detailLevel = .schoolchild
         selectedColorHex = palette.first!
         length = "2-3 sentences"
     }

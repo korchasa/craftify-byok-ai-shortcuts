@@ -33,13 +33,8 @@
 
 /* Operation Params Labels */
 "operation_param_target_language" = "Langue cible";
-"operation_param_complexity_level" = "Niveau de complexité";
-"operation_param_detail_level" = "Niveau de détail";
 
 /* Picker Values */
-"operation_value_schoolchild" = "Écolier";
-"operation_value_teenager" = "Adolescent";
-"operation_value_adult" = "Adulte";
 
 /* Operation Labels */
 "operation_label_translate" = "Traduire";
