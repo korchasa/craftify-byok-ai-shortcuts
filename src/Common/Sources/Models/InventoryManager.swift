@@ -80,30 +80,65 @@ public final class InventoryManager: InventoryManaging {
             return palette[colorIdx]
         }
         var defaults: [InventoryOperation] = []
-        // correct
-        if let op = OperationFactory.make(kind: .correct).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
+        // Helper to avoid duplicate translate operations for the same language
+        var addedTranslateLanguages = Set<String>()
+        func appendTranslate(to langCode: String) {
+            guard !addedTranslateLanguages.contains(langCode) else { return }
+            addedTranslateLanguages.insert(langCode)
+            if let op = OperationFactory
+                .make(kind: .translate)
+                .makeInventoryOperation(input: OperationInput(targetLanguage: langCode), colorHex: nextColor())
+            {
+                defaults.append(op)
+            }
+        }
+
+        // Determine device language
+        let deviceLang = Locale.current.language.languageCode?.identifier ?? "en"
+
+        // Order by expected frequency:
+        // 1. translate → device language (or English if device is English)
+        appendTranslate(to: deviceLang)
+
+        // 2. translate → English (only if device language is not English)
+        if deviceLang != "en" {
+            appendTranslate(to: "en")
+        }
+
+        // 3. simplify
+        if let op = OperationFactory
+            .make(kind: .simplify)
+            .makeInventoryOperation(input: OperationInput(), colorHex: nextColor())
+        {
             defaults.append(op)
         }
-        // simplify
-        if let op = OperationFactory.make(kind: .simplify).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
+
+        // 4. correct (fix)
+        if let op = OperationFactory
+            .make(kind: .correct)
+            .makeInventoryOperation(input: OperationInput(), colorHex: nextColor())
+        {
             defaults.append(op)
         }
-        // explain
-        if let op = OperationFactory.make(kind: .explain).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
+
+        // 5. summarize (9–10 sentences)
+        if let op = OperationFactory
+            .make(kind: .summarize)
+            .makeInventoryOperation(input: OperationInput(length: "9-10 sentences"), colorHex: nextColor())
+        {
             defaults.append(op)
         }
-        // translate english
-        if let op = OperationFactory.make(kind: .translate).makeInventoryOperation(input: OperationInput(targetLanguage: "en"), colorHex: nextColor()) {
+
+        // 6. explain
+        if let op = OperationFactory
+            .make(kind: .explain)
+            .makeInventoryOperation(input: OperationInput(), colorHex: nextColor())
+        {
             defaults.append(op)
         }
-        // translate dothraki
-        if let op = OperationFactory.make(kind: .translate).makeInventoryOperation(input: OperationInput(targetLanguage: "dtr"), colorHex: nextColor()) {
-            defaults.append(op)
-        }
-        // summarize
-        if let op = OperationFactory.make(kind: .summarize).makeInventoryOperation(input: OperationInput(), colorHex: nextColor()) {
-            defaults.append(op)
-        }
+
+        // 7. translate → Sindarin (sjn) – fun/example
+        appendTranslate(to: "sjn")
         saveInventory(defaults)
     }
 
