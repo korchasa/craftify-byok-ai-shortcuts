@@ -28,7 +28,7 @@ public struct ExplainOperation: OperationType {
 
         Follow strictly in order:
 
-        1. Give a CONCRETE and USEFUL explanation of the provided text in simple language in few sentences
+        1. Give a CONCRETE and USEFUL explanation of the provided text in simple language
         2. Combine your deep knowledge of the topic and clear thinking to quickly and accurately explain the text step by step with SPECIFIC details
         3. Your answer is critically important for my understanding
         4. Write your answer in a natural, human language
