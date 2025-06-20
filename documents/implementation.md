@@ -63,6 +63,24 @@
 ## Logs
 - `./run logs`: outputs os_log (last day, subsystem dev.korchasa.Craftify, JSON)
 
+## Default Operations Inventory
+
+At first launch `InventoryManager.fillWithDefaultOperationsIfNeeded()` seeds the user's inventory with a ready-to-use set of seven operations (six when the device language is English). They are ordered by the expected frequency of use:
+
+| # | Kind | Params | Purpose |
+|---|------|--------|---------|
+|1|translate|targetLanguage = *deviceLang*|Quickly convert copied text into the UI language (device localisation).|
+|2|translate|targetLanguage = `en` (*skipped if* `deviceLang == "en"`)|Widely used lingua-franca translation.|
+|3|simplify|—|Remove jargon and formal language, making text short & easy.|
+|4|correct|—|Fix grammar/spelling mistakes.|
+|5|summarize|length = "9-10 sentences"|Produce medium-length digest of large text/URL.|
+|6|explain|—|Explain complex text or code in simple words.|
+|7|translate|targetLanguage = `sjn` (Sindarin)|Fun/novelty translation for sharing.|
+
+No duplicates are added—helper `appendTranslate()` skips already inserted targetLanguage codes.
+
+---
+
 ## Operation Color
 - InventoryOperation: colorHex
 - InventoryManager: colorHex serialization
