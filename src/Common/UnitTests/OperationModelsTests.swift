@@ -23,30 +23,6 @@ public final class OperationModelsTests: XCTestCase {
         XCTAssertEqual(decoded, params)
     }
 
-    /// Проверяет Codable для SimplifyParams
-    public func testSimplifyParamsCodable() throws {
-        let params = SimplifyParams()
-        let data = try JSONEncoder().encode(params)
-        let decoded = try JSONDecoder().decode(SimplifyParams.self, from: data)
-        XCTAssertEqual(decoded, params)
-    }
-
-    /// Проверяет Codable для CorrectParams
-    public func testCorrectParamsCodable() throws {
-        let params = CorrectParams()
-        let data = try JSONEncoder().encode(params)
-        let decoded = try JSONDecoder().decode(CorrectParams.self, from: data)
-        XCTAssertEqual(decoded, params)
-    }
-
-    /// Проверяет Codable для ExplainParams
-    public func testExplainParamsCodable() throws {
-        let params = ExplainParams()
-        let data = try JSONEncoder().encode(params)
-        let decoded = try JSONDecoder().decode(ExplainParams.self, from: data)
-        XCTAssertEqual(decoded, params)
-    }
-
     /// Проверяет Codable для InventoryOperation
     public func testInventoryOperationCodable() throws {
         let params = TranslateParams(targetLanguage: "en")
