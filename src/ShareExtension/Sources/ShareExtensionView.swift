@@ -65,7 +65,7 @@ public struct ShareExtensionView: View {
                 operationsGrid
             }
         }
-        .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
+        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
         .padding(.bottom, ContentPaddingConstants.bottomExtra)
     }
 
@@ -150,7 +150,7 @@ public struct ShareExtensionView: View {
                 operationButton(for: op, cardCornerRadius: cardCornerRadius, symbolScale: symbolScale, vStackSpacing: vStackSpacing, hStackSpacing: hStackSpacing)
             }
         }
-        .padding(.horizontal, ShareExtensionButtonConstants.horizontalPadding)
+        .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
     }
 
     private func operationButton(for op: InventoryOperation, cardCornerRadius: CGFloat, symbolScale: CGFloat, vStackSpacing: CGFloat, hStackSpacing: CGFloat) -> some View {

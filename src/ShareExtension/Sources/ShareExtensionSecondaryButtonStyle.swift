@@ -11,8 +11,8 @@ public struct ShareExtensionSecondaryButtonStyle: ButtonStyle {
             .frame(maxWidth: .infinity)
             .background(palette.secondaryButton())
             .foregroundColor(palette.secondaryButtonText())
-            .cornerRadius(ShareExtensionButtonConstants.buttonCornerRadius)
-            .scaleEffect(configuration.isPressed ? ShareExtensionButtonConstants.buttonPressedScale : 1.0)
+            .cornerRadius(CraftifyButtonConstants.cornerRadius)
+            .scaleEffect(configuration.isPressed ? CraftifyButtonConstants.pressedScale : 1.0)
     }
 
     public init() {}
