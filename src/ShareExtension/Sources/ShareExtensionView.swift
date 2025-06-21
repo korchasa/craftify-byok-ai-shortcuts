@@ -301,7 +301,7 @@ public struct ShareExtensionView: View {
                 .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                 .foregroundColor(palette.primaryButtonText())
         }
-        .buttonStyle(GraySecondaryButtonStyle())
+        .buttonStyle(CraftifySecondaryButtonStyle())
     }
 
     private var copyAndCloseButton: some View {

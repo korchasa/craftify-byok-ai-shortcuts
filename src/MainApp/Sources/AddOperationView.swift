@@ -58,7 +58,7 @@ public struct AddOperationView: View {
                     .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                     .foregroundColor(palette.secondaryButtonText())
             }
-            .buttonStyle(GraySecondaryButtonStyle())
+            .buttonStyle(CraftifySecondaryButtonStyle())
         }
 
         private var saveButton: some View {

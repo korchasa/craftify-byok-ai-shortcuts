@@ -12,9 +12,8 @@ public struct CorrectOperation: OperationType {
     }
 
     public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = CorrectParams()
-        guard let data = try? JSONEncoder().encode(params) else { return nil }
-        return InventoryOperation(operation: .correct, params: data, colorHex: colorHex)
+        // CorrectOperation не имеет параметров
+        InventoryOperation(operation: .correct, params: Data(), colorHex: colorHex)
     }
 
     public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
@@ -72,8 +71,7 @@ public struct CorrectOperation: OperationType {
         )
     }
 
-    public func decodeInput(from data: Data) throws -> OperationInput {
-        _ = try JSONDecoder().decode(CorrectParams.self, from: data)
-        return OperationInput()
+    public func decodeInput(from _: Data) throws -> OperationInput {
+        OperationInput()
     }
 }

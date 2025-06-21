@@ -13,9 +13,8 @@ public struct ExplainOperation: OperationType {
     }
 
     public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = ExplainParams()
-        guard let data = try? JSONEncoder().encode(params) else { return nil }
-        return InventoryOperation(operation: .explain, params: data, colorHex: colorHex)
+        // ExplainOperation не требует параметров
+        InventoryOperation(operation: .explain, params: Data(), colorHex: colorHex)
     }
 
     /// Генерирует promptTemplate для данной операции с учётом текущего языка
@@ -121,8 +120,7 @@ public struct ExplainOperation: OperationType {
         )
     }
 
-    public func decodeInput(from data: Data) throws -> OperationInput {
-        _ = try JSONDecoder().decode(ExplainParams.self, from: data)
-        return OperationInput()
+    public func decodeInput(from _: Data) throws -> OperationInput {
+        OperationInput()
     }
 }

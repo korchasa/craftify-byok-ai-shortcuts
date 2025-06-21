@@ -12,9 +12,9 @@ public struct SimplifyOperation: OperationType {
     }
 
     public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = SimplifyParams()
-        guard let data = try? JSONEncoder().encode(params) else { return nil }
-        return InventoryOperation(operation: .simplify, params: data, colorHex: colorHex)
+        // Для SimplifyOperation дополнительных параметров нет
+        let emptyData = Data()
+        return InventoryOperation(operation: .simplify, params: emptyData, colorHex: colorHex)
     }
 
     public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
@@ -120,8 +120,8 @@ public struct SimplifyOperation: OperationType {
 
     public var supportsURL: Bool { true }
 
-    public func decodeInput(from data: Data) throws -> OperationInput {
-        _ = try JSONDecoder().decode(SimplifyParams.self, from: data)
-        return OperationInput()
+    public func decodeInput(from _: Data) throws -> OperationInput {
+        // Нет параметров для декодирования
+        OperationInput()
     }
 }
