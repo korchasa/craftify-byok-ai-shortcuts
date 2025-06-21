@@ -13,9 +13,8 @@ public struct ExplainOperation: OperationType {
     }
 
     public func makeInventoryOperation(input _: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = ExplainParams()
-        guard let data = try? JSONEncoder().encode(params) else { return nil }
-        return InventoryOperation(operation: .explain, params: data, colorHex: colorHex)
+        // ExplainOperation не требует параметров
+        InventoryOperation(operation: .explain, params: Data(), colorHex: colorHex)
     }
 
     /// Генерирует promptTemplate для данной операции с учётом текущего языка
@@ -51,15 +50,11 @@ public struct ExplainOperation: OperationType {
 
         TL;DR: Nocebo is an effect where a patient's negative expectations cause a worsening of condition or side effects, even if the treatment contains no harmful substances.
 
-        Detailed explanation: "Nocebo" means "I will harm" in Latin. It is the opposite of the placebo effect, where positive expectations improve the condition.
+        Detailed explanation: "Nocebo" means "I will harm" in Latin and is the opposite of the placebo effect, where positive expectations improve health. If a patient expects bad effects from treatment, these expectations can cause real symptoms.
 
-        If a patient expects bad consequences from treatment, these expectations can cause real symptoms. For example, if warned about side effects, a person may start to feel them even if the medicine is inactive.
+        For example, warnings about side effects may lead a person to feel them even if the medicine is inactive. This happens because stress and anxiety affect the body, increasing pain and fatigue.
 
-        This happens because of the influence of the psyche on the body: stress and anxiety trigger processes that increase pain and fatigue.
-
-        Doctors should consider the nocebo effect to better inform patients and create a positive mindset. This helps reduce negative reactions and improve treatment.
-
-        In summary: our thoughts and expectations can really affect health.
+        Doctors should consider the nocebo effect to better inform patients and foster a positive mindset, reducing negative reactions and improving treatment. In short, our thoughts and expectations truly affect health.
 
         ### Example 2:
 
@@ -72,13 +67,13 @@ public struct ExplainOperation: OperationType {
 
         TL;DR: Ефект Даннінга-Крюгера — це когнітивне спотворення, при якому люди з низьким рівнем знань або навичок у якійсь сфері переоцінюють свої здібності, не усвідомлюючи власних помилок.
 
-        Детальне пояснення: Ефект Даннінга-Крюгера був описаний психологами Девідом Даннінгом і Джастіном Крюгером у 1999 році. Суть ефекту полягає в тому, що люди, які мають низьку компетентність у певній сфері, часто не здатні об'єктивно оцінити свої знання та вміння. Це відбувається тому, що для правильної оцінки своїх навичок потрібно мати певний рівень розуміння і досвіду — тобто метапізнання. Без цього людина не бачить своїх помилок і вважає себе більш компетентною, ніж вона є насправді.
+        Детальне пояснення: Ефект Даннінга-Крюгера, описаний психологами Девідом Даннінгом і Джастіном Крюгером у 1999 році, полягає в тому, що люди з низькою компетентністю у певній сфері часто не можуть об'єктивно оцінити свої знання через відсутність метапізнання — здатності усвідомлювати свої помилки.
 
-        Наприклад, новачок у шахах може думати, що він грає дуже добре, тому що не знає всіх стратегій і не усвідомлює своїх помилок. Водночас, більш досвідчений гравець розуміє, наскільки складна гра, і може оцінити свої слабкі сторони більш тверезо.
+        Наприклад, новачок у шахах може вважати себе вправним, не розуміючи своїх помилок, тоді як досвідчений гравець краще оцінює свої слабкі сторони.
 
-        Ефект Даннінга-Крюгера важливий для розуміння людської поведінки, особливо в навчанні, прийнятті рішень і самооцінці. Він пояснює, чому люди іноді вперто дотримуються неправильних переконань і не прагнуть до розвитку, оскільки не бачать потреби в покращенні.
+        Цей ефект важливий для розуміння поведінки, навчання, прийняття рішень і самооцінки, пояснюючи, чому люди іноді вперто тримаються за неправильні переконання і не прагнуть до розвитку.
 
-        Таким чином, ефект показує, що усвідомлення своїх обмежень — ключ до зростання і розвитку, а відсутність цього усвідомлення веде до переоцінки себе і помилок.
+        Усвідомлення власних обмежень є ключем до зростання, а його відсутність веде до переоцінки себе і помилок.
         """
         let system = LLMMessage(role: .system, content: systemContent)
         let user = LLMMessage(role: .user, content: """
@@ -121,8 +116,7 @@ public struct ExplainOperation: OperationType {
         )
     }
 
-    public func decodeInput(from data: Data) throws -> OperationInput {
-        _ = try JSONDecoder().decode(ExplainParams.self, from: data)
-        return OperationInput()
+    public func decodeInput(from _: Data) throws -> OperationInput {
+        OperationInput()
     }
 }

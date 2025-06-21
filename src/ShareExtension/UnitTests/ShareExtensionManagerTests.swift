@@ -105,10 +105,8 @@ public final class ShareExtensionManagerTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        // ExplainOperation должен возвращать режим .display
-        let params = ExplainParams()
-        let data = try! JSONEncoder().encode(params)
-        let op = InventoryOperation(operation: .explain, params: data)
+        // ExplainOperation работает без параметров
+        let op = InventoryOperation(operation: .explain, params: Data())
         let result = await manager.process(text: "Test", operation: op)
         XCTAssertTrue(result?.success == true)
         XCTAssertEqual(manager.lastResult, "Processed: Test")

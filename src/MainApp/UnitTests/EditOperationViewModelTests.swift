@@ -16,7 +16,7 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithSimplifyOperationFillsFields() {
         let op = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams()),
+            params: Data(),
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
@@ -28,7 +28,7 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithCorrectOperationFillsFields() {
         let op = InventoryOperation(
             operation: .correct,
-            params: try! JSONEncoder().encode(CorrectParams()),
+            params: Data(),
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)
@@ -39,7 +39,7 @@ public final class EditOperationViewModelTests: XCTestCase {
     public func testInitWithExplainOperationFillsFields() {
         let op = InventoryOperation(
             operation: .explain,
-            params: try! JSONEncoder().encode(ExplainParams()),
+            params: Data(),
             colorHex: "abdda4"
         )
         let vm = EditOperationViewModel(operation: op)

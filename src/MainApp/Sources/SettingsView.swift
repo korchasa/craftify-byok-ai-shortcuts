@@ -77,7 +77,7 @@ public struct SettingsView: View {
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                         .foregroundColor(palette.secondaryButtonText())
                 }
-                .buttonStyle(GraySecondaryButtonStyle())
+                .buttonStyle(CraftifySecondaryButtonStyle())
                 Button(action: {
                     Task {
                         viewModel.saveNativeLanguage()

@@ -39,7 +39,7 @@ public final class HomeViewModelTests: XCTestCase {
     public func testAddOperationAppendsToInventory() {
         let operation = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams()),
+            params: Data(),
             colorHex: "fdae61"
         )
         viewModel?.addOperation(operation)
@@ -50,7 +50,7 @@ public final class HomeViewModelTests: XCTestCase {
     public func testRemoveOperationRemovesFromInventory() {
         let operation = InventoryOperation(
             operation: .correct,
-            params: try! JSONEncoder().encode(CorrectParams()),
+            params: Data(),
             colorHex: "d53e4f"
         )
         inventoryStub?.saveInventory([operation])
@@ -63,12 +63,12 @@ public final class HomeViewModelTests: XCTestCase {
     public func testUpdateOperationUpdatesInventory() {
         let operation1 = InventoryOperation(
             operation: .explain,
-            params: try! JSONEncoder().encode(ExplainParams()),
+            params: Data(),
             colorHex: "abdda4"
         )
         let operation2 = InventoryOperation(
             operation: .explain,
-            params: try! JSONEncoder().encode(ExplainParams()),
+            params: Data(),
             colorHex: "5e4fa2"
         )
         inventoryStub?.saveInventory([operation1])
@@ -86,12 +86,12 @@ public final class HomeViewModelTests: XCTestCase {
         )
         let operation2 = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams()),
+            params: Data(),
             colorHex: "fdae61"
         )
         let operation3 = InventoryOperation(
             operation: .correct,
-            params: try! JSONEncoder().encode(CorrectParams()),
+            params: Data(),
             colorHex: "d53e4f"
         )
         inventoryStub?.saveInventory([operation1, operation2, operation3])
@@ -112,12 +112,12 @@ public final class HomeViewModelTests: XCTestCase {
         )
         let operation2 = InventoryOperation(
             operation: .simplify,
-            params: try! JSONEncoder().encode(SimplifyParams()),
+            params: Data(),
             colorHex: "fdae61"
         )
         let operation3 = InventoryOperation(
             operation: .correct,
-            params: try! JSONEncoder().encode(CorrectParams()),
+            params: Data(),
             colorHex: "d53e4f"
         )
         inventoryStub?.saveInventory([operation1, operation2, operation3])
