@@ -10,7 +10,15 @@ final class SwiftSoupTextFetcherTests: XCTestCase {
         func data(from url: URL) async throws -> (Data, URLResponse) {
             if let error = nextError { throw error }
             guard let data = nextData else { throw URLError(.badServerResponse) }
-            return (data, nextResponse ?? URLResponse())
+            return (data, nextResponse ?? HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!)
+        }
+
+        func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+            if request.url?.lastPathComponent == "robots.txt" {
+                let data = "User-agent: *\nAllow: /".data(using: .utf8) ?? Data()
+                return (data, URLResponse())
+            }
+            return try await data(from: request.url!)
         }
     }
 

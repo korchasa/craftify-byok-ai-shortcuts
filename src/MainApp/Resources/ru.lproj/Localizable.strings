@@ -81,6 +81,7 @@
 "error_url_not_supported" = "URL не поддерживается";
 "error_download_failed" = "Не удалось получить содержимое страницы";
 "error_extract_text" = "Не удалось извлечь текст из страницы";
+"error_robots_disallowed" = "Доступ к странице запрещён правилами сайта";
 
 "advice_check_connection" = "Проверьте интернет и попробуйте ещё раз.";
 "advice_check_api_key" = "Проверьте ключ в настройках.";

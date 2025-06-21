@@ -13,3 +13,4 @@
 "OK" = "ОК";
 "percent_format" = "%d%%";
 "error_timeout" = "Время обработки истекло";
+"error_robots_disallowed" = "Доступ к странице запрещён правилами сайта";

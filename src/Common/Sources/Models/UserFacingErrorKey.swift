@@ -23,5 +23,6 @@ public enum UserFacingErrorKey: String {
     case errorApiKeyAccess = "error_api_key_access"
     case errorProcessingManagerUnavailable = "error_processing_manager_unavailable"
     case errorClipboard = "error_clipboard"
+    case errorRobotsDisallowed = "error_robots_disallowed"
     // Добавьте другие ключи по мере необходимости
 }

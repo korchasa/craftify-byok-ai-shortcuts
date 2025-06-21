@@ -353,6 +353,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         case .errorApiKeyAccess: L10n.errorApiKeyAccess
         case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
         case .errorClipboard: L10n.errorClipboard
+        case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
         }
         let advice = switch error.adviceKey {
         case .error: L10n.error
@@ -376,6 +377,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         case .errorApiKeyAccess: L10n.errorApiKeyAccess
         case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
         case .errorClipboard: L10n.errorClipboard
+        case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
         }
         var details = ""
         if let underlying = error.underlyingError {
@@ -403,6 +405,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 details = "\n\n\(localized)"
             } else if let userError = underlying as? UserFacingError {
@@ -428,6 +431,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 details = "\n\n\(localized)"
             }

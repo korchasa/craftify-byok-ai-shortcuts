@@ -65,6 +65,7 @@ public final class SettingsViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 let advice: String = switch userError.adviceKey {
                 case .error: L10n.error
@@ -88,6 +89,7 @@ public final class SettingsViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 errorMessage = "\(message)\n\n\(advice)"
             } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {
@@ -142,6 +144,7 @@ public final class SettingsViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 let advice: String = switch userError.adviceKey {
                 case .error: L10n.error
@@ -165,6 +168,7 @@ public final class SettingsViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 errorMessage = "\(message)\n\n\(advice)"
             } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {
@@ -209,6 +213,7 @@ public final class SettingsViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 let advice: String = switch userError.adviceKey {
                 case .error: L10n.error
@@ -232,6 +237,7 @@ public final class SettingsViewModel: ObservableObject {
                 case .errorApiKeyAccess: L10n.errorApiKeyAccess
                 case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
                 case .errorClipboard: L10n.errorClipboard
+                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
                 }
                 errorMessage = "\(message)\n\n\(advice)"
             } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {

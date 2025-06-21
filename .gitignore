@@ -82,3 +82,4 @@ Derived/Sources/
 !src/**/Generated/.gitkeep
 
 documents/whiteboard.md
+check_url.sh

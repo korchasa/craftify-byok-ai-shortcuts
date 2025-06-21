@@ -12,6 +12,8 @@ public enum FetchError: Error, LocalizedError, Equatable {
     case parseError
     /// HTML скачан, но текст не извлечён (пустой)
     case emptyText
+    /// Запрещено правилами robots.txt или X-Robots-Tag
+    case disallowedByRobots
 
     /// Преобразует FetchError в локализуемую ошибку для пользователя
     public var userFacingError: UserFacingError {
@@ -36,6 +38,11 @@ public enum FetchError: Error, LocalizedError, Equatable {
                 messageKey: .errorExtractText,
                 adviceKey: .adviceTryAgainLater
             )
+        case .disallowedByRobots:
+            UserFacingError(
+                messageKey: .errorRobotsDisallowed,
+                adviceKey: .adviceTryAgainLater
+            )
         }
     }
 
@@ -51,6 +58,8 @@ public enum FetchError: Error, LocalizedError, Equatable {
             "Ошибка парсинга HTML"
         case .emptyText:
             "HTML скачан, но текст не извлечён (страница пуста или не содержит видимого текста)"
+        case .disallowedByRobots:
+            "Доступ запрещён правилами robots.txt или X-Robots-Tag"
         }
     }
 }

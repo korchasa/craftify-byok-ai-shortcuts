@@ -33,6 +33,7 @@
 "error_extract_text" = "Не удалось извлечь текст из страницы";
 "error_timeout" = "Время обработки истекло";
 "error_url_not_supported" = "URL не поддерживается";
+"error_robots_disallowed" = "Доступ к странице запрещён правилами сайта";
 
 "advice_check_connection" = "Проверьте подключение к интернету и попробуйте снова.";
 "advice_check_api_key" = "Проверьте API-ключ в настройках.";

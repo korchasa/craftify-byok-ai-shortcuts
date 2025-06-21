@@ -38,3 +38,4 @@
 "error_extract_text" = "Failed to extract text from the page";
 "error_timeout" = "Processing timeout";
 "error_url_not_supported" = "URL is not supported";
+"error_robots_disallowed" = "Access to the page is disallowed by the site rules";
