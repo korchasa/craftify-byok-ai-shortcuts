@@ -1,0 +1,66 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# How to add new l10n
+
+Steps to add a new localisation to Craftify (MainApp, Share Extension, Common)
+
+1. Prepare language code
+   • Use the ISO-639-1 (or longer if needed) code, e.g. `zh-Hans`, `ja`.
+
+2. Create resource folders
+   ```
+   src/Common/Resources/<code>.lproj/
+   src/MainApp/Resources/<code>.lproj/
+   src/ShareExtension/Resources/<code>.lproj/
+   ```
+   Each folder must contain a `Localizable.strings` file (UTF-8, no BOM).
+
+3. Translate strings
+   • Copy the English `.strings` file into each new folder.
+   • Replace the values (right-hand side) with translated text.
+   • Keep every key exactly as in the English file; do not add or delete keys.
+   • Use `\"` to escape quotes and end every line with `;`.
+
+4. Update `Project.swift` resource lists
+   In the `resources` section of both targets, append the new folders:
+
+   ```swift
+   // MainApp target
+   "src/MainApp/Resources/<code>.lproj/**",
+   // ShareExtension target
+   "src/ShareExtension/Resources/<code>.lproj/**",
+   ```
+
+5. (Optional) Extend language pickers
+   • If the language should be selectable in UI drop-downs, ensure it exists in `SupportedLanguages.all` (Common/Sources/Models).
+   • Add a new `SupportedLanguage` entry if it is missing.
+
+6. Regenerate project & strings
+   ```
+   ./run generate
+   ```
+
+7. Validate
+   ```
+   ./run check
+   ```
+   All SwiftGen, lint, build & test stages must pass with zero warnings.
+
+8. Test in the app
+   • Run `./run sim`, switch system language to the new locale, open Craftify and the Share Extension.
+   • Verify every screen shows translated text and no layout breaks.
+
+9. Commit
+   ```
+   git add .
+   git commit -m "Add <Language> localisation"
+   ```
+
+10. Update documentation (optional)
+    • Mention the new language in `documents/architecture.md` or `README.md` if you keep a supported-languages list.
+
+Following these steps keeps Craftify fully automated, linter-clean and CI/CD-friendly.
+

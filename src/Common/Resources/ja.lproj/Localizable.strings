@@ -1,0 +1,17 @@
+/* Common Error Messages */
+"error_no_text" = "処理するテキストがありません";
+"error_text_too_long" = "テキストが長すぎて処理できません";
+"error_consent_required" = "ユーザーの同意が必要です";
+"error_invalid_api_key" = "無効な API キー";
+"error_clipboard" = "クリップボードアクセスエラー";
+"error_cancelled" = "操作がキャンセルされました";
+"error_network" = "ネットワークエラー";
+"error_parsing" = "解析エラー";
+"error_processing" = "処理エラー";
+"error_no_operation" = "処理する操作がありません";
+"error_api_key_access" = "API キーアクセスエラー";
+"error_processing_manager_unavailable" = "処理マネージャが利用できません";
+
+/* Misc */
+"OK" = "OK";
+"percent_format" = "%d%%";

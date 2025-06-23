@@ -1,0 +1,81 @@
+/* HowToUseView */
+"howtouse_title" = "如何使用 Craftify";
+"howtouse_instruction" = "在任何应用中选中文本，分享至 Craftify，选择一个操作，即可立即获取结果。";
+"howtouse_consent" = "我同意按照隐私政策将我选择的文本发送到所选的 LLM 供应商";
+"howtouse_done" = "接受并继续";
+
+/* HomeView */
+"home_title" = "操作";
+"home_add_operation" = "操作";
+"home_settings" = "设置";
+"home_delete" = "删除";
+"home_order" = "排序";
+"homeSortHandle" = "拖动以重新排序";
+"homeSortHint" = "长按并拖动以重新排序操作。";
+
+/* AddOperationView */
+"add_operation_title" = "添加操作";
+"add_operation_type" = "操作类型";
+"add_operation_save" = "保存";
+"add_operation_cancel" = "取消";
+
+/* EditOperationView */
+"edit_operation_title" = "编辑操作";
+"edit_operation_save" = "保存";
+"edit_operation_cancel" = "取消";
+
+/* SettingsView */
+"settings_title" = "设置";
+"settings_llm_api_key" = "LLM API 密钥";
+"settings_done" = "取消";
+"settings_native_language" = "母语";
+"settings_native_language_section" = "选择你的母语。它将用于摘要和解释操作。";
+
+/* Operation Params Labels */
+"operation_param_target_language" = "目标语言";
+
+/* Picker Values */
+
+/* Operation Labels */
+"operation_label_translate" = "翻译";
+"operation_label_simplify" = "简化";
+"operation_label_correct" = "纠正";
+"operation_label_explain" = "解释";
+"operation_label_summarize" = "总结";
+
+"error" = "错误";
+"color" = "颜色";
+
+"sentence_count_2_3" = "2–3 句";
+"sentence_count_5_6" = "5–6 句";
+"sentence_count_9_10" = "9–10 句";
+"sentence_count_18_20" = "18–20 句";
+
+"error_no_text" = "无可处理文本";
+"error_text_too_long" = "文本过长，无法处理";
+"error_consent_required" = "需要用户同意";
+"error_invalid_api_key" = "无效的 API 密钥";
+"error_clipboard" = "剪贴板访问错误";
+"error_cancelled" = "操作已取消";
+"error_network" = "网络错误";
+"error_parsing" = "解析错误";
+"error_processing" = "处理错误";
+"error_no_operation" = "无可处理操作";
+"error_api_key_access" = "API 密钥访问错误";
+"error_processing_manager_unavailable" = "处理管理器不可用";
+"error_url_not_supported" = "URL 不受支持";
+"error_download_failed" = "无法加载页面内容";
+"error_extract_text" = "无法从页面提取文本";
+"error_robots_disallowed" = "站点规则不允许访问该页面";
+
+"advice_check_connection" = "请检查您的网络连接并重试。";
+"advice_check_api_key" = "请在设置中检查您的 API 密钥。";
+"advice_try_again_later" = "请稍后再试。";
+"advice_contact_support" = "如果问题仍然存在，请联系支持。";
+"advice_unknown_error" = "发生未知错误。请重试或联系支持。";
+
+/* Privacy Policy Full */
+"privacy_policy_full" = "隐私政策\n\n1. 概述\nCraftify 仅处理您明确分享的文本。该文本会直接发送到您选择的 LLM 供应商以执行所选操作，并在返回结果后立即被丢弃。Craftify 从不存储、记录或分析这些文本。\n\n2. 收集的数据\nCraftify 不收集或存储个人数据。输入文本从您的设备直接传输到所选的 LLM 供应商，并不会被 Craftify 保存。\n\n3. 存储与安全\n应用仅保存设置。如果您为某个 LLM 供应商配置了 API 密钥，它将被加密地保存在您设备上的 iOS 钥匙串中，绝不会离开您的设备。所有网络通信均使用 HTTPS（TLS 1.2+）保护。\n\n4. 第三方共享\n我们不会与第三方共享任何数据，除非为了满足您的请求需要安全地将输入文本传输至您选择的 LLM 供应商。\n";
+
+/* LLM Provider */
+"settings_llm_provider" = "LLM 提供商";

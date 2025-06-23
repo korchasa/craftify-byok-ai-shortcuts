@@ -3,7 +3,7 @@
 ---
 
 ## Purpose
-- iOS app (iOS 16+) + Share Extension for contextual text processing (translate, simplify, correct, explain) via OpenAI API
+- iOS app (iOS 16+) + Share Extension for contextual text processing (translate, simplify, correct, explain) via LLM API
 - Process text from any app, no switching
 
 ## Problem

@@ -1,0 +1,41 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "关闭";
+"share_copy_close" = "复制并关闭";
+
+/* Picker Values */
+
+/* Operation Labels */
+"operation_label_translate" = "翻译";
+"operation_label_simplify" = "简化";
+"operation_label_correct" = "纠正";
+"operation_label_explain" = "解释";
+"operation_label_summarize" = "总结";
+
+"processing" = "处理中...";
+"error" = "错误";
+"copied_to_clipboard" = "已复制到剪贴板";
+
+"error_no_text" = "无可处理文本";
+"error_text_too_long" = "文本过长，无法处理";
+"error_consent_required" = "需要用户同意";
+"error_invalid_api_key" = "无效的 API 密钥";
+"error_clipboard" = "剪贴板访问错误";
+"error_cancelled" = "操作已取消";
+"error_network" = "网络错误";
+"error_parsing" = "解析错误";
+"error_processing" = "处理错误";
+"error_no_operation" = "无可处理操作";
+"error_api_key_access" = "API 密钥访问错误";
+"error_processing_manager_unavailable" = "处理管理器不可用";
+"percent_format" = "%d%%";
+"advice_check_connection" = "请检查您的网络连接并重试。";
+"advice_check_api_key" = "请在设置中检查您的 API 密钥。";
+"advice_try_again_later" = "请稍后再试。";
+"advice_contact_support" = "如果问题仍然存在，请联系支持。";
+"advice_unknown_error" = "发生未知错误。请重试或联系支持。";
+"error_download_failed" = "无法加载页面内容";
+"error_extract_text" = "无法从页面提取文本";
+"error_timeout" = "处理超时";
+"error_url_not_supported" = "URL 不受支持";
+"error_robots_disallowed" = "站点规则不允许访问该页面";

@@ -1,0 +1,41 @@
+/* Share Extension UI */
+"share_title" = "Craftify";
+"share_cancel" = "閉じる";
+"share_copy_close" = "コピーして閉じる";
+
+/* Picker Values */
+
+/* Operation Labels */
+"operation_label_translate" = "翻訳";
+"operation_label_simplify" = "簡素化";
+"operation_label_correct" = "校正";
+"operation_label_explain" = "解説";
+"operation_label_summarize" = "要約";
+
+"processing" = "処理中...";
+"error" = "エラー";
+"copied_to_clipboard" = "クリップボードにコピーしました";
+
+"error_no_text" = "処理するテキストがありません";
+"error_text_too_long" = "テキストが長すぎて処理できません";
+"error_consent_required" = "ユーザーの同意が必要です";
+"error_invalid_api_key" = "無効な API キー";
+"error_clipboard" = "クリップボードアクセスエラー";
+"error_cancelled" = "操作がキャンセルされました";
+"error_network" = "ネットワークエラー";
+"error_parsing" = "解析エラー";
+"error_processing" = "処理エラー";
+"error_no_operation" = "処理する操作がありません";
+"error_api_key_access" = "API キーアクセスエラー";
+"error_processing_manager_unavailable" = "処理マネージャが利用できません";
+"percent_format" = "%d%%";
+"advice_check_connection" = "インターネット接続を確認して、もう一度お試しください。";
+"advice_check_api_key" = "設定で API キーを確認してください。";
+"advice_try_again_later" = "時間を置いてからもう一度お試しください。";
+"advice_contact_support" = "問題が解決しない場合は、サポートにお問い合わせください。";
+"advice_unknown_error" = "不明なエラーが発生しました。もう一度試すか、サポートにお問い合わせください。";
+"error_download_failed" = "ページ内容を読み込めませんでした";
+"error_extract_text" = "ページからテキストを抽出できませんでした";
+"error_timeout" = "処理がタイムアウトしました";
+"error_url_not_supported" = "URL はサポートされていません";
+"error_robots_disallowed" = "サイトの規則によりページへのアクセスが許可されていません";

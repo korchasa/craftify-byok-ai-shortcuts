@@ -64,6 +64,8 @@ public let project = Project(
                 "src/MainApp/Resources/fr.lproj/**",
                 "src/MainApp/Resources/it.lproj/**",
                 "src/MainApp/Resources/bg.lproj/**",
+                "src/MainApp/Resources/ja.lproj/**",
+                "src/MainApp/Resources/zh-Hans.lproj/**",
                 "src/MainApp/Resources/Assets.xcassets"
             ],
             entitlements: "src/MainApp/Config/Craftify.entitlements",
@@ -147,6 +149,8 @@ public let project = Project(
                 "src/ShareExtension/Resources/fr.lproj/**",
                 "src/ShareExtension/Resources/it.lproj/**",
                 "src/ShareExtension/Resources/bg.lproj/**",
+                "src/ShareExtension/Resources/ja.lproj/**",
+                "src/ShareExtension/Resources/zh-Hans.lproj/**",
                 "src/ShareExtension/Resources/Assets.xcassets"
             ],
             entitlements: "src/ShareExtension/Config/ShareExtension.entitlements",

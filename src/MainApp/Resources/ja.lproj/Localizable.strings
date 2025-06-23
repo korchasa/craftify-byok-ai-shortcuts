@@ -1,0 +1,81 @@
+/* HowToUseView */
+"howtouse_title" = "Craftify の使い方";
+"howtouse_instruction" = "任意のアプリでテキストを選択し、Craftify に共有し、操作を選択すると、すぐに結果が得られます。";
+"howtouse_consent" = "プライバシーポリシーに記載のとおり、選択したテキストを選択した LLM プロバイダへ送信することに同意します";
+"howtouse_done" = "同意して続行";
+
+/* HomeView */
+"home_title" = "操作";
+"home_add_operation" = "操作";
+"home_settings" = "設定";
+"home_delete" = "削除";
+"home_order" = "並べ替え";
+"homeSortHandle" = "ドラッグして並べ替え";
+"homeSortHint" = "長押ししてドラッグすると操作の順序を変更できます。";
+
+/* AddOperationView */
+"add_operation_title" = "操作を追加";
+"add_operation_type" = "操作タイプ";
+"add_operation_save" = "保存";
+"add_operation_cancel" = "キャンセル";
+
+/* EditOperationView */
+"edit_operation_title" = "操作を編集";
+"edit_operation_save" = "保存";
+"edit_operation_cancel" = "キャンセル";
+
+/* SettingsView */
+"settings_title" = "設定";
+"settings_llm_api_key" = "LLM API キー";
+"settings_done" = "キャンセル";
+"settings_native_language" = "母国語";
+"settings_native_language_section" = "母国語を選択してください。要約と説明の操作で使用されます。";
+
+/* Operation Params Labels */
+"operation_param_target_language" = "対象言語";
+
+/* Picker Values */
+
+/* Operation Labels */
+"operation_label_translate" = "翻訳";
+"operation_label_simplify" = "簡素化";
+"operation_label_correct" = "校正";
+"operation_label_explain" = "解説";
+"operation_label_summarize" = "要約";
+
+"error" = "エラー";
+"color" = "カラー";
+
+"sentence_count_2_3" = "2～3 文";
+"sentence_count_5_6" = "5～6 文";
+"sentence_count_9_10" = "9～10 文";
+"sentence_count_18_20" = "18～20 文";
+
+"error_no_text" = "処理するテキストがありません";
+"error_text_too_long" = "テキストが長すぎて処理できません";
+"error_consent_required" = "ユーザーの同意が必要です";
+"error_invalid_api_key" = "無効な API キー";
+"error_clipboard" = "クリップボードアクセスエラー";
+"error_cancelled" = "操作がキャンセルされました";
+"error_network" = "ネットワークエラー";
+"error_parsing" = "解析エラー";
+"error_processing" = "処理エラー";
+"error_no_operation" = "処理する操作がありません";
+"error_api_key_access" = "API キーアクセスエラー";
+"error_processing_manager_unavailable" = "処理マネージャが利用できません";
+"error_url_not_supported" = "URL はサポートされていません";
+"error_download_failed" = "ページ内容を読み込めませんでした";
+"error_extract_text" = "ページからテキストを抽出できませんでした";
+"error_robots_disallowed" = "サイトの規則によりページへのアクセスが許可されていません";
+
+"advice_check_connection" = "インターネット接続を確認して、もう一度お試しください。";
+"advice_check_api_key" = "設定で API キーを確認してください。";
+"advice_try_again_later" = "時間を置いてからもう一度お試しください。";
+"advice_contact_support" = "問題が解決しない場合は、サポートにお問い合わせください。";
+"advice_unknown_error" = "不明なエラーが発生しました。もう一度試すか、サポートにお問い合わせください。";
+
+/* Privacy Policy Full */
+"privacy_policy_full" = "プライバシーポリシー\n\n1. 概要\nCraftify は、あなたが明示的に共有したテキストのみを処理します。このテキストは、選択した LLM プロバイダに直接送信され、結果が返された後すぐに破棄されます。Craftify がこのテキストを保存、記録、解析することはありません。\n\n2. 収集されるデータ\nCraftify は個人データを収集または保存しません。入力されたテキストは、あなたのデバイスから選択された LLM プロバイダへ直接送信され、Craftify に保存されることはありません。\n\n3. 保存とセキュリティ\nアプリは設定以外のユーザーデータを保存しません。LLM プロバイダの API キーを設定した場合、それは iOS キーチェーンに暗号化されてローカルに保存され、決してデバイス外に送信されません。すべてのネットワーク通信は HTTPS（TLS 1.2 以上）で保護されています。\n\n4. サードパーティへの共有\nご要望を満たすため、入力テキストを選択した LLM プロバイダに安全に送信する場合を除き、いかなるデータも第三者に共有しません。\n";
+
+/* LLM Provider */
+"settings_llm_provider" = "LLM プロバイダ";
