@@ -34,9 +34,7 @@ Steps to add a new localisation to Craftify (MainApp, Share Extension, Common)
    "src/ShareExtension/Resources/<code>.lproj/**",
    ```
 
-5. (Optional) Extend language pickers
-   • If the language should be selectable in UI drop-downs, ensure it exists in `SupportedLanguages.all` (Common/Sources/Models).
-   • Add a new `SupportedLanguage` entry if it is missing.
+5. Add App Store Description into `documents/app-store-description.md`
 
 6. Regenerate project & strings
    ```
