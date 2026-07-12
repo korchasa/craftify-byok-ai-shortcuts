@@ -144,9 +144,13 @@ public struct SummarizeOperation: OperationType {
         return str
     }
 
-    public var resultMode: ResultMode { .display }
+    public var resultMode: ResultMode {
+        .display
+    }
 
-    public var supportsURL: Bool { true }
+    public var supportsURL: Bool {
+        true
+    }
 
     public func decodeInput(from data: Data) throws -> OperationInput {
         let params = try JSONDecoder().decode(SummarizeParams.self, from: data)

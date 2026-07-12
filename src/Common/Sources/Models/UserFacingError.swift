@@ -14,9 +14,17 @@ public struct UserFacingError: LocalizedError, Equatable {
         self.underlyingError = underlyingError
     }
 
-    public var messageKeyString: String { messageKey.rawValue }
-    public var adviceKeyString: String { adviceKey.rawValue }
-    public var titleKeyString: String { titleKey.rawValue }
+    public var messageKeyString: String {
+        messageKey.rawValue
+    }
+
+    public var adviceKeyString: String {
+        adviceKey.rawValue
+    }
+
+    public var titleKeyString: String {
+        titleKey.rawValue
+    }
 
     public var errorDescription: String? {
         nil

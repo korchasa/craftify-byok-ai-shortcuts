@@ -28,8 +28,7 @@ public final class AppSettingsManager {
     /// Current user's native language
     public var nativeLanguage: String {
         get {
-            let value = userDefaults.string(forKey: nativeLanguageKey) ?? Locale.current.language.languageCode?.identifier ?? "en"
-            return value
+            userDefaults.string(forKey: nativeLanguageKey) ?? Locale.current.language.languageCode?.identifier ?? "en"
         }
         set {
             userDefaults.set(newValue, forKey: nativeLanguageKey)

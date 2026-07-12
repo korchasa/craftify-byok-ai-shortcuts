@@ -216,7 +216,10 @@ public final class OperationModelsTests: XCTestCase {
 // MARK: - DummyTextFetcher for SummarizeOperation tests
 
 private final class DummyTextFetcher: TextFetching {
-    func fetchText(from url: String) async throws -> String { "FAKE_TEXT" }
+    func fetchText(from url: String) async throws -> String {
+        "FAKE_TEXT"
+    }
+
     func fetchAndExtractText(from urlString: String, completion: @escaping (Result<String, Error>) -> Void) {
         completion(.success("FAKE_TEXT"))
     }

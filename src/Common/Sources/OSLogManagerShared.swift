@@ -30,7 +30,7 @@ public final class OSLogManagerShared: LogManagerShared {
     }
 
     /// No-op export
-    public func exportLogs() throws -> Data {
+    public func exportLogs() -> Data {
         Data()
     }
 

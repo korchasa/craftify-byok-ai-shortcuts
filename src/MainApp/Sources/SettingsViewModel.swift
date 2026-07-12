@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 /// ViewModel для экрана настроек Craftify: управление API-ключом и согласием пользователя
+@preconcurrency
 @MainActor
 public final class SettingsViewModel: ObservableObject {
     /// Введённый пользователем API-ключ

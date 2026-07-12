@@ -72,7 +72,9 @@ public final class InventoryManager: InventoryManaging {
 
     /// Заполняет инвентарь дефолтными операциями, если он пуст
     public func fillWithDefaultOperationsIfNeeded() {
-        if !inventory.isEmpty { return }
+        if !inventory.isEmpty {
+            return
+        }
         let palette = ColorPaletteConstants.palette
         var colorIdx = 0
         func nextColor() -> String {

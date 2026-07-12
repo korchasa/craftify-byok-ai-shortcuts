@@ -11,6 +11,5 @@ public func maskKey(_ key: String?) -> String {
     }
     let starsCount = key.count - maskSuffixLength
     let suffix = key.suffix(maskSuffixLength)
-    let masked = String(repeating: "*", count: starsCount) + suffix
-    return masked
+    return String(repeating: "*", count: starsCount) + suffix
 }

@@ -63,7 +63,9 @@ public enum RobotsTxtParser {
         // Флаш последнего раздела
         flushSection()
 
-        if collectedRules.isEmpty { return true }
+        if collectedRules.isEmpty {
+            return true
+        }
 
         // Выбираем правило с самой длинной строкой-совпадением
         var matchedRule: Rule?

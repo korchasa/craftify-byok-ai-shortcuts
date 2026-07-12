@@ -25,10 +25,10 @@ public final class HomeViewModelTests: XCTestCase {
         XCTAssertTrue(self.viewModel?.operations.isEmpty ?? false)
     }
 
-    public func testLoadInventoryLoadsOperations() {
-        let operation = InventoryOperation(
+    public func testLoadInventoryLoadsOperations() throws {
+        let operation = try InventoryOperation(
             operation: .translate,
-            params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "ru")),
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "ru")),
             colorHex: "3288bd"
         )
         inventoryStub?.saveInventory([operation])
@@ -78,10 +78,10 @@ public final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(self.inventoryStub?.inventory.first, operation2)
     }
 
-    public func testReorderOperationsChangesOrder() {
-        let operation1 = InventoryOperation(
+    public func testReorderOperationsChangesOrder() throws {
+        let operation1 = try InventoryOperation(
             operation: .translate,
-            params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
             colorHex: "3288bd"
         )
         let operation2 = InventoryOperation(
@@ -103,11 +103,11 @@ public final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(self.inventoryStub?.inventory, expected)
     }
 
-    public func testDeleteOperationViaEditViewRemovesFromList() {
+    public func testDeleteOperationViaEditViewRemovesFromList() throws {
         // Arrange: добавляем три операции
-        let operation1 = InventoryOperation(
+        let operation1 = try InventoryOperation(
             operation: .translate,
-            params: try! JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
             colorHex: "3288bd"
         )
         let operation2 = InventoryOperation(

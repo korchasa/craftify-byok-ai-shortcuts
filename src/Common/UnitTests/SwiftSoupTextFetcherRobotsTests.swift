@@ -28,11 +28,11 @@ final class SwiftSoupTextFetcherRobotsTests: XCTestCase {
         fetcher = SwiftSoupTextFetcher(session: mockSession)
     }
 
-    // Проверяем, что Disallow запрещает доступ
-    func test_fetchText_disallowedByRobots_throws() async {
+    /// Проверяем, что Disallow запрещает доступ
+    func test_fetchText_disallowedByRobots_throws() async throws {
         let robotsTxt = "User-agent: *\nDisallow: /protected"
-        mockSession.responses["/protected/robots.txt"] = (robotsTxt.data(using: .utf8)!, HTTPURLResponse(url: URL(string: "https://example.com/protected/robots.txt")!, statusCode: 200, httpVersion: nil, headerFields: nil)!)
-        mockSession.responses["/protected/page.html"] = ("<html><body>secret</body></html>".data(using: .utf8)!, HTTPURLResponse(url: URL(string: "https://example.com/protected/page.html")!, statusCode: 200, httpVersion: nil, headerFields: nil)!)
+        mockSession.responses["/protected/robots.txt"] = try (XCTUnwrap(robotsTxt.data(using: .utf8)), XCTUnwrap(try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://example.com/protected/robots.txt")), statusCode: 200, httpVersion: nil, headerFields: nil)))
+        mockSession.responses["/protected/page.html"] = try (XCTUnwrap("<html><body>secret</body></html>".data(using: .utf8)), XCTUnwrap(try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://example.com/protected/page.html")), statusCode: 200, httpVersion: nil, headerFields: nil)))
         do {
             _ = try await fetcher.fetchText(from: "https://example.com/protected/page.html")
             XCTFail("Expected disallowed error")
@@ -41,12 +41,12 @@ final class SwiftSoupTextFetcherRobotsTests: XCTestCase {
         }
     }
 
-    // Проверяем, что meta noindex запрещает доступ
-    func test_fetchText_metaNoindex_throws() async {
+    /// Проверяем, что meta noindex запрещает доступ
+    func test_fetchText_metaNoindex_throws() async throws {
         let robotsTxt = "User-agent: *\nAllow: /"
-        mockSession.responses["/robots.txt"] = (robotsTxt.data(using: .utf8)!, HTTPURLResponse(url: URL(string: "https://example.com/robots.txt")!, statusCode: 200, httpVersion: nil, headerFields: nil)!)
+        mockSession.responses["/robots.txt"] = try (XCTUnwrap(robotsTxt.data(using: .utf8)), XCTUnwrap(try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://example.com/robots.txt")), statusCode: 200, httpVersion: nil, headerFields: nil)))
         let html = "<html><head><meta name=\"robots\" content=\"noindex\"></head><body>Hello</body></html>"
-        mockSession.responses["/page.html"] = (html.data(using: .utf8)!, HTTPURLResponse(url: URL(string: "https://example.com/page.html")!, statusCode: 200, httpVersion: nil, headerFields: nil)!)
+        mockSession.responses["/page.html"] = try (XCTUnwrap(html.data(using: .utf8)), XCTUnwrap(try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://example.com/page.html")), statusCode: 200, httpVersion: nil, headerFields: nil)))
         do {
             _ = try await fetcher.fetchText(from: "https://example.com/page.html")
             XCTFail("Expected disallowed error")
@@ -55,12 +55,12 @@ final class SwiftSoupTextFetcherRobotsTests: XCTestCase {
         }
     }
 
-    // Проверяем успешный кейс
+    /// Проверяем успешный кейс
     func test_fetchText_allowed_success() async throws {
         let robotsTxt = "User-agent: *\nAllow: /"
-        mockSession.responses["/robots.txt"] = (robotsTxt.data(using: .utf8)!, HTTPURLResponse(url: URL(string: "https://example.com/robots.txt")!, statusCode: 200, httpVersion: nil, headerFields: nil)!)
+        mockSession.responses["/robots.txt"] = try (XCTUnwrap(robotsTxt.data(using: .utf8)), XCTUnwrap(try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://example.com/robots.txt")), statusCode: 200, httpVersion: nil, headerFields: nil)))
         let html = "<html><body>Allowed</body></html>"
-        mockSession.responses["/allowed.html"] = (html.data(using: .utf8)!, HTTPURLResponse(url: URL(string: "https://example.com/allowed.html")!, statusCode: 200, httpVersion: nil, headerFields: nil)!)
+        mockSession.responses["/allowed.html"] = try (XCTUnwrap(html.data(using: .utf8)), XCTUnwrap(try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://example.com/allowed.html")), statusCode: 200, httpVersion: nil, headerFields: nil)))
         let text = try await fetcher.fetchText(from: "https://example.com/allowed.html")
         XCTAssertEqual(text, "Allowed")
     }

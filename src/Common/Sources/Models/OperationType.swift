@@ -43,7 +43,9 @@ public protocol OperationType {
 /// - Note: resolveInput по умолчанию поддерживает только text, url не поддерживается.
 public extension OperationType {
     /// Режим обработки результата по умолчанию: копировать в буфер обмена
-    var resultMode: ResultMode { .clipboard }
+    var resultMode: ResultMode {
+        .clipboard
+    }
 
     /// Асинхронно получает текст для отправки в LLM: по умолчанию только text, url не поддерживается
     /// - Parameter input: OperationInput с текстом или url
@@ -60,7 +62,9 @@ public extension OperationType {
     }
 
     /// По умолчанию операция не поддерживает URL
-    var supportsURL: Bool { false }
+    var supportsURL: Bool {
+        false
+    }
 
     /// Default async resolveInput implementation: supports optional URL fetching using `URLInputResolver`.
     /// Operations that set `supportsURL = true` automatically gain URL handling.

@@ -97,5 +97,7 @@ public struct TranslateOperation: OperationType {
     }
 
     /// Операция перевода не поддерживает обработку URL.
-    public var supportsURL: Bool { false }
+    public var supportsURL: Bool {
+        false
+    }
 }

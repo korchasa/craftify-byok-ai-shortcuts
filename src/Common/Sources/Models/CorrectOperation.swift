@@ -71,7 +71,7 @@ public struct CorrectOperation: OperationType {
         )
     }
 
-    public func decodeInput(from _: Data) throws -> OperationInput {
+    public func decodeInput(from _: Data) -> OperationInput {
         OperationInput()
     }
 }

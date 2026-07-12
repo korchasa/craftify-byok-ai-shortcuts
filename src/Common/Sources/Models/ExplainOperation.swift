@@ -98,7 +98,9 @@ public struct ExplainOperation: OperationType {
     }
 
     /// Режим обработки результата операции: отображать результат во всплывающем окне
-    public var resultMode: ResultMode { .display }
+    public var resultMode: ResultMode {
+        .display
+    }
 
     public func resolveInput(input: OperationInput) throws -> String {
         if let text = input.text, !text.isEmpty {
@@ -116,7 +118,7 @@ public struct ExplainOperation: OperationType {
         )
     }
 
-    public func decodeInput(from _: Data) throws -> OperationInput {
+    public func decodeInput(from _: Data) -> OperationInput {
         OperationInput()
     }
 }

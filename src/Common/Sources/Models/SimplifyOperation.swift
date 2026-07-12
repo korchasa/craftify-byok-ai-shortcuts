@@ -118,9 +118,11 @@ public struct SimplifyOperation: OperationType {
         return str
     }
 
-    public var supportsURL: Bool { true }
+    public var supportsURL: Bool {
+        true
+    }
 
-    public func decodeInput(from _: Data) throws -> OperationInput {
+    public func decodeInput(from _: Data) -> OperationInput {
         // Нет параметров для декодирования
         OperationInput()
     }

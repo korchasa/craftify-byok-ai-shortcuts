@@ -8,7 +8,9 @@ final class SwiftSoupTextFetcherTests: XCTestCase {
         var nextError: Error?
         var nextResponse: URLResponse?
         func data(from url: URL) async throws -> (Data, URLResponse) {
-            if let error = nextError { throw error }
+            if let error = nextError {
+                throw error
+            }
             guard let data = nextData else { throw URLError(.badServerResponse) }
             return (data, nextResponse ?? HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!)
         }
