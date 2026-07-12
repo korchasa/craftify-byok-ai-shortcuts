@@ -86,3 +86,6 @@ check_url.sh
 
 # Local Cursor MCP config — may hold API tokens, never commit
 .cursor/mcp.json
+
+# FoxCode browser profile
+.foxcode/
