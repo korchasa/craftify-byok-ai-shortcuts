@@ -36,3 +36,8 @@
 "error_extract_text" = "Text konnte nicht von der Seite extrahiert werden";
 "error_timeout" = "Zeitüberschreitung bei der Verarbeitung";
 "error_url_not_supported" = "URL wird nicht unterstützt";
+"error_api_key_missing" = "Kein API-Schlüssel konfiguriert";
+"advice_add_api_key_in_app" = "Öffnen Sie die Craftify-App und fügen Sie Ihren API-Schlüssel in den Einstellungen hinzu.";
+"error_rate_limited" = "Der Anbieter begrenzt die Anfragerate";
+"advice_open_app_to_consent" = "Öffnen Sie zuerst die Craftify-App und akzeptieren Sie die Datenschutzbedingungen.";
+

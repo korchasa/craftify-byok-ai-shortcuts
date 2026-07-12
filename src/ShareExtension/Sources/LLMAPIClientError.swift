@@ -19,7 +19,7 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
             )
         case .tooManyRequests:
             UserFacingError(
-                messageKey: .errorNetwork,
+                messageKey: .errorRateLimited,
                 adviceKey: .adviceTryAgainLater
             )
         case .serverError:
@@ -52,7 +52,7 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
         case .unauthorized:
             "401: " + L10n.errorInvalidApiKey
         case .tooManyRequests:
-            "429: " + L10n.errorNetwork
+            "429: " + L10n.errorRateLimited
         case .serverError:
             "500: " + L10n.errorProcessing
         case .cancelled:

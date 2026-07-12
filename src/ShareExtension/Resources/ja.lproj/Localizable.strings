@@ -37,3 +37,8 @@
 "error_timeout" = "処理がタイムアウトしました";
 "error_url_not_supported" = "URL はサポートされていません";
 "error_robots_disallowed" = "サイトの規則によりページへのアクセスが許可されていません";
+"error_api_key_missing" = "APIキーが設定されていません";
+"advice_add_api_key_in_app" = "Craftifyアプリを開き、設定でAPIキーを追加してください。";
+"error_rate_limited" = "プロバイダーがリクエスト頻度を制限しています";
+"advice_open_app_to_consent" = "まずCraftifyアプリを開き、プライバシー条項に同意してください。";
+

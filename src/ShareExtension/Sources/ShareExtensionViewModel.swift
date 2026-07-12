@@ -306,110 +306,20 @@ public final class ShareExtensionViewModel: ObservableObject {
         }
     }
 
+    /// Локализует ключ ошибки по таблице Localizable бандла расширения
+    private func localized(_ key: UserFacingErrorKey) -> String {
+        key.localized(in: Bundle(for: ShareExtensionViewModel.self))
+    }
+
     private func handleUserFacingError(_ error: UserFacingError) -> String {
-        let message: String = switch error.messageKey {
-        case .error: L10n.error
-        case .adviceUnknownError: L10n.adviceUnknownError
-        case .adviceContactSupport: L10n.adviceContactSupport
-        case .errorNoOperation: L10n.errorNoOperation
-        case .adviceCheckConnection: L10n.adviceCheckConnection
-        case .errorNoText: L10n.errorNoText
-        case .adviceTryAgainLater: L10n.adviceTryAgainLater
-        case .errorParsing: L10n.errorParsing
-        case .errorInvalidApiKey: L10n.errorInvalidApiKey
-        case .adviceCheckApiKey: L10n.adviceCheckApiKey
-        case .errorNetwork: L10n.errorNetwork
-        case .errorProcessing: L10n.errorProcessing
-        case .errorCancelled: L10n.errorCancelled
-        case .errorUrlNotSupported: L10n.errorUrlNotSupported
-        case .errorDownloadFailed: L10n.errorDownloadFailed
-        case .errorExtractText: L10n.errorExtractText
-        case .errorTextTooLong: L10n.errorTextTooLong
-        case .errorConsentRequired: L10n.errorConsentRequired
-        case .errorApiKeyAccess: L10n.errorApiKeyAccess
-        case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
-        case .errorClipboard: L10n.errorClipboard
-        case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
-        }
-        let advice = switch error.adviceKey {
-        case .error: L10n.error
-        case .adviceUnknownError: L10n.adviceUnknownError
-        case .adviceContactSupport: L10n.adviceContactSupport
-        case .errorNoOperation: L10n.errorNoOperation
-        case .adviceCheckConnection: L10n.adviceCheckConnection
-        case .errorNoText: L10n.errorNoText
-        case .adviceTryAgainLater: L10n.adviceTryAgainLater
-        case .errorParsing: L10n.errorParsing
-        case .errorInvalidApiKey: L10n.errorInvalidApiKey
-        case .adviceCheckApiKey: L10n.adviceCheckApiKey
-        case .errorNetwork: L10n.errorNetwork
-        case .errorProcessing: L10n.errorProcessing
-        case .errorCancelled: L10n.errorCancelled
-        case .errorUrlNotSupported: L10n.errorUrlNotSupported
-        case .errorDownloadFailed: L10n.errorDownloadFailed
-        case .errorExtractText: L10n.errorExtractText
-        case .errorTextTooLong: L10n.errorTextTooLong
-        case .errorConsentRequired: L10n.errorConsentRequired
-        case .errorApiKeyAccess: L10n.errorApiKeyAccess
-        case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
-        case .errorClipboard: L10n.errorClipboard
-        case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
-        }
+        let message = localized(error.messageKey)
+        let advice = localized(error.adviceKey)
         var details = ""
         if let underlying = error.underlyingError {
             if let fetchError = underlying as? FetchError {
-                let userError = fetchError.userFacingError
-                let localized = switch userError.messageKey {
-                case .error: L10n.error
-                case .adviceUnknownError: L10n.adviceUnknownError
-                case .adviceContactSupport: L10n.adviceContactSupport
-                case .errorNoOperation: L10n.errorNoOperation
-                case .adviceCheckConnection: L10n.adviceCheckConnection
-                case .errorNoText: L10n.errorNoText
-                case .adviceTryAgainLater: L10n.adviceTryAgainLater
-                case .errorParsing: L10n.errorParsing
-                case .errorInvalidApiKey: L10n.errorInvalidApiKey
-                case .adviceCheckApiKey: L10n.adviceCheckApiKey
-                case .errorNetwork: L10n.errorNetwork
-                case .errorProcessing: L10n.errorProcessing
-                case .errorCancelled: L10n.errorCancelled
-                case .errorUrlNotSupported: L10n.errorUrlNotSupported
-                case .errorDownloadFailed: L10n.errorDownloadFailed
-                case .errorExtractText: L10n.errorExtractText
-                case .errorTextTooLong: L10n.errorTextTooLong
-                case .errorConsentRequired: L10n.errorConsentRequired
-                case .errorApiKeyAccess: L10n.errorApiKeyAccess
-                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
-                case .errorClipboard: L10n.errorClipboard
-                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
-                }
-                details = "\n\n\(localized)"
+                details = "\n\n\(localized(fetchError.userFacingError.messageKey))"
             } else if let userError = underlying as? UserFacingError {
-                let localized = switch userError.messageKey {
-                case .error: L10n.error
-                case .adviceUnknownError: L10n.adviceUnknownError
-                case .adviceContactSupport: L10n.adviceContactSupport
-                case .errorNoOperation: L10n.errorNoOperation
-                case .adviceCheckConnection: L10n.adviceCheckConnection
-                case .errorNoText: L10n.errorNoText
-                case .adviceTryAgainLater: L10n.adviceTryAgainLater
-                case .errorParsing: L10n.errorParsing
-                case .errorInvalidApiKey: L10n.errorInvalidApiKey
-                case .adviceCheckApiKey: L10n.adviceCheckApiKey
-                case .errorNetwork: L10n.errorNetwork
-                case .errorProcessing: L10n.errorProcessing
-                case .errorCancelled: L10n.errorCancelled
-                case .errorUrlNotSupported: L10n.errorUrlNotSupported
-                case .errorDownloadFailed: L10n.errorDownloadFailed
-                case .errorExtractText: L10n.errorExtractText
-                case .errorTextTooLong: L10n.errorTextTooLong
-                case .errorConsentRequired: L10n.errorConsentRequired
-                case .errorApiKeyAccess: L10n.errorApiKeyAccess
-                case .errorProcessingManagerUnavailable: L10n.errorProcessingManagerUnavailable
-                case .errorClipboard: L10n.errorClipboard
-                case .errorRobotsDisallowed: L10n.errorRobotsDisallowed
-                }
-                details = "\n\n\(localized)"
+                details = "\n\n\(localized(userError.messageKey))"
             }
         }
         return "\(message)\n\n\(advice)\(details)"

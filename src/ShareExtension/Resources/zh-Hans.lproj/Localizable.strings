@@ -37,3 +37,8 @@
 "error_timeout" = "处理超时";
 "error_url_not_supported" = "URL 不受支持";
 "error_robots_disallowed" = "站点规则不允许访问该页面";
+"error_api_key_missing" = "未配置 API 密钥";
+"advice_add_api_key_in_app" = "请打开 Craftify 应用，在设置中添加您的 API 密钥。";
+"error_rate_limited" = "服务商正在限制请求频率";
+"advice_open_app_to_consent" = "请先打开 Craftify 应用并接受隐私条款。";
+

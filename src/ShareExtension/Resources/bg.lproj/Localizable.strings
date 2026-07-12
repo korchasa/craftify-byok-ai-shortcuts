@@ -36,3 +36,8 @@
 "error_extract_text" = "Неуспешно извличане на текст от страницата";
 "error_timeout" = "Времето за обработка изтече";
 "error_url_not_supported" = "URL не се поддържа";
+"error_api_key_missing" = "Не е настроен API ключ";
+"advice_add_api_key_in_app" = "Отворете приложението Craftify и добавете своя API ключ в настройките.";
+"error_rate_limited" = "Доставчикът ограничава честотата на заявките";
+"advice_open_app_to_consent" = "Първо отворете приложението Craftify и приемете условията за поверителност.";
+

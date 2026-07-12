@@ -66,7 +66,7 @@ public final class ShareExtensionManager {
         }
         if !consentManager.getConsent() {
             logManager.log(LogEntry(level: .warning, module: "ShareExtension", message: "User consent required", metadata: [:]))
-            return (false, UserFacingError(messageKey: .errorConsentRequired, adviceKey: .adviceContactSupport))
+            return (false, UserFacingError(messageKey: .errorConsentRequired, adviceKey: .adviceOpenAppToConsent))
         }
         let apiKey: String?
         do {
@@ -76,8 +76,8 @@ public final class ShareExtensionManager {
             return (false, UserFacingError(messageKey: .errorApiKeyAccess, adviceKey: .adviceCheckApiKey))
         }
         guard let key = apiKey, !key.isEmpty else {
-            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Invalid API key", metadata: ["key": authManager.maskedAPIKey(apiKey)]))
-            return (false, UserFacingError(messageKey: .errorInvalidApiKey, adviceKey: .adviceCheckApiKey))
+            logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "API key missing", metadata: ["key": authManager.maskedAPIKey(apiKey)]))
+            return (false, UserFacingError(messageKey: .errorApiKeyMissing, adviceKey: .adviceAddApiKeyInApp))
         }
         guard let op = operation else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "No operation to process", metadata: [:]))

@@ -36,3 +36,8 @@
 "error_extract_text" = "Impossible d'extraire le texte de la page";
 "error_timeout" = "Délai de traitement dépassé";
 "error_url_not_supported" = "URL non prise en charge";
+"error_api_key_missing" = "Aucune clé API configurée";
+"advice_add_api_key_in_app" = "Ouvrez l'application Craftify et ajoutez votre clé API dans les réglages.";
+"error_rate_limited" = "Le fournisseur limite la fréquence des requêtes";
+"advice_open_app_to_consent" = "Ouvrez d'abord l'application Craftify et acceptez les conditions de confidentialité.";
+

@@ -37,3 +37,8 @@
 "error_timeout" = "Processing timeout";
 "error_url_not_supported" = "URL is not supported";
 "error_robots_disallowed" = "Access to the page is disallowed by the site rules";
+"error_api_key_missing" = "No API key configured";
+"advice_add_api_key_in_app" = "Open the Craftify app and add your API key in Settings.";
+"error_rate_limited" = "The provider is rate-limiting requests";
+"advice_open_app_to_consent" = "Open the Craftify app and accept the privacy terms first.";
+

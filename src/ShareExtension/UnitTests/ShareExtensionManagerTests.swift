@@ -43,7 +43,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
         let op = InventoryOperation(operation: .translate, params: Data())
         let result = await manager.process(text: "Hello", operation: op)
         XCTAssertTrue(result?.success == false)
-        XCTAssertEqual(result?.error, UserFacingError(messageKey: .errorConsentRequired, adviceKey: .adviceContactSupport))
+        XCTAssertEqual(result?.error, UserFacingError(messageKey: .errorConsentRequired, adviceKey: .adviceOpenAppToConsent))
     }
 
     public func testProcess_TextTooLong() async {
@@ -135,6 +135,27 @@ public final class ShareExtensionManagerTests: XCTestCase {
         XCTAssertTrue(result?.success == true)
         XCTAssertNil(result?.error)
         XCTAssertEqual(clipboardManager.copiedText, "Processed: https://example.com/some/path?query=1")
+    }
+
+    public func testProcess_MissingApiKey() async {
+        let inventoryManager = InventoryManagerStub()
+        let authManager = AuthManagerStub(key: nil)
+        let clipboardManager = ClipboardManagerStub()
+        let processingManager = ProcessingManagerStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: inventoryManager,
+            authManager: authManager,
+            clipboardManager: clipboardManager,
+            processingManager: processingManager,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let op = InventoryOperation(operation: .translate, params: Data())
+        let result = await manager.process(text: "Hello", operation: op)
+        XCTAssertTrue(result?.success == false)
+        XCTAssertEqual(result?.error, UserFacingError(messageKey: .errorApiKeyMissing, adviceKey: .adviceAddApiKeyInApp))
     }
 
     public func testPrintEnvironment() {}
