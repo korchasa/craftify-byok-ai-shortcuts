@@ -24,5 +24,14 @@ public enum UserFacingErrorKey: String {
     case errorProcessingManagerUnavailable = "error_processing_manager_unavailable"
     case errorClipboard = "error_clipboard"
     case errorRobotsDisallowed = "error_robots_disallowed"
+    case errorApiKeyMissing = "error_api_key_missing"
+    case adviceAddApiKeyInApp = "advice_add_api_key_in_app"
+    case errorRateLimited = "error_rate_limited"
+    case adviceOpenAppToConsent = "advice_open_app_to_consent"
     // Добавьте другие ключи по мере необходимости
+
+    /// Локализует ключ по таблице Localizable указанного бандла (rawValue совпадает с ключом локализации).
+    public func localized(in bundle: Bundle) -> String {
+        bundle.localizedString(forKey: rawValue, value: nil, table: nil)
+    }
 }

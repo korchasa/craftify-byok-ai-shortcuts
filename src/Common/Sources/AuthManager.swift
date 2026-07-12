@@ -3,10 +3,19 @@ import Security
 
 /// Production-реализация AuthManaging с поддержкой Keychain Sharing (App Group)
 public final class AuthManager: AuthManaging, @unchecked Sendable {
-    private let service = "dev.korchasa.Craftify.OpenAIKey"
     private let accessGroup = "78M3ZDR5UH.group.dev.korchasa.Craftify"
 
     public init() {}
+
+    /// Имя записи Keychain для текущего провайдера. Ключи хранятся раздельно,
+    /// чтобы переключение провайдера не подставляло чужой ключ.
+    /// Для OpenAI сохранено историческое имя записи — ключи существующих пользователей не теряются.
+    private var service: String {
+        let provider = AppSettingsManager.shared.llmProvider
+        return provider == .openAI
+            ? "dev.korchasa.Craftify.OpenAIKey"
+            : "dev.korchasa.Craftify.APIKey.\(provider.rawValue)"
+    }
 
     /// Получить API-ключ (или nil, если не найден)
     public func getAPIKey() async throws -> String? {

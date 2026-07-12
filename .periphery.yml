@@ -1,5 +1,7 @@
 retain_public: true
 clean_build: true
+report_exclude:
+- "**/Generated/Strings.swift"
 schemes:
 - MainApp
 - ShareExtension
