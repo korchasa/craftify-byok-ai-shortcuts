@@ -8,10 +8,10 @@ public final class ConsentManager: ConsentManaging {
     /// Инициализация менеджера согласия
     /// - Parameter appGroupSuiteName: Suite name App Group (по умолчанию — group.dev.korchasa.Craftify)
     public init(appGroupSuiteName: String = "group.dev.korchasa.Craftify") {
-        guard let userDefaults = UserDefaults(suiteName: appGroupSuiteName) else {
+        guard let appGroupDefaults = UserDefaults(suiteName: appGroupSuiteName) else {
             fatalError("App Group UserDefaults not found")
         }
-        self.userDefaults = userDefaults
+        self.userDefaults = appGroupDefaults
     }
 
     /// Получить согласие пользователя

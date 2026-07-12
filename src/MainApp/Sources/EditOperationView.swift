@@ -27,10 +27,14 @@ public struct EditOperationView: View {
                 )
             },
             buttons: {
-                EditOperationButtons(viewModel: viewModel, onSave: { op in
-                    onSave?(op)
-                    dismiss()
-                }, dismiss: dismiss)
+                EditOperationButtons(
+                    viewModel: viewModel,
+                    onSave: { op in
+                        onSave?(op)
+                        dismiss()
+                    },
+                    dismiss: dismiss
+                )
             }
         )
         .background(palette.background())
@@ -243,6 +247,7 @@ public struct EditOperationView: View {
                             .onTapGesture {
                                 viewModel.selectedColorHex = hex
                             }
+                            .accessibilityAddTraits(.isButton)
                             .accessibilityLabel("Цвет #\(hex)")
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }

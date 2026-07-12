@@ -4,7 +4,7 @@ import SwiftUI
 public struct AddOperationView: View {
     @ObservedObject public var viewModel: AddOperationViewModel
     @Environment(\.dismiss) private var dismiss
-    public var onSave: ((InventoryOperation) -> Void)? = nil
+    public var onSave: ((InventoryOperation) -> Void)?
 
     public init(viewModel: AddOperationViewModel, onSave: ((InventoryOperation) -> Void)? = nil) {
         self.viewModel = viewModel
@@ -104,21 +104,19 @@ public struct AddOperationView: View {
     private struct AddOperationFields: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Group {
-                switch viewModel.selectedKind {
-                case .translate:
-                    translateSection
-                case .simplify:
-                    EmptyView()
-                case .correct:
-                    EmptyView()
-                case .explain:
-                    explainSection
-                case .summarize:
-                    summarizeSection
-                case .none:
-                    EmptyView()
-                }
+            switch viewModel.selectedKind {
+            case .translate:
+                translateSection
+            case .simplify:
+                EmptyView()
+            case .correct:
+                EmptyView()
+            case .explain:
+                explainSection
+            case .summarize:
+                summarizeSection
+            case .none:
+                EmptyView()
             }
         }
 
@@ -200,6 +198,7 @@ public struct AddOperationView: View {
                             .onTapGesture {
                                 viewModel.selectedColorHex = hex
                             }
+                            .accessibilityAddTraits(.isButton)
                             .accessibilityLabel("Цвет #\(hex)")
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }

@@ -36,7 +36,7 @@ public struct OperationInput {
     /// - Parameter string: Строка для проверки.
     /// - Returns: true, если строка — http/https URL, иначе false.
     public static func isHttpURL(string: String) -> Bool {
-        guard let url = URL(string: string), let scheme = url.scheme else { return false }
+        guard let parsedURL = URL(string: string), let scheme = parsedURL.scheme else { return false }
         return scheme.hasPrefix("http")
     }
 }

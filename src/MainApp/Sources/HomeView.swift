@@ -46,26 +46,30 @@ public struct HomeView: View {
             })
             .environment(\.colorPalette, palette)
         })
-        .sheet(item: $editOperationViewModel, onDismiss: {
-            editingIndex = nil
-        }, content: { vm in
-            EditOperationView(
-                viewModel: EditOperationViewModel(operation: vm, palette: palette.palette()),
-                onSave: { updatedOperation in
-                    if let idx = editingIndex {
-                        viewModel.updateOperation(at: idx, with: updatedOperation)
+        .sheet(
+            item: $editOperationViewModel,
+            onDismiss: {
+                editingIndex = nil
+            },
+            content: { vm in
+                EditOperationView(
+                    viewModel: EditOperationViewModel(operation: vm, palette: palette.palette()),
+                    onSave: { updatedOperation in
+                        if let idx = editingIndex {
+                            viewModel.updateOperation(at: idx, with: updatedOperation)
+                        }
+                        editingIndex = nil
+                    },
+                    onDelete: {
+                        if let idx = editingIndex {
+                            viewModel.removeOperation(at: idx)
+                        }
+                        editingIndex = nil
                     }
-                    editingIndex = nil
-                },
-                onDelete: {
-                    if let idx = editingIndex {
-                        viewModel.removeOperation(at: idx)
-                    }
-                    editingIndex = nil
-                }
-            )
-            .environment(\.colorPalette, palette)
-        })
+                )
+                .environment(\.colorPalette, palette)
+            }
+        )
         .sheet(isPresented: $showSettings, onDismiss: nil, content: {
             SettingsView(viewModel: SettingsViewModel())
                 .environment(\.colorPalette, palette)

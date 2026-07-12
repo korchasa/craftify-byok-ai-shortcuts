@@ -59,8 +59,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             self.originalTargetLanguage = ""
         case .summarize:
             let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params)
-            let length = params?.length ?? "2-3 sentences"
-            self.length = length
+            self.length = params?.length ?? "2-3 sentences"
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
         }

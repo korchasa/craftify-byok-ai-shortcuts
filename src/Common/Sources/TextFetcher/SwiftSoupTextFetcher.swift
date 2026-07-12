@@ -32,7 +32,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
         }
 
         // Проверяем robots.txt
-        if try await !isAllowedByRobots(url: url, userAgent: userAgent) {
+        if await !isAllowedByRobots(url: url, userAgent: userAgent) {
             throw FetchError.disallowedByRobots
         }
 
@@ -150,7 +150,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
     // MARK: - Robots
 
     /// Проверяет robots.txt и кэширует результат. Возвращает `true`, если доступ разрешён.
-    private func isAllowedByRobots(url: URL, userAgent: String) async throws -> Bool {
+    private func isAllowedByRobots(url: URL, userAgent: String) async -> Bool {
         guard let host = url.host else { return true }
         let cache = RobotsCache.shared
         if let robotsTxt = await cache.get(for: host) {

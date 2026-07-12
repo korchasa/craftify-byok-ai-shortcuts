@@ -5,11 +5,11 @@ public extension Color {
     /// Создаёт цвет из hex-строки (например, "3288bd").
     /// - Parameter hex: Строка с hex-кодом цвета (например, "3288bd").
     init(hex: String) {
-        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        let cleanHex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
         var int = UInt64()
-        Scanner(string: hex).scanHexInt64(&int)
+        Scanner(string: cleanHex).scanHexInt64(&int)
         let a, r, g, b: UInt64
-        switch hex.count {
+        switch cleanHex.count {
         case ColorPaletteConstants.rgb12BitLength: // RGB (12-bit)
             (a, r, g, b) = (
                 ColorPaletteConstants.defaultAlpha,
