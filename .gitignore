@@ -83,3 +83,6 @@ Derived/Sources/
 
 documents/whiteboard.md
 check_url.sh
+
+# Local Cursor MCP config — may hold API tokens, never commit
+.cursor/mcp.json

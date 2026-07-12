@@ -1,0 +1,12 @@
+# gitleaks configuration for Craftify.
+# Extends the built-in rule set, then allowlists known-safe fake credentials
+# that live in test fixtures and stubs (not real secrets).
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Fake API keys in unit/E2E tests and *Stub sources are fixtures, not secrets"
+paths = [
+  '''.*/(UnitTests|E2ETests|Tests)/.*\.swift$''',
+  '''.*Stub\.swift$''',
+]

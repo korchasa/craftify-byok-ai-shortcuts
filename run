@@ -34,7 +34,7 @@ Commands:
   generate            Run SwiftGen and Tuist
   init                Install CLI tools
   logs                Stream MainApp logs
-  check               Run all checks (clean, generate, comment-scan, fmt, lint, analyze, build, test)
+  check               Run all checks (gitleaks, generate, fmt, lint, analyze, build, test, comment-scan, deploy_simulator)
   test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
   icons               Generate all PNG files for AppIcon from documents/icon.svg and update both targets
   help                Show this help
@@ -43,7 +43,7 @@ EOF
 
 function init() {
   echo -e "${GREEN}Checking CLI tools via Homebrew...${NC}"
-  local tools=(tuist swiftlint swiftformat swiftgen)
+  local tools=(tuist swiftlint swiftformat swiftgen gitleaks)
   for tool in "${tools[@]}"; do
     if ! command -v $tool &>/dev/null; then
       echo "Installing $tool..."
@@ -283,6 +283,16 @@ function comment_scan() {
   _end_section
 }
 
+function secret_scan() {
+  _start_section "Scanning for secrets (gitleaks)"
+  if ! command -v gitleaks &>/dev/null; then
+    echo -e "${RED}Error: gitleaks not installed. Run './run init' (or 'brew install gitleaks').${NC}"
+    exit 1
+  fi
+  gitleaks detect --source . --redact --no-banner
+  _end_section
+}
+
 function _test_scheme() {
   local scheme="$1"; shift
   local t0=$(date +%s)
@@ -425,6 +435,7 @@ case "$CMD" in
     _test_scheme AllTests --test-targets "$test_id" --no-selective-testing
     ;;
   check)
+    secret_scan || { echo -e "${RED}===CHECK_FAILED=== (gitleaks)${NC}"; exit 1; }
     generate || { echo -e "${RED}===CHECK_FAILED=== (generate)${NC}"; exit 1; }
     fmt || { echo -e "${RED}===CHECK_FAILED=== (fmt)${NC}"; exit 1; }
     lint || { echo -e "${RED}===CHECK_FAILED=== (lint)${NC}"; exit 1; }
