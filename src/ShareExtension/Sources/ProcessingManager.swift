@@ -84,7 +84,7 @@ public final class ProcessingManager: ProcessingManaging {
         ))
     }
 
-    private func processAsync(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) async {
+    private func processAsync(text: String, operation: InventoryOperation, completion: (Result<String, Error>) -> Void) async {
         do {
             let apiKey = try await authManager.getAPIKey() ?? ""
             let opType = OperationFactory.make(kind: operation.operation)

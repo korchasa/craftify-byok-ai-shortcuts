@@ -11,4 +11,3 @@
 "error_api_key_access" = "Error de acceso a la clave API";
 "error_processing_manager_unavailable" = "Administrador de procesamiento no disponible";
 "OK" = "Aceptar";
-"percent_format" = "%d%%";

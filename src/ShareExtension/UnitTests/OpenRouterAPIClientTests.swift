@@ -21,7 +21,7 @@ public final class OpenRouterAPIClientTests: XCTestCase {
         { "choices": [ { "message": { "content": "Processed text" } } ] }
         """.utf8)
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://openrouter.ai/api/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://openrouter.ai/api/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         let messages = [
             LLMMessage(role: .system, content: "Do something"),

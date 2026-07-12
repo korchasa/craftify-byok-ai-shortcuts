@@ -27,9 +27,10 @@ public final class LLMAPIClientTests: XCTestCase {
         let responseJSON = Data(
             """
             { "choices": [ { "message": { "content": "Processed text" } } ] }
-            """.utf8)
+            """.utf8
+        )
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         // Act
         let msgs = [LLMMessage(role: .system, content: "Translate the text"), LLMMessage(role: .user, content: "Hello")]
@@ -47,9 +48,10 @@ public final class LLMAPIClientTests: XCTestCase {
         let responseJSON = Data(
             """
             { "error": { "message": "Unauthorized", "type": "invalid_api_key" } }
-            """.utf8)
+            """.utf8
+        )
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 401, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 401, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         // Act & Assert
         do {
@@ -72,9 +74,10 @@ public final class LLMAPIClientTests: XCTestCase {
         let responseJSON = Data(
             """
             { "error": { "message": "Too Many Requests", "type": "rate_limit_reached" } }
-            """.utf8)
+            """.utf8
+        )
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 429, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 429, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         // Act & Assert
         do {
@@ -97,9 +100,10 @@ public final class LLMAPIClientTests: XCTestCase {
         let responseJSON = Data(
             """
             { "error": { "message": "Internal Server Error", "type": "server_error" } }
-            """.utf8)
+            """.utf8
+        )
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 500, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 500, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         // Act & Assert
         do {

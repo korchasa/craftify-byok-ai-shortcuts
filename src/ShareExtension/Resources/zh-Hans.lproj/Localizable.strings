@@ -14,7 +14,6 @@
 
 "processing" = "处理中...";
 "error" = "错误";
-"copied_to_clipboard" = "已复制到剪贴板";
 
 "error_no_text" = "无可处理文本";
 "error_text_too_long" = "文本过长，无法处理";
@@ -28,7 +27,6 @@
 "error_no_operation" = "无可处理操作";
 "error_api_key_access" = "API 密钥访问错误";
 "error_processing_manager_unavailable" = "处理管理器不可用";
-"percent_format" = "%d%%";
 "advice_check_connection" = "请检查您的网络连接并重试。";
 "advice_check_api_key" = "请在设置中检查您的 API 密钥。";
 "advice_try_again_later" = "请稍后再试。";

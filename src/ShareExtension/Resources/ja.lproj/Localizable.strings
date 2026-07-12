@@ -14,7 +14,6 @@
 
 "processing" = "処理中...";
 "error" = "エラー";
-"copied_to_clipboard" = "クリップボードにコピーしました";
 
 "error_no_text" = "処理するテキストがありません";
 "error_text_too_long" = "テキストが長すぎて処理できません";
@@ -28,7 +27,6 @@
 "error_no_operation" = "処理する操作がありません";
 "error_api_key_access" = "API キーアクセスエラー";
 "error_processing_manager_unavailable" = "処理マネージャが利用できません";
-"percent_format" = "%d%%";
 "advice_check_connection" = "インターネット接続を確認して、もう一度お試しください。";
 "advice_check_api_key" = "設定で API キーを確認してください。";
 "advice_try_again_later" = "時間を置いてからもう一度お試しください。";

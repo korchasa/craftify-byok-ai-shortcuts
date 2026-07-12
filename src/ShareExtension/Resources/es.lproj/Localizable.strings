@@ -14,7 +14,6 @@
 
 "processing" = "Procesando...";
 "error" = "Error";
-"copied_to_clipboard" = "Copiado al portapapeles";
 
 "error_no_text" = "No hay texto para procesar";
 "error_text_too_long" = "El texto es demasiado largo para procesar";
@@ -28,7 +27,6 @@
 "error_no_operation" = "No hay operación para procesar";
 "error_api_key_access" = "Error de acceso a la clave API";
 "error_processing_manager_unavailable" = "Administrador de procesamiento no disponible";
-"percent_format" = "%d%%";
 "advice_check_connection" = "Verifique su conexión a Internet y vuelva a intentarlo.";
 "advice_check_api_key" = "Por favor, verifique su clave API en Configuración.";
 "advice_try_again_later" = "Inténtelo de nuevo más tarde.";

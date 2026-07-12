@@ -7,8 +7,14 @@ public final class URLProtocolStub: URLProtocol {
     public static var error: Error?
     public static var requestObserver: ((URLRequest) -> Void)?
 
-    override public static func canInit(with _: URLRequest) -> Bool { true }
-    override public static func canonicalRequest(for request: URLRequest) -> URLRequest { request }
+    override public static func canInit(with _: URLRequest) -> Bool {
+        true
+    }
+
+    override public static func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
     override public func startLoading() {
         if let observer = URLProtocolStub.requestObserver {
             observer(request)

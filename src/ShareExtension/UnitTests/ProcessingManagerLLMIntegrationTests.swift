@@ -24,15 +24,15 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         return ProcessingManager(llmClient: llm, logManager: log, authManager: auth)
     }
 
-    func test_translateOperation_success() async {
+    func test_translateOperation_success() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput(targetLanguage: "ru")
-        let op = TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd")!
+        let op = try XCTUnwrap(TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd"))
         let expected = "Переведённый текст"
         URLProtocolStub.data = Data("""
         { "choices": [ { "message": { "content": "Переведённый текст" } } ] }
         """.utf8)
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "Hello", operation: op) { result in
@@ -42,15 +42,15 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_simplifyOperation_success() async {
+    func test_simplifyOperation_success() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput()
-        let op = SimplifyOperation().makeInventoryOperation(input: input, colorHex: "fdae61")!
+        let op = try XCTUnwrap(SimplifyOperation().makeInventoryOperation(input: input, colorHex: "fdae61"))
         let expected = "Упрощённый текст"
         URLProtocolStub.data = Data("""
         { "choices": [ { "message": { "content": "Упрощённый текст" } } ] }
         """.utf8)
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "Quantum mechanics...", operation: op) { result in
@@ -60,15 +60,15 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_correctOperation_success() async {
+    func test_correctOperation_success() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput()
-        let op = CorrectOperation().makeInventoryOperation(input: input, colorHex: "d53e4f")!
+        let op = try XCTUnwrap(CorrectOperation().makeInventoryOperation(input: input, colorHex: "d53e4f"))
         let expected = "Исправленный текст"
         URLProtocolStub.data = Data("""
         { "choices": [ { "message": { "content": "Исправленный текст" } } ] }
         """.utf8)
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "This are errors in text.", operation: op) { result in
@@ -78,15 +78,15 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_explainOperation_success() async {
+    func test_explainOperation_success() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput()
-        let op = ExplainOperation().makeInventoryOperation(input: input, colorHex: "abdda4")!
+        let op = try XCTUnwrap(ExplainOperation().makeInventoryOperation(input: input, colorHex: "abdda4"))
         let expected = "Объяснение для эксперта"
         URLProtocolStub.data = Data("""
         { "choices": [ { "message": { "content": "Объяснение для эксперта" } } ] }
         """.utf8)
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ответа LLM")
         manager.process(text: "Photosynthesis", operation: op) { result in
@@ -96,12 +96,12 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 1)
     }
 
-    func test_llm_error_returnsFailure() async {
+    func test_llm_error_returnsFailure() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput(targetLanguage: "ru")
-        let op = TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd")!
+        let op = try XCTUnwrap(TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd"))
         URLProtocolStub.data = "{}".data(using: .utf8)
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 500, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 500, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         let exp = expectation(description: "Ожидание ошибки LLM")
         manager.process(text: "Hello", operation: op) { result in
@@ -118,16 +118,16 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 8.0)
     }
 
-    func test_llm_unauthorized_returnsFailure() async {
+    func test_llm_unauthorized_returnsFailure() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput(targetLanguage: "ru")
-        let op = TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd")!
+        let op = try XCTUnwrap(TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd"))
         let responseJSON = Data("""
         { "error": { "message": "Unauthorized", "type": "invalid_api_key" } }
         """.utf8)
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(
-            url: URL(string: "https://api.openai.com/v1/chat/completions")!,
+        URLProtocolStub.response = try HTTPURLResponse(
+            url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")),
             statusCode: 401,
             httpVersion: nil,
             headerFields: nil
@@ -147,16 +147,16 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 8.0)
     }
 
-    func test_llm_tooManyRequests_returnsFailureAfterRetries() async {
+    func test_llm_tooManyRequests_returnsFailureAfterRetries() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput(targetLanguage: "ru")
-        let op = TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd")!
+        let op = try XCTUnwrap(TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd"))
         let responseJSON = Data("""
         { "error": { "message": "Too Many Requests", "type": "rate_limit_reached" } }
         """.utf8)
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(
-            url: URL(string: "https://api.openai.com/v1/chat/completions")!,
+        URLProtocolStub.response = try HTTPURLResponse(
+            url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")),
             statusCode: 429,
             httpVersion: nil,
             headerFields: nil
@@ -176,13 +176,13 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         await fulfillment(of: [exp], timeout: 8.0)
     }
 
-    func test_llm_invalidResponse_returnsFailure() async {
+    func test_llm_invalidResponse_returnsFailure() async throws {
         let manager = makeProcessingManager()
         let input = OperationInput(targetLanguage: "ru")
-        let op = TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd")!
+        let op = try XCTUnwrap(TranslateOperation().makeInventoryOperation(input: input, colorHex: "3288bd"))
         URLProtocolStub.data = "{}".data(using: .utf8)
-        URLProtocolStub.response = HTTPURLResponse(
-            url: URL(string: "https://api.openai.com/v1/chat/completions")!,
+        URLProtocolStub.response = try HTTPURLResponse(
+            url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")),
             statusCode: 200,
             httpVersion: nil,
             headerFields: nil

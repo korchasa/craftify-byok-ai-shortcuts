@@ -14,7 +14,6 @@
 
 "processing" = "Обработва се...";
 "error" = "Грешка";
-"copied_to_clipboard" = "Копирано в клипборда";
 
 "error_no_text" = "Няма текст за обработка";
 "error_text_too_long" = "Текстът е твърде дълъг за обработка";
@@ -28,7 +27,6 @@
 "error_no_operation" = "Няма операция за обработка";
 "error_api_key_access" = "Грешка при достъп до API ключ";
 "error_processing_manager_unavailable" = "Мениджърът за обработка е недостъпен";
-"percent_format" = "%d%%";
 "advice_check_connection" = "Проверете интернет връзката си и опитайте отново.";
 "advice_check_api_key" = "Моля, проверете вашия API ключ в Настройки.";
 "advice_try_again_later" = "Опитайте отново по-късно.";

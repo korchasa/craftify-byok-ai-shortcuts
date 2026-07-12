@@ -14,7 +14,6 @@
 
 "processing" = "Verarbeitung...";
 "error" = "Fehler";
-"copied_to_clipboard" = "In die Zwischenablage kopiert";
 
 "error_no_text" = "Kein Text zum Verarbeiten";
 "error_text_too_long" = "Text ist zu lang, um verarbeitet zu werden";
@@ -28,7 +27,6 @@
 "error_no_operation" = "Kein Vorgang zum Verarbeiten";
 "error_api_key_access" = "API-Schlüssel-Zugriffsfehler";
 "error_processing_manager_unavailable" = "Verarbeitungsmanager nicht verfügbar";
-"percent_format" = "%d%%";
 "advice_check_connection" = "Überprüfe deine Internetverbindung und versuche es erneut.";
 "advice_check_api_key" = "Bitte prüfe deinen API-Schlüssel in den Einstellungen.";
 "advice_try_again_later" = "Versuche es später noch einmal.";

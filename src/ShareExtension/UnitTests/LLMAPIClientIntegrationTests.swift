@@ -25,9 +25,10 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
         let responseJSON = Data(
             """
             { "choices": [ { "message": { "content": "Processed text" } } ] }
-            """.utf8)
+            """.utf8
+        )
         URLProtocolStub.data = responseJSON
-        URLProtocolStub.response = HTTPURLResponse(url: URL(string: "https://api.openai.com/v1/chat/completions")!, statusCode: 200, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
         URLProtocolStub.error = nil
         var capturedRequest: URLRequest?
         URLProtocolStub.requestObserver = { request in
@@ -62,7 +63,9 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
                         break
                     }
                 }
-                if !buffer.isEmpty { bodyData = buffer }
+                if !buffer.isEmpty {
+                    bodyData = buffer
+                }
             }
             guard let httpBody = bodyData else {
                 XCTFail("httpBody и httpBodyStream отсутствуют в capturedRequest — не отправляется тело JSON")

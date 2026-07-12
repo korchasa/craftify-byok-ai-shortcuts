@@ -11,4 +11,3 @@
 "error_api_key_access" = "Erreur d'accès à la clé API";
 "error_processing_manager_unavailable" = "Gestionnaire de traitement indisponible";
 "OK" = "OK";
-"percent_format" = "%d%%";

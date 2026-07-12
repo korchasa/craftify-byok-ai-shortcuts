@@ -11,4 +11,3 @@
 "error_api_key_access" = "Errore di accesso alla chiave API";
 "error_processing_manager_unavailable" = "Gestore di elaborazione non disponibile";
 "OK" = "OK";
-"percent_format" = "%d%%";

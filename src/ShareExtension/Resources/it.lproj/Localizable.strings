@@ -14,7 +14,6 @@
 
 "processing" = "Elaborazione...";
 "error" = "Errore";
-"copied_to_clipboard" = "Copiato negli appunti";
 
 "error_no_text" = "Nessun testo da elaborare";
 "error_text_too_long" = "Testo troppo lungo da elaborare";
@@ -28,7 +27,6 @@
 "error_no_operation" = "Nessuna operazione da eseguire";
 "error_api_key_access" = "Errore di accesso alla chiave API";
 "error_processing_manager_unavailable" = "Gestore di elaborazione non disponibile";
-"percent_format" = "%d%%";
 "advice_check_connection" = "Controlla la connessione a Internet e riprova.";
 "advice_check_api_key" = "Controlla la tua chiave API in Impostazioni.";
 "advice_try_again_later" = "Riprova più tardi.";

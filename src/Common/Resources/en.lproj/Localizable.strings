@@ -11,5 +11,4 @@
 "error_api_key_access" = "API key access error";
 "error_processing_manager_unavailable" = "Processing manager unavailable";
 "OK" = "OK";
-"percent_format" = "%d%%";
 "error_robots_disallowed" = "Access to the page is disallowed by the site rules";

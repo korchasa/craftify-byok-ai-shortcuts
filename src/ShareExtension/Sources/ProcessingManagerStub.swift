@@ -10,7 +10,7 @@ public final class ProcessingManagerStub: NSObject {
         super.init()
     }
 
-    public func process(text: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+    public func process(text: String, operation _: InventoryOperation, completion: (Result<String, Error>) -> Void) {
         if shouldFailNetwork {
             completion(.failure(NSError(domain: "Network", code: networkErrorCode, userInfo: [NSLocalizedDescriptionKey: "Сетевая ошибка"])))
             return

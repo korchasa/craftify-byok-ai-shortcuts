@@ -14,7 +14,6 @@
 
 "processing" = "Traitement...";
 "error" = "Erreur";
-"copied_to_clipboard" = "Copié dans le presse-papiers";
 
 "error_no_text" = "Aucun texte à traiter";
 "error_text_too_long" = "Texte trop long pour être traité";
@@ -28,7 +27,6 @@
 "error_no_operation" = "Aucune opération à traiter";
 "error_api_key_access" = "Erreur d'accès à la clé API";
 "error_processing_manager_unavailable" = "Gestionnaire de traitement indisponible";
-"percent_format" = "%d%%";
 "advice_check_connection" = "Vérifiez votre connexion Internet et réessayez.";
 "advice_check_api_key" = "Veuillez vérifier votre clé API dans les paramètres.";
 "advice_try_again_later" = "Réessayez plus tard.";

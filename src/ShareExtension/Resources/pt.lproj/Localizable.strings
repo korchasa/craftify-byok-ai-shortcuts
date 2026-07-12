@@ -14,7 +14,6 @@
 
 "processing" = "Processing...";
 "error" = "Error";
-"copied_to_clipboard" = "Copied to clipboard";
 
 "error_no_text" = "No text to process";
 "error_text_too_long" = "Text is too long to process";
@@ -28,7 +27,6 @@
 "error_no_operation" = "No operation to process";
 "error_api_key_access" = "API key access error";
 "error_processing_manager_unavailable" = "Processing manager unavailable";
-"percent_format" = "%d%%";
 "advice_check_connection" = "Check your internet connection and try again.";
 "advice_check_api_key" = "Please check your API key in Settings.";
 "advice_try_again_later" = "Try again later.";

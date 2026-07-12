@@ -11,6 +11,8 @@ public final class ShareExtensionViewController: UIViewController {
         // Инициализация менеджеров
         let userDefaults = UserDefaults(suiteName: "group.dev.korchasa.Craftify")!
         let inventoryManager = InventoryManager(userDefaults: userDefaults)
+        // Пользователь мог поделиться текстом, ни разу не открыв приложение — сетка не должна быть пустой
+        inventoryManager.fillWithDefaultOperationsIfNeeded()
         let authManager = AuthManager()
         let clipboardManager = ClipboardManager()
         let logManager = OSLogManagerShared(category: "ShareExtension")

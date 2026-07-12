@@ -1,17 +1,18 @@
 import Combine
 import Foundation
 import SwiftUI
+#if canImport(UIKit)
+    import UIKit
+#endif
 
+@preconcurrency
 @MainActor
 public final class ShareExtensionViewModel: ObservableObject {
     // MARK: - Published Properties
 
     @Published public var operations: [InventoryOperation] = []
     @Published public var isProcessing: Bool = false
-    @Published public var progress: Double = 0.0
     @Published public var errorMessage: String? = nil
-    @Published public var isInputTextTooLong: Bool = false
-    @Published public var showCopiedToast: Bool = false
     @Published public var displayResult: String? = nil
     @Published public var shouldCloseExtension: Bool = false
 
@@ -19,13 +20,14 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     public let manager: ShareExtensionManager
     private var currentResultMode: ResultMode = .clipboard
-    public var processingTask: Task<Void, Never>? = nil
-    public var progressTimer: Timer?
+    public var processingTask: Task<Void, Never>?
     public var processingTimeoutSeconds: Double = 30
     public var logContentLength: Int = 100
     private var hasCompleted = false
 
-    private var logManager: LogManagerShared { manager.logManager }
+    private var logManager: LogManagerShared {
+        manager.logManager
+    }
 
     // MARK: - Initialization
 
@@ -45,7 +47,7 @@ public final class ShareExtensionViewModel: ObservableObject {
 
         // Загружаем все операции по умолчанию, а затем отфильтруем их в updateInputText когда будет доступен контент
         self.operations = manager.inventoryManager.inventory
-        self.isInputTextTooLong = input.count > ShareExtensionViewModelConstants.maxInputTextLength
+        manager.inputText = Self.truncated(input)
     }
 
     // MARK: - Public Methods
@@ -59,40 +61,34 @@ public final class ShareExtensionViewModel: ObservableObject {
         currentResultMode = OperationFactory.make(kind: operation.operation, logManager: self.logManager).resultMode
         displayResult = nil
 
-        if validateInputTextLength() {
-            return
-        }
-
         startProcessing(operation: operation)
     }
 
     public func updateInputText(_ text: String) {
-        manager.inputText = text
-        isInputTextTooLong = text.count > ShareExtensionViewModelConstants.maxInputTextLength
+        let truncatedText = Self.truncated(text)
+        manager.inputText = truncatedText
 
-        logTextUpdate(text)
-        updateOperationsForInput(text)
+        logTextUpdate(truncatedText)
+        updateOperationsForInput(truncatedText)
     }
 
     public func cancel() {
         processingTask?.cancel()
         manager.cancelProcessing()
         isProcessing = false
-        progressTimer?.invalidate()
-        progress = 0.0
     }
 
-    public func hideCopiedToast() {
-        showCopiedToast = false
-        shouldCloseExtension = true
+    /// Сбрасывает ошибку после закрытия алерта и возвращает пользователя к сетке операций.
+    public func dismissError() {
+        errorMessage = nil
+        isProcessing = false
     }
 
-    /// Copies currently displayed result to clipboard and closes extension with toast.
+    /// Copies currently displayed result to clipboard and closes extension.
     public func copyDisplayedResultAndClose() {
         guard let text = displayResult, !text.isEmpty else { return }
         if manager.copyToClipboard(text) {
-            showCopiedToast = true
-            shouldCloseExtension = true
+            notifySuccessAndClose()
         } else {
             errorMessage = L10n.errorClipboard
         }
@@ -116,26 +112,22 @@ public final class ShareExtensionViewModel: ObservableObject {
         ))
     }
 
-    private func validateInputTextLength() -> Bool {
-        if manager.inputText.count > ShareExtensionViewModelConstants.maxInputTextLength {
-            logManager.log(LogEntry(
-                level: .error,
-                module: "ShareExtensionViewModel",
-                message: "errorMessage set in validateInputTextLength: Text too long to process",
-                metadata: [:],
-                timestamp: Date()
-            ))
-            errorMessage = L10n.errorTextTooLong
-            return true
-        }
-        return false
+    /// Обрезает вход до максимальной длины, чтобы длинный текст не блокировал обработку.
+    private static func truncated(_ text: String) -> String {
+        String(text.prefix(ShareExtensionViewModelConstants.maxInputTextLength))
+    }
+
+    /// Сигнализирует об успехе хаптикой и закрывает расширение.
+    private func notifySuccessAndClose() {
+        #if canImport(UIKit) && !os(watchOS)
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+        #endif
+        shouldCloseExtension = true
     }
 
     private func startProcessing(operation: InventoryOperation) {
         isProcessing = true
-        progress = 0.0
         errorMessage = nil
-        startProgressTimer()
 
         processingTask = Task { [weak self] in
             guard let self else { return }
@@ -153,18 +145,6 @@ public final class ShareExtensionViewModel: ObservableObject {
             } catch {
                 await MainActor.run {
                     self.handleProcessingError(error)
-                }
-            }
-        }
-    }
-
-    private func startProgressTimer() {
-        progressTimer?.invalidate()
-        progressTimer = Timer.scheduledTimer(withTimeInterval: ShareExtensionViewModelConstants.progressInterval, repeats: true) { [weak self] _ in
-            guard let self else { return }
-            Task { @MainActor in
-                if self.progress < ShareExtensionViewModelConstants.maxProgress {
-                    self.progress += ShareExtensionViewModelConstants.progressStep
                 }
             }
         }
@@ -258,7 +238,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     private func runProcessingWithTimeout(operation: InventoryOperation, resolvedText: String) async {
         // Запускаем две задачи: обработка и таймер
         await withTaskGroup(of: (finishedFirst: Int, result: (success: Bool, error: UserFacingError?)?).self) { group in
-            let processingTask = Task<(success: Bool, error: UserFacingError?)?, Never> {
+            let workTask = Task<(success: Bool, error: UserFacingError?)?, Never> {
                 await self.manager.process(text: resolvedText, operation: operation)
             }
             let timeoutTask = Task<Void, Never> {
@@ -266,7 +246,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 try? await Task.sleep(nanoseconds: UInt64(timeoutNs))
             }
             group.addTask {
-                let res = await processingTask.value
+                let res = await workTask.value
                 return (0, res)
             }
             group.addTask {
@@ -274,7 +254,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 return (1, nil)
             }
             let (finishedFirst, result) = await group.next() ?? (1, nil)
-            processingTask.cancel()
+            workTask.cancel()
             timeoutTask.cancel()
             await MainActor.run {
                 handleProcessingCompletion(finishedFirst: finishedFirst, result: result)
@@ -285,7 +265,6 @@ public final class ShareExtensionViewModel: ObservableObject {
     private func handleProcessingCompletion(finishedFirst: Int, result: (success: Bool, error: UserFacingError?)?) {
         guard !hasCompleted else { return }
         hasCompleted = true
-        progressTimer?.invalidate()
         isProcessing = false
         if finishedFirst == 1 {
             logManager.log(LogEntry(
@@ -299,9 +278,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 errorMessage = L10n.errorTimeout
             }
             manager.cancelProcessing()
-            progress = 0.0
         } else {
-            progress = ShareExtensionViewModelConstants.completeProgress
             handleResult(result: result)
         }
     }
@@ -324,8 +301,7 @@ public final class ShareExtensionViewModel: ObservableObject {
             if currentResultMode == .display {
                 displayResult = manager.lastResult
             } else {
-                showCopiedToast = true
-                shouldCloseExtension = true
+                notifySuccessAndClose()
             }
         }
     }
@@ -442,6 +418,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     private func handleProcessingError(_ error: Error) {
         guard !hasCompleted else { return }
         hasCompleted = true
+        isProcessing = false
         let errorType = String(describing: type(of: error))
         var errorMsg: String? = nil
         if let userError = error as? UserFacingError {
@@ -481,7 +458,6 @@ public final class ShareExtensionViewModel: ObservableObject {
     }
 
     deinit {
-        progressTimer?.invalidate()
         processingTask?.cancel()
     }
 }

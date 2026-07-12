@@ -43,7 +43,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertEqual(errorCount, 1)
     }
 
-    func testProcess_ShowCopiedToastOnSuccess() async {
+    func testProcess_ClosesExtensionOnSuccess() async {
         // Arrange
         let inventoryManager = InventoryManagerStub()
         let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")
@@ -64,21 +64,19 @@ final class ShareExtensionViewModelTests: XCTestCase {
         let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
         // Act
-        let exp = expectation(description: "CopiedToast")
+        let exp = expectation(description: "CloseExtension")
         var cancellable: AnyCancellable?
-        cancellable = viewModel.$showCopiedToast.sink { show in
-            if show {
+        cancellable = viewModel.$shouldCloseExtension.sink { shouldClose in
+            if shouldClose {
                 exp.fulfill()
                 cancellable?.cancel()
             }
         }
         viewModel.process(operation: op)
         await fulfillment(of: [exp], timeout: 1.0)
-        // Assert: showCopiedToast должен быть true (сразу после успешной обработки)
-        XCTAssertTrue(viewModel.showCopiedToast)
-        // Сбросим тост
-        viewModel.hideCopiedToast()
-        XCTAssertFalse(viewModel.showCopiedToast)
+        // Assert: после успешной обработки в режиме clipboard расширение закрывается
+        XCTAssertTrue(viewModel.shouldCloseExtension)
+        XCTAssertNil(viewModel.errorMessage)
     }
 
     func testOperations_FilteredForURLInput() {
@@ -130,7 +128,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.operations.count, allOps.count)
     }
 
-    func testUpdateInputText_ChangesFlagAndFiltersOperations() {
+    func testUpdateInputText_TruncatesAndFiltersOperations() {
         // Arrange
         let inventoryManager = InventoryManagerStub()
         let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")
@@ -157,16 +155,15 @@ final class ShareExtensionViewModelTests: XCTestCase {
         let longText = String(repeating: "a", count: ShareExtensionViewModelConstants.maxInputTextLength + 1)
         viewModel.updateInputText(longText)
 
-        // Assert - Флаг должен быть установлен
-        XCTAssertTrue(viewModel.isInputTextTooLong)
-        XCTAssertEqual(manager.inputText, longText)
+        // Assert - Текст обрезан до лимита, обработка остаётся доступной
+        XCTAssertEqual(manager.inputText.count, ShareExtensionViewModelConstants.maxInputTextLength)
+        XCTAssertEqual(manager.inputText, String(longText.prefix(ShareExtensionViewModelConstants.maxInputTextLength)))
 
         // Act - Устанавливаем URL
         let urlText = "https://example.com"
         viewModel.updateInputText(urlText)
 
-        // Assert - Флаг сброшен и операции отфильтрованы
-        XCTAssertFalse(viewModel.isInputTextTooLong)
+        // Assert - Короткий вход не изменяется и операции отфильтрованы
         XCTAssertEqual(manager.inputText, urlText)
         XCTAssertEqual(viewModel.operations.count, 2)
         let kindsURL2 = viewModel.operations.map(\.operation)
@@ -254,12 +251,11 @@ final class ShareExtensionViewModelTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(clipboardManager.copiedText, expectedText)
-        XCTAssertTrue(viewModel.showCopiedToast)
         XCTAssertTrue(viewModel.shouldCloseExtension)
     }
 }
 
-// Stub для медленной обработки
+/// Stub для медленной обработки
 final class SlowProcessingManagerStub: NSObject, ProcessingManaging {
     func process(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
         DispatchQueue.global().asyncAfter(deadline: .now() + 1.0) {

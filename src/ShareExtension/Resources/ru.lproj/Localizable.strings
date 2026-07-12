@@ -14,7 +14,6 @@
 
 "processing" = "Обработка...";
 "error" = "Ошибка";
-"copied_to_clipboard" = "Скопировано в буфер";
 
 "error_no_text" = "Нет текста для обработки";
 "error_text_too_long" = "Текст слишком длинный для обработки";
@@ -28,7 +27,6 @@
 "error_no_operation" = "Нет операции для обработки";
 "error_api_key_access" = "Ошибка доступа к API-ключу";
 "error_processing_manager_unavailable" = "Менеджер обработки недоступен";
-"percent_format" = "%d%%";
 "error_download_failed" = "Не удалось получить содержимое страницы";
 "error_extract_text" = "Не удалось извлечь текст из страницы";
 "error_timeout" = "Время обработки истекло";

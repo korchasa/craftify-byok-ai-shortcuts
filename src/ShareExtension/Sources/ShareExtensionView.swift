@@ -9,18 +9,13 @@ public struct ShareExtensionView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @State private var isProcessing = false
-    @State private var progress: Double = 0.0
     @Environment(\.colorScheme) private var colorScheme
     private var palette: ShareExtensionColorPaletteProviding {
         ShareExtensionColorPaletteFactory.palette(for: colorScheme)
     }
 
-    private enum ProgressConstants {
-        static let percentMax: Double = 100
-    }
-
     private enum ZIndexConstants {
-        static let copiedToast: Double = 2
+        static let overlay: Double = 2
     }
 
     private enum ContentPaddingConstants {
@@ -32,12 +27,12 @@ public struct ShareExtensionView: View {
         self.viewModel = viewModel
     }
 
-    // Add a helper property for the main content
+    /// Add a helper property for the main content
     private var mainContentVStack: some View {
         VStack(spacing: 0) {
             Rectangle()
                 .fill(Color.clear)
-                .frame(height: ShareExtensionViewConstants.copiedToastVerticalSpacing)
+                .frame(height: ShareExtensionViewConstants.contentTopSpacing)
 
             if viewModel.displayResult != nil {
                 Text(displayOperationTitle())
@@ -79,10 +74,6 @@ public struct ShareExtensionView: View {
             if isProcessing {
                 progressOverlay
             }
-            // Copied toast overlay
-            if viewModel.showCopiedToast {
-                copiedToast
-            }
         }
         // Pin action buttons above the bottom safe area using common button bar
         .safeAreaInset(edge: .bottom) {
@@ -98,7 +89,7 @@ public struct ShareExtensionView: View {
         }
         .background(palette.background())
         // Keep safe area so bottom inset matches Main screen
-        .zIndex(ZIndexConstants.copiedToast)
+        .zIndex(ZIndexConstants.overlay)
         .environment(\.shareExtensionColorPalette, palette)
         // ViewModel subscriptions & alerts
         .onReceive(viewModel.$errorMessage) { msg in
@@ -115,14 +106,6 @@ public struct ShareExtensionView: View {
             }
         }
         .onReceive(viewModel.$isProcessing) { isProcessing = $0 }
-        .onReceive(viewModel.$progress) { progress = $0 }
-        .onReceive(viewModel.$showCopiedToast) { show in
-            if show {
-                DispatchQueue.main.asyncAfter(deadline: .now() + ShareExtensionViewConstants.copiedToastHideDelay) {
-                    viewModel.hideCopiedToast()
-                }
-            }
-        }
         .onReceive(viewModel.$shouldCloseExtension) { shouldClose in
             if shouldClose {
                 NotificationCenter.default.post(name: .closeShareExtension, object: nil)
@@ -133,8 +116,8 @@ public struct ShareExtensionView: View {
         }
         .onChange(of: showAlert) { newValue in
             if !newValue, !alertMessage.isEmpty {
-                // alert был закрыт, инициируем закрытие расширения
-                viewModel.shouldCloseExtension = true
+                // alert был закрыт — возвращаемся к сетке операций, чтобы пользователь мог повторить попытку
+                viewModel.dismissError()
                 alertMessage = ""
             }
         }
@@ -183,7 +166,7 @@ public struct ShareExtensionView: View {
             .cornerRadius(cardCornerRadius)
         }
         .accessibilityLabel(operationCategory(for: op))
-        .disabled(viewModel.isProcessing || viewModel.isInputTextTooLong)
+        .disabled(viewModel.isProcessing)
     }
 
     private func operationCategory(for op: InventoryOperation) -> String {
@@ -220,52 +203,17 @@ public struct ShareExtensionView: View {
 
     private var progressOverlay: some View {
         VStack(spacing: ShareExtensionViewConstants.verticalSpacing) {
+            ProgressView()
+                .progressViewStyle(.circular)
             Text(L10n.processing)
                 .font(.craftifyBody)
-                .fontWeight(.semibold)
-            ProgressView(value: progress)
-                .progressViewStyle(.linear)
-                .frame(width: ShareExtensionViewConstants.progressWidth)
-            Text(L10n.percentFormat(Int(progress * ProgressConstants.percentMax)))
-                .font(.craftifyFootnote)
                 .fontWeight(.semibold)
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: ShareExtensionViewConstants.overlayCornerRadius).fill(Color(.systemBackground).opacity(ShareExtensionViewConstants.overlayOpacity)))
         .shadow(radius: ShareExtensionViewConstants.overlayShadow)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(L10n.processing), progress \(Int(progress * ProgressConstants.percentMax))%")
-    }
-
-    private var copiedToast: some View {
-        VStack {
-            Rectangle()
-                .fill(Color.clear)
-                .frame(height: ShareExtensionViewConstants.copiedToastVerticalSpacing)
-            HStack {
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(width: ShareExtensionViewConstants.copiedToastHorizontalSpacing)
-                Text(L10n.copiedToClipboard)
-                    .font(.craftifyBody)
-                    .fontWeight(.bold)
-                    .padding(.vertical, ShareExtensionViewConstants.copiedToastVerticalSpacing)
-                    .padding(.horizontal, ShareExtensionViewConstants.copiedToastHorizontalSpacing)
-                    .background(
-                        RoundedRectangle(cornerRadius: ShareExtensionViewConstants.copiedToastCornerRadius)
-                            .fill(Color(.systemGray6).opacity(ShareExtensionViewConstants.copiedToastBackgroundOpacity))
-                    )
-                    .shadow(radius: ShareExtensionViewConstants.copiedToastShadowRadius)
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(width: ShareExtensionViewConstants.copiedToastHorizontalSpacing)
-            }
-            Rectangle()
-                .fill(Color.clear)
-                .frame(height: ShareExtensionViewConstants.copiedToastBottomSpacing)
-        }
-        .transition(.opacity)
-        .zIndex(ZIndexConstants.copiedToast)
+        .accessibilityLabel(L10n.processing)
     }
 
     /// Возвращает локализованное название текущей операции для заголовка окна

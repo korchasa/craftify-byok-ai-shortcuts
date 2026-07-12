@@ -11,4 +11,3 @@
 "error_api_key_access" = "Грешка при достъп до API ключ";
 "error_processing_manager_unavailable" = "Мениджърът за обработка е недостъпен";
 "OK" = "OK";
-"percent_format" = "%d%%";
