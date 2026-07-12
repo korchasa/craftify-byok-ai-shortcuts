@@ -94,3 +94,4 @@
 
 /* LLM Provider */
 "settings_llm_provider" = "Провайдер LLM";
+"privacy_policy_title" = "Политика конфиденциальности";

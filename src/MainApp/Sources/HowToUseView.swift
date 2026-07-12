@@ -21,6 +21,7 @@ public struct HowToUseView: View {
                 VStack(spacing: Self.verticalSpacing) {
                     HowToUseTitle(topPadding: Self.topPadding)
                     HowToUseInstruction()
+                    HowToUseKeySetupSection(viewModel: viewModel)
                     Divider()
                         .padding(.vertical, Self.dividerVerticalPadding)
                     HowToUsePrivacyPolicyFullView()
@@ -32,7 +33,7 @@ public struct HowToUseView: View {
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
 
-                    HowToUseAcceptButton(handleAcceptTapped: handleDoneTapped)
+                    HowToUseAcceptButton(isVerifying: viewModel.isVerifying, handleAcceptTapped: handleDoneTapped)
                         .padding(.horizontal)
                         .padding(.bottom, Self.bottomPadding)
                 }
@@ -63,33 +64,75 @@ public struct HowToUseView: View {
         }
     }
 
-    /// Privacy policy text with dynamic type and selectable content
+    /// Первичная настройка: провайдер и API-ключ прямо на экране согласия
+    private struct HowToUseKeySetupSection: View {
+        @ObservedObject var viewModel: HowToUseViewModel
+        @Environment(\.colorPalette) private var palette
+        var body: some View {
+            VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
+                HStack {
+                    Text(LocalizedStringKey(L10n.settingsLlmProvider))
+                        .font(.craftifyBody)
+                        .fontWeight(.bold)
+                    Spacer()
+                    Picker(L10n.settingsLlmProvider, selection: $viewModel.selectedProvider) {
+                        ForEach(LLMProvider.allCases, id: \.rawValue) { provider in
+                            Text(provider.displayName).tag(provider)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+                SecureField(L10n.settingsLlmApiKey, text: $viewModel.apiKey)
+                    .textFieldStyle(.roundedBorder)
+                    .accessibilityLabel(L10n.settingsLlmApiKey)
+                if let error = viewModel.errorMessage {
+                    Text(error)
+                        .foregroundColor(palette.destructive())
+                        .font(.craftifyFootnote)
+                        .fontWeight(.bold)
+                }
+            }
+            .padding(.horizontal)
+        }
+    }
+
+    /// Privacy policy text collapsed behind a disclosure to keep the screen focused
     private struct HowToUsePrivacyPolicyFullView: View {
         var body: some View {
-            Text(L10n.privacyPolicyFull)
-                .font(.body)
-                .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal)
-                .dynamicTypeSize(.small ... .accessibility5)
-                .textSelection(.enabled)
-                .accessibilityIdentifier("privacyPolicyText")
+            DisclosureGroup(L10n.privacyPolicyTitle) {
+                Text(L10n.privacyPolicyFull)
+                    .font(.body)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .dynamicTypeSize(.small ... .accessibility5)
+                    .textSelection(.enabled)
+                    .accessibilityIdentifier("privacyPolicyText")
+            }
+            .padding(.horizontal)
         }
     }
 
     private struct HowToUseAcceptButton: View {
+        var isVerifying: Bool
         var handleAcceptTapped: () -> Void
         @Environment(\.colorPalette) private var palette
         var body: some View {
             Button(action: handleAcceptTapped) {
-                Text(L10n.howtouseDone)
-                    .font(Font.craftifyBody)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity)
-                    .foregroundColor(palette.primaryButtonText())
+                if isVerifying {
+                    ProgressView()
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Text(L10n.howtouseDone)
+                        .font(Font.craftifyBody)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity)
+                        .foregroundColor(palette.primaryButtonText())
+                }
             }
             .accessibilityLabel(L10n.howtouseDone)
             .buttonStyle(CraftifyPrimaryButtonStyle())
+            .disabled(isVerifying)
         }
     }
 
@@ -101,8 +144,10 @@ public struct HowToUseView: View {
     }
 
     private func handleDoneTapped() {
-        viewModel.consentGiven = true
-        viewModel.saveConsent()
-        onConsent?()
+        Task { @MainActor in
+            if await viewModel.completeOnboarding() {
+                onConsent?()
+            }
+        }
     }
 }

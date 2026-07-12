@@ -79,3 +79,4 @@
 
 /* LLM Provider */
 "settings_llm_provider" = "LLM プロバイダ";
+"privacy_policy_title" = "プライバシーポリシー";

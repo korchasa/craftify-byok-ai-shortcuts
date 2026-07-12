@@ -9,7 +9,7 @@ public final class SettingsViewModelTests: XCTestCase {
     override public func setUp() {
         super.setUp()
         authManager = AuthManagerStub(key: nil)
-        viewModel = SettingsViewModel(authManager: authManager!)
+        viewModel = SettingsViewModel(authManager: authManager!, verifier: APIKeyVerifierStub())
     }
 
     override public func tearDown() {
@@ -47,6 +47,28 @@ public final class SettingsViewModelTests: XCTestCase {
         await viewModel.saveKey()
         XCTAssertTrue(viewModel.isKeyPresent)
         XCTAssertNil(viewModel.errorMessage)
+    }
+
+    public func testSaveKey_RejectedByProvider() async {
+        let rejectingViewModel = SettingsViewModel(
+            authManager: AuthManagerStub(key: nil),
+            verifier: APIKeyVerifierStub(outcome: .invalid)
+        )
+        rejectingViewModel.apiKey = "sk-wrong-key-1234567890"
+        await rejectingViewModel.saveKey()
+        XCTAssertFalse(rejectingViewModel.isKeyPresent)
+        XCTAssertNotNil(rejectingViewModel.errorMessage)
+    }
+
+    public func testSaveKey_ProviderUnreachableStillSaves() async {
+        let offlineViewModel = SettingsViewModel(
+            authManager: AuthManagerStub(key: nil),
+            verifier: APIKeyVerifierStub(outcome: .unreachable)
+        )
+        offlineViewModel.apiKey = "sk-valid-key-1234567890"
+        await offlineViewModel.saveKey()
+        XCTAssertTrue(offlineViewModel.isKeyPresent)
+        XCTAssertNil(offlineViewModel.errorMessage)
     }
 
     public func testDeleteKey() async {

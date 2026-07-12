@@ -80,8 +80,6 @@ public struct SettingsView: View {
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 Button(action: {
                     Task {
-                        viewModel.saveNativeLanguage()
-                        viewModel.saveProvider()
                         await viewModel.saveKey()
                         if viewModel.errorMessage == nil {
                             shouldDismiss = true
