@@ -1,4 +1,5 @@
 retain_public: true
+clean_build: true
 schemes:
 - MainApp
 - ShareExtension

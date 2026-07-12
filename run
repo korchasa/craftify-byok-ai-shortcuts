@@ -31,6 +31,7 @@ Usage: $SCRIPT_NAME <command> [args...]
 Commands:
   clean          Full clean: deletion of all builds, caches, logs, and temporary files
   sim                 Build MainApp for simulator
+  dist                Build an UNSIGNED App Store archive (build/Craftify.xcarchive) for the factory
   generate            Run SwiftGen and Tuist
   init                Install CLI tools
   logs                Stream MainApp logs
@@ -152,6 +153,38 @@ function size_report() {
   if [[ $error -ne 0 ]]; then
     exit 1
   fi
+}
+
+function dist() {
+  # UNSIGNED App Store archive for the App Store Factory. The factory signs it
+  # later (xcodebuild -exportArchive) — NO signing happens here. Output path is
+  # exactly what the factory's apps.yml `build.artifact` expects:
+  # build/Craftify.xcarchive.
+  #
+  # Regenerate the Tuist project from scratch: drop the generated workspace/project
+  # (both gitignored) so `tuist generate` can't trip on a stale Package.resolved
+  # symlink left over from an earlier location of this repo.
+  rm -rf Craftify.xcworkspace Craftify.xcodeproj
+  generate "$@"
+  _start_section "Archiving MainApp for App Store (unsigned)"
+  rm -rf build/Craftify.xcarchive
+  # PATH=/usr/bin so xcodebuild's copy phase resolves system rsync, not the
+  # Homebrew one (the factory hits the same issue on -exportArchive).
+  PATH=/usr/bin:$PATH xcodebuild archive \
+    -workspace Craftify.xcworkspace \
+    -scheme MainApp \
+    -configuration Release \
+    -destination 'generic/platform=iOS' \
+    -archivePath build/Craftify.xcarchive \
+    CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO \
+    CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="" \
+    -quiet
+  _end_section
+  if [[ ! -d build/Craftify.xcarchive ]]; then
+    echo -e "${RED}dist: archive was not produced at build/Craftify.xcarchive${NC}"
+    exit 1
+  fi
+  echo -e "${GREEN}Unsigned archive: build/Craftify.xcarchive${NC}"
 }
 
 function _boot_and_wait_simulator() {
@@ -414,6 +447,7 @@ case "$CMD" in
     generate
     deploy_simulator "$@"
   ;;
+  dist) dist "$@" ;;
   generate) generate "$@" ;;
   init) init "$@" ;;
   logs) logs "$@" ;;
