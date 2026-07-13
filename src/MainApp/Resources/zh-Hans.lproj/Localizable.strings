@@ -9,6 +9,7 @@
 "home_add_operation" = "操作";
 "home_settings" = "设置";
 "home_delete" = "删除";
+"home_delete_confirm" = "确定要删除此操作吗？";
 "home_order" = "排序";
 "homeSortHandle" = "拖动以重新排序";
 "homeSortHint" = "长按并拖动以重新排序操作。";
@@ -45,6 +46,7 @@
 
 "error" = "错误";
 "color" = "颜色";
+"color_accessibility_format" = "颜色 #%@";
 
 "sentence_count_2_3" = "2–3 句";
 "sentence_count_5_6" = "5–6 句";

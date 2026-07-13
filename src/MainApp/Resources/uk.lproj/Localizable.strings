@@ -9,6 +9,7 @@
 "home_add_operation" = "Операція";
 "home_settings" = "Налаштування";
 "home_delete" = "Видалити";
+"home_delete_confirm" = "Ви впевнені, що хочете видалити операцію?";
 "home_order" = "Порядок";
 "homeSortHandle" = "Перетягніть для зміни порядку";
 "homeSortHint" = "Довге натискання та перетягування для зміни порядку операцій.";
@@ -45,6 +46,7 @@
 
 "error" = "Помилка";
 "color" = "Колір";
+"color_accessibility_format" = "Колір #%@";
 
 "sentence_count_2_3" = "2–3 речення";
 "sentence_count_5_6" = "5–6 речень";
@@ -66,6 +68,7 @@
 "error_url_not_supported" = "URL не підтримується";
 "error_download_failed" = "Не вдалося отримати вміст сторінки";
 "error_extract_text" = "Не вдалося витягти текст зі сторінки";
+"error_robots_disallowed" = "Доступ до сторінки заборонено правилами сайту";
 
 "advice_check_connection" = "Перевірте підключення до інтернету та спробуйте ще раз.";
 "advice_check_api_key" = "Перевірте API-ключ у налаштуваннях.";

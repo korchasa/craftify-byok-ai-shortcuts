@@ -36,6 +36,7 @@
 "error_extract_text" = "Неуспешно извличане на текст от страницата";
 "error_timeout" = "Времето за обработка изтече";
 "error_url_not_supported" = "URL не се поддържа";
+"error_robots_disallowed" = "Достъпът до страницата е забранен от правилата на сайта";
 "error_api_key_missing" = "Не е настроен API ключ";
 "advice_add_api_key_in_app" = "Отворете приложението Craftify и добавете своя API ключ в настройките.";
 "error_rate_limited" = "Доставчикът ограничава честотата на заявките";

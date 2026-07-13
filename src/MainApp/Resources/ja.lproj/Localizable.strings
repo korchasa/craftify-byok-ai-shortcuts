@@ -9,6 +9,7 @@
 "home_add_operation" = "操作";
 "home_settings" = "設定";
 "home_delete" = "削除";
+"home_delete_confirm" = "この操作を削除してもよろしいですか？";
 "home_order" = "並べ替え";
 "homeSortHandle" = "ドラッグして並べ替え";
 "homeSortHint" = "長押ししてドラッグすると操作の順序を変更できます。";
@@ -45,6 +46,7 @@
 
 "error" = "エラー";
 "color" = "カラー";
+"color_accessibility_format" = "カラー #%@";
 
 "sentence_count_2_3" = "2～3 文";
 "sentence_count_5_6" = "5～6 文";

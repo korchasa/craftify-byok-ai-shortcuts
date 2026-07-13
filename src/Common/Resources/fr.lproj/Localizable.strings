@@ -11,3 +11,4 @@
 "error_api_key_access" = "Erreur d'accès à la clé API";
 "error_processing_manager_unavailable" = "Gestionnaire de traitement indisponible";
 "OK" = "OK";
+"error_robots_disallowed" = "L'accès à la page est interdit par les règles du site";

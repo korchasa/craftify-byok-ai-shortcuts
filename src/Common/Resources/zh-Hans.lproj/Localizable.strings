@@ -14,3 +14,4 @@
 
 /* Misc */
 "OK" = "好";
+"error_robots_disallowed" = "站点规则不允许访问该页面";

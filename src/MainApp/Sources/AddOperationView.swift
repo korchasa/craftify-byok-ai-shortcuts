@@ -199,7 +199,7 @@ public struct AddOperationView: View {
                                 viewModel.selectedColorHex = hex
                             }
                             .accessibilityAddTraits(.isButton)
-                            .accessibilityLabel("Цвет #\(hex)")
+                            .accessibilityLabel(L10n.colorAccessibilityFormat(hex))
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }
                 }

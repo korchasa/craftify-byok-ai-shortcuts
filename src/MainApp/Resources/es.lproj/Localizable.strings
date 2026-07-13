@@ -9,6 +9,7 @@
 "home_add_operation" = "Operación";
 "home_settings" = "Ajustes";
 "home_delete" = "Eliminar";
+"home_delete_confirm" = "¿Seguro que quieres eliminar esta operación?";
 "home_order" = "Ordenar";
 "homeSortHandle" = "Arrastrar para reordenar";
 "homeSortHint" = "Mantenga pulsado y arrastre para reordenar operaciones.";
@@ -45,6 +46,7 @@
 
 "error" = "Error";
 "color" = "Color";
+"color_accessibility_format" = "Color #%@";
 
 "sentence_count_2_3" = "2–3 frases";
 "sentence_count_5_6" = "5–6 frases";
@@ -66,6 +68,7 @@
 "error_url_not_supported" = "La URL no es compatible";
 "error_download_failed" = "No se pudo cargar el contenido de la página";
 "error_extract_text" = "No se pudo extraer texto de la página";
+"error_robots_disallowed" = "El acceso a la página está prohibido por las reglas del sitio";
 
 "advice_check_connection" = "Verifique su conexión a Internet y vuelva a intentarlo.";
 "advice_check_api_key" = "Por favor, verifique su clave API en Ajustes.";

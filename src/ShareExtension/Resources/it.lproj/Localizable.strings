@@ -36,6 +36,7 @@
 "error_extract_text" = "Impossibile estrarre testo dalla pagina";
 "error_timeout" = "Timeout di elaborazione";
 "error_url_not_supported" = "URL non supportato";
+"error_robots_disallowed" = "L'accesso alla pagina è vietato dalle regole del sito";
 "error_api_key_missing" = "Nessuna chiave API configurata";
 "advice_add_api_key_in_app" = "Apri l'app Craftify e aggiungi la tua chiave API nelle impostazioni.";
 "error_rate_limited" = "Il provider sta limitando la frequenza delle richieste";

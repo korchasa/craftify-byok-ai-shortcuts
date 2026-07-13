@@ -212,7 +212,7 @@ Union dispositions (planner research ∪ scout):
 
 ## Definition of Done
 
-- [ ] FR-UX.L10N-CLEANUP: no mixed-language or untranslated user-facing strings; key sets identical across all 11 locales in all three bundles (MainApp, ShareExtension, Common); CI step in `./run check` fails on key-set divergence
+- [x] FR-UX.L10N-CLEANUP: no mixed-language or untranslated user-facing strings; key sets identical across all 11 locales in all three bundles (MainApp, ShareExtension, Common); CI step in `./run check` fails on key-set divergence
   - Test: `run::check_localization (script step, key-set diff per bundle)`
   - Evidence: `./run check`
 - [ ] FR-UX.SHEET-HEIGHT: share-extension sheet fits its content (operations grid) and grows to `.large()` when a result is displayed; iPad popover is ~360–400pt wide, not 180pt

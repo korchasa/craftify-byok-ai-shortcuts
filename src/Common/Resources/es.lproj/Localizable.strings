@@ -11,3 +11,4 @@
 "error_api_key_access" = "Error de acceso a la clave API";
 "error_processing_manager_unavailable" = "Administrador de procesamiento no disponible";
 "OK" = "Aceptar";
+"error_robots_disallowed" = "El acceso a la página está prohibido por las reglas del sitio";

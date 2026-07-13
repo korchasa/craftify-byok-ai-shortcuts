@@ -11,3 +11,4 @@
 "error_api_key_access" = "Помилка доступу до API-ключа";
 "error_processing_manager_unavailable" = "Менеджер обробки недоступний";
 "OK" = "ОК";
+"error_robots_disallowed" = "Доступ до сторінки заборонено правилами сайту";

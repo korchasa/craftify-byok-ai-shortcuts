@@ -99,11 +99,11 @@ public struct EditOperationView: View {
                         Text(LocalizedStringKey(L10n.homeDelete))
                     }
                     Button(role: .cancel, action: {}) {
-                        Text(LocalizedStringKey("Cancel"))
+                        Text(LocalizedStringKey(L10n.editOperationCancel))
                     }
                 },
                 message: {
-                    Text(LocalizedStringKey("Вы уверены, что хотите удалить операцию?"))
+                    Text(LocalizedStringKey(L10n.homeDeleteConfirm))
                 }
             )
         }
@@ -248,7 +248,7 @@ public struct EditOperationView: View {
                                 viewModel.selectedColorHex = hex
                             }
                             .accessibilityAddTraits(.isButton)
-                            .accessibilityLabel("Цвет #\(hex)")
+                            .accessibilityLabel(L10n.colorAccessibilityFormat(hex))
                             .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
                     }
                 }

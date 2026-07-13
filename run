@@ -316,6 +316,37 @@ function comment_scan() {
   _end_section
 }
 
+function check_localization() {
+  _start_section "Checking localization key parity (all locales vs en, 3 bundles)"
+  local failed=0
+  local res dir locale diff_out ref
+  for res in src/MainApp/Resources src/ShareExtension/Resources src/Common/Resources; do
+    ref="$res/en.lproj/Localizable.strings"
+    if [[ ! -f "$ref" ]]; then
+      echo -e "${RED}Missing reference locale: $ref${NC}"
+      failed=1
+      continue
+    fi
+    for dir in "$res"/*.lproj; do
+      locale="$(basename "$dir" .lproj)"
+      [[ "$locale" == "en" ]] && continue
+      if diff_out="$(diff \
+        <(grep -o '^"[^"]*"' "$ref" | sort) \
+        <(grep -o '^"[^"]*"' "$dir/Localizable.strings" | sort))"; then
+        continue
+      fi
+      echo -e "${RED}Key mismatch in $res — $locale vs en ('<' only in en, '>' only in $locale):${NC}"
+      echo "$diff_out"
+      failed=1
+    done
+  done
+  if [[ $failed -ne 0 ]]; then
+    echo -e "${RED}Error: localization key sets diverge!${NC}"
+    exit 1
+  fi
+  _end_section
+}
+
 function secret_scan() {
   _start_section "Scanning for secrets (gitleaks)"
   if ! command -v gitleaks &>/dev/null; then
@@ -473,10 +504,12 @@ case "$CMD" in
     generate || { echo -e "${RED}===CHECK_FAILED=== (generate)${NC}"; exit 1; }
     fmt || { echo -e "${RED}===CHECK_FAILED=== (fmt)${NC}"; exit 1; }
     lint || { echo -e "${RED}===CHECK_FAILED=== (lint)${NC}"; exit 1; }
+    check_localization || { echo -e "${RED}===CHECK_FAILED=== (localization)${NC}"; exit 1; }
     fast_check_build_analyze_test || { echo -e "${RED}===CHECK_FAILED=== (test)${NC}"; exit 1; }
     comment_scan || { echo -e "${RED}===CHECK_FAILED=== (comment_scan)${NC}"; exit 1; }
     deploy_simulator || { echo -e "${RED}===CHECK_FAILED=== (deploy_simulator)${NC}"; exit 1; }
     ;;
+  l10n) check_localization "$@" ;;
   icons) icons "$@" ;;
   help|*) usage ;;
 esac

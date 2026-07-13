@@ -9,6 +9,7 @@
 "home_add_operation" = "Operation";
 "home_settings" = "Settings";
 "home_delete" = "Delete";
+"home_delete_confirm" = "Are you sure you want to delete this operation?";
 "home_order" = "Order";
 "homeSortHandle" = "Drag to reorder";
 "homeSortHint" = "Long press and drag to reorder operations.";
@@ -45,6 +46,7 @@
 
 "error" = "Error";
 "color" = "Color";
+"color_accessibility_format" = "Color #%@";
 
 "sentence_count_2_3" = "2–3 sentences";
 "sentence_count_5_6" = "5–6 sentences";

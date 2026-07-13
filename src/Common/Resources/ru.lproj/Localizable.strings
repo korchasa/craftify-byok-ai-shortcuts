@@ -11,5 +11,4 @@
 "error_api_key_access" = "Ошибка доступа к API-ключу";
 "error_processing_manager_unavailable" = "Менеджер обработки недоступен";
 "OK" = "ОК";
-"error_timeout" = "Время обработки истекло";
 "error_robots_disallowed" = "Доступ к странице запрещён правилами сайта";

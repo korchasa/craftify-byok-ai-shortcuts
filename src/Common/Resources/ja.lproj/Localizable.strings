@@ -14,3 +14,4 @@
 
 /* Misc */
 "OK" = "OK";
+"error_robots_disallowed" = "サイトの規則によりページへのアクセスが許可されていません";

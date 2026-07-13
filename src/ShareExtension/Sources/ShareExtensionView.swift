@@ -1,9 +1,6 @@
 import Foundation
 import SwiftUI
 
-// swiftlint:disable:next file_name one_declaration_per_file file_types_order no_grouping_extension convenience_type prefer_self_in_static_references
-// Этот файл сгенерирован SwiftGen. Не редактируйте вручную.
-
 public struct ShareExtensionView: View {
     @ObservedObject public var viewModel: ShareExtensionViewModel
     @State private var showAlert = false
@@ -146,7 +143,7 @@ public struct ShareExtensionView: View {
                             .foregroundColor(palette.operationSymbolColor())
                             .font(.system(size: ColorPaletteConstants.circleSize * symbolScale))
                             .fontWeight(.semibold)
-                            .accessibilityLabel("SF Symbol for operation: \(op.operation.rawValue)")
+                            .accessibilityHidden(true)
                     }
                     Text(operationCategory(for: op))
                         .font(.craftifyBody)

@@ -9,6 +9,7 @@
 "home_add_operation" = "Операция";
 "home_settings" = "Настройки";
 "home_delete" = "Удалить";
+"home_delete_confirm" = "Вы уверены, что хотите удалить операцию?";
 "home_order" = "Сортировка";
 "homeSortHandle" = "Тянуть для сортировки";
 "homeSortHint" = "Долго нажмите и тяните для сортировки.";
@@ -45,6 +46,7 @@
 
 "error" = "Ошибка";
 "color" = "Цвет";
+"color_accessibility_format" = "Цвет #%@";
 
 "sentence_count_2_3" = "2–3 предложения";
 "sentence_count_5_6" = "5–6 предложений";
@@ -52,19 +54,8 @@
 "sentence_count_18_20" = "18–20 предложений";
 
 /* Share Extension UI */
-"share_title" = "Craftify";
-"share_cancel" = "Отмена";
-"share_copied" = "Скопировано";
-"share_close" = "Закрыть";
 
 /* Language Names */
-"language_russian" = "Русский";
-"language_english" = "Английский";
-"language_spanish" = "Испанский";
-"language_french" = "Французский";
-"language_german" = "Немецкий";
-"language_chinese" = "Китайский";
-"language_japanese" = "Японский";
 
 "error_no_text" = "Нет текста";
 "error_text_too_long" = "Слишком длинный текст";
