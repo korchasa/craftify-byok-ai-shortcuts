@@ -25,7 +25,29 @@ public final class SettingsViewModelTests: XCTestCase {
         await viewModel.load()
         XCTAssertEqual(viewModel.apiKey, "")
         XCTAssertFalse(viewModel.isKeyPresent)
-        XCTAssertEqual(viewModel.maskedApiKey, maskKey(nil))
+        XCTAssertEqual(viewModel.maskedApiKey, shortMaskKey(nil))
+    }
+
+    public func testBeginEditing_StartsEmptyAndNeverExposesStoredKey() async {
+        let storedKey = "sk-secret-key-1234567890"
+        let editingViewModel = SettingsViewModel(
+            authManager: AuthManagerStub(key: storedKey),
+            verifier: APIKeyVerifierStub()
+        )
+        await editingViewModel.load()
+        // Реальный ключ никогда не попадает в поле ввода — только короткая маска
+        XCTAssertTrue(editingViewModel.isKeyPresent)
+        XCTAssertEqual(editingViewModel.apiKey, "")
+        XCTAssertEqual(editingViewModel.maskedApiKey, shortMaskKey(storedKey))
+        XCTAssertFalse(editingViewModel.maskedApiKey.contains("secret-key"))
+        // Редактирование начинается с пустого поля
+        editingViewModel.beginEditing()
+        XCTAssertTrue(editingViewModel.isEditingKey)
+        XCTAssertEqual(editingViewModel.apiKey, "")
+        // Отмена возвращает к маскированному состоянию
+        editingViewModel.cancelEditing()
+        XCTAssertFalse(editingViewModel.isEditingKey)
+        XCTAssertEqual(editingViewModel.apiKey, "")
     }
 
     public func testSaveKey_Valid() async {
@@ -35,8 +57,9 @@ public final class SettingsViewModelTests: XCTestCase {
         await MainActor.run { viewModel.apiKey = "sk-valid-key-1234567890" }
         await viewModel.saveKey()
         XCTAssertTrue(viewModel.isKeyPresent)
-        XCTAssertEqual(viewModel.maskedApiKey, maskKey("sk-valid-key-1234567890"))
+        XCTAssertEqual(viewModel.maskedApiKey, shortMaskKey("sk-valid-key-1234567890"))
         XCTAssertNil(viewModel.errorMessage)
+        XCTAssertFalse(viewModel.isEditingKey)
     }
 
     public func testSaveKey_Invalid() async {

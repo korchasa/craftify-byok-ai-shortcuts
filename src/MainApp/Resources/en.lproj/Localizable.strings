@@ -28,6 +28,10 @@
 /* SettingsView */
 "settings_title" = "Settings";
 "settings_llm_api_key" = "LLM API Key";
+"settings_change_key" = "Change";
+"settings_delete_key" = "Delete";
+"settings_delete_key_confirm" = "Delete the API key?";
+"settings_cancel_editing" = "Cancel";
 "settings_done" = "Cancel";
 "settings_native_language" = "Native language";
 "settings_native_language_section" = "Select your native language. It will be used as the main language for summarize and explain operations.";

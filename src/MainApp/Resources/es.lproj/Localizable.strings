@@ -28,6 +28,10 @@
 /* SettingsView */
 "settings_title" = "Ajustes";
 "settings_llm_api_key" = "Clave API de LLM";
+"settings_change_key" = "Cambiar";
+"settings_delete_key" = "Eliminar";
+"settings_delete_key_confirm" = "¿Eliminar la clave de API?";
+"settings_cancel_editing" = "Cancelar";
 "settings_done" = "Cancelar";
 "settings_native_language" = "Idioma nativo";
 "settings_native_language_section" = "Seleccione su idioma nativo. Se usará como idioma principal para las operaciones de resumir y explicar.";

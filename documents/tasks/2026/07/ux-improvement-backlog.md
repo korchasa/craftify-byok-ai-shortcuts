@@ -224,7 +224,7 @@ Union dispositions (planner research ∪ scout):
 - [x] FR-UX.STAGED-PROGRESS: during processing the extension shows the current stage — "Loading page…" while fetching a URL, "Asking the model…" during the LLM call — localized in 11 locales
   - Test: `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testProcess_PublishesStages`
   - Evidence: `./run test`
-- [ ] FR-UX.MASKED-KEY: Settings shows the stored key only masked with Change/Delete actions; the edit field never pre-fills the real key
+- [x] FR-UX.MASKED-KEY: Settings shows the stored key only masked with Change/Delete actions; the edit field never pre-fills the real key
   - Test: `src/MainApp/UnitTests/SettingsViewModelTests.swift::testBeginEditing_StartsEmptyAndNeverExposesStoredKey`
   - Evidence: `./run test`
 - [ ] FR-UX.RETRY: transient errors (network, rate limit, timeout, processing) show a Retry button in the alert that re-runs the same operation; non-transient errors do not

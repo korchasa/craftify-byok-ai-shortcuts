@@ -28,6 +28,10 @@
 /* SettingsView */
 "settings_title" = "Налаштування";
 "settings_llm_api_key" = "API-ключ LLM";
+"settings_change_key" = "Змінити";
+"settings_delete_key" = "Видалити";
+"settings_delete_key_confirm" = "Видалити API-ключ?";
+"settings_cancel_editing" = "Скасувати";
 "settings_done" = "Скасувати";
 "settings_native_language" = "Рідна мова";
 "settings_native_language_section" = "Виберіть вашу рідну мову. Вона буде використана як основна мова для операцій \"Підсумувати\" та \"Пояснити\".";

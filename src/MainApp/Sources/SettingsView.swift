@@ -100,10 +100,55 @@ public struct SettingsView: View {
     private struct SettingsApiKeySection: View {
         @ObservedObject var viewModel: SettingsViewModel
         @FocusState var isTextFieldFocused: Bool
+        @State private var showDeleteConfirmation = false
+        @Environment(\.colorPalette) private var palette
         var body: some View {
-            SecureField(L10n.settingsLlmApiKey, text: $viewModel.apiKey)
-                .focused($isTextFieldFocused)
-                .accessibilityLabel(L10n.settingsLlmApiKey)
+            if viewModel.isKeyPresent, !viewModel.isEditingKey {
+                maskedKeyRow
+            } else {
+                editingRow
+            }
+        }
+
+        /// Сохранённый ключ показывается только короткой маской с действиями «Изменить»/«Удалить»
+        private var maskedKeyRow: some View {
+            HStack {
+                Text(viewModel.maskedApiKey)
+                    .font(.craftifyBody)
+                    .fontWeight(.regular)
+                    .foregroundColor(palette.secondaryText())
+                    .accessibilityLabel(L10n.settingsLlmApiKey)
+                Spacer()
+                Button(L10n.settingsChangeKey) { viewModel.beginEditing() }
+                    .font(.craftifyBody)
+                Button(role: .destructive, action: { showDeleteConfirmation = true }) {
+                    Text(L10n.settingsDeleteKey)
+                        .font(.craftifyBody)
+                        .foregroundColor(palette.destructive())
+                }
+            }
+            .confirmationDialog(
+                L10n.settingsDeleteKeyConfirm,
+                isPresented: $showDeleteConfirmation,
+                titleVisibility: .visible
+            ) {
+                Button(L10n.settingsDeleteKey, role: .destructive) {
+                    Task { await viewModel.deleteKey() }
+                }
+            }
+        }
+
+        /// Ввод нового ключа всегда начинается с пустого поля
+        private var editingRow: some View {
+            HStack {
+                SecureField(L10n.settingsLlmApiKey, text: $viewModel.apiKey)
+                    .focused($isTextFieldFocused)
+                    .accessibilityLabel(L10n.settingsLlmApiKey)
+                if viewModel.isEditingKey {
+                    Button(L10n.settingsCancelEditing) { viewModel.cancelEditing() }
+                        .font(.craftifyBody)
+                }
+            }
         }
     }
 

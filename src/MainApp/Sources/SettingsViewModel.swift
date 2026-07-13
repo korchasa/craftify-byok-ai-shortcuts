@@ -15,6 +15,8 @@ public final class SettingsViewModel: ObservableObject {
     @Published public var isLoading: Bool = false
     /// Признак наличия ключа
     @Published public var isKeyPresent: Bool = false
+    /// Идёт ввод нового ключа (поле всегда начинается пустым — сохранённый ключ не раскрывается)
+    @Published public var isEditingKey: Bool = false
     /// Выбранный язык пользователя; сохраняется сразу при изменении
     @Published public var selectedNativeLanguage: String = AppSettingsManager.shared.nativeLanguage {
         didSet {
@@ -28,6 +30,7 @@ public final class SettingsViewModel: ObservableObject {
         didSet {
             guard oldValue != selectedProvider else { return }
             AppSettingsManager.shared.llmProvider = selectedProvider
+            isEditingKey = false
             Task { await load() }
         }
     }
@@ -45,21 +48,36 @@ public final class SettingsViewModel: ObservableObject {
         Task { await load() }
     }
 
-    /// Загрузка состояния (ключ текущего провайдера)
+    /// Загрузка состояния (ключ текущего провайдера).
+    /// Реальный ключ никогда не публикуется — наружу уходит только короткая маска.
     public func load() async {
         isLoading = true
         defer { isLoading = false }
         do {
             let key = try await authManager.getAPIKey()
-            apiKey = key ?? ""
-            maskedApiKey = authManager.maskedAPIKey(key)
+            apiKey = ""
+            maskedApiKey = shortMaskKey(key)
             isKeyPresent = (key != nil)
         } catch {
             apiKey = ""
-            maskedApiKey = authManager.maskedAPIKey(nil)
+            maskedApiKey = shortMaskKey(nil)
             isKeyPresent = false
             presentError(error)
         }
+    }
+
+    /// Начать ввод нового ключа: поле всегда пустое
+    public func beginEditing() {
+        apiKey = ""
+        errorMessage = nil
+        isEditingKey = true
+    }
+
+    /// Отменить ввод и вернуться к маскированному отображению
+    public func cancelEditing() {
+        apiKey = ""
+        errorMessage = nil
+        isEditingKey = false
     }
 
     /// Проверить ключ у провайдера и сохранить
@@ -73,8 +91,10 @@ public final class SettingsViewModel: ObservableObject {
         }
         do {
             try await authManager.setAPIKey(key)
-            maskedApiKey = authManager.maskedAPIKey(key)
+            apiKey = ""
+            maskedApiKey = shortMaskKey(key)
             isKeyPresent = true
+            isEditingKey = false
             errorMessage = nil
         } catch {
             presentError(error)
@@ -88,8 +108,9 @@ public final class SettingsViewModel: ObservableObject {
         do {
             try await authManager.deleteAPIKey()
             apiKey = ""
-            maskedApiKey = authManager.maskedAPIKey(nil)
+            maskedApiKey = shortMaskKey(nil)
             isKeyPresent = false
+            isEditingKey = false
             errorMessage = nil
         } catch {
             presentError(error)
