@@ -1,25 +1,20 @@
 import SwiftUI
 
-/// Font styles for Craftify app (общий для всех модулей)
+/// Font styles for Craftify app (общий для всех модулей).
+/// Все шрифты относительны к текстовым стилям и масштабируются с Dynamic Type.
 public extension Font {
-    /// Title font (Semibold, 22pt)
+    /// Title font (Semibold, base 22pt = title2)
     static var craftifyTitle: Font {
-        .system(size: FontConstants.titleSize, weight: .semibold, design: .default)
+        .system(.title2, design: .default).weight(.semibold)
     }
 
-    /// Body font (Semibold, 17pt)
+    /// Body font (Semibold, base 17pt = body)
     static var craftifyBody: Font {
-        .system(size: FontConstants.bodySize, weight: .semibold, design: .default)
+        .system(.body, design: .default).weight(.semibold)
     }
 
-    /// Footnote font (Semibold, 13pt)
+    /// Footnote font (Semibold, base 13pt = footnote)
     static var craftifyFootnote: Font {
-        .system(size: FontConstants.footnoteSize, weight: .semibold, design: .default)
+        .system(.footnote, design: .default).weight(.semibold)
     }
-}
-
-private enum FontConstants {
-    static let titleSize: CGFloat = 22
-    static let bodySize: CGFloat = 17
-    static let footnoteSize: CGFloat = 13
 }

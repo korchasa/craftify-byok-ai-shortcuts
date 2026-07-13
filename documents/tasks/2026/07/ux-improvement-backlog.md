@@ -218,7 +218,7 @@ Union dispositions (planner research ∪ scout):
 - [x] FR-UX.SHEET-HEIGHT: share-extension sheet fits its content (operations grid) and grows to `.large()` when a result is displayed; iPad popover is ~360–400pt wide, not 180pt
   - Test: `src/ShareExtension/UnitTests/ShareExtensionViewHeightTests.swift::testDetentGrowsWithOperationsAndResult`
   - Evidence: `./run test`
-- [ ] FR-UX.DYNAMIC-TYPE: all app and extension text scales with the system font size setting; layouts stay usable at accessibility sizes (capped where needed)
+- [x] FR-UX.DYNAMIC-TYPE: all app and extension text scales with the system font size setting; layouts stay usable at accessibility sizes (capped where needed)
   - Test: `src/MainApp/UnitTests/FontCraftifyTests.swift::testCraftifyFontsUseTextStyles`
   - Evidence: `./run test`
 - [ ] FR-UX.STAGED-PROGRESS: during processing the extension shows the current stage — "Loading page…" while fetching a URL, "Asking the model…" during the LLM call — localized in 11 locales

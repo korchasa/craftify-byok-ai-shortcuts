@@ -127,9 +127,11 @@ public struct HomeView: View {
         let isEditing: Bool
         let onEdit: () -> Void
 
-        private static let circleSize: CGFloat = 28
+        private static let baseCircleSize: CGFloat = 28
         private static let symbolScale: CGFloat = 0.5
         private static let horizontalSpacing: CGFloat = 12
+        /// Кружок операции масштабируется вместе с системным размером шрифта
+        @ScaledMetric(relativeTo: .body) private var circleSize: CGFloat = Self.baseCircleSize
 
         var body: some View {
             Button(action: onEdit) {
@@ -137,11 +139,11 @@ public struct HomeView: View {
                     ZStack {
                         Circle()
                             .fill(Color(hex: operation.colorHex))
-                            .frame(width: Self.circleSize, height: Self.circleSize)
+                            .frame(width: circleSize, height: circleSize)
                             .accessibilityHidden(true)
                         Image(systemName: operation.operation.sfSymbol)
                             .foregroundColor(palette.operationSymbolColor())
-                            .font(.system(size: Self.circleSize * Self.symbolScale))
+                            .font(.system(size: circleSize * Self.symbolScale))
                             .fontWeight(.semibold)
                             .accessibilityLabel(LocalizedStringKey(operationLabel(for: operation.operation)))
                     }

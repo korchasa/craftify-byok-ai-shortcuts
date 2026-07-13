@@ -24,6 +24,8 @@ public enum ShareExtensionViewConstants {
     public static let contentTopSpacing: CGFloat = 8
     /// Множитель высоты для кнопки операции
     public static let operationHeightMultiplier: CGFloat = 1.5
+    /// Масштаб символа операции относительно кружка
+    public static let operationSymbolScale: CGFloat = 0.5
     /// Минимальная высота кнопки операции
     public static let operationMinHeight: CGFloat = operationHeightMultiplier * ColorPickerLayoutConstants.circleSize
 }

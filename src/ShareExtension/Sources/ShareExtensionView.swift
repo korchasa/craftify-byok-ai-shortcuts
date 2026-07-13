@@ -7,6 +7,11 @@ public struct ShareExtensionView: View {
     @State private var alertMessage = ""
     @State private var isProcessing = false
     @Environment(\.colorScheme) private var colorScheme
+    /// Символ операции и минимальная высота карточки масштабируются с Dynamic Type
+    @ScaledMetric(relativeTo: .body) private var operationSymbolSize: CGFloat =
+        ColorPaletteConstants.circleSize * ShareExtensionViewConstants.operationSymbolScale
+    @ScaledMetric(relativeTo: .body) private var operationMinHeight: CGFloat =
+        ShareExtensionViewConstants.operationMinHeight
     private var palette: ShareExtensionColorPaletteProviding {
         ShareExtensionColorPaletteFactory.palette(for: colorScheme)
     }
@@ -93,6 +98,8 @@ public struct ShareExtensionView: View {
         .background(palette.background())
         // Keep safe area so bottom inset matches Main screen
         .zIndex(ZIndexConstants.overlay)
+        // Крупные размеры ограничиваем, чтобы сетка 2xN оставалась пригодной
+        .dynamicTypeSize(.xSmall ... .accessibility3)
         .environment(\.shareExtensionColorPalette, palette)
         // ViewModel subscriptions & alerts
         .onReceive(viewModel.$errorMessage) { msg in
@@ -128,18 +135,17 @@ public struct ShareExtensionView: View {
 
     private var operationsGrid: some View {
         let cardCornerRadius: CGFloat = 12
-        let symbolScale: CGFloat = 0.5
         let vStackSpacing: CGFloat = 4
         let hStackSpacing: CGFloat = 6
         return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: ShareExtensionViewConstants.gridSpacing) {
             ForEach(viewModel.operations, id: \ .id) { op in
-                operationButton(for: op, cardCornerRadius: cardCornerRadius, symbolScale: symbolScale, vStackSpacing: vStackSpacing, hStackSpacing: hStackSpacing)
+                operationButton(for: op, cardCornerRadius: cardCornerRadius, vStackSpacing: vStackSpacing, hStackSpacing: hStackSpacing)
             }
         }
         .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
     }
 
-    private func operationButton(for op: InventoryOperation, cardCornerRadius: CGFloat, symbolScale: CGFloat, vStackSpacing: CGFloat, hStackSpacing: CGFloat) -> some View {
+    private func operationButton(for op: InventoryOperation, cardCornerRadius: CGFloat, vStackSpacing: CGFloat, hStackSpacing: CGFloat) -> some View {
         let color = Color(hex: op.colorHex)
         return Button(action: { viewModel.process(operation: op) }) {
             VStack(spacing: vStackSpacing) {
@@ -147,7 +153,7 @@ public struct ShareExtensionView: View {
                     ZStack {
                         Image(systemName: op.operation.sfSymbol)
                             .foregroundColor(palette.operationSymbolColor())
-                            .font(.system(size: ColorPaletteConstants.circleSize * symbolScale))
+                            .font(.system(size: operationSymbolSize))
                             .fontWeight(.semibold)
                             .accessibilityHidden(true)
                     }
@@ -162,7 +168,7 @@ public struct ShareExtensionView: View {
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, minHeight: ShareExtensionViewConstants.operationMinHeight)
+            .frame(maxWidth: .infinity, minHeight: operationMinHeight)
             .padding()
             .background(color)
             .foregroundColor(palette.primaryButtonText())
