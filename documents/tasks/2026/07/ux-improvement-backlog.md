@@ -221,7 +221,7 @@ Union dispositions (planner research ∪ scout):
 - [x] FR-UX.DYNAMIC-TYPE: all app and extension text scales with the system font size setting; layouts stay usable at accessibility sizes (capped where needed)
   - Test: `src/MainApp/UnitTests/FontCraftifyTests.swift::testCraftifyFontsUseTextStyles`
   - Evidence: `./run test`
-- [ ] FR-UX.STAGED-PROGRESS: during processing the extension shows the current stage — "Loading page…" while fetching a URL, "Asking the model…" during the LLM call — localized in 11 locales
+- [x] FR-UX.STAGED-PROGRESS: during processing the extension shows the current stage — "Loading page…" while fetching a URL, "Asking the model…" during the LLM call — localized in 11 locales
   - Test: `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testProcess_PublishesStages`
   - Evidence: `./run test`
 - [ ] FR-UX.MASKED-KEY: Settings shows the stored key only masked with Change/Delete actions; the edit field never pre-fills the real key

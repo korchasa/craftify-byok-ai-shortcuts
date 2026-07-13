@@ -13,6 +13,8 @@
 "operation_label_summarize" = "Обобщи";
 
 "processing" = "Обработва се...";
+"progress_loading_page" = "Зареждане на страницата…";
+"progress_asking_model" = "Запитване към модела…";
 "error" = "Грешка";
 
 "error_no_text" = "Няма текст за обработка";

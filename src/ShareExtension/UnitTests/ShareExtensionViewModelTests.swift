@@ -220,6 +220,47 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertEqual(errorCount, 1)
     }
 
+    func testProcess_PublishesStages() async {
+        // Arrange
+        let inventoryManager = InventoryManagerStub()
+        let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")
+        let clipboardManager = ClipboardManagerStub()
+        let processingManager = ProcessingManagerStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: inventoryManager,
+            authManager: authManager,
+            clipboardManager: clipboardManager,
+            processingManager: processingManager,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+        viewModel.processingTimeoutSeconds = 2
+        let op = InventoryOperation(operation: .translate, params: Data())
+        manager.inputText = "Hello"
+        var stages: [ProcessingStage?] = []
+        let stageCancellable = viewModel.$stage.sink { stages.append($0) }
+        let exp = expectation(description: "CloseExtension")
+        var closeCancellable: AnyCancellable?
+        closeCancellable = viewModel.$shouldCloseExtension.sink { shouldClose in
+            if shouldClose {
+                exp.fulfill()
+                closeCancellable?.cancel()
+            }
+        }
+        // Act
+        viewModel.process(operation: op)
+        await fulfillment(of: [exp], timeout: 1.0)
+        stageCancellable.cancel()
+        // Assert: для текстового входа публикуется стадия запроса к модели,
+        // стадия загрузки страницы не появляется, после завершения стадия сброшена
+        XCTAssertTrue(stages.contains(.askingModel))
+        XCTAssertFalse(stages.contains(.fetchingPage))
+        XCTAssertNil(viewModel.stage)
+    }
+
     func testCopyDisplayedResultAndClose_CopiesAndCloses() {
         // Arrange
         let inventoryManager = InventoryManagerStub()

@@ -214,7 +214,7 @@ public struct ShareExtensionView: View {
         VStack(spacing: ShareExtensionViewConstants.verticalSpacing) {
             ProgressView()
                 .progressViewStyle(.circular)
-            Text(L10n.processing)
+            Text(stageText)
                 .font(.craftifyBody)
                 .fontWeight(.semibold)
         }
@@ -222,7 +222,16 @@ public struct ShareExtensionView: View {
         .background(RoundedRectangle(cornerRadius: ShareExtensionViewConstants.overlayCornerRadius).fill(Color(.systemBackground).opacity(ShareExtensionViewConstants.overlayOpacity)))
         .shadow(radius: ShareExtensionViewConstants.overlayShadow)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel(L10n.processing)
+        .accessibilityLabel(stageText)
+    }
+
+    /// Локализованный текст текущей стадии обработки
+    private var stageText: String {
+        switch viewModel.stage {
+        case .fetchingPage: L10n.progressLoadingPage
+        case .askingModel: L10n.progressAskingModel
+        case nil: L10n.processing
+        }
     }
 
     /// Возвращает локализованное название текущей операции для заголовка окна

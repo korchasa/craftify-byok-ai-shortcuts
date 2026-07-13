@@ -17,6 +17,8 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public var errorMessage: String? = nil
     @Published public var displayResult: String? = nil
     @Published public var shouldCloseExtension: Bool = false
+    /// Текущая стадия обработки (nil вне обработки)
+    @Published public private(set) var stage: ProcessingStage? = nil
 
     // MARK: - Properties
 
@@ -78,12 +80,14 @@ public final class ShareExtensionViewModel: ObservableObject {
         processingTask?.cancel()
         manager.cancelProcessing()
         isProcessing = false
+        setStage(nil)
     }
 
     /// Сбрасывает ошибку после закрытия алерта и возвращает пользователя к сетке операций.
     public func dismissError() {
         errorMessage = nil
         isProcessing = false
+        setStage(nil)
     }
 
     /// Copies currently displayed result to clipboard and closes extension.
@@ -133,23 +137,50 @@ public final class ShareExtensionViewModel: ObservableObject {
 
         processingTask = Task { [weak self] in
             guard let self else { return }
-            do {
-                let opType = OperationFactory.make(kind: operation.operation, logManager: logManager)
-                let input = createOperationInput(isURL: OperationInput.isHttpURL(string: manager.inputText))
-
-                logOperationInput(input)
-
-                let resolvedText = try await opType.resolveInput(input: input)
-
-                logResolvedInput(resolvedText)
-
-                await runProcessingWithTimeout(operation: operation, resolvedText: resolvedText)
-            } catch {
-                await MainActor.run {
-                    self.handleProcessingError(error)
-                }
-            }
+            await runProcessingWithTimeout(operation: operation)
         }
+    }
+
+    /// Итог рабочей задачи: результат обработки либо ошибка подготовки входа
+    private enum WorkOutcome {
+        case finished((success: Bool, error: UserFacingError?)?)
+        case failed(Error)
+    }
+
+    /// Загружает вход (страницу для URL) и обрабатывает его моделью, публикуя стадии.
+    /// Выполняется целиком внутри бюджета таймаута обработки.
+    private func performWork(operation: InventoryOperation) async -> WorkOutcome {
+        do {
+            let opType = OperationFactory.make(kind: operation.operation, logManager: logManager)
+            let isURL = OperationInput.isHttpURL(string: manager.inputText)
+            let input = createOperationInput(isURL: isURL)
+
+            logOperationInput(input)
+
+            setStage(isURL ? .fetchingPage : .askingModel)
+            let resolvedText = try await opType.resolveInput(input: input)
+
+            logResolvedInput(resolvedText)
+
+            setStage(.askingModel)
+            let result = await manager.process(text: resolvedText, operation: operation)
+            return .finished(result)
+        } catch {
+            return .failed(error)
+        }
+    }
+
+    /// Публикует стадию обработки и логирует переход
+    private func setStage(_ newStage: ProcessingStage?) {
+        guard stage != newStage else { return }
+        stage = newStage
+        logManager.log(LogEntry(
+            level: .debug,
+            module: "ShareExtensionViewModel",
+            message: "Processing stage: \(newStage.map(String.init(describing:)) ?? "idle")",
+            metadata: [:],
+            timestamp: Date()
+        ))
     }
 
     private func createOperationInput(isURL: Bool) -> OperationInput {
@@ -237,11 +268,11 @@ public final class ShareExtensionViewModel: ObservableObject {
         }
     }
 
-    private func runProcessingWithTimeout(operation: InventoryOperation, resolvedText: String) async {
-        // Запускаем две задачи: обработка и таймер
-        await withTaskGroup(of: (finishedFirst: Int, result: (success: Bool, error: UserFacingError?)?).self) { group in
-            let workTask = Task<(success: Bool, error: UserFacingError?)?, Never> {
-                await self.manager.process(text: resolvedText, operation: operation)
+    private func runProcessingWithTimeout(operation: InventoryOperation) async {
+        // Запускаем две задачи: загрузка входа + обработка и таймер (общий бюджет времени)
+        await withTaskGroup(of: (finishedFirst: Int, outcome: WorkOutcome?).self) { group in
+            let workTask = Task<WorkOutcome, Never> {
+                await self.performWork(operation: operation)
             }
             let timeoutTask = Task<Void, Never> {
                 let timeoutNs = self.processingTimeoutSeconds * Double(ShareExtensionViewModelConstants.nanosecondsPerSecond)
@@ -255,12 +286,24 @@ public final class ShareExtensionViewModel: ObservableObject {
                 await timeoutTask.value
                 return (1, nil)
             }
-            let (finishedFirst, result) = await group.next() ?? (1, nil)
+            let (finishedFirst, outcome) = await group.next() ?? (1, nil)
             workTask.cancel()
             timeoutTask.cancel()
             await MainActor.run {
-                handleProcessingCompletion(finishedFirst: finishedFirst, result: result)
+                handleWorkCompletion(finishedFirst: finishedFirst, outcome: outcome)
             }
+        }
+    }
+
+    private func handleWorkCompletion(finishedFirst: Int, outcome: WorkOutcome?) {
+        setStage(nil)
+        switch outcome {
+        case let .failed(error):
+            handleProcessingError(error)
+        case let .finished(result):
+            handleProcessingCompletion(finishedFirst: finishedFirst, result: result)
+        case nil:
+            handleProcessingCompletion(finishedFirst: finishedFirst, result: nil)
         }
     }
 

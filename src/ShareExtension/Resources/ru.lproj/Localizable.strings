@@ -13,6 +13,8 @@
 "operation_label_summarize" = "Сократить";
 
 "processing" = "Обработка...";
+"progress_loading_page" = "Загружаем страницу…";
+"progress_asking_model" = "Спрашиваем модель…";
 "error" = "Ошибка";
 
 "error_no_text" = "Нет текста для обработки";

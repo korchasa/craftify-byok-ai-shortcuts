@@ -5,6 +5,9 @@ import SwiftSoup
 public final class SwiftSoupTextFetcher: TextFetching {
     private enum Constants {
         static let metaTagScanLimit = 250
+        /// Явный таймаут сетевых запросов: мёртвый сервер должен падать быстро,
+        /// не съедая весь бюджет обработки (30с)
+        static let requestTimeout: TimeInterval = 15
     }
 
     private let session: URLSessionProtocol
@@ -38,6 +41,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
 
         // Загружаем HTML с кастомным User-Agent
         var request = URLRequest(url: url)
+        request.timeoutInterval = Constants.requestTimeout
         request.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         let (data, response): (Data, URLResponse)
         do {
@@ -161,6 +165,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
         robotsURL.deleteLastPathComponent()
         robotsURL.appendPathComponent("robots.txt")
         var robotsRequest = URLRequest(url: robotsURL)
+        robotsRequest.timeoutInterval = Constants.requestTimeout
         robotsRequest.setValue(userAgent, forHTTPHeaderField: "User-Agent")
         do {
             let (data, _) = try await session.data(for: robotsRequest)

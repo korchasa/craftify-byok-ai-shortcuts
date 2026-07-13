@@ -13,6 +13,8 @@
 "operation_label_summarize" = "Riassumi";
 
 "processing" = "Elaborazione...";
+"progress_loading_page" = "Caricamento della pagina…";
+"progress_asking_model" = "Interrogazione del modello…";
 "error" = "Errore";
 
 "error_no_text" = "Nessun testo da elaborare";

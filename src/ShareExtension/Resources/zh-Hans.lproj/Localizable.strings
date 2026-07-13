@@ -13,6 +13,8 @@
 "operation_label_summarize" = "总结";
 
 "processing" = "处理中...";
+"progress_loading_page" = "正在加载页面…";
+"progress_asking_model" = "正在询问模型…";
 "error" = "错误";
 
 "error_no_text" = "无可处理文本";
