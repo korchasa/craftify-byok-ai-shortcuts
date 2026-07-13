@@ -18,33 +18,63 @@ public final class SettingsViewModel: ObservableObject {
     /// Идёт ввод нового ключа (поле всегда начинается пустым — сохранённый ключ не раскрывается)
     @Published public var isEditingKey: Bool = false
     /// Выбранный язык пользователя; сохраняется сразу при изменении
-    @Published public var selectedNativeLanguage: String = AppSettingsManager.shared.nativeLanguage {
+    @Published public var selectedNativeLanguage: String {
         didSet {
             guard oldValue != selectedNativeLanguage else { return }
-            AppSettingsManager.shared.nativeLanguage = selectedNativeLanguage
+            settings.nativeLanguage = selectedNativeLanguage
         }
     }
 
-    /// Выбранный провайдер; сохраняется сразу при изменении, поле ключа перезагружается
-    @Published public var selectedProvider: LLMProvider = AppSettingsManager.shared.llmProvider {
+    /// Выбранный провайдер; сохраняется сразу при изменении, поле ключа и модель перезагружаются
+    @Published public var selectedProvider: LLMProvider {
         didSet {
             guard oldValue != selectedProvider else { return }
-            AppSettingsManager.shared.llmProvider = selectedProvider
+            settings.llmProvider = selectedProvider
             isEditingKey = false
+            selectedModel = settings.model(for: selectedProvider)
             Task { await load() }
         }
     }
 
+    /// Выбранная модель текущего провайдера; сохраняется сразу при изменении
+    @Published public var selectedModel: String {
+        didSet {
+            guard oldValue != selectedModel else { return }
+            settings.setModel(selectedModel, for: selectedProvider)
+        }
+    }
+
+    /// Проверенный список моделей текущего провайдера
+    public var curatedModels: [String] {
+        LLMModelCatalog.curatedModels(for: selectedProvider)
+    }
+
+    /// Разрешён ли свободный ввод модели для текущего провайдера (OpenRouter)
+    public var allowsCustomModel: Bool {
+        LLMModelCatalog.allowsCustomModel(selectedProvider)
+    }
+
     private let authManager: AuthManaging
     private let verifier: APIKeyVerifying
+    private let settings: AppSettingsManager
 
     /// Инициализация с менеджерами
     /// - Parameters:
     ///   - authManager: Менеджер API-ключа
     ///   - verifier: Проверка ключа у провайдера
-    public init(authManager: AuthManaging = AuthManager(), verifier: APIKeyVerifying = APIKeyVerifier()) {
+    ///   - settings: Хранилище настроек (App Group)
+    public init(
+        authManager: AuthManaging = AuthManager(),
+        verifier: APIKeyVerifying = APIKeyVerifier(),
+        settings: AppSettingsManager = .shared
+    ) {
         self.authManager = authManager
         self.verifier = verifier
+        self.settings = settings
+        self.selectedNativeLanguage = settings.nativeLanguage
+        let provider = settings.llmProvider
+        self.selectedProvider = provider
+        self.selectedModel = settings.model(for: provider)
         Task { await load() }
     }
 

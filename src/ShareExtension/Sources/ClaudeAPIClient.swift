@@ -28,14 +28,16 @@ public final class ClaudeAPIClient: LLMClienting {
     private static let httpStatusServerErrorUpperBound = 600
 
     private let apiURL = URL(string: ClaudeAPIClient.apiURLString)!
-    private let model = ClaudeAPIClient.modelName
+    /// Идентификатор модели; задаётся пользователем в настройках, по умолчанию — из каталога
+    public let model: String
     private let temperature: Double = ClaudeAPIClient.defaultTemperature
     private let maxTokens: Int = ClaudeAPIClient.defaultMaxTokens
     private let maxRetries = ClaudeAPIClient.maxRetryCount
     private let retryDelays: [UInt64] = ClaudeAPIClient.retryDelaysSeconds.map { $0 * ClaudeAPIClient.nanosecondsPerSecond }
 
-    public init(session: URLSession = .shared) {
+    public init(session: URLSession = .shared, model: String? = nil) {
         self.session = session
+        self.model = model ?? ClaudeAPIClient.modelName
     }
 
     deinit {}

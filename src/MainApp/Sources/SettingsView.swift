@@ -24,6 +24,8 @@ public struct SettingsView: View {
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                     SettingsProviderSection(viewModel: viewModel)
 
+                    SettingsModelSection(viewModel: viewModel)
+
                     Text(L10n.settingsLlmApiKey)
                         .font(.craftifyBody)
                         .fontWeight(.bold)
@@ -165,6 +167,42 @@ public struct SettingsView: View {
                     .lineLimit(ViewConstants.unlimitedLineLimit)
                     .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
             }
+        }
+    }
+
+    private struct SettingsModelSection: View {
+        @ObservedObject var viewModel: SettingsViewModel
+        var body: some View {
+            HStack {
+                Text(L10n.settingsModel)
+                    .font(.craftifyBody)
+                    .fontWeight(.bold)
+                Spacer()
+                if viewModel.allowsCustomModel {
+                    TextField(L10n.settingsModelCustomHint, text: $viewModel.selectedModel)
+                        .multilineTextAlignment(.trailing)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        .accessibilityLabel(L10n.settingsModel)
+                } else {
+                    Picker(L10n.settingsModel, selection: $viewModel.selectedModel) {
+                        ForEach(pickerModels, id: \.self) { model in
+                            Text(model).tag(model)
+                        }
+                    }
+                    .pickerStyle(MenuPickerStyle())
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                }
+            }
+        }
+
+        /// Сохранённое значение вне списка (например, модель убрали из каталога) остаётся выбираемым
+        private var pickerModels: [String] {
+            let curated = viewModel.curatedModels
+            if curated.contains(viewModel.selectedModel) {
+                return curated
+            }
+            return [viewModel.selectedModel] + curated
         }
     }
 

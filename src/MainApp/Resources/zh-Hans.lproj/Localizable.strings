@@ -85,4 +85,6 @@
 
 /* LLM Provider */
 "settings_llm_provider" = "LLM 提供商";
+"settings_model" = "模型";
+"settings_model_custom_hint" = "模型 ID";
 "privacy_policy_title" = "隐私政策";

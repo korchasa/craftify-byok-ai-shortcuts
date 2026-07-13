@@ -50,6 +50,30 @@ public final class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(editingViewModel.apiKey, "")
     }
 
+    public func testModelSelection_PersistsPerProvider() {
+        let suite = "test.craftify.model-selection"
+        UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite)
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let settings = AppSettingsManager(suiteName: suite)
+        let modelViewModel = SettingsViewModel(
+            authManager: AuthManagerStub(key: nil),
+            verifier: APIKeyVerifierStub(),
+            settings: settings
+        )
+        modelViewModel.selectedProvider = .openAI
+        // без сохранённого значения показывается модель по умолчанию
+        XCTAssertEqual(modelViewModel.selectedModel, LLMModelCatalog.defaultModel(for: .openAI))
+        modelViewModel.selectedModel = "gpt-4o"
+        // смена провайдера показывает его собственную модель
+        modelViewModel.selectedProvider = .claude
+        XCTAssertEqual(modelViewModel.selectedModel, LLMModelCatalog.defaultModel(for: .claude))
+        modelViewModel.selectedModel = "claude-3-5-haiku-latest"
+        // возврат к первому провайдеру восстанавливает его выбор
+        modelViewModel.selectedProvider = .openAI
+        XCTAssertEqual(modelViewModel.selectedModel, "gpt-4o")
+        XCTAssertEqual(settings.model(for: .claude), "claude-3-5-haiku-latest")
+    }
+
     public func testSaveKey_Valid() async {
         guard let viewModel, let _ = authManager else { XCTFail("nil stub")
             return

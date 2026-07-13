@@ -1,6 +1,6 @@
 ---
 date: "2026-07-13"
-status: to do
+status: done
 implements: [FR-UX.L10N-CLEANUP, FR-UX.SHEET-HEIGHT, FR-UX.DYNAMIC-TYPE, FR-UX.STAGED-PROGRESS, FR-UX.MASKED-KEY, FR-UX.RETRY, FR-UX.MODEL-SELECT]
 tags: [ux, backlog, share-extension, settings, localization]
 related_tasks: []
@@ -230,10 +230,10 @@ Union dispositions (planner research ∪ scout):
 - [x] FR-UX.RETRY: transient errors (network, rate limit, timeout, processing) show a Retry button in the alert that re-runs the same operation; non-transient errors do not
   - Test: `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testRetry_ReprocessesLastOperationOnlyForTransientErrors`
   - Evidence: `./run test`
-- [ ] FR-UX.MODEL-SELECT: user can pick the model per provider in Settings (curated list; free text for OpenRouter); choice persists per provider and is used by the extension
+- [x] FR-UX.MODEL-SELECT: user can pick the model per provider in Settings (curated list; free text for OpenRouter); choice persists per provider and is used by the extension
   - Test: `src/MainApp/UnitTests/SettingsViewModelTests.swift::testModelSelection_PersistsPerProvider`
   - Evidence: `./run test`
-- [ ] All 7 in-scope FR-UX.* sections added to SRS (`documents/srs.md`) with filled `**Acceptance:**` fields
+- [x] All 7 in-scope FR-UX.* sections added to SRS (`documents/srs.md`) with filled `**Acceptance:**` fields
   - Test: `manual — korchasa (SRS review)`
   - Evidence: `grep -c '### FR-UX\.' documents/srs.md` returns 7
 
@@ -317,6 +317,7 @@ Error handling: guard against zero/absurd reported heights (first layout pass) �
 
 ## Follow-ups
 
+- **WP7 step 5 (unknown-model error mapping)** — deferred: the data-first probe of each provider's actual "unknown model" response requires live API keys, which are not available to the agent. Until probed, an invalid model surfaces the provider's raw error message via the existing `LLMAPIClientError.invalidResponse` path. When picked up: run the probe with real keys, then map the observed shape to a dedicated advice key ("change model in Craftify settings") in the error-owning bundles.
 - **F12 custom prompt operation** — deferred by variant 3. When picked up: add stable `UUID` to `InventoryOperation` in the same schema migration; tolerant decoding of unknown `OperationKind` cases is a hard requirement (unknown case currently nukes the whole inventory).
 - **F15 history** — deferred by variant 3. BLOCKER stands: privacy policy (`privacy_policy_full`) says content is never stored; opt-in toggle + policy rewrite × 11 locales must land in the same change as any storage. When picked up, first AUDIT all 11 locale variants of the policy text — only the English text was inspected; other locales may phrase the storage commitment differently.
 - **F7 streaming** — deferred by variant 3. Preconditions (F19 sheet, F13 model injection) are satisfied by this wave; timeout redesign (first-token + idle) and the shared SSE parser design are recorded in Current State.

@@ -85,4 +85,6 @@
 
 /* LLM Provider */
 "settings_llm_provider" = "LLM доставчик";
+"settings_model" = "Модел";
+"settings_model_custom_hint" = "Идентификатор на модел";
 "privacy_policy_title" = "Политика за поверителност";

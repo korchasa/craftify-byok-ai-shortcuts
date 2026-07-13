@@ -23,14 +23,16 @@ public final class OpenRouterAPIClient: LLMClienting {
     private static let httpStatusServerErrorUpperBound = 600
 
     private let apiURL = URL(string: OpenRouterAPIClient.apiURLString)!
-    private let model = OpenRouterAPIClient.modelName
+    /// Идентификатор модели; задаётся пользователем в настройках, по умолчанию — из каталога
+    public let model: String
     private let temperature: Double = OpenRouterAPIClient.defaultTemperature
     private let maxTokens: Int = OpenRouterAPIClient.defaultMaxTokens
     private let maxRetries = OpenRouterAPIClient.maxRetryCount
     private let retryDelays: [UInt64] = OpenRouterAPIClient.retryDelaysSeconds.map { $0 * OpenRouterAPIClient.nanosecondsPerSecond }
 
-    public init(session: URLSession = .shared) {
+    public init(session: URLSession = .shared, model: String? = nil) {
         self.session = session
+        self.model = model ?? OpenRouterAPIClient.modelName
     }
 
     deinit {}

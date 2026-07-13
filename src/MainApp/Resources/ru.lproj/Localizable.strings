@@ -89,4 +89,6 @@
 
 /* LLM Provider */
 "settings_llm_provider" = "Провайдер LLM";
+"settings_model" = "Модель";
+"settings_model_custom_hint" = "Идентификатор модели";
 "privacy_policy_title" = "Политика конфиденциальности";

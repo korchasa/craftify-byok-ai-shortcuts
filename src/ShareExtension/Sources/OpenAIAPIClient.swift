@@ -25,14 +25,16 @@ public final class OpenAIAPIClient: LLMClienting {
     private static let httpStatusServerError = 500
 
     private let apiURL = URL(string: OpenAIAPIClient.apiURLString)!
-    private let model = OpenAIAPIClient.modelName
+    /// Идентификатор модели; задаётся пользователем в настройках, по умолчанию — из каталога
+    public let model: String
     private let temperature: Double = OpenAIAPIClient.defaultTemperature
     private let maxTokens: Int = OpenAIAPIClient.defaultMaxTokens
     private let maxRetries = OpenAIAPIClient.maxRetryCount
     private let retryDelays: [UInt64] = OpenAIAPIClient.retryDelaysSeconds.map { $0 * OpenAIAPIClient.nanosecondsPerSecond }
 
-    public init(session: URLSession = .shared) {
+    public init(session: URLSession = .shared, model: String? = nil) {
         self.session = session
+        self.model = model ?? OpenAIAPIClient.modelName
     }
 
     deinit {}

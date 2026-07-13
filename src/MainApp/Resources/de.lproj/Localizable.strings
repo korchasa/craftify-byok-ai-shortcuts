@@ -85,4 +85,6 @@
 
 /* LLM Provider */
 "settings_llm_provider" = "LLM-Anbieter";
+"settings_model" = "Modell";
+"settings_model_custom_hint" = "Modell-ID";
 "privacy_policy_title" = "Datenschutzerklärung";

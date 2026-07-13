@@ -85,4 +85,6 @@
 
 /* LLM Provider */
 "settings_llm_provider" = "LLM プロバイダ";
+"settings_model" = "モデル";
+"settings_model_custom_hint" = "モデルID";
 "privacy_policy_title" = "プライバシーポリシー";

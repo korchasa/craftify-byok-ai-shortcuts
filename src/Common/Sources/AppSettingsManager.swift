@@ -10,6 +10,7 @@ public final class AppSettingsManager {
     private let userDefaults: UserDefaults
     private let nativeLanguageKey = "CraftifyNativeLanguage"
     private let llmProviderKey = "CraftifyLLMProvider"
+    private let llmModelKeyPrefix = "CraftifyLLMModel."
     private let logManager: LogManagerShared
 
     /// Initializes the settings manager
@@ -54,6 +55,30 @@ public final class AppSettingsManager {
                 ]
             ))
         }
+    }
+
+    /// Выбранная модель для провайдера; без сохранённого значения — модель по умолчанию из каталога
+    public func model(for provider: LLMProvider) -> String {
+        let stored = userDefaults.string(forKey: llmModelKeyPrefix + provider.rawValue)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if let stored, !stored.isEmpty {
+            return stored
+        }
+        return LLMModelCatalog.defaultModel(for: provider)
+    }
+
+    /// Сохраняет выбранную модель для провайдера
+    public func setModel(_ model: String, for provider: LLMProvider) {
+        userDefaults.set(model, forKey: llmModelKeyPrefix + provider.rawValue)
+        logManager.log(LogEntry(
+            level: LogLevel.info,
+            module: "AppSettingsManager",
+            message: "[SET] CraftifyLLMModel",
+            metadata: [
+                "provider": provider.rawValue,
+                "newValue": model
+            ]
+        ))
     }
 
     /// English name for the current user's native language (e.g., "Russian" for "ru").
