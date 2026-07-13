@@ -19,6 +19,8 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public var shouldCloseExtension: Bool = false
     /// Текущая стадия обработки (nil вне обработки)
     @Published public private(set) var stage: ProcessingStage? = nil
+    /// Ключ последней ошибки — определяет, доступен ли повтор
+    @Published public private(set) var lastErrorKey: UserFacingErrorKey? = nil
 
     // MARK: - Properties
 
@@ -28,6 +30,25 @@ public final class ShareExtensionViewModel: ObservableObject {
     public var processingTimeoutSeconds: Double = 30
     public var logContentLength: Int = 100
     private var hasCompleted = false
+    /// Последняя запущенная операция — цель для повтора после транзиентной ошибки
+    private var lastOperation: InventoryOperation?
+
+    /// Транзиентные ошибки, для которых имеет смысл кнопка «Повторить»
+    private static let retryableErrorKeys: Set<UserFacingErrorKey> = [
+        .errorNetwork,
+        .errorRateLimited,
+        .errorProcessing,
+        .errorDownloadFailed,
+        .errorParsing,
+        .errorTimeout,
+        .adviceUnknownError
+    ]
+
+    /// Доступен ли повтор для последней ошибки
+    public var isLastErrorRetryable: Bool {
+        guard let key = lastErrorKey else { return false }
+        return Self.retryableErrorKeys.contains(key)
+    }
 
     private var logManager: LogManagerShared {
         manager.logManager
@@ -59,6 +80,9 @@ public final class ShareExtensionViewModel: ObservableObject {
     public func process(operation: InventoryOperation) {
         guard !isProcessing else { return }
         hasCompleted = false
+        lastOperation = operation
+        lastErrorKey = nil
+        manager.resetCancellation()
 
         logProcessingStart()
 
@@ -88,6 +112,14 @@ public final class ShareExtensionViewModel: ObservableObject {
         errorMessage = nil
         isProcessing = false
         setStage(nil)
+    }
+
+    /// Повторяет последнюю операцию после транзиентной ошибки (кнопка «Повторить» в алерте)
+    public func retry() {
+        guard isLastErrorRetryable, let operation = lastOperation else { return }
+        errorMessage = nil
+        setStage(nil)
+        process(operation: operation)
     }
 
     /// Copies currently displayed result to clipboard and closes extension.
@@ -320,6 +352,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 timestamp: Date()
             ))
             if errorMessage == nil {
+                lastErrorKey = .errorTimeout
                 errorMessage = L10n.errorTimeout
             }
             manager.cancelProcessing()
@@ -357,6 +390,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     }
 
     private func handleUserFacingError(_ error: UserFacingError) -> String {
+        lastErrorKey = error.messageKey
         let message = localized(error.messageKey)
         let advice = localized(error.adviceKey)
         var details = ""
@@ -381,8 +415,10 @@ public final class ShareExtensionViewModel: ObservableObject {
         } else if let fetchError = error as? FetchError {
             errorMsg = self.handleUserFacingError(fetchError.userFacingError)
         } else if let localized = error as? LocalizedError, let desc = localized.errorDescription {
+            lastErrorKey = .adviceUnknownError
             errorMsg = desc
         } else {
+            lastErrorKey = .adviceUnknownError
             errorMsg = UserFacingError.unknown(underlyingError: error).errorDescription
         }
         logManager.log(LogEntry(

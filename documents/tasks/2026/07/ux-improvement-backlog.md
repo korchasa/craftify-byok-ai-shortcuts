@@ -227,7 +227,7 @@ Union dispositions (planner research ∪ scout):
 - [x] FR-UX.MASKED-KEY: Settings shows the stored key only masked with Change/Delete actions; the edit field never pre-fills the real key
   - Test: `src/MainApp/UnitTests/SettingsViewModelTests.swift::testBeginEditing_StartsEmptyAndNeverExposesStoredKey`
   - Evidence: `./run test`
-- [ ] FR-UX.RETRY: transient errors (network, rate limit, timeout, processing) show a Retry button in the alert that re-runs the same operation; non-transient errors do not
+- [x] FR-UX.RETRY: transient errors (network, rate limit, timeout, processing) show a Retry button in the alert that re-runs the same operation; non-transient errors do not
   - Test: `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testRetry_ReprocessesLastOperationOnlyForTransientErrors`
   - Evidence: `./run test`
 - [ ] FR-UX.MODEL-SELECT: user can pick the model per provider in Settings (curated list; free text for OpenRouter); choice persists per provider and is used by the extension

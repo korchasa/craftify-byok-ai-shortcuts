@@ -122,15 +122,34 @@ public struct ShareExtensionView: View {
             }
         }
         .alert(isPresented: $showAlert) {
-            Alert(title: Text(L10n.error), message: Text(alertMessage), dismissButton: .default(Text(LocalizedStringKey("OK"))))
+            errorAlert
         }
-        .onChange(of: showAlert) { newValue in
-            if !newValue, !alertMessage.isEmpty {
-                // alert был закрыт — возвращаемся к сетке операций, чтобы пользователь мог повторить попытку
-                viewModel.dismissError()
+    }
+
+    /// Для транзиентных ошибок алерт предлагает повтор без повторного выбора операции
+    private var errorAlert: Alert {
+        if viewModel.isLastErrorRetryable {
+            return Alert(
+                title: Text(L10n.error),
+                message: Text(alertMessage),
+                primaryButton: .default(Text(L10n.retry)) {
+                    alertMessage = ""
+                    viewModel.retry()
+                },
+                secondaryButton: .cancel(Text(LocalizedStringKey("OK"))) {
+                    alertMessage = ""
+                    viewModel.dismissError()
+                }
+            )
+        }
+        return Alert(
+            title: Text(L10n.error),
+            message: Text(alertMessage),
+            dismissButton: .default(Text(LocalizedStringKey("OK"))) {
                 alertMessage = ""
+                viewModel.dismissError()
             }
-        }
+        )
     }
 
     private var operationsGrid: some View {

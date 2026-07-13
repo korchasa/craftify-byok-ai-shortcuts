@@ -27,6 +27,7 @@ public enum UserFacingErrorKey: String {
     case errorApiKeyMissing = "error_api_key_missing"
     case adviceAddApiKeyInApp = "advice_add_api_key_in_app"
     case errorRateLimited = "error_rate_limited"
+    case errorTimeout = "error_timeout"
     case adviceOpenAppToConsent = "advice_open_app_to_consent"
     // Добавьте другие ключи по мере необходимости
 

@@ -1,6 +1,7 @@
 /* Share Extension UI */
 "share_title" = "Craftify";
 "share_cancel" = "Close";
+"retry" = "Retry";
 "share_copy_close" = "Copy & Close";
 
 /* Picker Values */

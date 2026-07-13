@@ -1,6 +1,7 @@
 /* Share Extension UI */
 "share_title" = "Craftify";
 "share_cancel" = "Закрыть";
+"retry" = "Повторить";
 "share_copy_close" = "Скопировать и закрыть";
 
 /* Picker Values */

@@ -171,6 +171,13 @@ public final class ShareExtensionManager {
         isCancelled = true
     }
 
+    /// Сбрасывает флаг отмены перед новым запуском обработки.
+    /// Нужен для повтора после таймаута: таймаут ставит флаг через cancelProcessing,
+    /// и без сброса новый запуск сразу завершился бы ошибкой «отменено».
+    public func resetCancellation() {
+        isCancelled = false
+    }
+
     // MARK: - Clipboard Helper
 
     /// Copies provided text to clipboard using injected clipboard manager.

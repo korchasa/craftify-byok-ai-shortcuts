@@ -1,6 +1,7 @@
 /* Share Extension UI */
 "share_title" = "Craftify";
 "share_cancel" = "閉じる";
+"retry" = "再試行";
 "share_copy_close" = "コピーして閉じる";
 
 /* Picker Values */
