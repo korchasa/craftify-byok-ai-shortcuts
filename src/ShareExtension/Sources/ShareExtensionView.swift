@@ -66,7 +66,13 @@ public struct ShareExtensionView: View {
             // Scrollable header + content
             ScrollView {
                 mainContentVStack
+                    .background(
+                        GeometryReader { proxy in
+                            Color.clear.preference(key: ContentHeightKey.self, value: proxy.size.height)
+                        }
+                    )
             }
+            .onPreferenceChange(ContentHeightKey.self) { viewModel.contentHeight = $0 }
             // Processing overlay
             if isProcessing {
                 progressOverlay

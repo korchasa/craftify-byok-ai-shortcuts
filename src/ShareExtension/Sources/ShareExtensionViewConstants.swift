@@ -16,8 +16,8 @@ public enum ShareExtensionViewConstants {
     public static let overlayOpacity: Double = 0.95
     /// Тень overlay прогресса
     public static let overlayShadow: CGFloat = 8
-    /// Ширина прогресс-бара
-    public static let progressWidth: CGFloat = 180
+    /// Ширина popover на iPad
+    public static let popoverWidth: CGFloat = 380
     /// Радиус blur при обработке
     public static let blurRadius: CGFloat = 2
     /// Отступ над заголовком контента

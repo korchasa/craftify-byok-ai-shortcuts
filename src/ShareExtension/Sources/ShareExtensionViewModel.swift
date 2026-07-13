@@ -11,6 +11,8 @@ public final class ShareExtensionViewModel: ObservableObject {
     // MARK: - Published Properties
 
     @Published public var operations: [InventoryOperation] = []
+    /// Замеренная высота контента (PreferenceKey из ShareExtensionView) для адаптивного detent
+    @Published public var contentHeight: CGFloat = 0
     @Published public var isProcessing: Bool = false
     @Published public var errorMessage: String? = nil
     @Published public var displayResult: String? = nil
