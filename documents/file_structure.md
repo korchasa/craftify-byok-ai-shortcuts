@@ -202,8 +202,8 @@ src/
     Sources/
       ShareExtensionManager.swift   # Reads inventory, API key, triggers processing (учитывает resultMode)
       ProcessingManager.swift       # Handles text processing logic
-      OpenAIAPIClient.swift         # OpenAI API client (gpt-4o-mini)
-      ClaudeAPIClient.swift         # Anthropic Claude client (claude-sonnet-4-0)
+      OpenAIAPIClient.swift         # OpenAI API client (default gpt-5.6-luna)
+      ClaudeAPIClient.swift         # Anthropic Claude client (default claude-sonnet-5)
       LLMClientFactory.swift        # Factory returning concrete client based on `LLMProvider`
       ClipboardManager.swift        # Clipboard integration
       ShareExtensionView.swift      # SwiftUI UI for extension (поддержка display/clipboard)

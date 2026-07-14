@@ -44,14 +44,9 @@ public final class SettingsViewModel: ObservableObject {
         }
     }
 
-    /// Проверенный список моделей текущего провайдера
+    /// Актуальный список моделей текущего провайдера
     public var curatedModels: [String] {
         LLMModelCatalog.curatedModels(for: selectedProvider)
-    }
-
-    /// Разрешён ли свободный ввод модели для текущего провайдера (OpenRouter)
-    public var allowsCustomModel: Bool {
-        LLMModelCatalog.allowsCustomModel(selectedProvider)
     }
 
     private let authManager: AuthManaging

@@ -1,12 +1,12 @@
 import Foundation
 
 /// Client for sending requests to the Mistral Chat Completion API.
-/// Uses model `mistral-medium-latest` which offers balanced quality and cost.
+/// Default model `mistral-medium-3-5` — frontier generalist per docs.mistral.ai/models.
 /// API reference: https://docs.mistral.ai/api/
 public final class MistralAPIClient: LLMClienting {
     private let session: URLSession
     private static let apiURLString = "https://api.mistral.ai/v1/chat/completions"
-    private static let modelName = "mistral-medium-latest"
+    private static let modelName = "mistral-medium-3-5"
     private static let defaultTemperature: Double = 0.7
     private static let defaultMaxTokens: Int = 2048
     /// Request timeout (sec)

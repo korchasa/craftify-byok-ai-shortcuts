@@ -1,11 +1,11 @@
 import Foundation
 
 /// Client for sending requests to the OpenRouter unified Chat Completion API.
-/// Default model: `openai/gpt-4o-mini`. API docs: https://openrouter.ai/docs/quickstart
+/// Default model: `openai/gpt-5.6-luna`. API docs: https://openrouter.ai/docs/quickstart
 public final class OpenRouterAPIClient: LLMClienting {
     private let session: URLSession
     private static let apiURLString = "https://openrouter.ai/api/v1/chat/completions"
-    private static let modelName = "openai/gpt-4o-mini"
+    private static let modelName = "openai/gpt-5.6-luna"
     private static let defaultTemperature: Double = 0.7
     private static let defaultMaxTokens: Int = 2048
     /// Request timeout (sec)

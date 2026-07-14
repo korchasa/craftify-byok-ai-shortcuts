@@ -178,21 +178,13 @@ public struct SettingsView: View {
                     .font(.craftifyBody)
                     .fontWeight(.bold)
                 Spacer()
-                if viewModel.allowsCustomModel {
-                    TextField(L10n.settingsModelCustomHint, text: $viewModel.selectedModel)
-                        .multilineTextAlignment(.trailing)
-                        .autocorrectionDisabled()
-                        .textInputAutocapitalization(.never)
-                        .accessibilityLabel(L10n.settingsModel)
-                } else {
-                    Picker(L10n.settingsModel, selection: $viewModel.selectedModel) {
-                        ForEach(pickerModels, id: \.self) { model in
-                            Text(model).tag(model)
-                        }
+                Picker(L10n.settingsModel, selection: $viewModel.selectedModel) {
+                    ForEach(pickerModels, id: \.self) { model in
+                        Text(model).tag(model)
                     }
-                    .pickerStyle(MenuPickerStyle())
-                    .frame(maxWidth: .infinity, alignment: .trailing)
                 }
+                .pickerStyle(MenuPickerStyle())
+                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
 

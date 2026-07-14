@@ -1,16 +1,15 @@
 import Foundation
 
 /// Client for sending requests to the Anthropic Claude API.
-/// Currently uses model `claude-sonnet-4-0` that offers a balanced trade-off between
-/// quality, speed and cost. All constants are in accordance with Anthropic documentation
-/// (https://docs.anthropic.com/claude/reference/messages_post).
+/// Default model `claude-sonnet-5` — the best speed/intelligence balance per
+/// the Anthropic models overview (platform.claude.com/docs).
 public final class ClaudeAPIClient: LLMClienting {
     private let session: URLSession
     private static let apiURLString = "https://api.anthropic.com/v1/messages"
     #if swift(>=5.9)
         // swiftlint:disable:next no_magic_numbers
     #endif
-    private static let modelName = "claude-sonnet-4-0"
+    private static let modelName = "claude-sonnet-5"
     private static let defaultTemperature: Double = 0.7
     private static let defaultMaxTokens: Int = 2048
     /// Request timeout (sec)

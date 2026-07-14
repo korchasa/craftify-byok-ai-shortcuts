@@ -72,7 +72,7 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
                 return
             }
             let body = try JSONSerialization.jsonObject(with: httpBody) as? [String: Any]
-            XCTAssertEqual(body?["model"] as? String, "gpt-4o-mini")
+            XCTAssertEqual(body?["model"] as? String, "gpt-5.6-luna")
             XCTAssertEqual(body?["temperature"] as? Double, 0.7)
             XCTAssertEqual(body?["max_tokens"] as? Int, 2048)
             let messages = body?["messages"] as? [[String: Any]]

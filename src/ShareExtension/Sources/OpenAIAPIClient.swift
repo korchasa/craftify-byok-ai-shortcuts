@@ -1,11 +1,12 @@
 import Foundation
 
-/// Client for sending requests to OpenAI Chat Completions API (gpt-4o-mini)
+/// Client for sending requests to OpenAI Chat Completions API.
+/// Default model `gpt-5.6-luna` — cost-efficient tier per platform.openai.com/docs/models.
 public final class OpenAIAPIClient: LLMClienting {
     // The implementation is identical to the previous LLMAPIClient but with a new name.
     private let session: URLSession
     private static let apiURLString = "https://api.openai.com/v1/chat/completions"
-    private static let modelName = "gpt-4o-mini"
+    private static let modelName = "gpt-5.6-luna"
     private static let defaultTemperature: Double = 0.7
     private static let defaultMaxTokens: Int = 2048
     /// Request timeout (sec)

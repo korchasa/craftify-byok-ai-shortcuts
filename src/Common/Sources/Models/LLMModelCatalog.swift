@@ -1,38 +1,36 @@
 import Foundation
 
-/// Каталог моделей LLM-провайдеров: значения по умолчанию и проверенные списки для выбора в настройках.
-/// OpenRouter дополнительно принимает произвольный идентификатор модели (свободный ввод в настройках).
+/// Каталог моделей LLM-провайдеров: значения по умолчанию и актуальные списки для выбора в настройках.
+/// Списки собраны из официальных источников (июль 2026):
+/// OpenAI — platform.openai.com/docs/models; Anthropic — platform.claude.com/docs (models overview);
+/// Mistral — docs.mistral.ai/models (карточки моделей); OpenRouter — живой список openrouter.ai/api/v1/models.
 public enum LLMModelCatalog {
-    /// Модель по умолчанию — прежние зашитые значения клиентов
+    /// Модель по умолчанию — первая в актуальном списке провайдера
     public static func defaultModel(for provider: LLMProvider) -> String {
-        switch provider {
-        case .openAI:
-            "gpt-4o-mini"
-        case .claude:
-            "claude-sonnet-4-0"
-        case .mistral:
-            "mistral-medium-latest"
-        case .openRouter:
-            "openai/gpt-4o-mini"
-        }
+        curatedModels(for: provider)[0]
     }
 
-    /// Проверенный список моделей для выбора; первая — модель по умолчанию
+    /// Актуальный список моделей для выбора; первая — модель по умолчанию
     public static func curatedModels(for provider: LLMProvider) -> [String] {
         switch provider {
         case .openAI:
-            ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini", "gpt-4.1"]
+            ["gpt-5.6-luna", "gpt-5.6-terra", "gpt-5.6-sol"]
         case .claude:
-            ["claude-sonnet-4-0", "claude-3-5-haiku-latest", "claude-opus-4-0"]
+            ["claude-sonnet-5", "claude-haiku-4-5", "claude-opus-4-8", "claude-fable-5"]
         case .mistral:
-            ["mistral-medium-latest", "mistral-small-latest", "mistral-large-latest"]
+            ["mistral-medium-3-5", "mistral-small-2603", "mistral-large-2512"]
         case .openRouter:
-            ["openai/gpt-4o-mini", "anthropic/claude-sonnet-4", "google/gemini-2.5-flash"]
+            [
+                "openai/gpt-5.6-luna",
+                "openai/gpt-5.6-terra",
+                "openai/gpt-5.6-sol",
+                "anthropic/claude-sonnet-5",
+                "anthropic/claude-opus-4.8",
+                "anthropic/claude-fable-5",
+                "google/gemini-3.5-flash",
+                "mistralai/mistral-medium-3-5",
+                "deepseek/deepseek-v4-flash"
+            ]
         }
-    }
-
-    /// Провайдеры со свободным вводом модели (помимо списка)
-    public static func allowsCustomModel(_ provider: LLMProvider) -> Bool {
-        provider == .openRouter
     }
 }
