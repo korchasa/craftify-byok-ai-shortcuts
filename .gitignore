@@ -89,3 +89,6 @@ check_url.sh
 
 # FoxCode browser profile
 .foxcode/
+
+# Local secrets
+.env

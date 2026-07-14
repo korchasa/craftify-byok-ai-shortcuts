@@ -45,3 +45,5 @@
 "error_rate_limited" = "Доставчикът ограничава честотата на заявките";
 "advice_open_app_to_consent" = "Първо отворете приложението Craftify и приемете условията за поверителност.";
 
+"error_unknown_model" = "Неизвестен модел";
+"advice_change_model" = "Изберете друг модел в настройките на Craftify.";

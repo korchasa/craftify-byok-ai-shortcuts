@@ -29,6 +29,8 @@ public enum UserFacingErrorKey: String {
     case errorRateLimited = "error_rate_limited"
     case errorTimeout = "error_timeout"
     case adviceOpenAppToConsent = "advice_open_app_to_consent"
+    case errorUnknownModel = "error_unknown_model"
+    case adviceChangeModel = "advice_change_model"
     // Добавьте другие ключи по мере необходимости
 
     /// Локализует ключ по таблице Localizable указанного бандла (rawValue совпадает с ключом локализации).

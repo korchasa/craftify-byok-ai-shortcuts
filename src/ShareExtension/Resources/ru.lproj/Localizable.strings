@@ -46,3 +46,5 @@
 "error_rate_limited" = "Провайдер ограничивает частоту запросов";
 "advice_open_app_to_consent" = "Сначала откройте приложение Craftify и примите условия конфиденциальности.";
 
+"error_unknown_model" = "Неизвестная модель";
+"advice_change_model" = "Выберите другую модель в настройках Craftify.";

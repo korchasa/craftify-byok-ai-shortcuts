@@ -45,3 +45,5 @@
 "error_rate_limited" = "プロバイダーがリクエスト頻度を制限しています";
 "advice_open_app_to_consent" = "まずCraftifyアプリを開き、プライバシー条項に同意してください。";
 
+"error_unknown_model" = "不明なモデル";
+"advice_change_model" = "Craftifyの設定で別のモデルを選択してください。";

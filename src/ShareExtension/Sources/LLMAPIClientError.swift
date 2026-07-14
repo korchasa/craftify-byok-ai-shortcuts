@@ -7,6 +7,8 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
     case serverError
     case cancelled
     case invalidResponse(String)
+    /// Провайдер не знает указанную модель (форма ответа проверена живой пробой)
+    case unknownModel(String)
     case unknown(Int)
     case network(Error)
 
@@ -37,6 +39,11 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
                 messageKey: .errorParsing,
                 adviceKey: .adviceTryAgainLater
             )
+        case .unknownModel:
+            UserFacingError(
+                messageKey: .errorUnknownModel,
+                adviceKey: .adviceChangeModel
+            )
         case .unknown:
             UserFacingError.unknown(underlyingError: self)
         case .network:
@@ -59,6 +66,8 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
             L10n.errorCancelled
         case let .invalidResponse(msg):
             L10n.errorParsing + ": " + msg
+        case let .unknownModel(model):
+            L10n.errorUnknownModel + ": " + model
         case let .unknown(code):
             "Unknown error (code: \(code))"
         case let .network(error):
@@ -73,6 +82,7 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
         case (.serverError, .serverError): true
         case (.cancelled, .cancelled): true
         case let (.invalidResponse(a), .invalidResponse(b)): a == b
+        case let (.unknownModel(a), .unknownModel(b)): a == b
         case let (.unknown(a), .unknown(b)): a == b
         case (.network, .network): true // сравниваем только тип
         default: false

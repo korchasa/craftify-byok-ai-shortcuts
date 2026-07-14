@@ -45,3 +45,5 @@
 "error_rate_limited" = "Der Anbieter begrenzt die Anfragerate";
 "advice_open_app_to_consent" = "Öffnen Sie zuerst die Craftify-App und akzeptieren Sie die Datenschutzbedingungen.";
 
+"error_unknown_model" = "Unbekanntes Modell";
+"advice_change_model" = "Wählen Sie ein anderes Modell in den Craftify-Einstellungen.";

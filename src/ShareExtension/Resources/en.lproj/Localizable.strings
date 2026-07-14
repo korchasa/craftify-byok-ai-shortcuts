@@ -45,3 +45,5 @@
 "error_rate_limited" = "The provider is rate-limiting requests";
 "advice_open_app_to_consent" = "Open the Craftify app and accept the privacy terms first.";
 
+"error_unknown_model" = "Unknown model";
+"advice_change_model" = "Choose a different model in Craftify settings.";
