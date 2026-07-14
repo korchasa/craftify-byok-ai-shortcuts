@@ -87,4 +87,6 @@
 "settings_llm_provider" = "LLM доставчик";
 "settings_model" = "Модел";
 "settings_model_search" = "Търсене на модели";
+"settings_models_load_failed" = "Моделите не се заредиха";
+"settings_models_retry" = "Опитай отново";
 "privacy_policy_title" = "Политика за поверителност";

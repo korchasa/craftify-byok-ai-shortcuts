@@ -87,4 +87,6 @@
 "settings_llm_provider" = "LLM provider";
 "settings_model" = "Model";
 "settings_model_search" = "Search models";
+"settings_models_load_failed" = "Couldn't load models";
+"settings_models_retry" = "Retry";
 "privacy_policy_title" = "Privacy Policy";

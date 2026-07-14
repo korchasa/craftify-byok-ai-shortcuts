@@ -87,4 +87,6 @@
 "settings_llm_provider" = "Постачальник LLM";
 "settings_model" = "Модель";
 "settings_model_search" = "Пошук моделей";
+"settings_models_load_failed" = "Не вдалося завантажити моделі";
+"settings_models_retry" = "Повторити";
 "privacy_policy_title" = "Політика конфіденційності";

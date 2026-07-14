@@ -125,7 +125,7 @@ public final class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(switchViewModel.maskedApiKey, shortMaskKey(storedKey))
     }
 
-    public func testLoadModels_UsesFetcherAndFallsBackToCatalog() async {
+    public func testLoadModels_UsesFetcherAndReportsFailure() async {
         // Arrange: заглушка загрузчика с фиксированным списком
         final class FetcherStub: ModelListFetching {
             var models: [String] = []
@@ -152,10 +152,17 @@ public final class SettingsViewModelTests: XCTestCase {
         // Act: успешная загрузка списка
         await modelsViewModel.loadModels()
         XCTAssertEqual(modelsViewModel.availableModels, ["m-alpha", "m-beta"])
-        // Act: при ошибке — запасной статический каталог
+        XCTAssertFalse(modelsViewModel.modelsLoadFailed)
+        // Act: при ошибке — никакого запасного каталога, только признак сбоя
         fetcher.shouldThrow = true
         await modelsViewModel.loadModels()
-        XCTAssertEqual(modelsViewModel.availableModels, LLMModelCatalog.curatedModels(for: modelsViewModel.selectedProvider))
+        XCTAssertEqual(modelsViewModel.availableModels, [])
+        XCTAssertTrue(modelsViewModel.modelsLoadFailed)
+        // Act: успешный повтор сбрасывает признак сбоя
+        fetcher.shouldThrow = false
+        await modelsViewModel.loadModels()
+        XCTAssertEqual(modelsViewModel.availableModels, ["m-alpha", "m-beta"])
+        XCTAssertFalse(modelsViewModel.modelsLoadFailed)
     }
 
     public func testSaveKey_Valid() async {

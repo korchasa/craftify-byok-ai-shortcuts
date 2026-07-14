@@ -87,4 +87,6 @@
 "settings_llm_provider" = "LLM プロバイダ";
 "settings_model" = "モデル";
 "settings_model_search" = "モデルを検索";
+"settings_models_load_failed" = "モデルを読み込めませんでした";
+"settings_models_retry" = "再試行";
 "privacy_policy_title" = "プライバシーポリシー";

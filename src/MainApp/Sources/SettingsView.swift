@@ -211,6 +211,8 @@ public struct SettingsView: View {
                     if viewModel.isLoadingModels, viewModel.availableModels.isEmpty {
                         ProgressView()
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else if viewModel.modelsLoadFailed, viewModel.availableModels.isEmpty {
+                        loadFailedState
                     } else {
                         modelList
                     }
@@ -224,6 +226,22 @@ public struct SettingsView: View {
                     await viewModel.loadModels()
                 }
             }
+        }
+
+        /// Список не загрузился — сообщение и кнопка повтора, без подставного каталога
+        private var loadFailedState: some View {
+            VStack(spacing: FormStyleConstants.sectionSpacing) {
+                Text(L10n.settingsModelsLoadFailed)
+                    .font(.craftifyBody)
+                    .fontWeight(.regular)
+                    .multilineTextAlignment(.center)
+                Button(L10n.settingsModelsRetry) {
+                    Task { await viewModel.loadModels() }
+                }
+                .font(.craftifyBody)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
         }
 
         private var modelList: some View {

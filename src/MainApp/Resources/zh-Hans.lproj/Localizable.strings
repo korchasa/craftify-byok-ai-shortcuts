@@ -87,4 +87,6 @@
 "settings_llm_provider" = "LLM 提供商";
 "settings_model" = "模型";
 "settings_model_search" = "搜索模型";
+"settings_models_load_failed" = "无法加载模型";
+"settings_models_retry" = "重试";
 "privacy_policy_title" = "隐私政策";

@@ -48,10 +48,12 @@ public final class SettingsViewModel: ObservableObject {
         }
     }
 
-    /// Загруженный с API список моделей текущего провайдера (при сбое — статический каталог)
+    /// Загруженный с API список моделей текущего провайдера
     @Published public private(set) var availableModels: [String] = []
     /// Идёт загрузка списка моделей
     @Published public private(set) var isLoadingModels: Bool = false
+    /// Последняя загрузка списка моделей не удалась
+    @Published public private(set) var modelsLoadFailed: Bool = false
 
     private let authManager: AuthManaging
     private let verifier: APIKeyVerifying
@@ -107,22 +109,23 @@ public final class SettingsViewModel: ObservableObject {
         }
     }
 
-    /// Загружает список моделей текущего провайдера с его API;
-    /// при сбое или отсутствии ключа показывает статический каталог
+    /// Загружает список моделей текущего провайдера с его API
     public func loadModels() async {
         let provider = selectedProvider
         isLoadingModels = true
         defer { isLoadingModels = false }
         let key = try? await authManager.getAPIKey()
-        var models: [String]
         do {
-            models = try await modelListFetcher.fetchModels(provider: provider, apiKey: key)
+            let models = try await modelListFetcher.fetchModels(provider: provider, apiKey: key)
+            // Поздний ответ для уже смененного провайдера отбрасываем
+            guard provider == selectedProvider else { return }
+            availableModels = models
+            modelsLoadFailed = false
         } catch {
-            models = LLMModelCatalog.curatedModels(for: provider)
+            guard provider == selectedProvider else { return }
+            availableModels = []
+            modelsLoadFailed = true
         }
-        // Поздний ответ для уже смененного провайдера отбрасываем
-        guard provider == selectedProvider else { return }
-        availableModels = models
     }
 
     /// Начать ввод нового ключа: поле всегда пустое

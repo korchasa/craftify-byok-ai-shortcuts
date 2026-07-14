@@ -91,4 +91,6 @@
 "settings_llm_provider" = "Провайдер LLM";
 "settings_model" = "Модель";
 "settings_model_search" = "Поиск моделей";
+"settings_models_load_failed" = "Не удалось загрузить модели";
+"settings_models_retry" = "Повторить";
 "privacy_policy_title" = "Политика конфиденциальности";

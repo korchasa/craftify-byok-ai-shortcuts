@@ -87,4 +87,6 @@
 "settings_llm_provider" = "LLM-Anbieter";
 "settings_model" = "Modell";
 "settings_model_search" = "Modelle suchen";
+"settings_models_load_failed" = "Modelle konnten nicht geladen werden";
+"settings_models_retry" = "Erneut versuchen";
 "privacy_policy_title" = "Datenschutzerklärung";
