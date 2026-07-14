@@ -90,3 +90,4 @@
 "settings_models_load_failed" = "Couldn't load models";
 "settings_models_retry" = "Retry";
 "privacy_policy_title" = "Privacy Policy";
+"howtouse_set_up_later" = "Set up later";

@@ -33,13 +33,38 @@ public struct HowToUseView: View {
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
 
-                    HowToUseAcceptButton(isVerifying: viewModel.isVerifying, handleAcceptTapped: handleDoneTapped)
-                        .padding(.horizontal)
+                    HowToUseAcceptButton(
+                        isVerifying: viewModel.isVerifying,
+                        isKeyEmpty: trimmedKey.isEmpty,
+                        handleAcceptTapped: handleDoneTapped
+                    )
+                    .padding(.horizontal)
+
+                    HowToUseSkipButton(handleSkipTapped: handleSkipTapped)
                         .padding(.bottom, Self.bottomPadding)
                 }
                 .padding(.horizontal)
             }
         }
+        .sheet(isPresented: $viewModel.showModelStep, onDismiss: handleModelStepDismiss) {
+            ModelPickerView(
+                selectedModel: viewModel.selectedModel,
+                availableModels: viewModel.availableModels,
+                isLoading: viewModel.isLoadingModels,
+                loadFailed: viewModel.modelsLoadFailed,
+                onSelect: { model in
+                    viewModel.selectedModel = model
+                    finishAndClose()
+                },
+                onRetry: {
+                    Task { await viewModel.loadModels() }
+                }
+            )
+        }
+    }
+
+    private var trimmedKey: String {
+        viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     private struct HowToUseTitle: View {
@@ -97,6 +122,21 @@ public struct HowToUseView: View {
         }
     }
 
+    /// Явный путь без ключа: только согласие, настройка откладывается
+    private struct HowToUseSkipButton: View {
+        var handleSkipTapped: () -> Void
+        @Environment(\.colorPalette) private var palette
+        var body: some View {
+            Button(action: handleSkipTapped) {
+                Text(L10n.howtouseSetUpLater)
+                    .font(Font.craftifyFootnote)
+                    .fontWeight(.regular)
+                    .foregroundColor(palette.secondaryText())
+            }
+            .accessibilityLabel(L10n.howtouseSetUpLater)
+        }
+    }
+
     /// Privacy policy text collapsed behind a disclosure to keep the screen focused
     private struct HowToUsePrivacyPolicyFullView: View {
         var body: some View {
@@ -115,6 +155,7 @@ public struct HowToUseView: View {
 
     private struct HowToUseAcceptButton: View {
         var isVerifying: Bool
+        var isKeyEmpty: Bool
         var handleAcceptTapped: () -> Void
         @Environment(\.colorPalette) private var palette
         var body: some View {
@@ -132,7 +173,7 @@ public struct HowToUseView: View {
             }
             .accessibilityLabel(L10n.howtouseDone)
             .buttonStyle(CraftifyPrimaryButtonStyle())
-            .disabled(isVerifying)
+            .disabled(isVerifying || isKeyEmpty)
         }
     }
 
@@ -145,9 +186,25 @@ public struct HowToUseView: View {
 
     private func handleDoneTapped() {
         Task { @MainActor in
-            if await viewModel.completeOnboarding() {
-                onConsent?()
-            }
+            // Успешная проверка открывает шаг выбора модели (sheet);
+            // онбординг завершается в finishAndClose
+            _ = await viewModel.submitKey()
         }
+    }
+
+    private func handleSkipTapped() {
+        viewModel.skipKeySetup()
+        onConsent?()
+    }
+
+    /// Закрытие шага модели любым способом (выбор или свайп) завершает онбординг
+    private func handleModelStepDismiss() {
+        guard !viewModel.consentGiven else { return }
+        finishAndClose()
+    }
+
+    private func finishAndClose() {
+        viewModel.finishOnboarding()
+        onConsent?()
     }
 }

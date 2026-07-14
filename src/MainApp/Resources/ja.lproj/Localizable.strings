@@ -90,3 +90,4 @@
 "settings_models_load_failed" = "モデルを読み込めませんでした";
 "settings_models_retry" = "再試行";
 "privacy_policy_title" = "プライバシーポリシー";
+"howtouse_set_up_later" = "後で設定";

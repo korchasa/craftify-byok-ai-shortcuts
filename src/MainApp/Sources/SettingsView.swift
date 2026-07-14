@@ -200,81 +200,29 @@ public struct SettingsView: View {
         }
     }
 
-    /// Экран выбора модели: список подгружается с API провайдера, поиск по подстроке
+    /// Экран выбора модели настроек — обёртка над общим ModelPickerView
     private struct ModelPickerSheet: View {
         @ObservedObject var viewModel: SettingsViewModel
         @Environment(\.dismiss) private var dismiss
-        @State private var searchText = ""
         var body: some View {
-            NavigationStack {
-                Group {
-                    if viewModel.isLoadingModels, viewModel.availableModels.isEmpty {
-                        ProgressView()
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    } else if viewModel.modelsLoadFailed, viewModel.availableModels.isEmpty {
-                        loadFailedState
-                    } else {
-                        modelList
-                    }
+            ModelPickerView(
+                selectedModel: viewModel.selectedModel,
+                availableModels: viewModel.availableModels,
+                isLoading: viewModel.isLoadingModels,
+                loadFailed: viewModel.modelsLoadFailed,
+                onSelect: { model in
+                    viewModel.selectedModel = model
+                    dismiss()
+                },
+                onRetry: {
+                    Task { await viewModel.loadModels() }
                 }
-                .navigationTitle(L10n.settingsModel)
-                .navigationBarTitleDisplayMode(.inline)
-                .searchable(text: $searchText, prompt: L10n.settingsModelSearch)
-            }
+            )
             .task {
                 if viewModel.availableModels.isEmpty {
                     await viewModel.loadModels()
                 }
             }
-        }
-
-        /// Список не загрузился — сообщение и кнопка повтора, без подставного каталога
-        private var loadFailedState: some View {
-            VStack(spacing: FormStyleConstants.sectionSpacing) {
-                Text(L10n.settingsModelsLoadFailed)
-                    .font(.craftifyBody)
-                    .fontWeight(.regular)
-                    .multilineTextAlignment(.center)
-                Button(L10n.settingsModelsRetry) {
-                    Task { await viewModel.loadModels() }
-                }
-                .font(.craftifyBody)
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .padding()
-        }
-
-        private var modelList: some View {
-            List(filteredModels, id: \.self) { model in
-                Button(action: {
-                    viewModel.selectedModel = model
-                    dismiss()
-                }) {
-                    HStack {
-                        Text(model)
-                            .font(.craftifyBody)
-                            .fontWeight(.regular)
-                        Spacer()
-                        if model == viewModel.selectedModel {
-                            Image(systemName: "checkmark")
-                                .accessibilityHidden(true)
-                        }
-                    }
-                }
-                .accessibilityAddTraits(model == viewModel.selectedModel ? .isSelected : [])
-            }
-            .listStyle(.plain)
-        }
-
-        /// Выбранная модель всегда в списке, даже если API её уже не отдаёт
-        private var filteredModels: [String] {
-            var models = viewModel.availableModels
-            if !models.contains(viewModel.selectedModel), !viewModel.selectedModel.isEmpty {
-                models.insert(viewModel.selectedModel, at: 0)
-            }
-            let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !query.isEmpty else { return models }
-            return models.filter { $0.localizedCaseInsensitiveContains(query) }
         }
     }
 
