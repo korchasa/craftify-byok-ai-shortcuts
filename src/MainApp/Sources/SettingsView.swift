@@ -172,29 +172,91 @@ public struct SettingsView: View {
 
     private struct SettingsModelSection: View {
         @ObservedObject var viewModel: SettingsViewModel
+        @State private var showModelPicker = false
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             HStack {
                 Text(L10n.settingsModel)
                     .font(.craftifyBody)
                     .fontWeight(.bold)
                 Spacer()
-                Picker(L10n.settingsModel, selection: $viewModel.selectedModel) {
-                    ForEach(pickerModels, id: \.self) { model in
-                        Text(model).tag(model)
+                Button(action: { showModelPicker = true }) {
+                    HStack {
+                        Text(viewModel.selectedModel)
+                            .font(.craftifyBody)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.craftifyFootnote)
+                            .foregroundColor(palette.secondaryText())
+                            .accessibilityHidden(true)
                     }
                 }
-                .pickerStyle(MenuPickerStyle())
-                .frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityLabel(L10n.settingsModel)
+            }
+            .sheet(isPresented: $showModelPicker) {
+                ModelPickerSheet(viewModel: viewModel)
+            }
+        }
+    }
+
+    /// Экран выбора модели: список подгружается с API провайдера, поиск по подстроке
+    private struct ModelPickerSheet: View {
+        @ObservedObject var viewModel: SettingsViewModel
+        @Environment(\.dismiss) private var dismiss
+        @State private var searchText = ""
+        var body: some View {
+            NavigationStack {
+                Group {
+                    if viewModel.isLoadingModels, viewModel.availableModels.isEmpty {
+                        ProgressView()
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    } else {
+                        modelList
+                    }
+                }
+                .navigationTitle(L10n.settingsModel)
+                .navigationBarTitleDisplayMode(.inline)
+                .searchable(text: $searchText, prompt: L10n.settingsModelSearch)
+            }
+            .task {
+                if viewModel.availableModels.isEmpty {
+                    await viewModel.loadModels()
+                }
             }
         }
 
-        /// Сохранённое значение вне списка (например, модель убрали из каталога) остаётся выбираемым
-        private var pickerModels: [String] {
-            let curated = viewModel.curatedModels
-            if curated.contains(viewModel.selectedModel) {
-                return curated
+        private var modelList: some View {
+            List(filteredModels, id: \.self) { model in
+                Button(action: {
+                    viewModel.selectedModel = model
+                    dismiss()
+                }) {
+                    HStack {
+                        Text(model)
+                            .font(.craftifyBody)
+                            .fontWeight(.regular)
+                        Spacer()
+                        if model == viewModel.selectedModel {
+                            Image(systemName: "checkmark")
+                                .accessibilityHidden(true)
+                        }
+                    }
+                }
+                .accessibilityAddTraits(model == viewModel.selectedModel ? .isSelected : [])
             }
-            return [viewModel.selectedModel] + curated
+            .listStyle(.plain)
+        }
+
+        /// Выбранная модель всегда в списке, даже если API её уже не отдаёт
+        private var filteredModels: [String] {
+            var models = viewModel.availableModels
+            if !models.contains(viewModel.selectedModel), !viewModel.selectedModel.isEmpty {
+                models.insert(viewModel.selectedModel, at: 0)
+            }
+            let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !query.isEmpty else { return models }
+            return models.filter { $0.localizedCaseInsensitiveContains(query) }
         }
     }
 

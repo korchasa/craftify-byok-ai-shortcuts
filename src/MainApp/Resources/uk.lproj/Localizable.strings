@@ -86,4 +86,5 @@
 /* LLM Provider */
 "settings_llm_provider" = "Постачальник LLM";
 "settings_model" = "Модель";
+"settings_model_search" = "Пошук моделей";
 "privacy_policy_title" = "Політика конфіденційності";

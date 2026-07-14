@@ -25,14 +25,18 @@ public final class SettingsViewModel: ObservableObject {
         }
     }
 
-    /// Выбранный провайдер; сохраняется сразу при изменении, поле ключа и модель перезагружаются
+    /// Выбранный провайдер; сохраняется сразу при изменении, поле ключа и модели перезагружаются
     @Published public var selectedProvider: LLMProvider {
         didSet {
             guard oldValue != selectedProvider else { return }
             settings.llmProvider = selectedProvider
             isEditingKey = false
             selectedModel = settings.model(for: selectedProvider)
-            Task { await load() }
+            availableModels = []
+            Task {
+                await load()
+                await loadModels()
+            }
         }
     }
 
@@ -44,51 +48,81 @@ public final class SettingsViewModel: ObservableObject {
         }
     }
 
-    /// Актуальный список моделей текущего провайдера
-    public var curatedModels: [String] {
-        LLMModelCatalog.curatedModels(for: selectedProvider)
-    }
+    /// Загруженный с API список моделей текущего провайдера (при сбое — статический каталог)
+    @Published public private(set) var availableModels: [String] = []
+    /// Идёт загрузка списка моделей
+    @Published public private(set) var isLoadingModels: Bool = false
 
     private let authManager: AuthManaging
     private let verifier: APIKeyVerifying
     private let settings: AppSettingsManager
+    private let modelListFetcher: ModelListFetching
 
     /// Инициализация с менеджерами
     /// - Parameters:
     ///   - authManager: Менеджер API-ключа
     ///   - verifier: Проверка ключа у провайдера
     ///   - settings: Хранилище настроек (App Group)
+    ///   - modelListFetcher: Загрузчик списка моделей провайдера
     public init(
         authManager: AuthManaging = AuthManager(),
         verifier: APIKeyVerifying = APIKeyVerifier(),
-        settings: AppSettingsManager = .shared
+        settings: AppSettingsManager = .shared,
+        modelListFetcher: ModelListFetching = LLMModelListFetcher()
     ) {
         self.authManager = authManager
         self.verifier = verifier
         self.settings = settings
+        self.modelListFetcher = modelListFetcher
         self.selectedNativeLanguage = settings.nativeLanguage
         let provider = settings.llmProvider
         self.selectedProvider = provider
         self.selectedModel = settings.model(for: provider)
-        Task { await load() }
+        Task {
+            await load()
+            await loadModels()
+        }
     }
 
     /// Загрузка состояния (ключ текущего провайдера).
     /// Реальный ключ никогда не публикуется — наружу уходит только короткая маска.
     public func load() async {
+        // Поздний ответ для уже смененного провайдера отбрасываем,
+        // чтобы он не затирал ключ текущего провайдера
+        let provider = selectedProvider
         isLoading = true
         defer { isLoading = false }
         do {
             let key = try await authManager.getAPIKey()
+            guard provider == selectedProvider else { return }
             apiKey = ""
             maskedApiKey = shortMaskKey(key)
             isKeyPresent = (key != nil)
         } catch {
+            guard provider == selectedProvider else { return }
             apiKey = ""
             maskedApiKey = shortMaskKey(nil)
             isKeyPresent = false
             presentError(error)
         }
+    }
+
+    /// Загружает список моделей текущего провайдера с его API;
+    /// при сбое или отсутствии ключа показывает статический каталог
+    public func loadModels() async {
+        let provider = selectedProvider
+        isLoadingModels = true
+        defer { isLoadingModels = false }
+        let key = try? await authManager.getAPIKey()
+        var models: [String]
+        do {
+            models = try await modelListFetcher.fetchModels(provider: provider, apiKey: key)
+        } catch {
+            models = LLMModelCatalog.curatedModels(for: provider)
+        }
+        // Поздний ответ для уже смененного провайдера отбрасываем
+        guard provider == selectedProvider else { return }
+        availableModels = models
     }
 
     /// Начать ввод нового ключа: поле всегда пустое

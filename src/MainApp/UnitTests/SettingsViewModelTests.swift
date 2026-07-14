@@ -74,6 +74,90 @@ public final class SettingsViewModelTests: XCTestCase {
         XCTAssertEqual(settings.model(for: .claude), "claude-3-5-haiku-latest")
     }
 
+    public func testProviderSwitchAndReturn_KeepsKey() async throws {
+        // Arrange: как и настоящий Keychain, стаб читает ключ текущего провайдера
+        // в момент запроса; у Claude ключа нет, и его ответ приходит с задержкой
+        final class ProviderAwareAuthManagerStub: AuthManaging {
+            private let settings: AppSettingsManager
+            private let openAIKey: String
+            init(settings: AppSettingsManager, openAIKey: String) {
+                self.settings = settings
+                self.openAIKey = openAIKey
+            }
+
+            func getAPIKey() async throws -> String? {
+                let provider = settings.llmProvider
+                if provider == .openAI {
+                    return openAIKey
+                }
+                try? await Task.sleep(nanoseconds: 300_000_000)
+                return nil
+            }
+
+            func setAPIKey(_ key: String) async throws {}
+            func deleteAPIKey() async throws {}
+            func maskedAPIKey(_ key: String?) -> String {
+                maskKey(key)
+            }
+        }
+        let storedKey = "sk-openai-key-1234567890"
+        let suite = "test.craftify.provider-switch"
+        UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite)
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let settings = AppSettingsManager(suiteName: suite)
+        let auth = ProviderAwareAuthManagerStub(settings: settings, openAIKey: storedKey)
+        let switchViewModel = SettingsViewModel(
+            authManager: auth,
+            verifier: APIKeyVerifierStub(),
+            settings: settings
+        )
+        switchViewModel.selectedProvider = .openAI
+        try await Task.sleep(nanoseconds: 100_000_000)
+
+        // Act: уходим на Claude, его медленное чтение ещё в полёте — возвращаемся на OpenAI
+        switchViewModel.selectedProvider = .claude
+        try await Task.sleep(nanoseconds: 50_000_000)
+        switchViewModel.selectedProvider = .openAI
+        try await Task.sleep(nanoseconds: 600_000_000)
+
+        // Assert: поздний пустой ответ для Claude не должен затирать ключ OpenAI
+        XCTAssertTrue(switchViewModel.isKeyPresent)
+        XCTAssertEqual(switchViewModel.maskedApiKey, shortMaskKey(storedKey))
+    }
+
+    public func testLoadModels_UsesFetcherAndFallsBackToCatalog() async {
+        // Arrange: заглушка загрузчика с фиксированным списком
+        final class FetcherStub: ModelListFetching {
+            var models: [String] = []
+            var shouldThrow = false
+            func fetchModels(provider: LLMProvider, apiKey: String?) async throws -> [String] {
+                if shouldThrow {
+                    throw URLError(.notConnectedToInternet)
+                }
+                return models
+            }
+        }
+        let fetcher = FetcherStub()
+        fetcher.models = ["m-alpha", "m-beta"]
+        let suite = "test.craftify.load-models"
+        UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite)
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let settings = AppSettingsManager(suiteName: suite)
+        let modelsViewModel = SettingsViewModel(
+            authManager: AuthManagerStub(key: nil),
+            verifier: APIKeyVerifierStub(),
+            settings: settings,
+            modelListFetcher: fetcher
+        )
+        // Act: успешная загрузка списка
+        await modelsViewModel.loadModels()
+        XCTAssertEqual(modelsViewModel.availableModels, ["m-alpha", "m-beta"])
+        // Act: при ошибке — запасной статический каталог
+        fetcher.shouldThrow = true
+        await modelsViewModel.loadModels()
+        XCTAssertEqual(modelsViewModel.availableModels, LLMModelCatalog.curatedModels(for: modelsViewModel.selectedProvider))
+    }
+
     public func testSaveKey_Valid() async {
         guard let viewModel, let _ = authManager else { XCTFail("nil stub")
             return

@@ -86,4 +86,5 @@
 /* LLM Provider */
 "settings_llm_provider" = "Fournisseur LLM";
 "settings_model" = "Modèle";
+"settings_model_search" = "Rechercher des modèles";
 "privacy_policy_title" = "Politique de confidentialité";
