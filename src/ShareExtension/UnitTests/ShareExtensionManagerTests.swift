@@ -158,5 +158,45 @@ public final class ShareExtensionManagerTests: XCTestCase {
         XCTAssertEqual(result?.error, UserFacingError(messageKey: .errorApiKeyMissing, adviceKey: .adviceAddApiKeyInApp))
     }
 
+    /// Поздний результат прогона, который был вытеснен новым запуском (повтор после таймаута),
+    /// не должен ничего копировать в буфер обмена и затирать lastResult.
+    public func testProcess_LateResultOfSupersededRunIsDiscarded() async {
+        final class ManualProcessingStub: NSObject, ProcessingManaging {
+            var stored: ((Result<String, Error>) -> Void)?
+            func process(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+                stored = completion
+            }
+
+            func cancel() {}
+        }
+        let clipboard = ClipboardManagerStub()
+        let processing = ManualProcessingStub()
+        let consent = ConsentManagerStub()
+        consent.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: clipboard,
+            processingManager: processing,
+            consentManager: consent,
+            logManager: LogManagerSharedInMemory()
+        )
+        manager.resetCancellation() // прогон 1
+        let op = InventoryOperation(operation: .translate, params: Data())
+        // Прогон 1 «зависает» на continuation до ручного завершения
+        let run1 = Task { await manager.process(text: "Hello", operation: op) }
+        while processing.stored == nil {
+            await Task.yield()
+        }
+        // Пользователь запускает новый прогон — поколение сдвигается
+        manager.resetCancellation() // прогон 2
+        // Поздний успех прогона 1 приходит уже после смены поколения
+        processing.stored?(.success("STALE-RESULT"))
+        let result = await run1.value
+        XCTAssertNil(clipboard.copiedText)
+        XCTAssertNotEqual(manager.lastResult, "STALE-RESULT")
+        XCTAssertTrue(result?.success == false)
+    }
+
     public func testPrintEnvironment() {}
 }

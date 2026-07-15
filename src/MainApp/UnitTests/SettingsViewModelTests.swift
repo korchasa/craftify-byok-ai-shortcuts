@@ -1,6 +1,15 @@
 // @testable import Common
 import XCTest
 
+/// Заглушка загрузчика моделей без сети: init ViewModel запускает loadModels(),
+/// и без подмены каждый тест бил бы живым HTTPS-запросом по /v1/models провайдера.
+private final class NoNetworkFetcherStub: ModelListFetching {
+    var models: [String] = []
+    func fetchModels(provider: LLMProvider, apiKey: String?) async throws -> [String] {
+        models
+    }
+}
+
 @MainActor
 public final class SettingsViewModelTests: XCTestCase {
     private var authManager: AuthManagerStub?
@@ -9,7 +18,11 @@ public final class SettingsViewModelTests: XCTestCase {
     override public func setUp() {
         super.setUp()
         authManager = AuthManagerStub(key: nil)
-        viewModel = SettingsViewModel(authManager: authManager!, verifier: APIKeyVerifierStub())
+        viewModel = SettingsViewModel(
+            authManager: authManager!,
+            verifier: APIKeyVerifierStub(),
+            modelListFetcher: NoNetworkFetcherStub()
+        )
     }
 
     override public func tearDown() {
@@ -32,7 +45,8 @@ public final class SettingsViewModelTests: XCTestCase {
         let storedKey = "sk-secret-key-1234567890"
         let editingViewModel = SettingsViewModel(
             authManager: AuthManagerStub(key: storedKey),
-            verifier: APIKeyVerifierStub()
+            verifier: APIKeyVerifierStub(),
+            modelListFetcher: NoNetworkFetcherStub()
         )
         await editingViewModel.load()
         // Реальный ключ никогда не попадает в поле ввода — только короткая маска
@@ -58,7 +72,8 @@ public final class SettingsViewModelTests: XCTestCase {
         let modelViewModel = SettingsViewModel(
             authManager: AuthManagerStub(key: nil),
             verifier: APIKeyVerifierStub(),
-            settings: settings
+            settings: settings,
+            modelListFetcher: NoNetworkFetcherStub()
         )
         modelViewModel.selectedProvider = .openAI
         // без сохранённого значения показывается модель по умолчанию
@@ -109,7 +124,8 @@ public final class SettingsViewModelTests: XCTestCase {
         let switchViewModel = SettingsViewModel(
             authManager: auth,
             verifier: APIKeyVerifierStub(),
-            settings: settings
+            settings: settings,
+            modelListFetcher: NoNetworkFetcherStub()
         )
         switchViewModel.selectedProvider = .openAI
         try await Task.sleep(nanoseconds: 100_000_000)
@@ -190,7 +206,8 @@ public final class SettingsViewModelTests: XCTestCase {
     public func testSaveKey_RejectedByProvider() async {
         let rejectingViewModel = SettingsViewModel(
             authManager: AuthManagerStub(key: nil),
-            verifier: APIKeyVerifierStub(outcome: .invalid)
+            verifier: APIKeyVerifierStub(outcome: .invalid),
+            modelListFetcher: NoNetworkFetcherStub()
         )
         rejectingViewModel.apiKey = "sk-wrong-key-1234567890"
         await rejectingViewModel.saveKey()
@@ -201,7 +218,8 @@ public final class SettingsViewModelTests: XCTestCase {
     public func testSaveKey_ProviderUnreachableStillSaves() async {
         let offlineViewModel = SettingsViewModel(
             authManager: AuthManagerStub(key: nil),
-            verifier: APIKeyVerifierStub(outcome: .unreachable)
+            verifier: APIKeyVerifierStub(outcome: .unreachable),
+            modelListFetcher: NoNetworkFetcherStub()
         )
         offlineViewModel.apiKey = "sk-valid-key-1234567890"
         await offlineViewModel.saveKey()

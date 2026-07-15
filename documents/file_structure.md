@@ -50,8 +50,10 @@ graph TD
   - GraySecondaryButtonStyle.swift: gray secondary button style
   - ColorPaletteConstants.swift: color palette consts
   - SupportedLanguages.swift: all supported langs
-  - AppSettingsManager.swift: settings, logs
-  - LLMProvider.swift: Enum of supported LLM providers (openAI, claude)
+  - AppSettingsManager.swift: settings, logs, per-provider model
+  - LLMProvider.swift: Enum of supported LLM providers (openAI, claude, mistral, openRouter)
+  - LLMModelCatalog.swift: default model per provider (no static catalog)
+  - LLMModelListFetcher.swift: fetches the provider's live model list from `/v1/models`
   - MarkdownLLMView.swift: SwiftUI view for Markdown rendering of LLM responses
   - URLInputResolver.swift: Resolves URL → plain text via pluggable TextFetching layer
 - **UnitTests/**: tests for all logic
@@ -140,7 +142,10 @@ src/
         ResultMode.swift           # Режим обработки результата (clipboard/display)
         OperationType.swift        # Протокол операций с resultMode
         ExplainOperation.swift     # Операция Explain с режимом display
-        LLMProvider.swift         # Enum of supported LLM providers (openAI, claude)
+        LLMProvider.swift         # Enum of supported LLM providers (openAI, claude, mistral, openRouter)
+        LLMModelCatalog.swift      # Default model per provider (no static catalog)
+        LLMModelListFetcher.swift  # Live model list fetch from provider `/v1/models`
+        ModelListFetching.swift    # Protocol for the model-list fetcher
       InventoryOperation.swift      # Модель операции, теперь с colorHex и поддержкой resultMode
       InventoryManager.swift        # Управление инвентарём, поддержка colorHex и resultMode
       CorrectParams.swift           # Параметры операции correct (без stylePreservationLevel)

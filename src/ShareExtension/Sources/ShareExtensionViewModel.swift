@@ -103,6 +103,9 @@ public final class ShareExtensionViewModel: ObservableObject {
     public func cancel() {
         processingTask?.cancel()
         manager.cancelProcessing()
+        // Помечаем прогон завершённым, чтобы уже летящее завершение не изменило
+        // состояние (errorMessage/displayResult) после отмены
+        hasCompleted = true
         isProcessing = false
         setStage(nil)
     }
@@ -418,8 +421,9 @@ public final class ShareExtensionViewModel: ObservableObject {
             lastErrorKey = .adviceUnknownError
             errorMsg = desc
         } else {
-            lastErrorKey = .adviceUnknownError
-            errorMsg = UserFacingError.unknown(underlyingError: error).errorDescription
+            // UserFacingError.errorDescription всегда nil — строим сообщение из ключей,
+            // иначе алерт не покажется и операция «молча ничего не делает»
+            errorMsg = handleUserFacingError(UserFacingError.unknown(underlyingError: error))
         }
         logManager.log(LogEntry(
             level: .error,

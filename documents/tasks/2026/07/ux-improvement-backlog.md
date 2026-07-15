@@ -230,7 +230,7 @@ Union dispositions (planner research ∪ scout):
 - [x] FR-UX.RETRY: transient errors (network, rate limit, timeout, processing) show a Retry button in the alert that re-runs the same operation; non-transient errors do not
   - Test: `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testRetry_ReprocessesLastOperationOnlyForTransientErrors`
   - Evidence: `./run test`
-- [x] FR-UX.MODEL-SELECT: user can pick the model per provider in Settings (curated list; free text for OpenRouter); choice persists per provider and is used by the extension
+- [x] FR-UX.MODEL-SELECT: user can pick the model per provider in Settings and onboarding from a live-fetched searchable list (no static catalog, no free text); choice persists per provider and is used by the extension
   - Test: `src/MainApp/UnitTests/SettingsViewModelTests.swift::testModelSelection_PersistsPerProvider`
   - Evidence: `./run test`
 - [x] All 7 in-scope FR-UX.* sections added to SRS (`documents/srs.md`) with filled `**Acceptance:**` fields
@@ -303,9 +303,9 @@ Error handling: guard against zero/absurd reported heights (first layout pass) �
 ### WP7 — FR-UX.MODEL-SELECT (feature 13) — independent; must land before any future streaming work
 
 1. `AppSettingsManager` (App Group defaults, visible to the extension): `model(for provider: LLMProvider) -> String` stored under `CraftifyLLMModel.<providerRaw>`; defaults = current hardcoded values (`gpt-4o-mini`, `claude-sonnet-4-0`, `mistral-medium-latest`, `openai/gpt-4o-mini`).
-2. Curated static model lists per provider as constants in Common; OpenRouter additionally gets a free-text field.
+2. SHIPPED CHANGE vs plan: no static catalog and no free-text field. `LLMModelCatalog` keeps only a default model per provider; the selectable list is fetched live from the provider's `/v1/models` via `LLMModelListFetcher`/`ModelListFetching`, with an error+retry state when the load fails.
 3. Add `init(model:)` to the 4 API clients; `LLMClientFactory` injects the stored model.
-4. `SettingsView`: model picker section below the provider picker (picker for curated lists; `TextField` for OpenRouter custom value).
+4. `SettingsView`: model section opens `ModelPickerView` (searchable live list, checkmark on the selection); the same picker also runs in onboarding after key entry.
 5. Data-first: capture each provider's ACTUAL "unknown model" response (status code + body) with a throwaway request before coding the mapping — do not assume 404/400; then map that observed shape to a user-facing advice "change model in Craftify settings" — new `UserFacingErrorKey` advice case, keys in ShareExtension locales (error surfaces in the extension) + MainApp locales if Settings verification shows it.
 6. New keys × 11 MainApp locales (model section labels); advice keys × 11 in both error-owning bundles.
 7. Tests: `SettingsViewModelTests::testModelSelection_PersistsPerProvider`; factory test asserting the client receives the stored model.

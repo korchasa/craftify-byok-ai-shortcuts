@@ -11,6 +11,10 @@ public final class ShareExtensionManager {
     /// Менеджер логирования для Share Extension (используется для отладочных и бизнес-логов)
     public let logManager: LogManagerShared
     private var isCancelled = false
+    /// Поколение текущего прогона обработки. Каждый новый запуск (в т.ч. повтор после
+    /// таймаута) увеличивает его, а поздний результат прежнего прогона отбрасывается,
+    /// чтобы он не затирал буфер обмена и lastResult нового запроса.
+    private var runGeneration = 0
     /// Последний результат обработки, используется для режима отображения
     public private(set) var lastResult: String?
     /// Тип последней выполненной операции
@@ -51,6 +55,7 @@ public final class ShareExtensionManager {
     ///   - operation: Операция из inventory (InventoryOperation?).
     /// - Returns: Кортеж (успех: Bool, ошибка: UserFacingError?) или nil, если операция не выполнена.
     public func process(text: String, operation: InventoryOperation?) async -> (success: Bool, error: UserFacingError?)? {
+        let generation = runGeneration
         if isCancelled {
             isCancelled = false
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
@@ -122,9 +127,9 @@ public final class ShareExtensionManager {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing manager unavailable", metadata: [:]))
             return (false, UserFacingError(messageKey: .errorProcessingManagerUnavailable, adviceKey: .adviceContactSupport))
         }
-        if isCancelled {
+        if isCancelled || generation != runGeneration {
             isCancelled = false
-            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled", metadata: [:]))
+            logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled or superseded", metadata: [:]))
             return (false, UserFacingError(messageKey: .errorCancelled, adviceKey: .adviceTryAgainLater))
         }
         // Настройка режима обработки результата и сохранение результата
@@ -176,6 +181,7 @@ public final class ShareExtensionManager {
     /// и без сброса новый запуск сразу завершился бы ошибкой «отменено».
     public func resetCancellation() {
         isCancelled = false
+        runGeneration += 1
     }
 
     // MARK: - Clipboard Helper

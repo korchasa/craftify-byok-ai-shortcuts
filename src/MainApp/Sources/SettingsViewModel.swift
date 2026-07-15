@@ -31,7 +31,11 @@ public final class SettingsViewModel: ObservableObject {
             guard oldValue != selectedProvider else { return }
             settings.llmProvider = selectedProvider
             isEditingKey = false
+            // Отображаем модель нового провайдера, но не персистим дефолт как явный выбор:
+            // иначе будущая смена каталожного дефолта не дойдёт до тех, кто лишь щёлкал провайдеры.
+            isSyncingModelForProvider = true
             selectedModel = settings.model(for: selectedProvider)
+            isSyncingModelForProvider = false
             availableModels = []
             Task {
                 await load()
@@ -40,10 +44,14 @@ public final class SettingsViewModel: ObservableObject {
         }
     }
 
-    /// Выбранная модель текущего провайдера; сохраняется сразу при изменении
+    /// Пока true, присваивание selectedModel синхронизирует отображение с провайдером
+    /// и не записывается в хранилище (записываем только явный выбор пользователя).
+    private var isSyncingModelForProvider = false
+
+    /// Выбранная модель текущего провайдера; сохраняется сразу при явном изменении
     @Published public var selectedModel: String {
         didSet {
-            guard oldValue != selectedModel else { return }
+            guard oldValue != selectedModel, !isSyncingModelForProvider else { return }
             settings.setModel(selectedModel, for: selectedProvider)
         }
     }
