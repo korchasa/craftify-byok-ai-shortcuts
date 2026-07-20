@@ -8,4 +8,7 @@ public enum ViewConstants {
     public static let fixedSizeHorizontal: Bool = false
     /// Значение fixedSize(vertical: ...) по умолчанию
     public static let fixedSizeVertical: Bool = true
+    /// Максимальная ширина контента корневых экранов: на iPad без ограничения
+    /// контент растягивается на всю ширину и становится нечитаемым
+    public static let rootContentMaxWidth: CGFloat = 700
 }

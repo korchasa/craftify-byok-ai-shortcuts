@@ -17,13 +17,16 @@ public struct CraftifyApp: App {
 
     public var body: some Scene {
         WindowGroup {
-            if appState.isConsentGiven {
-                HomeView(viewModel: viewModel)
-            } else {
-                HowToUseView(onConsent: {
-                    appState.setConsentGiven(true)
-                })
+            Group {
+                if appState.isConsentGiven {
+                    HomeView(viewModel: viewModel)
+                } else {
+                    HowToUseView(onConsent: {
+                        appState.setConsentGiven(true)
+                    })
+                }
             }
+            .frame(maxWidth: ViewConstants.rootContentMaxWidth)
         }
     }
 }
