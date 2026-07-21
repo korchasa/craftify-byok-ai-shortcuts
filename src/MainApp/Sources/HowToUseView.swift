@@ -134,6 +134,7 @@ public struct HowToUseView: View {
                     .foregroundColor(palette.secondaryText())
             }
             .accessibilityLabel(L10n.howtouseSetUpLater)
+            .accessibilityIdentifier("howtouse_skip_button")
         }
     }
 

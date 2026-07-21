@@ -19,4 +19,8 @@ public enum FormStyleConstants {
     public static let sectionSpacing: CGFloat = 16
     /// Отступ сверху для секции родного языка в настройках
     public static let nativeLanguageSectionTopPadding: CGFloat = 2
+    /// Минимальная ширина popover выбора модели (iPad)
+    public static let modelPickerPopoverMinWidth: CGFloat = 420
+    /// Минимальная высота popover выбора модели (iPad)
+    public static let modelPickerPopoverMinHeight: CGFloat = 560
 }

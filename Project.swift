@@ -113,6 +113,24 @@ public let project = Project(
             ])
         ),
         .target(
+            name: "MainAppUITests",
+            destinations: [.iPhone, .iPad],
+            product: .uiTests,
+            bundleId: "dev.korchasa.CraftifyUITests",
+            deploymentTargets: .iOS("16.0"),
+            infoPlist: .default,
+            sources: [
+                "src/MainApp/UITests/**"
+            ],
+            dependencies: [
+                .target(name: "MainApp")
+            ],
+            settings: .settings(base: [
+                "GENERATE_INFOPLIST_FILE": "YES",
+                "TEST_TARGET_NAME": "MainApp"
+            ])
+        ),
+        .target(
             name: "ShareExtension",
             destinations: [.iPhone, .iPad],
             product: .appExtension,
@@ -236,6 +254,12 @@ public let project = Project(
             name: "MainApp",
             shared: true,
             buildAction: .buildAction(targets: ["MainApp", "ShareExtension"])
+        ),
+        .scheme(
+            name: "UITests",
+            shared: true,
+            buildAction: .buildAction(targets: ["MainApp"]),
+            testAction: .targets(["MainAppUITests"])
         ),
         .scheme(
             name: "ShareExtension",

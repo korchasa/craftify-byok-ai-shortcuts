@@ -1,4 +1,5 @@
 import Foundation
+import os
 import SwiftUI
 
 public struct HomeView: View {
@@ -12,6 +13,9 @@ public struct HomeView: View {
     private var palette: MainAppColorPaletteProviding {
         ColorPaletteFactory.palette(for: colorScheme)
     }
+
+    /// Диагностика полевого iPad-бага: шит настроек закрывался при тапе по строке модели
+    fileprivate static let uiLog = OSLog(subsystem: "Internal", category: "SettingsUI")
 
     public init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -73,7 +77,13 @@ public struct HomeView: View {
         .sheet(isPresented: $showSettings, onDismiss: nil, content: {
             SettingsView(viewModel: SettingsViewModel())
                 .environment(\.colorPalette, palette)
+                // Настройки закрываются только кнопками: в форме бывает несохранённый
+                // ключ, а на iPad жест/клик мимо шита молча уносил ввод
+                .interactiveDismissDisabled()
         })
+        .onChange(of: showSettings) { newValue in
+            os_log("%{public}@", log: HomeView.uiLog, type: .info, "showSettings changed: \(newValue)")
+        }
     }
 
     private var operationsList: some View {
@@ -118,6 +128,7 @@ public struct HomeView: View {
                     .foregroundColor(palette.secondaryButtonText())
             }
             .buttonStyle(SettingsPrimaryButtonStyle())
+            .accessibilityIdentifier("home_settings_button")
         }
     }
 

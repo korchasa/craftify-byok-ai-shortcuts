@@ -1,4 +1,5 @@
 import Foundation
+import os
 import SwiftUI
 import UniformTypeIdentifiers
 
@@ -10,6 +11,8 @@ public struct SettingsView: View {
     @FocusState private var isTextFieldFocused: Bool
     @State private var shouldDismiss = false
     @Environment(\.colorPalette) private var palette
+    /// Диагностика полевого iPad-бага: шит настроек закрывался при тапе по строке модели
+    fileprivate static let uiLog = OSLog(subsystem: "Internal", category: "SettingsUI")
 
     /// Инициализация с ViewModel
     /// - Parameter viewModel: ViewModel настроек
@@ -63,6 +66,12 @@ public struct SettingsView: View {
             if newValue {
                 dismiss()
             }
+        }
+        .onAppear {
+            os_log("%{public}@", log: SettingsView.uiLog, type: .info, "settings appeared")
+        }
+        .onDisappear {
+            os_log("%{public}@", log: SettingsView.uiLog, type: .info, "settings disappeared")
         }
         .background(palette.background())
     }
@@ -123,6 +132,7 @@ public struct SettingsView: View {
                 Spacer()
                 Button(L10n.settingsChangeKey) { viewModel.beginEditing() }
                     .font(.craftifyBody)
+                    .accessibilityIdentifier("settings_change_key_button")
                 Button(role: .destructive, action: { showDeleteConfirmation = true }) {
                     Text(L10n.settingsDeleteKey)
                         .font(.craftifyBody)
@@ -180,7 +190,10 @@ public struct SettingsView: View {
                     .font(.craftifyBody)
                     .fontWeight(.bold)
                 Spacer()
-                Button(action: { showModelPicker = true }) {
+                Button(action: {
+                    os_log("%{public}@", log: SettingsView.uiLog, type: .info, "model row tapped")
+                    showModelPicker = true
+                }) {
                     HStack {
                         Text(viewModel.selectedModel)
                             .font(.craftifyBody)
@@ -193,9 +206,20 @@ public struct SettingsView: View {
                     }
                 }
                 .accessibilityLabel(L10n.settingsModel)
+                .accessibilityIdentifier("settings_model_button")
             }
-            .sheet(isPresented: $showModelPicker) {
+            // popover, а не sheet: вложенный sheet на iPad закрывает шит настроек
+            // (несохранённый ключ терялся); popover ложится поверх и адаптируется
+            // в sheet на iPhone
+            .popover(isPresented: $showModelPicker) {
                 ModelPickerSheet(viewModel: viewModel)
+                    .frame(
+                        minWidth: FormStyleConstants.modelPickerPopoverMinWidth,
+                        minHeight: FormStyleConstants.modelPickerPopoverMinHeight
+                    )
+            }
+            .onChange(of: showModelPicker) { newValue in
+                os_log("%{public}@", log: SettingsView.uiLog, type: .info, "model picker presented: \(newValue)")
             }
         }
     }
@@ -241,6 +265,7 @@ public struct SettingsView: View {
                 }
                 .pickerStyle(MenuPickerStyle())
                 .frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityIdentifier("settings_provider_picker")
             }
         }
     }
