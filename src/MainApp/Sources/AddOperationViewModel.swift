@@ -7,26 +7,26 @@ public final class AddOperationViewModel: ObservableObject {
             switch kind {
             case .translate:
                 targetLanguage = supportedLanguages.first?.code ?? ""
-                length = "2-3 sentences"
+                length = SummarizeLengths.defaultLength
             case .simplify:
                 targetLanguage = ""
-                length = "2-3 sentences"
+                length = SummarizeLengths.defaultLength
             case .correct:
                 targetLanguage = ""
-                length = "2-3 sentences"
+                length = SummarizeLengths.defaultLength
             case .explain:
                 targetLanguage = ""
-                length = "2-3 sentences"
+                length = SummarizeLengths.defaultLength
             case .summarize:
                 targetLanguage = ""
-                length = "2-3 sentences"
+                length = SummarizeLengths.defaultLength
             }
         }
     }
 
     @Published public var targetLanguage: String = ""
     @Published public var selectedColorHex: String
-    @Published public var length: String = "2-3 sentences"
+    @Published public var length: String = SummarizeLengths.defaultLength
 
     /// Проверяет, могут ли данные создать операцию
     public var isValid: Bool {
@@ -63,7 +63,7 @@ public final class AddOperationViewModel: ObservableObject {
         selectedKind = nil
         targetLanguage = ""
         selectedColorHex = palette.first!
-        length = "2-3 sentences"
+        length = SummarizeLengths.defaultLength
     }
 
     deinit {}

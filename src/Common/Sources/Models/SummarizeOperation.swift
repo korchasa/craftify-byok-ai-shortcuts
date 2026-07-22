@@ -24,7 +24,7 @@ public struct SummarizeOperation: OperationType {
     }
 
     public func makeInventoryOperation(input: OperationInput, colorHex: String) -> InventoryOperation? {
-        let params = SummarizeParams(length: input.length)
+        let params = SummarizeParams(length: SummarizeLengths.normalize(input.length))
         guard let data = try? JSONEncoder().encode(params) else { return nil }
         return InventoryOperation(operation: .summarize, params: data, colorHex: colorHex)
     }
@@ -154,6 +154,8 @@ public struct SummarizeOperation: OperationType {
 
     public func decodeInput(from data: Data) throws -> OperationInput {
         let params = try JSONDecoder().decode(SummarizeParams.self, from: data)
-        return OperationInput(length: params.length)
+        // Старые записи могли хранить локализованную строку пикера —
+        // в промпт LLM должно уходить каноническое английское значение
+        return OperationInput(length: SummarizeLengths.normalize(params.length))
     }
 }

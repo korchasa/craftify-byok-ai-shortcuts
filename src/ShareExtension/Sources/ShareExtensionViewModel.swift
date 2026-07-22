@@ -222,14 +222,14 @@ public final class ShareExtensionViewModel: ObservableObject {
         if isURL {
             OperationInput(
                 targetLanguage: "",
-                length: "2-3 sentences",
+                length: SummarizeLengths.defaultLength,
                 url: manager.inputText,
                 text: nil
             )
         } else {
             OperationInput(
                 targetLanguage: "",
-                length: "2-3 sentences",
+                length: SummarizeLengths.defaultLength,
                 url: nil,
                 text: manager.inputText
             )

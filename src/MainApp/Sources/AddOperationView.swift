@@ -162,16 +162,10 @@ public struct AddOperationView: View {
 
     private struct AddOperationSummarizeSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
-        private let lengths = [
-            L10n.sentenceCount23,
-            L10n.sentenceCount56,
-            L10n.sentenceCount910,
-            L10n.sentenceCount1820
-        ]
         var body: some View {
             Picker(L10n.operationLabelSummarize, selection: $viewModel.length) {
-                ForEach(lengths, id: \.self) { length in
-                    Text(length).tag(length)
+                ForEach(SummarizeLengths.all, id: \.self) { length in
+                    Text(SummarizeLengthDisplay.label(for: length)).tag(length)
                         .lineLimit(ViewConstants.unlimitedLineLimit)
                         .fixedSize(horizontal: ViewConstants.fixedSizeHorizontal, vertical: ViewConstants.fixedSizeVertical)
                 }

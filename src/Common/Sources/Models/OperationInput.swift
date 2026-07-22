@@ -20,10 +20,10 @@ public struct OperationInput {
     ///   - targetLanguage: Целевой язык (по умолчанию пустая строка).
     ///   - complexityLevel: Уровень сложности для операций упрощения (не используется в UI).
     ///   - detailLevel: Уровень детализации для операций объяснения (не используется в UI).
-    ///   - length: Длина итогового текста (по умолчанию "2-3 sentences").
+    ///   - length: Длина итогового текста (по умолчанию SummarizeLengths.defaultLength).
     ///   - url: URL для загрузки текста (по умолчанию nil)
     ///   - text: Текст для обработки (по умолчанию nil)
-    public init(targetLanguage: String = "", complexityLevel: ComplexityLevel = .schoolchild, detailLevel: DetailLevel = .schoolchild, length: String = "2-3 sentences", url: String? = nil, text: String? = nil) {
+    public init(targetLanguage: String = "", complexityLevel: ComplexityLevel = .schoolchild, detailLevel: DetailLevel = .schoolchild, length: String = SummarizeLengths.defaultLength, url: String? = nil, text: String? = nil) {
         self.targetLanguage = targetLanguage
         self.complexityLevel = complexityLevel
         self.detailLevel = detailLevel

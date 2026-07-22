@@ -241,7 +241,7 @@ public struct HomeView: View {
                 return ""
             case .summarize:
                 if let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params) {
-                    return params.length
+                    return SummarizeLengthDisplay.label(for: params.length)
                 }
             }
             return ""

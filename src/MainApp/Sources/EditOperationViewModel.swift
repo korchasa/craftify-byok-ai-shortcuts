@@ -33,7 +33,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
     }
 
     @Published public var selectedColorHex: String
-    @Published public var length: String = "2-3 sentences" {
+    @Published public var length: String = SummarizeLengths.defaultLength {
         didSet {
             guard oldValue != length else { return }
             refreshPromptAfterParamsChange(previousDefault: defaultPrompt(targetLanguage: targetLanguage, length: oldValue))
@@ -45,6 +45,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
 
     public let originalOperation: InventoryOperation
     private let originalTargetLanguage: String
+    private let originalLength: String
     private let originalKind: OperationKind
     private let originalColorHex: String
     public let palette: [String]
@@ -67,18 +68,26 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             let lang = params?.targetLanguage ?? ""
             self.targetLanguage = lang
             self.originalTargetLanguage = lang
+            self.originalLength = SummarizeLengths.defaultLength
         case .simplify:
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
+            self.originalLength = SummarizeLengths.defaultLength
         case .correct:
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
+            self.originalLength = SummarizeLengths.defaultLength
         case .explain:
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
+            self.originalLength = SummarizeLengths.defaultLength
         case .summarize:
             let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params)
-            self.length = params?.length ?? "2-3 sentences"
+            // Старые записи могли хранить локализованную строку пикера —
+            // без нормализации выбор в пикере длины оставался пустым
+            let storedLength = SummarizeLengths.normalize(params?.length ?? SummarizeLengths.defaultLength)
+            self.length = storedLength
+            self.originalLength = storedLength
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
         }
@@ -137,7 +146,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         self.selectedKind = originalKind
         self.targetLanguage = originalTargetLanguage
         self.selectedColorHex = originalColorHex
-        self.length = "2-3 sentences"
+        self.length = originalLength
         self.promptText = originalOperation.customPrompt ?? currentDefaultPrompt
     }
 
