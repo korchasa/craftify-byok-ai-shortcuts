@@ -26,12 +26,16 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
             VStack(spacing: 0) {
                 Divider()
                     .padding(.bottom, FormStyleConstants.dividerBottomPadding)
-                VStack(spacing: 0) {
-                    content()
-                        .background(palette.background())
+                // Контент скроллится: в компактном iPad-шите форма выше окна,
+                // без прокрутки нижняя панель кнопок обрезалась кромкой шита
+                ScrollView {
+                    VStack(spacing: 0) {
+                        content()
+                            .background(palette.background())
+                    }
+                    .padding(.top, FormStyleConstants.formContentTopPadding)
+                    .padding(.bottom, FormStyleConstants.bottomPadding)
                 }
-                .padding(.top, FormStyleConstants.formContentTopPadding)
-                Spacer(minLength: CraftifyButtonConstants.spacerMinLength)
                 buttons()
             }
             .background(palette.background())
