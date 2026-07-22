@@ -28,12 +28,13 @@ public struct HomeView: View {
     public var body: some View {
         NavigationStack {
             operationsList
-                .navigationTitle(LocalizedStringKey(L10n.homeTitle))
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
+                // Собственная шапка вместо системного навбара: кнопка Edit должна
+                // стоять в строке заголовка, а не липнуть к верхней кромке окна
+                // (заметно в оконном режиме iPad)
+                .safeAreaInset(edge: .top) {
+                    titleBar
                 }
+                .toolbar(.hidden, for: .navigationBar)
                 .safeAreaInset(edge: .bottom) {
                     bottomBar
                 }
@@ -111,6 +112,22 @@ public struct HomeView: View {
         }
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
+        .background(palette.background())
+    }
+
+    /// Строка заголовка: крупный титул слева, Edit — на той же линии справа
+    private var titleBar: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(LocalizedStringKey(L10n.homeTitle))
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            Spacer()
+            EditButton()
+                .font(.craftifyBody)
+        }
+        .padding(.horizontal, FormStyleConstants.formLeadingPadding + FormStyleConstants.formLeadingPadding / 4)
+        .padding(.top, FormStyleConstants.sectionSpacing)
+        .padding(.bottom, FormStyleConstants.dividerBottomPadding)
         .background(palette.background())
     }
 
