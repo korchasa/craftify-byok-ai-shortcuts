@@ -208,15 +208,11 @@ public struct SettingsView: View {
                 .accessibilityLabel(L10n.settingsModel)
                 .accessibilityIdentifier("settings_model_button")
             }
-            // popover, а не sheet: вложенный sheet на iPad закрывает шит настроек
-            // (несохранённый ключ терялся); popover ложится поверх и адаптируется
-            // в sheet на iPhone
-            .popover(isPresented: $showModelPicker) {
+            // Пуш внутри NavigationStack настроек, а не вложенная презентация
+            // (sheet/popover): на iPad активация поиска во вложенной презентации
+            // системно сбрасывала и пикер, и шит настроек — несохранённый ключ терялся
+            .navigationDestination(isPresented: $showModelPicker) {
                 ModelPickerSheet(viewModel: viewModel)
-                    .frame(
-                        minWidth: FormStyleConstants.modelPickerPopoverMinWidth,
-                        minHeight: FormStyleConstants.modelPickerPopoverMinHeight
-                    )
             }
             .onChange(of: showModelPicker) { newValue in
                 os_log("%{public}@", log: SettingsView.uiLog, type: .info, "model picker presented: \(newValue)")

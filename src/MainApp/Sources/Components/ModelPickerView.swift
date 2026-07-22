@@ -2,6 +2,9 @@ import SwiftUI
 
 /// Переиспользуемый экран выбора модели: список подгружается с API провайдера,
 /// поиск по подстроке. Используется в настройках и в онбординге.
+/// Без собственного NavigationStack и .searchable: системная активация поиска
+/// внутри вложенной презентации на iPad сбрасывала родительский шит настроек,
+/// поэтому поиск — обычный TextField, а навигацию даёт вызывающая сторона.
 public struct ModelPickerView: View {
     public let selectedModel: String
     public let availableModels: [String]
@@ -12,7 +15,8 @@ public struct ModelPickerView: View {
     @State private var searchText = ""
 
     public var body: some View {
-        NavigationStack {
+        VStack(spacing: 0) {
+            searchBar
             Group {
                 if isLoading, availableModels.isEmpty {
                     ProgressView()
@@ -23,10 +27,37 @@ public struct ModelPickerView: View {
                     modelList
                 }
             }
-            .navigationTitle(L10n.settingsModel)
-            .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $searchText, prompt: L10n.settingsModelSearch)
         }
+        .navigationTitle(L10n.settingsModel)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var searchBar: some View {
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+                .accessibilityHidden(true)
+            TextField(L10n.settingsModelSearch, text: $searchText)
+                .font(.craftifyBody)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .accessibilityIdentifier("model_search_field")
+            if !searchText.isEmpty {
+                Button(action: { searchText = "" }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.secondary)
+                }
+                .accessibilityLabel(L10n.settingsModelSearch)
+            }
+        }
+        .padding(.vertical, FormStyleConstants.searchBarVerticalPadding)
+        .padding(.horizontal, FormStyleConstants.searchBarHorizontalPadding)
+        .background(
+            RoundedRectangle(cornerRadius: FormStyleConstants.searchBarCornerRadius)
+                .fill(Color(.secondarySystemBackground))
+        )
+        .padding(.horizontal, FormStyleConstants.formLeadingPadding)
+        .padding(.vertical, FormStyleConstants.searchBarVerticalPadding)
     }
 
     /// Список не загрузился — сообщение и кнопка повтора, без подставного каталога

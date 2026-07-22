@@ -47,19 +47,23 @@ public struct HowToUseView: View {
             }
         }
         .sheet(isPresented: $viewModel.showModelStep, onDismiss: handleModelStepDismiss) {
-            ModelPickerView(
-                selectedModel: viewModel.selectedModel,
-                availableModels: viewModel.availableModels,
-                isLoading: viewModel.isLoadingModels,
-                loadFailed: viewModel.modelsLoadFailed,
-                onSelect: { model in
-                    viewModel.selectedModel = model
-                    finishAndClose()
-                },
-                onRetry: {
-                    Task { await viewModel.loadModels() }
-                }
-            )
+            // NavigationStack здесь только ради заголовка: сам пикер больше
+            // не носит собственный стек (см. комментарий в ModelPickerView)
+            NavigationStack {
+                ModelPickerView(
+                    selectedModel: viewModel.selectedModel,
+                    availableModels: viewModel.availableModels,
+                    isLoading: viewModel.isLoadingModels,
+                    loadFailed: viewModel.modelsLoadFailed,
+                    onSelect: { model in
+                        viewModel.selectedModel = model
+                        finishAndClose()
+                    },
+                    onRetry: {
+                        Task { await viewModel.loadModels() }
+                    }
+                )
+            }
         }
     }
 
