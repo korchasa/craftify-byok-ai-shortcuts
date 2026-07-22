@@ -47,7 +47,7 @@ public let project = Project(
                     .string("UIInterfaceOrientationLandscapeRight")
                 ]),
                 "CFBundleShortVersionString": .string("$(MARKETING_VERSION)"),
-                "CFBundleVersion": .string("1")
+                "CFBundleVersion": .string("$(CURRENT_PROJECT_VERSION)")
             ]),
             sources: [
                 "src/Common/Sources/**",
@@ -139,7 +139,7 @@ public let project = Project(
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": .string("Craftify Share"),
                 "CFBundleShortVersionString": .string("$(MARKETING_VERSION)"),
-                "CFBundleVersion": .string("1"),
+                "CFBundleVersion": .string("$(CURRENT_PROJECT_VERSION)"),
                 "NSExtension": .dictionary([
                     "NSExtensionAttributes": .dictionary([
                         "NSExtensionActivationRule": .dictionary([
