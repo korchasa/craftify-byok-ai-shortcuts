@@ -18,8 +18,8 @@ public enum CraftifyButtonConstants {
     public static let primaryColor = Color(red: primaryRed, green: primaryGreen, blue: primaryBlue)
     /// Вторичный цвет кнопки (Cancel)
     public static let secondaryColor = Color(red: secondaryRed, green: secondaryGreen, blue: secondaryBlue)
-    /// Радиус скругления кнопки
-    public static let cornerRadius: CGFloat = 20
+    /// Радиус скругления кнопки (масштабируется на iPad вместе с высотой)
+    public static let cornerRadius: CGFloat = 20 * DeviceScale.controlFactor
     /// Масштаб кнопки при нажатии
     public static let pressedScale: CGFloat = 0.97
     /// Прозрачность для вторичной кнопки
@@ -30,8 +30,8 @@ public enum CraftifyButtonConstants {
     public static let bottomPadding: CGFloat = 16
     /// Minimum spacer height for button layouts
     public static let spacerMinLength: CGFloat = 0
-    /// Минимальная высота кнопки
-    public static let minButtonHeight: CGFloat = 44
+    /// Минимальная высота кнопки (на iPad крупнее, чем на iPhone)
+    public static let minButtonHeight: CGFloat = 44 * DeviceScale.controlFactor
     /// Масштаб кнопки по умолчанию
     public static let defaultScale: CGFloat = 1.0
 }

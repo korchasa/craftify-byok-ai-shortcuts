@@ -138,7 +138,7 @@ public struct HomeView: View {
         let isEditing: Bool
         let onEdit: () -> Void
 
-        private static let baseCircleSize: CGFloat = 28
+        private static let baseCircleSize: CGFloat = 28 * DeviceScale.controlFactor
         private static let symbolScale: CGFloat = 0.5
         private static let horizontalSpacing: CGFloat = 12
         /// Кружок операции масштабируется вместе с системным размером шрифта

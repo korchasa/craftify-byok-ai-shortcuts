@@ -15,6 +15,7 @@ public struct SettingsPrimaryButtonStyle: ButtonStyle {
 
     public func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .font(.craftifyBody)
             .fontWeight(.bold)
             .padding()
             .frame(maxWidth: .infinity)
