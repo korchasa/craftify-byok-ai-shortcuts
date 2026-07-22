@@ -89,7 +89,7 @@ public final class ProcessingManager: ProcessingManaging {
             let apiKey = try await authManager.getAPIKey() ?? ""
             let opType = OperationFactory.make(kind: operation.operation)
             let input = try opType.decodeInput(from: operation.params)
-            let messages = opType.makeMessages(input: input, text: text)
+            let messages = opType.makeMessages(input: input, text: text, customPrompt: operation.customPrompt)
             logRequest(operation: operation, apiKey: apiKey, messages: messages)
             let result = try await llmClient.send(messages: messages, apiKey: apiKey)
             logResponse(operation: operation, text: text, result: result)

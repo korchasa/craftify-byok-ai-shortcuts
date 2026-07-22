@@ -17,10 +17,8 @@ public struct ExplainOperation: OperationType {
         InventoryOperation(operation: .explain, params: Data(), colorHex: colorHex)
     }
 
-    /// Генерирует promptTemplate для данной операции с учётом текущего языка
-    public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
-        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
-        let systemContent = """
+    public func defaultSystemPrompt(input _: OperationInput) -> String {
+        """
         # INSTRUCTIONS
 
         Follow strictly in order:
@@ -75,12 +73,14 @@ public struct ExplainOperation: OperationType {
 
         Усвідомлення власних обмежень є ключем до зростання, а його відсутність веде до переоцінки себе і помилок.
         """
-        let system = LLMMessage(role: .system, content: systemContent)
-        let user = LLMMessage(role: .user, content: """
+    }
+
+    public func userContent(input _: OperationInput, text: String) -> String {
+        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
+        return """
         - Target language: \(nativeLang)
         - User request: \(text)
-        """)
-        return [system, user]
+        """
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {

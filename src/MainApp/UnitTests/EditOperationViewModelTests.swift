@@ -72,5 +72,78 @@ public final class EditOperationViewModelTests: XCTestCase {
         XCTAssertEqual(params?.targetLanguage, "de")
     }
 
+    // MARK: - Пользовательский промпт
+
+    public func testPromptInitializedWithDefaultWhenNoCustom() throws {
+        let op = try InventoryOperation(
+            operation: .translate,
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "fr")),
+            colorHex: "3288bd"
+        )
+        let vm = EditOperationViewModel(operation: op)
+        XCTAssertEqual(vm.promptText, vm.currentDefaultPrompt)
+        XCTAssertTrue(vm.isPromptDefault)
+    }
+
+    public func testPromptInitializedWithCustomWhenPresent() throws {
+        let op = try InventoryOperation(
+            operation: .translate,
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "fr")),
+            colorHex: "3288bd",
+            customPrompt: "Translate rudely"
+        )
+        let vm = EditOperationViewModel(operation: op)
+        XCTAssertEqual(vm.promptText, "Translate rudely")
+        XCTAssertFalse(vm.isPromptDefault)
+    }
+
+    public func testResetPromptRestoresTemplateDefault() throws {
+        let op = try InventoryOperation(
+            operation: .translate,
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "fr")),
+            colorHex: "3288bd",
+            customPrompt: "Translate rudely"
+        )
+        let vm = EditOperationViewModel(operation: op)
+        vm.resetPrompt()
+        XCTAssertEqual(vm.promptText, vm.currentDefaultPrompt)
+        XCTAssertTrue(vm.isPromptDefault)
+    }
+
+    public func testLanguageChangeRegeneratesDefaultPromptWhenNotCustomized() throws {
+        let op = try InventoryOperation(
+            operation: .translate,
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "fr")),
+            colorHex: "3288bd"
+        )
+        let vm = EditOperationViewModel(operation: op)
+        vm.targetLanguage = "de"
+        XCTAssertTrue(vm.promptText.contains("German"), "Prompt should follow the new language: \(vm.promptText)")
+    }
+
+    public func testLanguageChangeKeepsCustomizedPrompt() throws {
+        let op = try InventoryOperation(
+            operation: .translate,
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "fr")),
+            colorHex: "3288bd",
+            customPrompt: "Translate rudely"
+        )
+        let vm = EditOperationViewModel(operation: op)
+        vm.targetLanguage = "de"
+        XCTAssertEqual(vm.promptText, "Translate rudely")
+    }
+
+    public func testMakeOperationStoresNilForDefaultPromptAndTextForCustom() throws {
+        let op = try InventoryOperation(
+            operation: .translate,
+            params: JSONEncoder().encode(TranslateParams(targetLanguage: "fr")),
+            colorHex: "3288bd"
+        )
+        let vm = EditOperationViewModel(operation: op)
+        XCTAssertNil(vm.makeOperation()?.customPrompt)
+        vm.promptText = "Translate rudely"
+        XCTAssertEqual(vm.makeOperation()?.customPrompt, "Translate rudely")
+    }
+
     deinit {}
 }

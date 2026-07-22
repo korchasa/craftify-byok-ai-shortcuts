@@ -184,6 +184,7 @@ public struct HomeView: View {
             }
             .buttonStyle(PlainButtonStyle())
             .disabled(isEditing)
+            .accessibilityIdentifier("operation_row_\(operation.operation.rawValue)")
         }
 
         private func operationLabel(for type: OperationKind) -> String {

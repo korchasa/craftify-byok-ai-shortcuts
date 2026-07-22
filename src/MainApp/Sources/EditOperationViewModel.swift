@@ -17,12 +17,31 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             case .summarize:
                 targetLanguage = ""
             }
+            // Смена типа операции обнуляет пользовательскую правку промпта:
+            // текст другого типа не имеет смысла для нового
+            if oldValue != selectedKind {
+                promptText = currentDefaultPrompt
+            }
         }
     }
 
-    @Published public var targetLanguage: String = ""
+    @Published public var targetLanguage: String = "" {
+        didSet {
+            guard oldValue != targetLanguage else { return }
+            refreshPromptAfterParamsChange(previousDefault: defaultPrompt(targetLanguage: oldValue, length: length))
+        }
+    }
+
     @Published public var selectedColorHex: String
-    @Published public var length: String = "2-3 sentences"
+    @Published public var length: String = "2-3 sentences" {
+        didSet {
+            guard oldValue != length else { return }
+            refreshPromptAfterParamsChange(previousDefault: defaultPrompt(targetLanguage: targetLanguage, length: oldValue))
+        }
+    }
+
+    /// Итоговый текст системного промпта, показанный на экране (редактируемый)
+    @Published public var promptText: String = ""
 
     public let originalOperation: InventoryOperation
     private let originalTargetLanguage: String
@@ -63,10 +82,43 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
         }
+        self.promptText = operation.customPrompt ?? currentDefaultPrompt
     }
 
-    /// Создаёт новую InventoryOperation на основе текущего состояния ViewModel
-    /// - Returns: InventoryOperation или nil, если данные невалидны
+    /// Дефолтный промпт для текущего типа и заданных параметров
+    private func defaultPrompt(targetLanguage: String, length: String) -> String {
+        guard let kind = selectedKind else { return "" }
+        let input = OperationInput(targetLanguage: targetLanguage, length: length)
+        return OperationFactory.make(kind: kind).defaultSystemPrompt(input: input)
+    }
+
+    /// Дефолтный промпт для текущего состояния полей
+    public var currentDefaultPrompt: String {
+        defaultPrompt(targetLanguage: targetLanguage, length: length)
+    }
+
+    /// Промпт совпадает с дефолтным (кнопке сброса нечего делать)
+    public var isPromptDefault: Bool {
+        promptText.trimmingCharacters(in: .whitespacesAndNewlines) ==
+            currentDefaultPrompt.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    /// Сброс текста промпта на дефолтное значение из шаблона
+    public func resetPrompt() {
+        promptText = currentDefaultPrompt
+    }
+
+    /// После смены параметров дефолтный текст меняется; если пользователь промпт
+    /// не правил (текст был равен старому дефолту) — показываем новый дефолт
+    private func refreshPromptAfterParamsChange(previousDefault: String) {
+        if promptText == previousDefault {
+            promptText = currentDefaultPrompt
+        }
+    }
+
+    /// Создаёт новую InventoryOperation на основе текущего состояния ViewModel.
+    /// Промпт сохраняется как пользовательский, только если он отличается от
+    /// дефолтного и непуст — иначе операция продолжает следовать шаблону.
     public func makeOperation() -> InventoryOperation? {
         guard let kind = selectedKind else { return nil }
         let input = OperationInput(
@@ -74,7 +126,10 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             length: length
         )
         let operation = OperationFactory.make(kind: kind)
-        return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)
+        let trimmedPrompt = promptText.trimmingCharacters(in: .whitespacesAndNewlines)
+        let customPrompt = (isPromptDefault || trimmedPrompt.isEmpty) ? nil : promptText
+        return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)?
+            .with(customPrompt: customPrompt)
     }
 
     /// Сбрасывает все поля в исходное состояние
@@ -83,6 +138,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         self.targetLanguage = originalTargetLanguage
         self.selectedColorHex = originalColorHex
         self.length = "2-3 sentences"
+        self.promptText = originalOperation.customPrompt ?? currentDefaultPrompt
     }
 
     deinit {}

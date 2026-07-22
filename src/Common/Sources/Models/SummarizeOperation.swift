@@ -29,10 +29,8 @@ public struct SummarizeOperation: OperationType {
         return InventoryOperation(operation: .summarize, params: data, colorHex: colorHex)
     }
 
-    /// Генерирует promptTemplate для данной операции с учётом текущего языка
-    public func makeMessages(input: OperationInput, text: String) -> [LLMMessage] {
-        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
-        let systemContent = """
+    public func defaultSystemPrompt(input _: OperationInput) -> String {
+        """
         YOU ARE AN ELITE TEXT SUMMARIZATION SPECIALIST. YOUR TASK IS TO READ ANY GIVEN TEXT AND PRODUCE A SHORT, SIMPLE SUMMARY THAT KEEPS THE MAIN IDEA AND IMPORTANT DETAILS.
 
         ### YOUR MISSION ###
@@ -89,13 +87,15 @@ public struct SummarizeOperation: OperationType {
         **Summary:**
         Потяги між Центральною та Східною станціями не їздитимуть 10–15 квітня через погану погоду і ремонт. Використовуйте інший транспорт.
         """
-        let system = LLMMessage(role: .system, content: systemContent)
-        let user = LLMMessage(role: .user, content: """
+    }
+
+    public func userContent(input: OperationInput, text: String) -> String {
+        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
+        return """
         Target language: \(nativeLang)
         Length: \(input.length)
         Text: \(text)
-        """)
-        return [system, user]
+        """
     }
 
     /// Асинхронно получает текст для суммаризации: либо из text, либо из url

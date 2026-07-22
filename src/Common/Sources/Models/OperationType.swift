@@ -19,8 +19,12 @@ public protocol OperationType {
     /// Режим обработки результата операции: копировать в буфер обмена или отображать во всплывающем окне
     var resultMode: ResultMode { get }
 
-    /// Creates full LLM chat messages based on operation parameters and user text.
-    func makeMessages(input: OperationInput, text: String) -> [LLMMessage]
+    /// Итоговый системный промпт операции, собранный из шаблона с подстановкой
+    /// параметров. Именно этот текст показывается и редактируется на экране операции.
+    func defaultSystemPrompt(input: OperationInput) -> String
+
+    /// Содержимое user-сообщения для LLM (текст пользователя плюс служебные поля)
+    func userContent(input: OperationInput, text: String) -> String
 
     /// Асинхронно получает текст для отправки в LLM: по умолчанию только text, url не поддерживается
     /// - Parameter input: OperationInput с текстом или url
@@ -45,6 +49,17 @@ public extension OperationType {
     /// Режим обработки результата по умолчанию: копировать в буфер обмена
     var resultMode: ResultMode {
         .clipboard
+    }
+
+    /// Собирает сообщения для LLM: системный промпт (пользовательский, если задан
+    /// и непустой, иначе дефолтный из шаблона) плюс user-сообщение
+    func makeMessages(input: OperationInput, text: String, customPrompt: String? = nil) -> [LLMMessage] {
+        let trimmedCustom = customPrompt?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let systemContent = trimmedCustom.isEmpty ? defaultSystemPrompt(input: input) : customPrompt ?? ""
+        return [
+            LLMMessage(role: .system, content: systemContent),
+            LLMMessage(role: .user, content: userContent(input: input, text: text))
+        ]
     }
 
     /// Асинхронно получает текст для отправки в LLM: по умолчанию только text, url не поддерживается

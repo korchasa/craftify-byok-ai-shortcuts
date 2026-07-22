@@ -91,3 +91,6 @@
 "settings_models_retry" = "Retry";
 "privacy_policy_title" = "Privacy Policy";
 "howtouse_set_up_later" = "Set up later";
+
+"edit_operation_prompt" = "Prompt";
+"edit_operation_prompt_reset" = "Reset";

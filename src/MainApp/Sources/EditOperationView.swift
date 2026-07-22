@@ -54,6 +54,7 @@ public struct EditOperationView: View {
                     EditOperationTypeSection(viewModel: viewModel)
                 }
                 EditOperationFields(viewModel: viewModel)
+                EditOperationPromptSection(viewModel: viewModel)
                 Text(L10n.color)
                     .font(.craftifyBody).bold()
                     .padding(.top, FormStyleConstants.sectionSpacing)
@@ -68,6 +69,42 @@ public struct EditOperationView: View {
             }
             .padding(.leading, FormStyleConstants.formLeadingPadding)
             .padding(.trailing, FormStyleConstants.formTrailingPadding)
+        }
+    }
+
+    /// Итоговый текст системного промпта: редактируется на месте,
+    /// кнопка сброса возвращает дефолт, собранный из шаблона операции
+    private struct EditOperationPromptSection: View {
+        @ObservedObject var viewModel: EditOperationViewModel
+        @Environment(\.colorPalette) private var palette
+        var body: some View {
+            VStack(alignment: .leading, spacing: FormStyleConstants.dividerBottomPadding) {
+                HStack {
+                    Text(L10n.editOperationPrompt)
+                        .font(.craftifyBody).bold()
+                    Spacer()
+                    Button(action: { viewModel.resetPrompt() }) {
+                        Label(L10n.editOperationPromptReset, systemImage: "arrow.counterclockwise")
+                            .font(.craftifyFootnote)
+                    }
+                    .disabled(viewModel.isPromptDefault)
+                    .accessibilityIdentifier("edit_prompt_reset_button")
+                }
+                TextEditor(text: $viewModel.promptText)
+                    .font(.craftifyFootnote)
+                    .fontWeight(.regular)
+                    .frame(
+                        minHeight: FormStyleConstants.promptEditorMinHeight,
+                        maxHeight: FormStyleConstants.promptEditorMaxHeight
+                    )
+                    .padding(FormStyleConstants.promptEditorInnerPadding)
+                    .background(
+                        RoundedRectangle(cornerRadius: FormStyleConstants.searchBarCornerRadius)
+                            .stroke(palette.secondaryText().opacity(FormStyleConstants.promptEditorBorderOpacity))
+                    )
+                    .accessibilityIdentifier("edit_prompt_editor")
+            }
+            .padding(.top, FormStyleConstants.sectionSpacing)
         }
     }
 

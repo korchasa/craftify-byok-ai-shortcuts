@@ -91,3 +91,6 @@
 "settings_models_retry" = "Повторити";
 "privacy_policy_title" = "Політика конфіденційності";
 "howtouse_set_up_later" = "Налаштувати пізніше";
+
+"edit_operation_prompt" = "Промпт";
+"edit_operation_prompt_reset" = "Скинути";

@@ -17,9 +17,8 @@ public struct SimplifyOperation: OperationType {
         return InventoryOperation(operation: .simplify, params: emptyData, colorHex: colorHex)
     }
 
-    public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
-        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
-        let system = LLMMessage(role: .system, content: """
+    public func defaultSystemPrompt(input _: OperationInput) -> String {
+        """
         YOU ARE AN ELITE TEXT SIMPLIFICATION SPECIALIST, INTERNATIONALLY RECOGNIZED FOR YOUR ABILITY TO TRANSFORM COMPLEX, BUREAUCRATIC, OR UNCLEAR TEXTS INTO STRAIGHTFORWARD, CONCISE, AND READER-FOCUSED VERSIONS WHILE PRESERVING MEANING AND INTENT.
 
         ### YOUR MISSION ###
@@ -96,12 +95,15 @@ public struct SimplifyOperation: OperationType {
 
         **Your answer:**
         З 10 до 15 квітня потяги між Центральною та Східною станціями не їздитимуть через погану погоду і ремонт. Будь ласка, обери інший транспорт.
-        """)
-        let user = LLMMessage(role: .user, content: """
+        """
+    }
+
+    public func userContent(input _: OperationInput, text: String) -> String {
+        let nativeLang = AppSettingsManager.shared.nativeLanguageEnglishName
+        return """
         Target language: \(nativeLang)
         Text: \(text)
-        """)
-        return [system, user]
+        """
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {

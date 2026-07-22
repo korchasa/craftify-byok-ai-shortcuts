@@ -91,3 +91,6 @@
 "settings_models_retry" = "再試行";
 "privacy_policy_title" = "プライバシーポリシー";
 "howtouse_set_up_later" = "後で設定";
+
+"edit_operation_prompt" = "プロンプト";
+"edit_operation_prompt_reset" = "リセット";

@@ -16,8 +16,8 @@ public struct CorrectOperation: OperationType {
         InventoryOperation(operation: .correct, params: Data(), colorHex: colorHex)
     }
 
-    public func makeMessages(input _: OperationInput, text: String) -> [LLMMessage] {
-        let system = LLMMessage(role: .system, content: """
+    public func defaultSystemPrompt(input _: OperationInput) -> String {
+        """
         You will act as an EXPERT editor.
 
         FOLLOW these INSTRUCTIONS carefully for translating the text:
@@ -36,9 +36,11 @@ public struct CorrectOperation: OperationType {
         Привит это саобщение с `markdown`, и <b>тегими</b>
         Your answer:
         Привет, это сообщение с `markdown` и <b>тегами</b>
-        """)
-        let user = LLMMessage(role: .user, content: text)
-        return [system, user]
+        """
+    }
+
+    public func userContent(input _: OperationInput, text: String) -> String {
+        text
     }
 
     public func buildRequest(text _: String, operation _: InventoryOperation) -> URLRequest {
