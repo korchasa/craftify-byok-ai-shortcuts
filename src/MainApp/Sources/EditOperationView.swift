@@ -54,7 +54,6 @@ public struct EditOperationView: View {
                         accessibilityID: "edit_color_button"
                     )
                 }
-                .padding(.top, FormStyleConstants.sectionSpacing)
                 EditOperationPromptSection(viewModel: viewModel)
             }
             .padding(.leading, FormStyleConstants.formLeadingPadding)
@@ -91,7 +90,6 @@ public struct EditOperationView: View {
                     )
                     .accessibilityIdentifier("edit_prompt_editor")
             }
-            .padding(.top, FormStyleConstants.sectionSpacing)
         }
     }
 

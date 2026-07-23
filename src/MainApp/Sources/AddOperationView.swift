@@ -34,7 +34,6 @@ public struct AddOperationView: View {
                             accessibilityID: "add_color_button"
                         )
                     }
-                    .padding(.top, FormStyleConstants.sectionSpacing)
                 }
                 .padding(.leading, FormStyleConstants.formLeadingPadding)
                 .padding(.trailing, FormStyleConstants.formTrailingPadding)
