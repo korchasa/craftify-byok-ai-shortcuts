@@ -40,7 +40,11 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
                         .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .top)
                     }
                 }
+                // Зазор над панелью кнопок: без него растянутый редактор промпта
+                // упирается рамкой прямо в кнопки. Живёт вне ScrollView, поэтому
+                // виден и когда контент растянут, и когда прокручивается
                 buttons()
+                    .padding(.top, FormStyleConstants.sectionSpacing)
             }
             .background(palette.background())
             .navigationTitle(title)
