@@ -64,7 +64,7 @@ public struct AddOperationView: View {
             }) {
                 Label(L10n.addOperationCancel, systemImage: "xmark")
                     .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                    .foregroundColor(palette.secondaryButtonText())
+                    .foregroundColor(.primary)
             }
             .buttonStyle(CraftifySecondaryButtonStyle())
         }
@@ -146,7 +146,7 @@ public struct AddOperationView: View {
 
         private var summarizeSection: some View {
             HStack {
-                Text(L10n.operationLabelSummarize)
+                Text(L10n.operationParamLength)
                     .font(.craftifyBody).bold()
                 Spacer()
                 AddOperationSummarizeSection(viewModel: viewModel)
@@ -171,7 +171,7 @@ public struct AddOperationView: View {
     private struct AddOperationSummarizeSection: View {
         @ObservedObject var viewModel: AddOperationViewModel
         var body: some View {
-            Picker(L10n.operationLabelSummarize, selection: $viewModel.length) {
+            Picker(L10n.operationParamLength, selection: $viewModel.length) {
                 ForEach(SummarizeLengths.all, id: \.self) { length in
                     Text(SummarizeLengthDisplay.label(for: length)).tag(length)
                         .lineLimit(ViewConstants.unlimitedLineLimit)
@@ -179,7 +179,7 @@ public struct AddOperationView: View {
                 }
             }
             .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.operationLabelSummarize)
+            .accessibilityLabel(L10n.operationParamLength)
             .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }

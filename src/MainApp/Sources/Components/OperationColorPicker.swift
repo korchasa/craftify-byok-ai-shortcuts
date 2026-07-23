@@ -17,6 +17,8 @@ public struct OperationColorPicker: View {
     private static let symbolScale: CGFloat = 0.48
     private static let hintSize: CGFloat = 12
     private static let popoverWidth: CGFloat = 240
+    private static let swatchBorderWidth: CGFloat = 1
+    private static let swatchBorderOpacity: CGFloat = 0.15
 
     public init(symbol: String, palette: [String], selectedHex: Binding<String>, accessibilityID: String) {
         self.symbol = symbol
@@ -71,9 +73,14 @@ public struct OperationColorPicker: View {
                     Circle()
                         .fill(Color(hex: hex))
                         .frame(width: ColorPickerLayoutConstants.circleSize, height: ColorPickerLayoutConstants.circleSize)
+                        // Выбранный — толстое акцентное кольцо; остальные — тонкая
+                        // обводка, иначе бледные цвета сливаются с белым фоном палитры
                         .overlay(
                             Circle()
-                                .stroke(selectedHex == hex ? Color.accentColor : .clear, lineWidth: ColorPickerLayoutConstants.borderWidth)
+                                .stroke(
+                                    selectedHex == hex ? Color.accentColor : Color.primary.opacity(Self.swatchBorderOpacity),
+                                    lineWidth: selectedHex == hex ? ColorPickerLayoutConstants.borderWidth : Self.swatchBorderWidth
+                                )
                         )
                 }
                 .buttonStyle(.plain)

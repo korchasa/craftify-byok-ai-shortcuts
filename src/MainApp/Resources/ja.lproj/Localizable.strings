@@ -6,7 +6,7 @@
 
 /* HomeView */
 "home_title" = "操作";
-"home_add_operation" = "操作";
+"home_add_operation" = "追加";
 "home_settings" = "設定";
 "home_delete" = "削除";
 "home_delete_confirm" = "この操作を削除してもよろしいですか？";
@@ -94,3 +94,9 @@
 
 "edit_operation_prompt" = "プロンプト";
 "edit_operation_prompt_reset" = "リセット";
+
+// QA review additions
+"operation_param_length" = "長さ";
+"settings_llm_api_key_placeholder" = "APIキーを入力";
+"home_empty_title" = "操作がまだありません";
+"home_empty_subtitle" = "「追加」をタップして最初の操作を作成します。";

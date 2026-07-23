@@ -50,7 +50,7 @@ public struct HomeView: View {
                 showAddOperation = false
             })
             .environment(\.colorPalette, palette)
-            .largeFormPresentation()
+            .compactFormPresentation()
         })
         .sheet(
             item: $editOperationViewModel,
@@ -74,6 +74,8 @@ public struct HomeView: View {
         .sheet(isPresented: $showSettings, onDismiss: nil, content: {
             SettingsView(viewModel: SettingsViewModel())
                 .environment(\.colorPalette, palette)
+                // Настройки остаются на полном листе: внутри пуш в пикер моделей,
+                // а половинный детент прячет его навбар и обрезает длинный список
                 .largeFormPresentation()
                 // Настройки закрываются только кнопками: в форме бывает несохранённый
                 // ключ, а на iPad жест/клик мимо шита молча уносил ввод
@@ -84,31 +86,56 @@ public struct HomeView: View {
         }
     }
 
+    @ViewBuilder
     private var operationsList: some View {
-        List {
-            ForEach(Array(viewModel.operations.enumerated()), id: \.element) { idx, operation in
-                OperationRowView(
-                    operation: operation,
-                    palette: palette,
-                    isEditing: editMode == .active,
-                    onEdit: {
-                        editOperationViewModel = operation
-                        editingIndex = idx
+        if viewModel.operations.isEmpty {
+            emptyState
+        } else {
+            List {
+                ForEach(Array(viewModel.operations.enumerated()), id: \.element) { idx, operation in
+                    OperationRowView(
+                        operation: operation,
+                        palette: palette,
+                        isEditing: editMode == .active,
+                        onEdit: {
+                            editOperationViewModel = operation
+                            editingIndex = idx
+                        }
+                    )
+                    .listRowBackground(palette.background())
+                }
+                .onMove { indices, newOffset in
+                    viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
+                }
+                .onDelete { indices in
+                    for index in indices {
+                        viewModel.removeOperation(at: index)
                     }
-                )
-                .listRowBackground(palette.background())
-            }
-            .onMove { indices, newOffset in
-                viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
-            }
-            .onDelete { indices in
-                for index in indices {
-                    viewModel.removeOperation(at: index)
                 }
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(palette.background())
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
+    }
+
+    /// Пустой список: подсказка вместо белого экрана, когда операций нет
+    private var emptyState: some View {
+        VStack(spacing: FormStyleConstants.sectionSpacing) {
+            Image(systemName: "wand.and.stars")
+                .font(.largeTitle)
+                .foregroundColor(palette.secondaryText())
+                .accessibilityHidden(true)
+            Text(L10n.homeEmptyTitle)
+                .font(.craftifyBody)
+                .fontWeight(.bold)
+            Text(L10n.homeEmptySubtitle)
+                .font(.craftifyFootnote)
+                .foregroundColor(palette.secondaryText())
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding(.horizontal, FormStyleConstants.titleBarHorizontalPadding)
         .background(palette.background())
     }
 
@@ -119,8 +146,11 @@ public struct HomeView: View {
                 .font(.largeTitle)
                 .fontWeight(.bold)
             Spacer()
-            EditButton()
-                .font(.craftifyBody)
+            // Нечего редактировать на пустом списке — кнопку прячем
+            if !viewModel.operations.isEmpty {
+                EditButton()
+                    .font(.craftifyBody)
+            }
         }
         .padding(.horizontal, FormStyleConstants.titleBarHorizontalPadding)
         .padding(.top, FormStyleConstants.sectionSpacing)
@@ -136,6 +166,7 @@ public struct HomeView: View {
                     .foregroundColor(palette.primaryButtonText())
             }
             .buttonStyle(CraftifyPrimaryButtonStyle())
+            .accessibilityIdentifier("home_add_button")
             Button(action: { showSettings = true }) {
                 Label(L10n.homeSettings, systemImage: "gearshape")
                     .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
@@ -261,5 +292,13 @@ private extension View {
         } else {
             presentationDetents([.large])
         }
+    }
+
+    /// Компактный лист для коротких форм (добавление, настройки): на iPhone
+    /// открывается на половину экрана с возможностью растянуть, на iPad — обычный
+    /// системный formSheet. В отличие от `largeFormPresentation` не растягивает
+    /// короткую форму на весь экран, из-за чего под ней зиял пустой провал.
+    func compactFormPresentation() -> some View {
+        presentationDetents([.medium, .large])
     }
 }

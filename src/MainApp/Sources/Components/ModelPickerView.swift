@@ -93,14 +93,15 @@ public struct ModelPickerView: View {
         .listStyle(.plain)
     }
 
-    /// Выбранная модель всегда в списке, даже если API её уже не отдаёт
+    /// При пустом поиске выбранная модель всегда первая в списке (даже если API
+    /// отдаёт её ниже или уже не отдаёт вовсе) — иначе в длинном каталоге до неё
+    /// приходится прокручивать. При активном поиске порядок каталога сохраняется.
     private var filteredModels: [String] {
-        var models = availableModels
-        if !models.contains(selectedModel), !selectedModel.isEmpty {
-            models.insert(selectedModel, at: 0)
-        }
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !query.isEmpty else { return models }
-        return models.filter { $0.localizedCaseInsensitiveContains(query) }
+        guard query.isEmpty else {
+            return availableModels.filter { $0.localizedCaseInsensitiveContains(query) }
+        }
+        guard !selectedModel.isEmpty else { return availableModels }
+        return [selectedModel] + availableModels.filter { $0 != selectedModel }
     }
 }

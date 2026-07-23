@@ -86,7 +86,7 @@ public struct SettingsView: View {
                 Button(action: { dismiss() }) {
                     Label(L10n.settingsDone, systemImage: "xmark")
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                        .foregroundColor(palette.secondaryButtonText())
+                        .foregroundColor(.primary)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 Button(action: {
@@ -153,7 +153,7 @@ public struct SettingsView: View {
         /// Ввод нового ключа всегда начинается с пустого поля
         private var editingRow: some View {
             HStack {
-                SecureField(L10n.settingsLlmApiKey, text: $viewModel.apiKey)
+                SecureField(L10n.settingsLlmApiKeyPlaceholder, text: $viewModel.apiKey)
                     .focused($isTextFieldFocused)
                     .accessibilityLabel(L10n.settingsLlmApiKey)
                 if viewModel.isEditingKey {

@@ -108,7 +108,7 @@ public struct EditOperationView: View {
                 }) {
                     Label(L10n.editOperationCancel, systemImage: "xmark")
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                        .foregroundColor(palette.secondaryButtonText())
+                        .foregroundColor(.primary)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
                 Button(action: {
@@ -129,16 +129,15 @@ public struct EditOperationView: View {
 
     private struct EditOperationTypeSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
+        @Environment(\.colorPalette) private var palette
         var body: some View {
-            Picker("", selection: $viewModel.selectedKind) {
-                ForEach(OperationFactory.allKinds, id: \.self) { kind in
-                    Text(label(for: kind)).tag(Optional(kind))
-                }
-            }
-            .pickerStyle(DefaultPickerStyle())
-            .accessibilityLabel(L10n.addOperationType)
-            .frame(maxWidth: .infinity, alignment: .trailing)
-            .disabled(true)
+            // Тип операции при редактировании неизменяем: показываем как статичный
+            // текст без пикера и шеврона, чтобы не намекать на возможность смены
+            Text(viewModel.selectedKind.map { label(for: $0) } ?? "")
+                .font(.craftifyBody)
+                .foregroundColor(palette.secondaryText())
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .accessibilityLabel(L10n.addOperationType)
         }
 
         private func label(for kind: OperationKind) -> String {
@@ -195,10 +194,10 @@ public struct EditOperationView: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
             HStack {
-                Text(L10n.operationLabelSummarize)
+                Text(L10n.operationParamLength)
                     .font(.craftifyBody).bold()
                 Spacer()
-                Picker(L10n.operationLabelSummarize, selection: $viewModel.length) {
+                Picker(L10n.operationParamLength, selection: $viewModel.length) {
                     ForEach(SummarizeLengths.all, id: \.self) { length in
                         Text(SummarizeLengthDisplay.label(for: length)).tag(length)
                             .lineLimit(ViewConstants.unlimitedLineLimit)
@@ -206,7 +205,7 @@ public struct EditOperationView: View {
                     }
                 }
                 .pickerStyle(DefaultPickerStyle())
-                .accessibilityLabel(L10n.operationLabelSummarize)
+                .accessibilityLabel(L10n.operationParamLength)
                 .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }

@@ -6,7 +6,7 @@
 
 /* HomeView */
 "home_title" = "Операции";
-"home_add_operation" = "Операция";
+"home_add_operation" = "Добавить";
 "home_settings" = "Настройки";
 "home_delete" = "Удалить";
 "home_delete_confirm" = "Вы уверены, что хотите удалить операцию?";
@@ -98,3 +98,9 @@
 
 "edit_operation_prompt" = "Промпт";
 "edit_operation_prompt_reset" = "Сбросить";
+
+// QA review additions
+"operation_param_length" = "Длина";
+"settings_llm_api_key_placeholder" = "Введите API-ключ";
+"home_empty_title" = "Пока нет операций";
+"home_empty_subtitle" = "Нажмите «Добавить», чтобы создать первую операцию.";

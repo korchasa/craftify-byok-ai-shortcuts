@@ -6,7 +6,7 @@
 
 /* HomeView */
 "home_title" = "操作";
-"home_add_operation" = "操作";
+"home_add_operation" = "添加";
 "home_settings" = "设置";
 "home_delete" = "删除";
 "home_delete_confirm" = "确定要删除此操作吗？";
@@ -94,3 +94,9 @@
 
 "edit_operation_prompt" = "提示词";
 "edit_operation_prompt_reset" = "重置";
+
+// QA review additions
+"operation_param_length" = "长度";
+"settings_llm_api_key_placeholder" = "输入 API 密钥";
+"home_empty_title" = "还没有操作";
+"home_empty_subtitle" = "点按「添加」创建您的第一个操作。";

@@ -6,7 +6,7 @@
 
 /* HomeView */
 "home_title" = "Operazioni";
-"home_add_operation" = "Operazione";
+"home_add_operation" = "Aggiungi";
 "home_settings" = "Impostazioni";
 "home_delete" = "Elimina";
 "home_delete_confirm" = "Sei sicuro di voler eliminare questa operazione?";
@@ -94,3 +94,9 @@
 
 "edit_operation_prompt" = "Prompt";
 "edit_operation_prompt_reset" = "Ripristina";
+
+// QA review additions
+"operation_param_length" = "Lunghezza";
+"settings_llm_api_key_placeholder" = "Inserisci la tua chiave API";
+"home_empty_title" = "Ancora nessuna operazione";
+"home_empty_subtitle" = "Tocca «Aggiungi» per creare la tua prima operazione.";
