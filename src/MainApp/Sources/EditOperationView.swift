@@ -43,7 +43,6 @@ public struct EditOperationView: View {
                     EditOperationTypeSection(viewModel: viewModel)
                 }
                 EditOperationFields(viewModel: viewModel)
-                EditOperationPromptSection(viewModel: viewModel)
                 HStack {
                     Text(L10n.color)
                         .font(.craftifyBody).bold()
@@ -56,6 +55,7 @@ public struct EditOperationView: View {
                     )
                 }
                 .padding(.top, FormStyleConstants.sectionSpacing)
+                EditOperationPromptSection(viewModel: viewModel)
             }
             .padding(.leading, FormStyleConstants.formLeadingPadding)
             .padding(.trailing, FormStyleConstants.formTrailingPadding)
