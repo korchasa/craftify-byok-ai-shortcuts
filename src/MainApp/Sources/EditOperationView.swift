@@ -83,10 +83,7 @@ public struct EditOperationView: View {
                 TextEditor(text: $viewModel.promptText)
                     .font(.craftifyFootnote)
                     .fontWeight(.regular)
-                    .frame(
-                        minHeight: FormStyleConstants.promptEditorMinHeight,
-                        maxHeight: FormStyleConstants.promptEditorMaxHeight
-                    )
+                    .frame(minHeight: FormStyleConstants.promptEditorMinHeight, maxHeight: .infinity)
                     .padding(FormStyleConstants.promptEditorInnerPadding)
                     .background(
                         RoundedRectangle(cornerRadius: FormStyleConstants.searchBarCornerRadius)

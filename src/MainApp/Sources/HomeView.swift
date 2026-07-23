@@ -50,6 +50,7 @@ public struct HomeView: View {
                 showAddOperation = false
             })
             .environment(\.colorPalette, palette)
+            .largeFormPresentation()
         })
         .sheet(
             item: $editOperationViewModel,
@@ -67,11 +68,13 @@ public struct HomeView: View {
                     }
                 )
                 .environment(\.colorPalette, palette)
+                .largeFormPresentation()
             }
         )
         .sheet(isPresented: $showSettings, onDismiss: nil, content: {
             SettingsView(viewModel: SettingsViewModel())
                 .environment(\.colorPalette, palette)
+                .largeFormPresentation()
                 // Настройки закрываются только кнопками: в форме бывает несохранённый
                 // ключ, а на iPad жест/клик мимо шита молча уносил ввод
                 .interactiveDismissDisabled()
@@ -240,6 +243,23 @@ public struct HomeView: View {
                 }
             }
             return ""
+        }
+    }
+}
+
+private extension View {
+    /// Крупный лист формы для экранов операций и настроек. На iPhone лист
+    /// растягивается до `.large`; на iPad с iOS 18 занимает размер страницы
+    /// вместо тесного системного formSheet, где редактор промпта и поля были
+    /// зажаты по высоте. На iPad с iOS 16/17 остаётся стандартный formSheet —
+    /// системного способа увеличить его там нет.
+    @ViewBuilder
+    func largeFormPresentation() -> some View {
+        if #available(iOS 18.0, *) {
+            presentationDetents([.large])
+                .presentationSizing(.page)
+        } else {
+            presentationDetents([.large])
         }
     }
 }

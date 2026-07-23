@@ -29,8 +29,6 @@ public enum FormStyleConstants {
     public static let searchBarCornerRadius: CGFloat = 10
     /// Минимальная высота редактора промпта операции
     public static let promptEditorMinHeight: CGFloat = 140
-    /// Максимальная высота редактора промпта операции
-    public static let promptEditorMaxHeight: CGFloat = 220
     /// Внутренний отступ редактора промпта
     public static let promptEditorInnerPadding: CGFloat = 4
     /// Прозрачность рамки редактора промпта

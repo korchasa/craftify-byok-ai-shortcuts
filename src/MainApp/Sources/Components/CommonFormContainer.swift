@@ -26,15 +26,19 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
             VStack(spacing: 0) {
                 Divider()
                     .padding(.bottom, FormStyleConstants.dividerBottomPadding)
-                // Контент скроллится: в компактном iPad-шите форма выше окна,
-                // без прокрутки нижняя панель кнопок обрезалась кромкой шита
-                ScrollView {
-                    VStack(spacing: 0) {
-                        content()
-                            .background(palette.background())
+                // Контент растягивается на высоту листа, чтобы гибкие элементы
+                // (редактор промпта) заполняли место; если контент выше листа —
+                // прокручивается, а нижняя панель кнопок остаётся закреплённой
+                GeometryReader { geo in
+                    ScrollView {
+                        VStack(spacing: 0) {
+                            content()
+                                .background(palette.background())
+                        }
+                        .padding(.top, FormStyleConstants.formContentTopPadding)
+                        .padding(.bottom, FormStyleConstants.bottomPadding)
+                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .top)
                     }
-                    .padding(.top, FormStyleConstants.formContentTopPadding)
-                    .padding(.bottom, FormStyleConstants.bottomPadding)
                 }
                 buttons()
             }
