@@ -17,6 +17,13 @@ public struct HomeView: View {
     /// Диагностика полевого iPad-бага: шит настроек закрывался при тапе по строке модели
     fileprivate static let uiLog = OSLog(subsystem: "Internal", category: "SettingsUI")
 
+    /// Вертикальная вставка строки списка: стандартная у `.plain` даёт слишком
+    /// воздушный список; ужимаем так, чтобы строка села к минимальной высоте
+    private static let rowVerticalInset: CGFloat = 2
+    /// Минимальная высота строки списка: снимаем «воздушный» дефолт и держим
+    /// строку у 44 pt — минимального удобного тап-таргета (строка целиком кнопка)
+    private static let rowMinHeight: CGFloat = 44
+
     public init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
         // Используем ключи, оставленные в ресурсах, чтобы Periphery не помечал их как неиспользуемые
@@ -103,6 +110,12 @@ public struct HomeView: View {
                         }
                     )
                     .listRowBackground(palette.background())
+                    .listRowInsets(EdgeInsets(
+                        top: Self.rowVerticalInset,
+                        leading: FormStyleConstants.formLeadingPadding,
+                        bottom: Self.rowVerticalInset,
+                        trailing: FormStyleConstants.formLeadingPadding
+                    ))
                 }
                 .onMove { indices, newOffset in
                     viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
@@ -113,6 +126,7 @@ public struct HomeView: View {
                     }
                 }
             }
+            .environment(\.defaultMinListRowHeight, Self.rowMinHeight)
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
             .background(palette.background())
