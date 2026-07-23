@@ -26,9 +26,10 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
             VStack(spacing: 0) {
                 Divider()
                     .padding(.bottom, FormStyleConstants.dividerBottomPadding)
-                // Контент растягивается на высоту листа, чтобы гибкие элементы
-                // (редактор промпта) заполняли место; если контент выше листа —
-                // прокручивается, а нижняя панель кнопок остаётся закреплённой
+                // Контент занимает ровно высоту листа: гибкие элементы (редактор
+                // промпта) заполняют место и, будучи ограниченными по высоте,
+                // прокручиваются внутри себя, а не растягивают всю форму. Нижняя
+                // панель кнопок остаётся закреплённой вне прокрутки.
                 GeometryReader { geo in
                     ScrollView {
                         VStack(spacing: 0) {
@@ -37,7 +38,12 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
                         }
                         .padding(.top, FormStyleConstants.formContentTopPadding)
                         .padding(.bottom, FormStyleConstants.bottomPadding)
-                        .frame(maxWidth: .infinity, minHeight: geo.size.height, alignment: .top)
+                        .frame(
+                            maxWidth: .infinity,
+                            minHeight: geo.size.height,
+                            maxHeight: geo.size.height,
+                            alignment: .top
+                        )
                     }
                 }
                 // Зазор над панелью кнопок: без него растянутый редактор промпта
