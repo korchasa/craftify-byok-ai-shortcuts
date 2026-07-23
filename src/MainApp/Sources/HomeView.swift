@@ -64,12 +64,6 @@ public struct HomeView: View {
                             viewModel.updateOperation(at: idx, with: updatedOperation)
                         }
                         editingIndex = nil
-                    },
-                    onDelete: {
-                        if let idx = editingIndex {
-                            viewModel.removeOperation(at: idx)
-                        }
-                        editingIndex = nil
                     }
                 )
                 .environment(\.colorPalette, palette)
@@ -125,7 +119,7 @@ public struct HomeView: View {
             EditButton()
                 .font(.craftifyBody)
         }
-        .padding(.horizontal, FormStyleConstants.formLeadingPadding + FormStyleConstants.formLeadingPadding / 4)
+        .padding(.horizontal, FormStyleConstants.titleBarHorizontalPadding)
         .padding(.top, FormStyleConstants.sectionSpacing)
         .padding(.bottom, FormStyleConstants.dividerBottomPadding)
         .background(palette.background())
@@ -155,7 +149,8 @@ public struct HomeView: View {
         let isEditing: Bool
         let onEdit: () -> Void
 
-        private static let baseCircleSize: CGFloat = 28 * DeviceScale.controlFactor
+        private static let baseCircleUnscaled: CGFloat = 28
+        private static let baseCircleSize: CGFloat = baseCircleUnscaled * DeviceScale.controlFactor
         private static let symbolScale: CGFloat = 0.5
         private static let horizontalSpacing: CGFloat = 12
         /// Кружок операции масштабируется вместе с системным размером шрифта

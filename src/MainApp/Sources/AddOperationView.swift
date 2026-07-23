@@ -23,10 +23,18 @@ public struct AddOperationView: View {
                         AddOperationTypeSection(viewModel: viewModel)
                     }
                     AddOperationFields(viewModel: viewModel)
-                    Text(L10n.color)
-                        .font(.craftifyBody).bold()
-                        .padding(.top, FormStyleConstants.sectionSpacing)
-                    AddOperationColorPalette(viewModel: viewModel)
+                    HStack {
+                        Text(L10n.color)
+                            .font(.craftifyBody).bold()
+                        Spacer()
+                        OperationColorPicker(
+                            symbol: viewModel.selectedKind?.sfSymbol ?? "",
+                            palette: viewModel.palette,
+                            selectedHex: $viewModel.selectedColorHex,
+                            accessibilityID: "add_color_button"
+                        )
+                    }
+                    .padding(.top, FormStyleConstants.sectionSpacing)
                 }
                 .padding(.leading, FormStyleConstants.formLeadingPadding)
                 .padding(.trailing, FormStyleConstants.formTrailingPadding)
@@ -173,32 +181,6 @@ public struct AddOperationView: View {
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationLabelSummarize)
             .frame(maxWidth: .infinity, alignment: .trailing)
-        }
-    }
-
-    private struct AddOperationColorPalette: View {
-        @ObservedObject var viewModel: AddOperationViewModel
-        var body: some View {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: ColorPickerLayoutConstants.circleSpacing) {
-                    ForEach(viewModel.palette, id: \.self) { hex in
-                        Circle()
-                            .fill(Color(hex: hex))
-                            .frame(width: ColorPickerLayoutConstants.circleSize, height: ColorPickerLayoutConstants.circleSize)
-                            .overlay(
-                                Circle()
-                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: ColorPickerLayoutConstants.borderWidth)
-                            )
-                            .onTapGesture {
-                                viewModel.selectedColorHex = hex
-                            }
-                            .accessibilityAddTraits(.isButton)
-                            .accessibilityLabel(L10n.colorAccessibilityFormat(hex))
-                            .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
-                    }
-                }
-                .padding(.vertical, ColorPickerLayoutConstants.verticalSpacing)
-            }
         }
     }
 }

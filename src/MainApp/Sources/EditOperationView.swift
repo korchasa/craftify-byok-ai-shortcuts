@@ -4,27 +4,19 @@ import SwiftUI
 public struct EditOperationView: View {
     @ObservedObject public var viewModel: EditOperationViewModel
     public var onSave: ((InventoryOperation) -> Void)?
-    public var onDelete: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorPalette) private var palette
-    @State private var showDeleteConfirmation = false
 
-    public init(viewModel: EditOperationViewModel, onSave: ((InventoryOperation) -> Void)? = nil, onDelete: (() -> Void)? = nil) {
+    public init(viewModel: EditOperationViewModel, onSave: ((InventoryOperation) -> Void)? = nil) {
         self.viewModel = viewModel
         self.onSave = onSave
-        self.onDelete = onDelete
     }
 
     public var body: some View {
         CommonFormContainer(
             title: LocalizedStringKey(L10n.editOperationTitle),
             content: {
-                EditOperationContent(
-                    viewModel: viewModel,
-                    onDelete: onDelete,
-                    showDeleteConfirmation: $showDeleteConfirmation,
-                    dismiss: dismiss
-                )
+                EditOperationContent(viewModel: viewModel)
             },
             buttons: {
                 EditOperationButtons(
@@ -42,9 +34,6 @@ public struct EditOperationView: View {
 
     private struct EditOperationContent: View {
         @ObservedObject var viewModel: EditOperationViewModel
-        let onDelete: (() -> Void)?
-        @Binding var showDeleteConfirmation: Bool
-        var dismiss: DismissAction
         var body: some View {
             VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                 HStack {
@@ -55,17 +44,18 @@ public struct EditOperationView: View {
                 }
                 EditOperationFields(viewModel: viewModel)
                 EditOperationPromptSection(viewModel: viewModel)
-                Text(L10n.color)
-                    .font(.craftifyBody).bold()
-                    .padding(.top, FormStyleConstants.sectionSpacing)
-                EditOperationColorPalette(viewModel: viewModel)
-                if let onDelete {
-                    EditOperationDeleteSection(
-                        showDeleteConfirmation: $showDeleteConfirmation,
-                        onDelete: onDelete,
-                        dismiss: dismiss
+                HStack {
+                    Text(L10n.color)
+                        .font(.craftifyBody).bold()
+                    Spacer()
+                    OperationColorPicker(
+                        symbol: viewModel.selectedKind?.sfSymbol ?? "",
+                        palette: viewModel.palette,
+                        selectedHex: $viewModel.selectedColorHex,
+                        accessibilityID: "edit_color_button"
                     )
                 }
+                .padding(.top, FormStyleConstants.sectionSpacing)
             }
             .padding(.leading, FormStyleConstants.formLeadingPadding)
             .padding(.trailing, FormStyleConstants.formTrailingPadding)
@@ -105,44 +95,6 @@ public struct EditOperationView: View {
                     .accessibilityIdentifier("edit_prompt_editor")
             }
             .padding(.top, FormStyleConstants.sectionSpacing)
-        }
-    }
-
-    private struct EditOperationDeleteSection: View {
-        @Binding var showDeleteConfirmation: Bool
-        let onDelete: () -> Void
-        var dismiss: DismissAction
-        @Environment(\.colorPalette) private var palette
-        var body: some View {
-            Divider()
-            Button(role: .destructive, action: {
-                showDeleteConfirmation = true
-            }) {
-                Label(L10n.homeDelete, systemImage: "trash")
-                    .font(.craftifyBody)
-                    .fontWeight(.bold)
-                    .foregroundColor(palette.destructive())
-            }
-            .accessibilityLabel(L10n.homeDelete)
-            .padding(.top, FormStyleConstants.sectionSpacing)
-            .alert(
-                LocalizedStringKey(L10n.homeDelete),
-                isPresented: $showDeleteConfirmation,
-                actions: {
-                    Button(role: .destructive, action: {
-                        onDelete()
-                        dismiss()
-                    }) {
-                        Text(LocalizedStringKey(L10n.homeDelete))
-                    }
-                    Button(role: .cancel, action: {}) {
-                        Text(LocalizedStringKey(L10n.editOperationCancel))
-                    }
-                },
-                message: {
-                    Text(LocalizedStringKey(L10n.homeDeleteConfirm))
-                }
-            )
         }
     }
 
@@ -259,32 +211,6 @@ public struct EditOperationView: View {
                 .pickerStyle(DefaultPickerStyle())
                 .accessibilityLabel(L10n.operationLabelSummarize)
                 .frame(maxWidth: .infinity, alignment: .trailing)
-            }
-        }
-    }
-
-    private struct EditOperationColorPalette: View {
-        @ObservedObject var viewModel: EditOperationViewModel
-        var body: some View {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: ColorPickerLayoutConstants.circleSpacing) {
-                    ForEach(viewModel.palette, id: \.self) { hex in
-                        Circle()
-                            .fill(Color(hex: hex))
-                            .frame(width: ColorPickerLayoutConstants.circleSize, height: ColorPickerLayoutConstants.circleSize)
-                            .overlay(
-                                Circle()
-                                    .stroke(viewModel.selectedColorHex == hex ? Color.accentColor : .clear, lineWidth: ColorPickerLayoutConstants.borderWidth)
-                            )
-                            .onTapGesture {
-                                viewModel.selectedColorHex = hex
-                            }
-                            .accessibilityAddTraits(.isButton)
-                            .accessibilityLabel(L10n.colorAccessibilityFormat(hex))
-                            .accessibilityAddTraits(viewModel.selectedColorHex == hex ? [.isButton, .isSelected] : [.isButton])
-                    }
-                }
-                .padding(.vertical, ColorPickerLayoutConstants.verticalSpacing)
             }
         }
     }
