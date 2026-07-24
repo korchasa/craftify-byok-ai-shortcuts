@@ -8,6 +8,8 @@ Craftify is a BYOK (bring-your-own-key) iOS app: users process selected text wit
 - `./run test` — build and run unit tests only.
 - `./run generate` — regenerate Xcode project (Tuist) and localization enums (SwiftGen).
 - Simulator UUID is env-overridable via `SIMULATOR_ID` / `TEST_SIMULATOR_ID`.
+- A UITest that sets `XCUIDevice.shared.orientation` leaves the simulator in that orientation **between test runs** — the next portrait test fails spuriously ("not hittable", element frames report landscape-width coordinates like x≈710). Reset with `xcrun simctl shutdown <udid> && xcrun simctl boot <udid>` (boot is always portrait), or set `.portrait` in that test's `tearDown`.
+- Right after edits, SourceKit often can't resolve same-module types/modules ("Cannot find type … in scope", "No such module 'XCTest'") — this is re-indexing noise, not a real error. The source of truth is `./run check` / `tuist build`, not the live IDE diagnostics.
 
 ## Documentation Hierarchy
 
