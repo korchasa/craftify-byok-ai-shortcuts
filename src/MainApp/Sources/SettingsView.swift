@@ -23,7 +23,7 @@ public struct SettingsView: View {
     public var body: some View {
         CommonFormContainer(
             title: LocalizedStringKey(L10n.settingsTitle),
-            content: {
+            content: { _ in
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                     SettingsProviderSection(viewModel: viewModel)
 

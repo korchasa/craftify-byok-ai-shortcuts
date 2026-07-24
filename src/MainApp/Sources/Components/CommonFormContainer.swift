@@ -8,12 +8,12 @@ import SwiftUI
 public struct CommonFormContainer<Content: View, Buttons: View>: View {
     @Environment(\.colorPalette) private var palette
     public let title: LocalizedStringKey
-    public let content: () -> Content
+    public let content: (CGFloat) -> Content
     public let buttons: () -> Buttons
 
     public init(
         title: LocalizedStringKey,
-        @ViewBuilder content: @escaping () -> Content,
+        @ViewBuilder content: @escaping (CGFloat) -> Content,
         @ViewBuilder buttons: @escaping () -> Buttons
     ) {
         self.title = title
@@ -26,14 +26,18 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
             VStack(spacing: 0) {
                 Divider()
                     .padding(.bottom, FormStyleConstants.dividerBottomPadding)
-                // Контент занимает ровно высоту листа: гибкие элементы (редактор
-                // промпта) заполняют место и, будучи ограниченными по высоте,
-                // прокручиваются внутри себя, а не растягивают всю форму. Нижняя
-                // панель кнопок остаётся закреплённой вне прокрутки.
+                // Доступную под прокруткой высоту отдаём в контент: редактор
+                // промпта заполняет остаток листа, а когда контент выше экрана
+                // (ландшафт, крупный шрифт) — форма прокручивается целиком, и строки
+                // над редактором уходят за верхний край. Панель кнопок остаётся
+                // закреплённой вне прокрутки.
                 GeometryReader { geo in
+                    let availableHeight = geo.size.height
+                        - FormStyleConstants.formContentTopPadding
+                        - FormStyleConstants.bottomPadding
                     ScrollView {
                         VStack(spacing: 0) {
-                            content()
+                            content(availableHeight)
                                 .background(palette.background())
                         }
                         .padding(.top, FormStyleConstants.formContentTopPadding)
@@ -41,7 +45,6 @@ public struct CommonFormContainer<Content: View, Buttons: View>: View {
                         .frame(
                             maxWidth: .infinity,
                             minHeight: geo.size.height,
-                            maxHeight: geo.size.height,
                             alignment: .top
                         )
                     }

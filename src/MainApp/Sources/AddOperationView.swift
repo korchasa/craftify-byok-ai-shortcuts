@@ -14,7 +14,7 @@ public struct AddOperationView: View {
     public var body: some View {
         CommonFormContainer(
             title: LocalizedStringKey(L10n.addOperationTitle),
-            content: {
+            content: { _ in
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                     HStack {
                         Text(L10n.addOperationType)

@@ -15,8 +15,8 @@ public struct EditOperationView: View {
     public var body: some View {
         CommonFormContainer(
             title: LocalizedStringKey(L10n.editOperationTitle),
-            content: {
-                EditOperationContent(viewModel: viewModel)
+            content: { availableHeight in
+                EditOperationContent(viewModel: viewModel, availableHeight: availableHeight)
             },
             buttons: {
                 EditOperationButtons(
@@ -34,7 +34,48 @@ public struct EditOperationView: View {
 
     private struct EditOperationContent: View {
         @ObservedObject var viewModel: EditOperationViewModel
+        @Environment(\.colorPalette) private var palette
+        /// Высота листа под прокруткой, приходит из CommonFormContainer
+        let availableHeight: CGFloat
+        /// Замеренная высота строк над редактором (тип, поля, цвет, заголовок)
+        @State private var headerHeight: CGFloat = 0
+
+        /// Высота блока строк над редактором — для адаптивной высоты редактора
+        private struct EditHeaderHeightKey: PreferenceKey {
+            static var defaultValue: CGFloat = 0
+            static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+                value = max(value, nextValue())
+            }
+        }
+
+        /// Редактор заполняет остаток листа, а на коротком экране (ландшафт,
+        /// крупный шрифт) зажимается до минимума — тогда вся форма прокручивается
+        /// и строки над промптом уходят за верхний край
+        private var editorHeight: CGFloat {
+            let chromeBelowHeader = FormStyleConstants.dividerBottomPadding
+                + FormStyleConstants.promptEditorInnerPadding
+                + FormStyleConstants.promptEditorInnerPadding
+            let fill = availableHeight - headerHeight - chromeBelowHeader
+            return max(FormStyleConstants.promptEditorMinHeight, fill)
+        }
+
         var body: some View {
+            VStack(alignment: .leading, spacing: 0) {
+                header
+                    .background(
+                        GeometryReader { geo in
+                            Color.clear.preference(key: EditHeaderHeightKey.self, value: geo.size.height)
+                        }
+                    )
+                promptEditor
+            }
+            .padding(.leading, FormStyleConstants.formLeadingPadding)
+            .padding(.trailing, FormStyleConstants.formTrailingPadding)
+            .onPreferenceChange(EditHeaderHeightKey.self) { headerHeight = $0 }
+        }
+
+        /// Строки над редактором: тип операции, параметры, цвет и заголовок промпта
+        private var header: some View {
             VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
                 HStack {
                     Text(L10n.addOperationType)
@@ -54,20 +95,6 @@ public struct EditOperationView: View {
                         accessibilityID: "edit_color_button"
                     )
                 }
-                EditOperationPromptSection(viewModel: viewModel)
-            }
-            .padding(.leading, FormStyleConstants.formLeadingPadding)
-            .padding(.trailing, FormStyleConstants.formTrailingPadding)
-        }
-    }
-
-    /// Итоговый текст системного промпта: редактируется на месте,
-    /// кнопка сброса возвращает дефолт, собранный из шаблона операции
-    private struct EditOperationPromptSection: View {
-        @ObservedObject var viewModel: EditOperationViewModel
-        @Environment(\.colorPalette) private var palette
-        var body: some View {
-            VStack(alignment: .leading, spacing: FormStyleConstants.dividerBottomPadding) {
                 HStack {
                     Text(L10n.editOperationPrompt)
                         .font(.craftifyBody).bold()
@@ -79,17 +106,23 @@ public struct EditOperationView: View {
                     .disabled(viewModel.isPromptDefault)
                     .accessibilityIdentifier("edit_prompt_reset_button")
                 }
-                TextEditor(text: $viewModel.promptText)
-                    .font(.craftifyFootnote)
-                    .fontWeight(.regular)
-                    .frame(minHeight: FormStyleConstants.promptEditorMinHeight, maxHeight: .infinity)
-                    .padding(FormStyleConstants.promptEditorInnerPadding)
-                    .background(
-                        RoundedRectangle(cornerRadius: FormStyleConstants.searchBarCornerRadius)
-                            .stroke(palette.secondaryText().opacity(FormStyleConstants.promptEditorBorderOpacity))
-                    )
-                    .accessibilityIdentifier("edit_prompt_editor")
             }
+        }
+
+        /// Итоговый текст системного промпта: редактируется на месте и прокручивается
+        /// внутри себя; кнопка сброса возвращает дефолт из шаблона операции
+        private var promptEditor: some View {
+            TextEditor(text: $viewModel.promptText)
+                .font(.craftifyFootnote)
+                .fontWeight(.regular)
+                .frame(height: editorHeight)
+                .padding(FormStyleConstants.promptEditorInnerPadding)
+                .background(
+                    RoundedRectangle(cornerRadius: FormStyleConstants.searchBarCornerRadius)
+                        .stroke(palette.secondaryText().opacity(FormStyleConstants.promptEditorBorderOpacity))
+                )
+                .padding(.top, FormStyleConstants.dividerBottomPadding)
+                .accessibilityIdentifier("edit_prompt_editor")
         }
     }
 
