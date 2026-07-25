@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Foreground glyph for the iOS 26 Icon Composer bundle (src/MainApp/Resources/AppIcon.icon). -->
+<!-- White letter "C" on a TRANSPARENT 1024 canvas. The white is only a mask: the actual -->
+<!-- per-appearance colour (white in light, black in dark) is set by fill-specializations in -->
+<!-- AppIcon.icon/icon.json, which recolours this alpha shape like a template. -->
+<!-- Same annular-sector geometry as documents/icon.svg, scaled to 1024: -->
+<!-- centre 512,512; outer R=384, inner r=216 → stroke width 168 (matches the flat 42/256). -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <path d="M783.53 783.53 A384 384 0 1 1 783.53 240.47 L664.74 359.26 A216 216 0 1 0 664.74 664.74 Z" fill="#FFFFFF"/>
+</svg>

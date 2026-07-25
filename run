@@ -37,7 +37,7 @@ Commands:
   logs                Stream MainApp logs
   check               Run all checks (gitleaks, generate, fmt, lint, analyze, build, test, comment-scan, deploy_simulator)
   test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
-  icons               Generate all PNG files for AppIcon from documents/icon.svg and update both targets
+  icons               Render app icons: ShareExtension AppIcon.appiconset PNGs from documents/icon.svg, and the MainApp Icon Composer glyph (AppIcon.icon) from documents/icon-glyph.svg
   help                Show this help
 EOF
 }
@@ -463,7 +463,16 @@ PY
           )
           rsvg-convert -w "$px" -h "$px" "$SRC" -o "$dest/$filename"
         done
-      done'
+      done
+      # iOS 26 Icon Composer foreground glyph for the MainApp .icon bundle.
+      # The PNG is only a white alpha mask; the per-appearance colour (white in
+      # light, black in dark) is set in AppIcon.icon/icon.json fill-specializations.
+      GLYPH_SRC="documents/icon-glyph.svg"
+      GLYPH_DEST="src/MainApp/Resources/AppIcon.icon/Assets/glyph.png"
+      if [ -f "$GLYPH_SRC" ] && [ -d "$(dirname "$GLYPH_DEST")" ]; then
+        echo "→ Rendering Icon Composer glyph $GLYPH_DEST"
+        rsvg-convert -w 1024 -h 1024 "$GLYPH_SRC" -o "$GLYPH_DEST"
+      fi'
 
   _end_section
   echo -e "${GREEN}App icons regenerated (Docker).${NC}"

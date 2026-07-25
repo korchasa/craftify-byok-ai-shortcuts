@@ -30,6 +30,7 @@ This will install via Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
 ## Main Commands
 - `./run init` — install all CLI tools
 - `./run sim` — build and run in simulator
+- `./run icons` — regenerate app icons (MainApp Icon Composer glyph + ShareExtension appiconset)
 - `./run check` — run all checks
 - `./run clean` — clean build artifacts
 - `./run logs` — view logs

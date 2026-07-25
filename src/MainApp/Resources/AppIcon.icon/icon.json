@@ -1,0 +1,41 @@
+{
+  "fill-specializations" : [
+    { "value" : { "solid" : "srgb:0.00000,0.75294,0.71373,1.00000" } },
+    { "appearance" : "dark", "value" : { "solid" : "srgb:0.00000,0.75294,0.71373,1.00000" } }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            { "value" : { "solid" : "srgb:1.00000,1.00000,1.00000,1.00000" } },
+            { "appearance" : "dark", "value" : { "solid" : "srgb:0.00000,0.00000,0.00000,1.00000" } }
+          ],
+          "glass" : false,
+          "hidden" : false,
+          "image-name" : "glyph.png",
+          "name" : "glyph",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

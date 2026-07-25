@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
+  <!-- Craftify app icon: white letter "C" on the brand teal background. -->
+  <!-- The "C" is a single annular sector (270° ring, open 90° on the right), -->
+  <!-- drawn as one white path so every edge is a single clean antialiased contour -->
+  <!-- (no background-coloured "erase" overlay, which used to double the antialiasing). -->
+  <!-- Geometry (viewBox 256, centre 128,128): outer R=96, inner r=54 → stroke width 42. -->
   <rect width="256" height="256" fill="#00C0B6"/>
-
-  <!-- Black circle -->
-  <circle cx="128" cy="128" r="96" fill="#000000"/>
-
-  <circle cx="128" cy="128" r="64" fill="#00C0B6"/>
-
-  <!-- Cut-out sector (90° on the right) to form the letter C -->
-  <!-- The path starts at the centre, goes to the top-right point on the circle (-45°),
-       follows the arc 90° clockwise to the bottom-right point (+45°),
-       and closes back to the centre. Filled with background colour to "erase" the sector. -->
-  <path d="M128 128 L198.71 57.29 A100 100 0 0 1 198.71 198.71 Z" fill="#00C0B6" stroke="#00C0B6" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M195.882 195.882 A96 96 0 1 1 195.882 60.118 L166.184 89.816 A54 54 0 1 0 166.184 166.184 Z" fill="#FFFFFF"/>
 </svg>

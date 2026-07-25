@@ -66,7 +66,8 @@ public let project = Project(
                 "src/MainApp/Resources/bg.lproj/**",
                 "src/MainApp/Resources/ja.lproj/**",
                 "src/MainApp/Resources/zh-Hans.lproj/**",
-                "src/MainApp/Resources/Assets.xcassets"
+                "src/MainApp/Resources/Assets.xcassets",
+                "src/MainApp/Resources/AppIcon.icon"
             ],
             entitlements: "src/MainApp/Config/Craftify.entitlements",
             dependencies: [

@@ -156,6 +156,14 @@ graph TD
 - Manual editing of Xcode project files or use of XcodeGen is prohibited (all configuration is in Project.swift).
 - All build, test, and code generation steps are automated via ./run scripts and Tuist.
 
+## App Icon
+- MainApp ships an **iOS 26 Icon Composer bundle**: `src/MainApp/Resources/AppIcon.icon` (a folder with `icon.json` + `Assets/glyph.png`), referenced by `CFBundleIconName: "AppIcon"` and added as an explicit resource in Project.swift. `actool` compiles it into `Assets.car` and auto-derives the flat legacy renditions (120px iPhone, 152px iPad, 1024 marketing) that iOS 16–25 use — verified: `actool --minimum-deployment-target 16.0` emits `CFBundleIconFiles [AppIcon60x60, AppIcon76x76]` with no warnings.
+- The icon is intentionally **flat, not glass**: every layer sets `"glass": false` and shadow/translucency are zeroed, so iOS 26 does not add the Liquid Glass sheen.
+- Appearance colours are per-appearance via `fill-specializations`: white "C" in light, black "C" in dark, over the same turquoise `#00C0B6` background. The background fill is duplicated into the dark specialization on purpose — a plain solid `fill` is treated as light-only and would fall back to system gray in dark.
+- `glyph.png` is only a **white alpha mask**; the manifest recolours it per appearance, so no separate dark PNG is needed.
+- ShareExtension keeps the classic `AppIcon.appiconset` (an extension never shows a Liquid Glass home-screen icon).
+- Sources live in `documents/`: `icon.svg` (flat letter-on-turquoise, feeds the ShareExtension appiconset) and `icon-glyph.svg` (transparent letter mask, feeds the `.icon` glyph). Regenerate all PNGs with `./run icons`.
+
 ## Benefits of Tuist-based Architecture
 - Single source of truth for project structure and configuration
 - Easy onboarding and reproducible builds
