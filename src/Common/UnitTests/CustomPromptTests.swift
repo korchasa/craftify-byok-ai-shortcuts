@@ -8,7 +8,7 @@ public final class CustomPromptTests: XCTestCase {
         let input = OperationInput(targetLanguage: "fr")
         let messages = op.makeMessages(input: input, text: "hello", customPrompt: "My custom instructions")
         XCTAssertEqual(messages.first?.content, "My custom instructions")
-        XCTAssertEqual(messages.last?.content, "hello")
+        XCTAssertEqual(messages.last?.content, "<input>\nhello\n</input>")
     }
 
     public func testMakeMessagesFallsBackToDefaultForNilOrBlankPrompt() {

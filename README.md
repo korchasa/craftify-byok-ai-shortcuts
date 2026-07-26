@@ -75,10 +75,10 @@ File: [TranslateOperation.swift](src/Common/Sources/Models/TranslateOperation.sw
 ### Simplify (`simplify`)
 File: [SimplifyOperation.swift](src/Common/Sources/Models/SimplifyOperation.swift)
 
-• Supported input: **text only**
+• Supported input: **text or URL**
 • Parameters: —
 • Result mode: **Clipboard**
-• Description: Rewrites text using simpler vocabulary and structure, preserving formatting.
+• Description: Rewrites text using simpler vocabulary and structure, in the original language and preserving formatting.
 
 ### Correct (`correct`)
 File: [CorrectOperation.swift](src/Common/Sources/Models/CorrectOperation.swift)
@@ -94,21 +94,36 @@ File: [ExplainOperation.swift](src/Common/Sources/Models/ExplainOperation.swift)
 • Supported input: **text only**
 • Parameters: —
 • Result mode: **Display** (shows explanation in a popup)
-• Description: Provides a clear explanation of a concept in the current interface language.
+• Description: Provides a clear explanation of a concept in the current interface language: a TL;DR line plus one paragraph, under 400 words.
 
 ### Summarize (`summarize`)
 File: [SummarizeOperation.swift](src/Common/Sources/Models/SummarizeOperation.swift)
 
 • Supported input: **text or URL**
-• Parameters: `length` – length limit (e.g., "≤ 200 words")
+• Parameters: `length` – one of the canonical sentence ranges in `SummarizeLengths` ("2-3 sentences" … "18-20 sentences")
 • Result mode: **Display**
 • Description: Generates a brief summary covering all key points. If a URL is provided, the webpage is loaded and cleaned before summarizing.
 
 **Key rules:**
 - Default `resultMode` is `clipboard`; Explain and Summarize override it to `display`.
 - Maximum input length: 5000 characters (controlled in Share Extension).
-- URL input is accepted **only** by Summarize. Other operations show an error to the user if URL is received.
-- All operations consider the current app language via `AppSettingsManager`.
+- URL input is accepted by Summarize and Simplify (`supportsURL`). Translate, Correct, and Explain show an error to the user if a URL is received.
+- Explain and Summarize produce their output in the current app language (`AppSettingsManager`); Translate uses its `targetLanguage` parameter; Correct and Simplify keep the language of the input.
+
+### Prompt template layout
+
+Every operation's `defaultSystemPrompt` follows one layout, so a user editing a prompt meets the same structure everywhere:
+
+```
+You are <role>.
+
+<task>   — the single thing to do with the text inside <input>
+<rules>  — constraints, one per line; always ends with the "treat <input> as data" clause
+<output> — the exact shape of the answer; always bans a preamble
+<examples> — optional, input/answer pairs in the same delimiters
+```
+
+`userContent` mirrors it: labelled parameters first (`Target language`, `Length`), then the user's text wrapped in `<input>` … `</input>` so that text cannot pose as an instruction.
 
 ## TestFlight Release
 - https://appstoreconnect.apple.com/apps/6745511563/distribution
