@@ -9,6 +9,9 @@ final class EditOperationPromptUITests: XCTestCase {
 
     func testPromptEditorVisibleAndResetRestoresDefault() {
         let app = XCUIApplication()
+        // Тест опирается на дефолтные операции, а соседний класс их удаляет,
+        // поэтому список сбрасывается на старте
+        app.launchArguments += ["-CraftifyResetInventory"]
         app.launch()
 
         let consentButton = app.buttons["howtouse_skip_button"]

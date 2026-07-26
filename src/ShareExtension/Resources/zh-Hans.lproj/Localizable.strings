@@ -47,3 +47,13 @@
 
 "error_unknown_model" = "未知模型";
 "advice_change_model" = "请在 Craftify 设置中选择其他模型。";
+
+/* Selection screen: what we are working on */
+"share_input_caption" = "所选文本";
+"share_input_caption_link" = "共享链接";
+
+/* Summarize length values (mirrors the main app picker) */
+"sentence_count_2_3" = "2–3 句";
+"sentence_count_5_6" = "5–6 句";
+"sentence_count_9_10" = "9–10 句";
+"sentence_count_18_20" = "18–20 句";

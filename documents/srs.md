@@ -54,3 +54,24 @@
 - **Tasks:** [REF:task:2026-07-ux-improvement-backlog | ux-improvement-backlog]
 - **Acceptance:** `src/MainApp/UnitTests/SettingsViewModelTests.swift::testModelSelection_PersistsPerProvider` | `./run check`
 - **Status:** [x]
+
+### FR-UX.OPERATION-TILES: The same operation tile on the home screen and the picker [ANC:fr:ux.operation-tiles]
+
+- **Description:** The operations list in the app and the transformation picker in the share extension render every operation with one and the same tile — icon on the left, operation name, and the configured setting on a second line — laid out in the same two-column grid. The setting value goes through one shared localized formatter: summarize shows the localized label, never the canonical English string that goes into the prompt, and translate shows the bare language name. Whatever the user arranges in the app is what the extension shows.
+- **Tasks:** [REF:task:2026-07-operation-tiles-on-both-screens | operation-tiles-on-both-screens]
+- **Acceptance:** `src/Common/UnitTests/OperationDisplayTests.swift::testSummarizeShowsLocalizedLabelNotCanonicalValue` | `./run check`
+- **Status:** [x]
+
+### FR-UX.TILE-ARRANGE: Arranging tiles on the home screen [ANC:fr:ux.tile-arrange]
+
+- **Description:** The home screen is a grid of cells, not a list: every operation owns a cell, and gaps between occupied cells stay as the user left them. Cells are numbered from the bottom up, so the tiles the user reaches for sit under the thumb and new cells grow upwards. Tapping Edit puts the tiles into arrange mode: they wiggle, each grows a red minus badge, and any tile can be dragged onto any cell — an empty one takes it, an occupied one swaps. Every empty cell offers "+ Add", and the new operation lands in that exact cell. Deleting through the minus asks for confirmation first. The wiggle stops when the system Reduce Motion setting is on. Each operation carries a stable identifier and a stable cell that survive editing, so the arrangement belongs to the operation rather than to its place in the array, and the same arrangement — gaps included — is what the extension shows.
+- **Tasks:** [REF:task:2026-07-operation-tiles-on-both-screens | operation-tiles-on-both-screens]
+- **Acceptance:** `src/Common/UnitTests/OperationGridTests.swift::testCellsKeepGapsBetweenOccupiedSlots` | `./run check`
+- **Status:** [x]
+
+### FR-UX.SHARE-INPUT-PREVIEW: Shared text visible above the transformation picker [ANC:fr:ux.share-input-preview]
+
+- **Description:** Before choosing an operation, the share extension shows the text (or link) it is about to transform at the top of the sheet, under a localized uppercase caption that distinguishes selected text from a shared link. The preview is clipped to a few lines so the sheet stays compact and the operations grid stays visible.
+- **Tasks:** [REF:task:2026-07-operation-tiles-on-both-screens | operation-tiles-on-both-screens]
+- **Acceptance:** `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testUpdateInputText_PublishesPreviewAndDetectsURL` | `./run check`
+- **Status:** [x]

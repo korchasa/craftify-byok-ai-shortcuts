@@ -78,29 +78,35 @@ public final class HomeViewModelTests: XCTestCase {
         XCTAssertEqual(self.inventoryStub?.inventory.first, operation2)
     }
 
-    public func testReorderOperationsChangesOrder() throws {
+    public func testPlaceOperationSwapsTilesBetweenCells() throws {
         let operation1 = try InventoryOperation(
             operation: .translate,
             params: JSONEncoder().encode(TranslateParams(targetLanguage: "en")),
-            colorHex: "3288bd"
+            colorHex: "3288bd",
+            slot: 0
         )
         let operation2 = InventoryOperation(
             operation: .simplify,
             params: Data(),
-            colorHex: "fdae61"
+            colorHex: "fdae61",
+            slot: 1
         )
-        let operation3 = InventoryOperation(
-            operation: .correct,
-            params: Data(),
-            colorHex: "d53e4f"
-        )
-        inventoryStub?.saveInventory([operation1, operation2, operation3])
+        inventoryStub?.saveInventory([operation1, operation2])
         viewModel?.loadInventory()
-        // Перемещаем второй элемент (index 1) на первое место (index 0)
-        viewModel?.reorderOperations(fromOffsets: IndexSet(integer: 1), toOffset: 0)
-        let expected = [operation2, operation1, operation3]
-        XCTAssertEqual(self.viewModel?.operations, expected)
-        XCTAssertEqual(self.inventoryStub?.inventory, expected)
+        // Кладём первую плитку на место второй — они меняются ячейками
+        viewModel?.placeOperation(id: operation1.id, at: 1)
+        XCTAssertEqual(self.viewModel?.operations.first { $0.id == operation1.id }?.slot, 1)
+        XCTAssertEqual(self.viewModel?.operations.first { $0.id == operation2.id }?.slot, 0)
+        XCTAssertEqual(self.inventoryStub?.inventory.first { $0.id == operation1.id }?.slot, 1)
+    }
+
+    public func testPlaceOperationMovesTileToAnEmptyCell() {
+        let operation = InventoryOperation(operation: .correct, params: Data(), colorHex: "d53e4f", slot: 0)
+        inventoryStub?.saveInventory([operation])
+        viewModel?.loadInventory()
+        viewModel?.placeOperation(id: operation.id, at: 5)
+        XCTAssertEqual(self.viewModel?.operations.first?.slot, 5)
+        XCTAssertEqual(self.viewModel?.firstFreeSlot, 0)
     }
 
     public func testDeleteOperationViaEditViewRemovesFromList() throws {

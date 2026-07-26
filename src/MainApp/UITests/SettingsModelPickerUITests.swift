@@ -32,11 +32,19 @@ final class SettingsModelPickerUITests: XCTestCase {
         return searchField
     }
 
-    /// Возврат из пикера кнопкой «Назад»: настройки должны остаться на экране
+    /// Возврат из пикера кнопкой «Назад»: настройки должны остаться на экране.
+    /// Заголовок пикера локализован, поэтому панель ищем как таковую, а не по
+    /// английскому названию — иначе тест падает на не-английском симуляторе.
+    /// Что мы действительно ушли с пикера, доказывает исчезнувшее поле поиска
     private func assertBackReturnsToSettings(_ app: XCUIApplication) {
-        let pickerBar = app.navigationBars["Model"]
+        let searchField = app.textFields["model_search_field"]
+        let pickerBar = app.navigationBars.firstMatch
         XCTAssertTrue(pickerBar.waitForExistence(timeout: 3), "Model nav bar not found:\n\(app.debugDescription)")
         pickerBar.buttons.firstMatch.tap()
+        XCTAssertTrue(
+            searchField.waitForNonExistence(timeout: 5),
+            "Back button did not leave the model picker:\n\(app.debugDescription)"
+        )
         XCTAssertTrue(
             app.buttons["settings_save_button"].waitForExistence(timeout: 5),
             "Settings sheet is gone after leaving the model picker:\n\(app.debugDescription)"

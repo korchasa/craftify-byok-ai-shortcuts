@@ -137,8 +137,13 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
         let operation = OperationFactory.make(kind: kind)
         let trimmedPrompt = promptText.trimmingCharacters(in: .whitespacesAndNewlines)
         let customPrompt = (isPromptDefault || trimmedPrompt.isEmpty) ? nil : promptText
+        // Фабрика собирает новый объект со свежим UUID и нулевой ячейкой, поэтому
+        // идентификатор и место исходной операции возвращаем на место: правка
+        // настройки не подменяет плитку и не сдвигает её по сетке
         return operation.makeInventoryOperation(input: input, colorHex: selectedColorHex)?
             .with(customPrompt: customPrompt)
+            .with(id: originalOperation.id)
+            .with(slot: originalOperation.slot)
     }
 
     /// Сбрасывает все поля в исходное состояние

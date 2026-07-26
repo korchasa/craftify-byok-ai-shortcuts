@@ -1,6 +1,7 @@
 import Foundation
 import os
 import SwiftUI
+import UniformTypeIdentifiers
 
 public struct HomeView: View {
     @ObservedObject public var viewModel: HomeViewModel
@@ -10,6 +11,14 @@ public struct HomeView: View {
     @State private var editingIndex: Int? = nil
     @Environment(\.colorScheme) private var colorScheme
     @State private var editMode: EditMode = .inactive
+    /// Перетаскиваемая операция; nil — перетаскивания нет
+    @State private var draggingID: UUID? = nil
+    /// Ячейка под пальцем: её подсвечиваем, чтобы было видно, куда ляжет плитка
+    @State private var highlightedSlot: Int? = nil
+    /// Ячейка, для которой открыта форма добавления
+    @State private var addTargetSlot: Int = 0
+    /// Операция, для которой нажали минус и ждут подтверждения
+    @State private var pendingDeletion: InventoryOperation? = nil
     private var palette: MainAppColorPaletteProviding {
         ColorPaletteFactory.palette(for: colorScheme)
     }
@@ -19,9 +28,7 @@ public struct HomeView: View {
 
     public init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
-        // Используем ключи, оставленные в ресурсах, чтобы Periphery не помечал их как неиспользуемые
-        _ = L10n.homeSortHint
-        _ = L10n.homeSortHandle
+        // Ключ остался в ресурсах без применения; трогаем, чтобы Periphery не ругался
         _ = L10n.homeOrder
     }
 
@@ -38,14 +45,26 @@ public struct HomeView: View {
                 .safeAreaInset(edge: .bottom) {
                     bottomBar
                 }
+                // Привязка режима правки живёт ВНУТРИ NavigationStack: снаружи
+                // стек подсовывает содержимому собственный editMode и затеняет
+                // наш — кнопка Edit переключалась, а плитки об этом не узнавали
+                .environment(\.editMode, $editMode)
         }
         .background(palette.background())
-        .environment(\.editMode, $editMode)
         .environment(\.colorPalette, palette)
+        .alert(
+            L10n.homeDeleteConfirm,
+            isPresented: deletionConfirmationBinding,
+            presenting: pendingDeletion,
+            actions: { operation in
+                Button(L10n.homeDelete, role: .destructive) { confirmDeletion(of: operation) }
+                Button(L10n.editOperationCancel, role: .cancel) { pendingDeletion = nil }
+            }
+        )
         .sheet(isPresented: $showAddOperation, onDismiss: {}, content: {
             let addOperationViewModel = AddOperationViewModel(palette: palette.palette())
             AddOperationView(viewModel: addOperationViewModel, onSave: { op in
-                viewModel.addOperation(op)
+                viewModel.addOperation(op.with(slot: addTargetSlot))
                 addOperationViewModel.cancel()
                 showAddOperation = false
             })
@@ -86,37 +105,160 @@ public struct HomeView: View {
         }
     }
 
+    /// Ячейки сетки в порядке отрисовки. Нумерация идёт снизу вверх, поэтому
+    /// нулевая ячейка — левая нижняя, а новые прирастают сверху. В режиме
+    /// правки сверху всегда есть свободный ряд, куда можно добавить плитку
+    private var gridCells: [(slot: Int, operation: InventoryOperation?)] {
+        var cells = OperationGrid.cells(for: viewModel.operations, minimumCells: 0)
+        if editMode == .active {
+            let columns = OperationTileConstants.columns
+            let rows = Int((Double(cells.count) / Double(columns)).rounded(.up))
+            let target = (rows + 1) * columns
+            cells.append(contentsOf: Array(repeating: nil, count: max(0, target - cells.count)))
+        }
+        return OperationGrid.displayOrder(cells, columns: OperationTileConstants.columns)
+    }
+
+    /// Показ подтверждения удаления завязан на выбранную операцию
+    private var deletionConfirmationBinding: Binding<Bool> {
+        Binding(
+            get: { pendingDeletion != nil },
+            set: { isPresented in
+                if !isPresented {
+                    pendingDeletion = nil
+                }
+            }
+        )
+    }
+
+    // [REF:fr:ux.operation-tiles]
+    /// Сетка плиток — ровно та же, что увидит пользователь в расширении.
+    /// Здесь он задаёт состав и порядок плиток: перетаскивание меняет порядок,
+    /// режим правки добавляет кнопки удаления
     @ViewBuilder
     private var operationsList: some View {
         if viewModel.operations.isEmpty {
             emptyState
         } else {
-            List {
-                ForEach(Array(viewModel.operations.enumerated()), id: \.element) { idx, operation in
-                    OperationRowView(
-                        operation: operation,
-                        palette: palette,
-                        isEditing: editMode == .active,
-                        onEdit: {
-                            editOperationViewModel = operation
-                            editingIndex = idx
-                        }
-                    )
-                    .listRowBackground(palette.background())
-                }
-                .onMove { indices, newOffset in
-                    viewModel.reorderOperations(fromOffsets: indices, toOffset: newOffset)
-                }
-                .onDelete { indices in
-                    for index in indices {
-                        viewModel.removeOperation(at: index)
+            // Плитки прижаты к низу, чтобы до них доставал большой палец одной
+            // руки. Пустое место уходит наверх, а когда плиток больше, чем
+            // помещается на экран, список прокручивается как обычно
+            GeometryReader { geometry in
+                ScrollView {
+                    VStack(spacing: 0) {
+                        Spacer(minLength: 0)
+                        operationsGrid(containerWidth: geometry.size.width)
                     }
+                    .frame(minHeight: geometry.size.height, alignment: .bottom)
                 }
             }
-            .listStyle(.plain)
-            .scrollContentBackground(.hidden)
             .background(palette.background())
         }
+    }
+
+    /// Ширину контейнера сетка получает снаружи и передаёт плиткам: превью
+    /// перетаскивания должно быть ровно в ячейку, а на iPad окно бывает уже экрана
+    private func operationsGrid(containerWidth: CGFloat) -> some View {
+        let cellWidth = OperationGridLayout.cellWidth(
+            containerWidth: containerWidth,
+            horizontalPadding: FormStyleConstants.titleBarHorizontalPadding
+        )
+        return LazyVGrid(columns: OperationGridLayout.columns, spacing: OperationTileConstants.gridSpacing) {
+            ForEach(gridCells, id: \.slot) { cell in
+                gridCell(slot: cell.slot, operation: cell.operation, cellWidth: cellWidth)
+            }
+        }
+        .padding(.horizontal, FormStyleConstants.titleBarHorizontalPadding)
+        .padding(.top, FormStyleConstants.dividerBottomPadding)
+    }
+
+    /// Одна ячейка сетки: плитка, кнопка добавления или пустое место.
+    /// Дырка между плитками сохраняется и вне режима правки — раскладку задаёт
+    /// пользователь, и она не должна схлопываться
+    @ViewBuilder
+    private func gridCell(slot: Int, operation: InventoryOperation?, cellWidth: CGFloat) -> some View {
+        if let operation {
+            operationTile(operation, at: slot, cellWidth: cellWidth)
+        } else if editMode == .active {
+            OperationAddCellButton(
+                slot: slot,
+                isHighlighted: highlightedSlot == slot,
+                action: { beginAdding(at: slot) }
+            )
+            .onDrop(of: [UTType.text], delegate: dropDelegate(for: slot))
+        } else {
+            Color.clear
+                .frame(height: OperationTileConstants.height)
+                .accessibilityHidden(true)
+        }
+    }
+
+    /// Плитка операции. Перетаскивание включается только в режиме правки —
+    /// вне его тап должен открывать форму, а не начинать перенос
+    @ViewBuilder
+    private func operationTile(_ operation: InventoryOperation, at slot: Int, cellWidth: CGFloat) -> some View {
+        let isEditing = editMode == .active
+        let tile = OperationTileButton(
+            operation: operation,
+            palette: palette,
+            isEditing: isEditing,
+            onEdit: { beginEditing(operation) },
+            onDelete: { pendingDeletion = operation },
+            cellWidth: cellWidth,
+            dragItem: isEditing ? { beginDrag(of: operation) } : nil,
+            onLongPress: isEditing ? nil : { withAnimation { editMode = .active } }
+        )
+        if isEditing {
+            tile
+                .opacity(draggingID == operation.id ? OperationTileConstants.settingOpacity : 1)
+                .onDrop(of: [UTType.text], delegate: dropDelegate(for: slot))
+        } else {
+            tile
+        }
+    }
+
+    /// Открывает форму добавления для конкретной ячейки
+    private func beginAdding(at slot: Int) {
+        addTargetSlot = slot
+        showAddOperation = true
+    }
+
+    /// Открывает форму правки для выбранной операции
+    private func beginEditing(_ operation: InventoryOperation) {
+        editingIndex = viewModel.operations.firstIndex { $0.id == operation.id }
+        editOperationViewModel = operation
+    }
+
+    /// Удаляет подтверждённую операцию по её идентификатору
+    private func confirmDeletion(of operation: InventoryOperation) {
+        pendingDeletion = nil
+        guard let index = viewModel.operations.firstIndex(where: { $0.id == operation.id }) else { return }
+        viewModel.removeOperation(at: index)
+    }
+
+    /// Начинает перетаскивание. Сам груз системе не нужен — операция живёт в
+    /// состоянии экрана, — но без зарегистрированного представления перенос
+    /// не стартует
+    private func beginDrag(of operation: InventoryOperation) -> NSItemProvider {
+        draggingID = operation.id
+        let provider = NSItemProvider()
+        provider.registerDataRepresentation(
+            forTypeIdentifier: UTType.plainText.identifier,
+            visibility: .ownProcess
+        ) { completion in
+            completion(Data(operation.id.uuidString.utf8), nil)
+            return nil
+        }
+        return provider
+    }
+
+    private func dropDelegate(for slot: Int) -> OperationDropDelegate {
+        OperationDropDelegate(
+            slot: slot,
+            draggingID: $draggingID,
+            highlightedSlot: $highlightedSlot,
+            onPlace: { id, destination in viewModel.placeOperation(id: id, at: destination) }
+        )
     }
 
     /// Пустой список: подсказка вместо белого экрана, когда операций нет
@@ -160,7 +302,7 @@ public struct HomeView: View {
 
     private var bottomBar: some View {
         CraftifyButtonBar(backgroundColor: palette.background()) {
-            Button(action: { showAddOperation = true }) {
+            Button(action: { beginAdding(at: viewModel.firstFreeSlot) }) {
                 Label(L10n.homeAddOperation, systemImage: "plus")
                     .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                     .foregroundColor(palette.primaryButtonText())
@@ -174,106 +316,6 @@ public struct HomeView: View {
             }
             .buttonStyle(SettingsPrimaryButtonStyle())
             .accessibilityIdentifier("home_settings_button")
-        }
-    }
-
-    private struct OperationRowView: View {
-        let operation: InventoryOperation
-        let palette: MainAppColorPaletteProviding
-        let isEditing: Bool
-        let onEdit: () -> Void
-
-        private static let baseCircleUnscaled: CGFloat = 28
-        private static let baseCircleSize: CGFloat = baseCircleUnscaled * DeviceScale.controlFactor
-        private static let symbolScale: CGFloat = 0.5
-        private static let horizontalSpacing: CGFloat = 12
-        /// Кружок операции масштабируется вместе с системным размером шрифта
-        @ScaledMetric(relativeTo: .body) private var circleSize: CGFloat = Self.baseCircleSize
-
-        var body: some View {
-            Button(action: onEdit) {
-                HStack(spacing: Self.horizontalSpacing) {
-                    ZStack {
-                        Circle()
-                            .fill(Color(hex: operation.colorHex))
-                            .frame(width: circleSize, height: circleSize)
-                            .accessibilityHidden(true)
-                        Image(systemName: operation.operation.sfSymbol)
-                            .foregroundColor(palette.operationSymbolColor())
-                            .font(.system(size: circleSize * Self.symbolScale))
-                            .fontWeight(.semibold)
-                            .accessibilityLabel(LocalizedStringKey(operationLabel(for: operation.operation)))
-                    }
-                    OperationLabelText(type: operation.operation)
-                    Spacer()
-                    OperationParamsText(operation: operation)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(PlainButtonStyle())
-            .disabled(isEditing)
-            .accessibilityIdentifier("operation_row_\(operation.operation.rawValue)")
-        }
-
-        private func operationLabel(for type: OperationKind) -> String {
-            switch type {
-            case .translate: L10n.operationLabelTranslate
-            case .simplify: L10n.operationLabelSimplify
-            case .correct: L10n.operationLabelCorrect
-            case .explain: L10n.operationLabelExplain
-            case .summarize: L10n.operationLabelSummarize
-            }
-        }
-    }
-
-    private struct OperationLabelText: View {
-        let type: OperationKind
-        var body: some View {
-            Text(operationLabel(for: type))
-                .font(.craftifyBody)
-                .fontWeight(.semibold)
-        }
-
-        private func operationLabel(for type: OperationKind) -> String {
-            switch type {
-            case .translate: L10n.operationLabelTranslate
-            case .simplify: L10n.operationLabelSimplify
-            case .correct: L10n.operationLabelCorrect
-            case .explain: L10n.operationLabelExplain
-            case .summarize: L10n.operationLabelSummarize
-            }
-        }
-    }
-
-    private struct OperationParamsText: View {
-        let operation: InventoryOperation
-        var body: some View {
-            Text(operationParamsDescription(for: operation))
-                .font(.craftifyFootnote)
-                .fontWeight(.semibold)
-                .foregroundColor(Color.secondary)
-        }
-
-        private func operationParamsDescription(for operation: InventoryOperation) -> String {
-            switch operation.operation {
-            case .translate:
-                if let params = try? JSONDecoder().decode(TranslateParams.self, from: operation.params) {
-                    let langName = SupportedLanguages.all.first { $0.code == params.targetLanguage }?.name ?? params.targetLanguage
-                    return "\u{2192} " + langName
-                }
-            case .simplify:
-                return ""
-            case .correct:
-                return ""
-            case .explain:
-                return ""
-            case .summarize:
-                if let params = try? JSONDecoder().decode(SummarizeParams.self, from: operation.params) {
-                    return SummarizeLengthDisplay.label(for: params.length)
-                }
-            }
-            return ""
         }
     }
 }

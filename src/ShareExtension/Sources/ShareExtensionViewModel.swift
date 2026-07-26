@@ -11,6 +11,8 @@ public final class ShareExtensionViewModel: ObservableObject {
     // MARK: - Published Properties
 
     @Published public var operations: [InventoryOperation] = []
+    /// Текст (или ссылка), над которым работаем — показывается в шапке экрана выбора
+    @Published public private(set) var inputText: String = ""
     /// Замеренная высота контента (PreferenceKey из ShareExtensionView) для адаптивного detent
     @Published public var contentHeight: CGFloat = 0
     @Published public var isProcessing: Bool = false
@@ -73,6 +75,12 @@ public final class ShareExtensionViewModel: ObservableObject {
         // Загружаем все операции по умолчанию, а затем отфильтруем их в updateInputText когда будет доступен контент
         self.operations = manager.inventoryManager.inventory
         manager.inputText = Self.truncated(input)
+        self.inputText = manager.inputText
+    }
+
+    /// Вход — ссылка, а не выделенный текст: шапка подписывает его иначе
+    public var isInputURL: Bool {
+        OperationInput.isHttpURL(string: inputText)
     }
 
     // MARK: - Public Methods
@@ -95,6 +103,7 @@ public final class ShareExtensionViewModel: ObservableObject {
     public func updateInputText(_ text: String) {
         let truncatedText = Self.truncated(text)
         manager.inputText = truncatedText
+        inputText = truncatedText
 
         logTextUpdate(truncatedText)
         updateOperationsForInput(truncatedText)

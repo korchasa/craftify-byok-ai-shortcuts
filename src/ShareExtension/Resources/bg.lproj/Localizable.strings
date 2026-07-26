@@ -47,3 +47,13 @@
 
 "error_unknown_model" = "Неизвестен модел";
 "advice_change_model" = "Изберете друг модел в настройките на Craftify.";
+
+/* Selection screen: what we are working on */
+"share_input_caption" = "Избран текст";
+"share_input_caption_link" = "Споделен линк";
+
+/* Summarize length values (mirrors the main app picker) */
+"sentence_count_2_3" = "2–3 изречения";
+"sentence_count_5_6" = "5–6 изречения";
+"sentence_count_9_10" = "9–10 изречения";
+"sentence_count_18_20" = "18–20 изречения";

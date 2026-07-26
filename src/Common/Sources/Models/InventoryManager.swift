@@ -6,11 +6,18 @@ public final class InventoryManager: InventoryManaging {
     public private(set) var inventory: [InventoryOperation] = []
     private let userDefaults: UserDefaults
     private let key = "CraftifyInventory"
+    /// Приложение и расширение читают одно хранилище в App Group. Если оба
+    /// раздадут идентификаторы старым записям и оба их запишут, порядок плиток
+    /// разъедется, поэтому переписывает хранилище только приложение.
+    private let migratesIdentifiers: Bool
 
     /// Инициализация менеджера с UserDefaults
-    /// - Parameter userDefaults: UserDefaults (обычно App Group)
-    public init(userDefaults: UserDefaults) {
+    /// - Parameters:
+    ///   - userDefaults: UserDefaults (обычно App Group)
+    ///   - migratesIdentifiers: Разрешено ли дописывать идентификаторы старым записям
+    public init(userDefaults: UserDefaults, migratesIdentifiers: Bool = false) {
         self.userDefaults = userDefaults
+        self.migratesIdentifiers = migratesIdentifiers
         loadInventory()
     }
 
@@ -22,11 +29,21 @@ public final class InventoryManager: InventoryManaging {
             inventory = []
             return inventory
         }
-        guard let decoded = try? JSONDecoder().decode([InventoryOperation].self, from: data) else {
+        let context = InventoryOperationDecodingContext()
+        let decoder = JSONDecoder()
+        decoder.userInfo[InventoryOperationDecodingContext.userInfoKey] = context
+        guard let decoded = try? decoder.decode([InventoryOperation].self, from: data) else {
             inventory = []
             return inventory
         }
-        inventory = decoded
+        // Записям, сохранённым до появления сетки, ячейки раздаются по текущему
+        // порядку — у существующих пользователей раскладка не разъезжается
+        let normalized = OperationGrid.normalized(decoded)
+        inventory = normalized
+        // Старые записи получают идентификаторы и ячейки ровно один раз
+        if context.didGenerateIdentifier, migratesIdentifiers {
+            saveInventory(normalized)
+        }
         return inventory
     }
 
@@ -141,7 +158,8 @@ public final class InventoryManager: InventoryManaging {
 
         // 7. translate → Sindarin (sjn) – fun/example
         appendTranslate(to: "sjn")
-        saveInventory(defaults)
+        // Дефолтные плитки встают подряд с первой ячейки
+        saveInventory(defaults.enumerated().map { index, operation in operation.with(slot: index) })
     }
 
     /// Деструктор. Освобождает ресурсы, если это необходимо.

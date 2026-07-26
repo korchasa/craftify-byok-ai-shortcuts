@@ -52,10 +52,10 @@
 "color" = "Color";
 "color_accessibility_format" = "Cor #%@";
 
-"sentence_count_2_3" = "2–3 sentences";
-"sentence_count_5_6" = "5–6 sentences";
-"sentence_count_9_10" = "9–10 sentences";
-"sentence_count_18_20" = "18–20 sentences";
+"sentence_count_2_3" = "2–3 frases";
+"sentence_count_5_6" = "5–6 frases";
+"sentence_count_9_10" = "9–10 frases";
+"sentence_count_18_20" = "18–20 frases";
 
 "error_no_text" = "No text to process";
 "error_text_too_long" = "Text too long to process";

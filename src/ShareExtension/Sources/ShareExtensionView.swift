@@ -7,11 +7,6 @@ public struct ShareExtensionView: View {
     @State private var alertMessage = ""
     @State private var isProcessing = false
     @Environment(\.colorScheme) private var colorScheme
-    /// Символ операции и минимальная высота карточки масштабируются с Dynamic Type
-    @ScaledMetric(relativeTo: .body) private var operationSymbolSize: CGFloat =
-        ColorPaletteConstants.circleSize * ShareExtensionViewConstants.operationSymbolScale
-    @ScaledMetric(relativeTo: .body) private var operationMinHeight: CGFloat =
-        ShareExtensionViewConstants.operationMinHeight
     private var palette: ShareExtensionColorPaletteProviding {
         ShareExtensionColorPaletteFactory.palette(for: colorScheme)
     }
@@ -42,28 +37,59 @@ public struct ShareExtensionView: View {
                     .fontWeight(.bold)
                     .accessibilityAddTraits(.isHeader)
                     .padding(.top, ShareExtensionViewConstants.topPadding)
-            } else {
-                Text(L10n.shareTitle)
-                    .font(.craftifyTitle)
-                    .fontWeight(.bold)
-                    .accessibilityAddTraits(.isHeader)
-                    .padding(.top, ShareExtensionViewConstants.topPadding)
-            }
 
-            Rectangle()
-                .fill(Color.clear)
-                .frame(height: ShareExtensionViewConstants.verticalSpacing)
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(height: ShareExtensionViewConstants.verticalSpacing)
 
-            if viewModel.displayResult != nil {
                 DisplayResultView(
                     text: viewModel.displayResult ?? ""
                 )
             } else {
+                // До выбора операции шапку занимает сам текст: пользователь должен
+                // видеть, над чем работает, а не название приложения
+                inputPreview
+                    .padding(.top, ShareExtensionViewConstants.topPadding)
+                    .padding(.bottom, ShareExtensionViewConstants.inputPreviewBottomSpacing)
+
                 operationsGrid
             }
         }
         .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
         .padding(.bottom, ContentPaddingConstants.bottomExtra)
+    }
+
+    // [REF:fr:ux.share-input-preview]
+    /// Шапка экрана выбора: над чем работаем. Длинный текст обрезается —
+    /// шторка должна оставаться компактной, а сетка операций — видимой
+    @ViewBuilder
+    private var inputPreview: some View {
+        if viewModel.inputText.isEmpty {
+            Text(L10n.shareTitle)
+                .font(.craftifyTitle)
+                .fontWeight(.bold)
+                .accessibilityAddTraits(.isHeader)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        } else {
+            VStack(alignment: .leading, spacing: ShareExtensionViewConstants.inputPreviewSpacing) {
+                Text(viewModel.isInputURL ? L10n.shareInputCaptionLink : L10n.shareInputCaption)
+                    .font(.caption)
+                    .fontWeight(.semibold)
+                    .textCase(.uppercase)
+                    .kerning(ShareExtensionViewConstants.inputPreviewCaptionKerning)
+                    .foregroundColor(palette.secondaryText())
+                    .accessibilityAddTraits(.isHeader)
+                Text(viewModel.inputText)
+                    .font(.craftifyBody)
+                    .fontWeight(.regular)
+                    .foregroundColor(palette.primaryText())
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(ShareExtensionViewConstants.inputPreviewLineLimit)
+                    .truncationMode(.tail)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
+        }
     }
 
     public var body: some View {
@@ -152,81 +178,34 @@ public struct ShareExtensionView: View {
         )
     }
 
+    /// Сетка повторяет раскладку главного экрана вместе с дырками: пользователь
+    /// расставил плитки в приложении, чтобы узнавать их здесь по месту
     private var operationsGrid: some View {
-        let cardCornerRadius: CGFloat = 12
-        let vStackSpacing: CGFloat = 4
-        let hStackSpacing: CGFloat = 6
-        return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: ShareExtensionViewConstants.gridSpacing) {
-            ForEach(viewModel.operations, id: \ .id) { op in
-                operationButton(for: op, cardCornerRadius: cardCornerRadius, vStackSpacing: vStackSpacing, hStackSpacing: hStackSpacing)
+        let cells = OperationGrid.cells(for: viewModel.operations, minimumCells: 0)
+        return LazyVGrid(columns: OperationGridLayout.columns, spacing: OperationTileConstants.gridSpacing) {
+            ForEach(OperationGrid.displayOrder(cells, columns: OperationTileConstants.columns), id: \.slot) { cell in
+                if let operation = cell.operation {
+                    operationButton(for: operation)
+                } else {
+                    Color.clear
+                        .frame(height: OperationTileConstants.height)
+                        .accessibilityHidden(true)
+                }
             }
         }
         .padding(.horizontal, CraftifyButtonConstants.horizontalPadding)
     }
 
-    private func operationButton(for op: InventoryOperation, cardCornerRadius: CGFloat, vStackSpacing: CGFloat, hStackSpacing: CGFloat) -> some View {
-        let color = Color(hex: op.colorHex)
-        return Button(action: { viewModel.process(operation: op) }) {
-            VStack(spacing: vStackSpacing) {
-                HStack(spacing: hStackSpacing) {
-                    ZStack {
-                        Image(systemName: op.operation.sfSymbol)
-                            .foregroundColor(palette.operationSymbolColor())
-                            .font(.system(size: operationSymbolSize))
-                            .fontWeight(.semibold)
-                            .accessibilityHidden(true)
-                    }
-                    Text(operationCategory(for: op))
-                        .font(.craftifyBody)
-                        .fontWeight(.semibold)
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                Text(operationProperty(for: op))
-                    .font(.craftifyFootnote)
-                    .fontWeight(.bold)
-                    .multilineTextAlignment(.leading)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }
-            .frame(maxWidth: .infinity, minHeight: operationMinHeight)
-            .padding()
-            .background(color)
-            .foregroundColor(palette.primaryButtonText())
-            .cornerRadius(cardCornerRadius)
-        }
-        .accessibilityLabel(operationCategory(for: op))
-        .disabled(viewModel.isProcessing)
-    }
-
-    private func operationCategory(for op: InventoryOperation) -> String {
-        switch op.operation {
-        case .translate: L10n.operationLabelTranslate
-        case .simplify: L10n.operationLabelSimplify
-        case .correct: L10n.operationLabelCorrect
-        case .explain: L10n.operationLabelExplain
-        case .summarize: L10n.operationLabelSummarize
-        }
-    }
-
-    private func operationProperty(for op: InventoryOperation) -> String {
-        switch op.operation {
-        case .translate:
-            if let params = try? JSONDecoder().decode(TranslateParams.self, from: op.params) {
-                let langName = SupportedLanguages.all.first { $0.code == params.targetLanguage }?.name ?? params.targetLanguage
-                return "\u{2192} " + langName
-            }
-            return ""
-        case .simplify:
-            return ""
-        case .correct:
-            return ""
-        case .explain:
-            return ""
-        case .summarize:
-            if let params = try? JSONDecoder().decode(SummarizeParams.self, from: op.params) {
-                return params.length
-            }
-            return ""
-        }
+    /// Плитка операции — та же, что пользователь расставил на главном экране
+    private func operationButton(for op: InventoryOperation) -> some View {
+        let tile = OperationTileView(
+            operation: op,
+            symbolColor: palette.operationSymbolColor(),
+            textColor: palette.primaryButtonText()
+        )
+        return Button(action: { viewModel.process(operation: op) }) { tile }
+            .accessibilityLabel(tile.accessibilityText)
+            .disabled(viewModel.isProcessing)
     }
 
     private var progressOverlay: some View {
@@ -258,18 +237,7 @@ public struct ShareExtensionView: View {
         guard let op = viewModel.operations.first(where: { viewModel.displayResult != nil && $0.operation == viewModel.manager.lastOperationKind }) else {
             return L10n.shareTitle
         }
-        return operationTitle(for: op.operation)
-    }
-
-    /// Возвращает только название операции без параметров
-    private func operationTitle(for kind: OperationKind) -> String {
-        switch kind {
-        case .translate: L10n.operationLabelTranslate
-        case .simplify: L10n.operationLabelSimplify
-        case .correct: L10n.operationLabelCorrect
-        case .explain: L10n.operationLabelExplain
-        case .summarize: L10n.operationLabelSummarize
-        }
+        return OperationDisplay.title(for: op.operation)
     }
 
     /// View для отображения результата и кнопки закрытия

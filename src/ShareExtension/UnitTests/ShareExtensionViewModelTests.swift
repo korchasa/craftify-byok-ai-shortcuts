@@ -380,6 +380,49 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertEqual(clipboardManager.copiedText, expectedText)
         XCTAssertTrue(viewModel.shouldCloseExtension)
     }
+
+    /// Экран выбора показывает, над чем работаем: вход публикуется во ViewModel
+    /// и подписывается как ссылка, когда пользователь поделился ссылкой
+    func testUpdateInputText_PublishesPreviewAndDetectsURL() {
+        let inventoryManager = InventoryManagerStub()
+        let manager = ShareExtensionManager(
+            inventoryManager: inventoryManager,
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: ProcessingManagerStub(),
+            consentManager: ConsentManagerStub(),
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+
+        viewModel.updateInputText("Договор вступает в силу с момента подписания.")
+        XCTAssertEqual(viewModel.inputText, "Договор вступает в силу с момента подписания.")
+        XCTAssertEqual(viewModel.inputText, manager.inputText)
+        XCTAssertFalse(viewModel.isInputURL)
+
+        viewModel.updateInputText("https://example.com/article")
+        XCTAssertEqual(viewModel.inputText, "https://example.com/article")
+        XCTAssertTrue(viewModel.isInputURL)
+    }
+
+    /// Слишком длинный вход обрезается одинаково и для обработки, и для шапки
+    func testUpdateInputText_TruncatesPreviewLikeProcessingInput() {
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: ProcessingManagerStub(),
+            consentManager: ConsentManagerStub(),
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+
+        let long = String(repeating: "a", count: ShareExtensionViewModelConstants.maxInputTextLength + 100)
+        viewModel.updateInputText(long)
+
+        XCTAssertEqual(viewModel.inputText.count, ShareExtensionViewModelConstants.maxInputTextLength)
+        XCTAssertEqual(viewModel.inputText, manager.inputText)
+    }
 }
 
 /// Stub для медленной обработки

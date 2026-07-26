@@ -8,8 +8,14 @@ public enum ShareExtensionViewConstants {
     public static let topPadding: CGFloat = 24
     /// Отступ снизу для кнопки
     public static let bottomPadding: CGFloat = 24
-    /// Отступ между колонками операций
-    public static let gridSpacing: CGFloat = 16
+    /// Отступ между подписью «над чем работаем» и самим текстом
+    public static let inputPreviewSpacing: CGFloat = 6
+    /// Разрядка букв в подписи «над чем работаем»
+    public static let inputPreviewCaptionKerning: CGFloat = 1.1
+    /// Сколько строк входного текста показываем в шапке
+    public static let inputPreviewLineLimit: Int = 4
+    /// Отступ под шапкой с входным текстом
+    public static let inputPreviewBottomSpacing: CGFloat = 20
     /// Радиус скругления overlay прогресса
     public static let overlayCornerRadius: CGFloat = 16
     /// Прозрачность overlay прогресса
@@ -22,12 +28,6 @@ public enum ShareExtensionViewConstants {
     public static let blurRadius: CGFloat = 2
     /// Отступ над заголовком контента
     public static let contentTopSpacing: CGFloat = 8
-    /// Множитель высоты для кнопки операции
-    public static let operationHeightMultiplier: CGFloat = 1.5
-    /// Масштаб символа операции относительно кружка
-    public static let operationSymbolScale: CGFloat = 0.5
-    /// Минимальная высота кнопки операции
-    public static let operationMinHeight: CGFloat = operationHeightMultiplier * ColorPickerLayoutConstants.circleSize
 }
 
 /// Расширение для уведомлений ShareExtension

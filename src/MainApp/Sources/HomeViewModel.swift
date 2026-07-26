@@ -28,11 +28,17 @@ public final class HomeViewModel: ObservableObject {
         loadInventory()
     }
 
-    public func reorderOperations(fromOffsets: IndexSet, toOffset: Int) {
-        var newOperations = operations
-        newOperations.move(fromOffsets: fromOffsets, toOffset: toOffset)
-        inventoryManager.saveInventory(newOperations)
+    /// Ставит плитку в указанную ячейку сетки. Занятая ячейка меняется местами
+    /// с переносимой — плитку можно положить куда угодно, а не только сдвинуть
+    /// соседей, как это было со списком
+    public func placeOperation(id: UUID, at slot: Int) {
+        inventoryManager.saveInventory(OperationGrid.place(operations, id: id, at: slot))
         loadInventory()
+    }
+
+    /// Первая свободная ячейка — туда встаёт операция, добавленная нижней кнопкой
+    public var firstFreeSlot: Int {
+        OperationGrid.firstFreeSlot(in: operations)
     }
 
     deinit {}
