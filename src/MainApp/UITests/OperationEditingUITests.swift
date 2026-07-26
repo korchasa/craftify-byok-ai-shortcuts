@@ -108,6 +108,121 @@ final class OperationEditingUITests: XCTestCase {
         XCTAssertFalse(app.textViews["edit_prompt_editor"].exists, "Удержание не должно открывать форму правки")
     }
 
+    /// Перетаскивание в уже включённом режиме правки — опора для теста ниже:
+    /// пока этот проходит, провал соседнего означает сорванное удержание,
+    /// а не сломанный перенос вообще
+    func testDragSwapsTilesInEditMode() {
+        let app = launchAndSkipOnboarding()
+        XCTAssertTrue(app.buttons["operation_row_explain"].firstMatch.waitForExistence(timeout: 5))
+        app.buttons["Edit"].firstMatch.tap()
+        XCTAssertTrue(
+            app.buttons["operation_delete_explain"].firstMatch.waitForExistence(timeout: 3),
+            "Режим правки не включился"
+        )
+
+        assertTileSwapsWithNeighbour(in: app)
+    }
+
+    /// Одно удержание должно и включить режим правки, и сразу утащить плитку.
+    /// Раньше перенос появлялся у плитки только вместе с режимом — то есть уже
+    /// под держащим пальцем, — и система его не подхватывала: удержание
+    /// срывалось, а тащить приходилось со второго раза
+    func testLongPressDragMovesTileWithoutSecondPress() {
+        let app = launchAndSkipOnboarding()
+        XCTAssertTrue(app.buttons["operation_row_explain"].firstMatch.waitForExistence(timeout: 5))
+
+        assertTileSwapsWithNeighbour(in: app)
+
+        XCTAssertTrue(
+            app.buttons["operation_delete_explain"].firstMatch.exists,
+            "Удержание не включило режим правки"
+        )
+    }
+
+    /// Перенос на пустую ячейку — вторая половина приёма плиток: занятая ячейка
+    /// меняется местами, пустая просто забирает плитку себе
+    func testDragToEmptyCellMovesTile() {
+        let app = launchAndSkipOnboarding()
+        let source = app.buttons["operation_row_explain"].firstMatch
+        XCTAssertTrue(source.waitForExistence(timeout: 5), "Operation tile not found")
+        app.buttons["Edit"].firstMatch.tap()
+
+        // Дефолтный набор занимает не больше семи ячеек, значит восьмая пуста
+        let emptyCell = app.buttons["operation_add_slot_7"].firstMatch
+        XCTAssertTrue(emptyCell.waitForExistence(timeout: 3), "Режим правки не показал пустую ячейку")
+        let sourceFrame = source.frame
+        let emptyFrame = emptyCell.frame
+
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        origin.withOffset(CGVector(dx: sourceFrame.midX, dy: sourceFrame.midY))
+            .press(
+                forDuration: 1.0,
+                thenDragTo: origin.withOffset(CGVector(dx: emptyFrame.midX, dy: emptyFrame.midY)),
+                withVelocity: .slow,
+                thenHoldForDuration: 1.0
+            )
+
+        // Допуск покрывает наклон дрожания и вынесенный за угол минус
+        XCTAssertEqual(
+            source.frame.midX,
+            emptyFrame.midX,
+            accuracy: 12,
+            "Плитка должна была переехать в пустую ячейку по горизонтали: "
+                + "было x=\(sourceFrame.midX), стало x=\(source.frame.midX), ждали x=\(emptyFrame.midX)"
+        )
+        XCTAssertEqual(
+            source.frame.midY,
+            emptyFrame.midY,
+            accuracy: 12,
+            "Плитка должна была переехать в пустую ячейку по вертикали: "
+                + "было y=\(sourceFrame.midY), стало y=\(source.frame.midY), ждали y=\(emptyFrame.midY)"
+        )
+    }
+
+    /// Тащит плитку «explain» на соседа по ряду и проверяет, что они поменялись
+    /// местами. Плитку адресуем идентификатором: в режиме правки все плитки
+    /// получают одну подпись «переставить», а порядок в дереве меняется
+    /// переносом — элемент, взятый по номеру, указывал бы потом на чужую плитку
+    private func assertTileSwapsWithNeighbour(in app: XCUIApplication, file: StaticString = #filePath, line: UInt = #line) {
+        let source = app.buttons["operation_row_explain"].firstMatch
+        // Сосед по ряду: обмен местами меняет только горизонтальную координату,
+        // а вертикальная сдвигается ещё и от пустого ряда, который добавляет правка
+        let sourceFrame = source.frame
+        let tiles = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH 'operation_row_'"))
+        // Допуски крупные: в режиме правки плитки качаются каждая в своей фазе,
+        // и координаты соседей по ряду совпадают лишь примерно. Ряды при этом
+        // отстоят друг от друга на высоту плитки, а колонки — на её ширину
+        let neighbourFrame = (0 ..< tiles.count)
+            .map { tiles.element(boundBy: $0).frame }
+            .first { abs($0.minY - sourceFrame.minY) < 20 && abs($0.minX - sourceFrame.minX) > 20 }
+        guard let neighbourFrame else {
+            XCTFail("Не нашёлся сосед по ряду для переноса", file: file, line: line)
+            return
+        }
+
+        let origin = app.coordinate(withNormalizedOffset: .zero)
+        origin.withOffset(CGVector(dx: sourceFrame.midX, dy: sourceFrame.midY))
+            .press(
+                forDuration: 1.0,
+                thenDragTo: origin.withOffset(CGVector(dx: neighbourFrame.midX, dy: neighbourFrame.midY)),
+                withVelocity: .slow,
+                thenHoldForDuration: 1.0
+            )
+
+        // Допуск в несколько точек: в режиме правки рамка плитки прирастает
+        // вынесенным за угол минусом и наклоном дрожания, поэтому измеренная
+        // до включения правки координата соседа совпадает не до точки
+        XCTAssertEqual(
+            source.frame.minX,
+            neighbourFrame.minX,
+            accuracy: 8,
+            "Плитка должна была переехать на место соседа: "
+                + "было x=\(sourceFrame.minX), стало x=\(source.frame.minX), ждали x=\(neighbourFrame.minX)",
+            file: file,
+            line: line
+        )
+    }
+
     func testEditModeShowsDeleteBadgeAndRemovesTile() {
         let app = launchAndSkipOnboarding()
 

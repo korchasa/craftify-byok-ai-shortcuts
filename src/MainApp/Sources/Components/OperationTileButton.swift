@@ -10,8 +10,8 @@ public struct OperationTileButton: View {
     private let isEditing: Bool
     private let onEdit: () -> Void
     private let onDelete: () -> Void
-    private let dragItem: (() -> NSItemProvider)?
-    private let onLongPress: (() -> Void)?
+    private let dragItem: () -> NSItemProvider
+    private let onEnterEditing: () -> Void
     /// Ширина ячейки — её знает только сетка, а превью перетаскивания без
     /// родителя растянулось бы во всю доступную ширину
     private let cellWidth: CGFloat
@@ -26,8 +26,8 @@ public struct OperationTileButton: View {
     ///   - isEditing: Включён ли режим правки
     ///   - onEdit: Открыть форму правки
     ///   - onDelete: Запросить удаление операции
-    ///   - dragItem: Груз перетаскивания. `nil` — плитку тащить нельзя
-    ///   - onLongPress: Что делать на удержании плитки. `nil` — ничего
+    ///   - dragItem: Груз перетаскивания
+    ///   - onEnterEditing: Включить режим правки — вызывается на удержании
     ///   - cellWidth: Ширина ячейки сетки — в ней едет превью перетаскивания
     public init(
         operation: InventoryOperation,
@@ -36,8 +36,8 @@ public struct OperationTileButton: View {
         onEdit: @escaping () -> Void,
         onDelete: @escaping () -> Void,
         cellWidth: CGFloat,
-        dragItem: (() -> NSItemProvider)? = nil,
-        onLongPress: (() -> Void)? = nil
+        dragItem: @escaping () -> NSItemProvider,
+        onEnterEditing: @escaping () -> Void
     ) {
         self.operation = operation
         self.palette = palette
@@ -46,7 +46,7 @@ public struct OperationTileButton: View {
         self.onDelete = onDelete
         self.cellWidth = cellWidth
         self.dragItem = dragItem
-        self.onLongPress = onLongPress
+        self.onEnterEditing = onEnterEditing
     }
 
     /// Наклон плитки в градусах: ноль вне правки и при «Уменьшении движения»
@@ -108,26 +108,27 @@ public struct OperationTileButton: View {
     /// Перетаскивание висит на самой плитке, а не на ZStack вместе с бейджем.
     /// Систему интересует именно источник переноса: при «приподнятии» она
     /// снимает его как есть, и вместе с ZStack в снимок попадал бы вынесенный
-    /// за угол минус, а вокруг — непрозрачный прямоугольник по границам снимка
-    @ViewBuilder
+    /// за угол минус, а вокруг — непрозрачный прямоугольник по границам снимка.
+    ///
+    /// Перенос включён всегда, а не только в режиме правки. Раньше `.onDrag`
+    /// появлялся вместе с режимом — то есть ровно в тот момент, когда палец уже
+    /// держал плитку. Система вешает распознаватель переноса на готовое
+    /// представление и не подхватывает уже идущее касание, поэтому удержание
+    /// обрывалось и тащить приходилось со второго раза
     private var draggableTile: some View {
-        if let dragItem {
-            tileButton
-                .contentShape(.dragPreview, previewShape)
-                .onDrag(dragItem) { dragPreview }
-        } else if let onLongPress {
-            // Вне режима правки удержание его включает — как на домашнем экране
-            // iOS, где иконки начинают дрожать, не дожидаясь отдельной кнопки.
-            // Жест именно одновременный: собственный жест кнопки забирает нажатие
-            // себе, и обычный `onLongPressGesture` поверх неё не доходит
-            tileButton
-                .simultaneousGesture(
-                    LongPressGesture(minimumDuration: OperationTileConstants.longPressToEditDuration)
-                        .onEnded { _ in onLongPress() }
-                )
-        } else {
-            tileButton
-        }
+        tileButton
+            .contentShape(.dragPreview, previewShape)
+            .onDrag(startDrag) { dragPreview }
+    }
+
+    /// Поднимает плитку и заодно включает режим правки — как на домашнем экране
+    /// iOS, где иконки начинают дрожать от того же удержания, которым их тащат.
+    /// Система зовёт это на «приподнятии», то есть после удержания и до первого
+    /// движения пальца: отпустив палец сразу, пользователь просто остаётся в
+    /// режиме правки
+    private func startDrag() -> NSItemProvider {
+        onEnterEditing()
+        return dragItem()
     }
 
     /// Кнопка-плитка без бейджа

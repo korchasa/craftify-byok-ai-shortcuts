@@ -11,7 +11,9 @@ public struct HomeView: View {
     @State private var editingIndex: Int? = nil
     @Environment(\.colorScheme) private var colorScheme
     @State private var editMode: EditMode = .inactive
-    /// Перетаскиваемая операция; nil — перетаскивания нет
+    /// Поднятая с места операция; nil — плитку никто не поднимал
+    @State private var dragSourceID: UUID? = nil
+    /// Операция, которая едет над сеткой; nil — перетаскивания нет
     @State private var draggingID: UUID? = nil
     /// Ячейка под пальцем: её подсвечиваем, чтобы было видно, куда ляжет плитка
     @State private var highlightedSlot: Int? = nil
@@ -193,28 +195,32 @@ public struct HomeView: View {
         }
     }
 
-    /// Плитка операции. Перетаскивание включается только в режиме правки —
-    /// вне его тап должен открывать форму, а не начинать перенос
-    @ViewBuilder
+    /// Плитка операции. Перенос и приём плиток навешены всегда, а не только в
+    /// режиме правки: модификаторы, появляющиеся вместе с режимом, перестраивали
+    /// плитку прямо под пальцем и рвали начатое удержание. Тап при этом
+    /// по-прежнему открывает форму — за это отвечает `beginEditing`
     private func operationTile(_ operation: InventoryOperation, at slot: Int, cellWidth: CGFloat) -> some View {
-        let isEditing = editMode == .active
-        let tile = OperationTileButton(
+        OperationTileButton(
             operation: operation,
             palette: palette,
-            isEditing: isEditing,
+            isEditing: editMode == .active,
             onEdit: { beginEditing(operation) },
             onDelete: { pendingDeletion = operation },
             cellWidth: cellWidth,
-            dragItem: isEditing ? { beginDrag(of: operation) } : nil,
-            onLongPress: isEditing ? nil : { withAnimation { editMode = .active } }
+            dragItem: { beginDrag(of: operation) },
+            onEnterEditing: { enterEditing() }
         )
-        if isEditing {
-            tile
-                .opacity(draggingID == operation.id ? OperationTileConstants.settingOpacity : 1)
-                .onDrop(of: [UTType.text], delegate: dropDelegate(for: slot))
-        } else {
-            tile
-        }
+        .opacity(draggingID == operation.id ? OperationTileConstants.settingOpacity : 1)
+        .onDrop(of: [UTType.text], delegate: dropDelegate(for: slot))
+    }
+
+    /// Включает режим правки, если он ещё не включён. Проверяем актуальный
+    /// `editMode` экрана, а не значение, доставшееся плитке: удержание зовёт
+    /// это и с уже включённым режимом, а лишний `withAnimation` перезапускал бы
+    /// раскладку посреди переноса
+    private func enterEditing() {
+        guard editMode != .active else { return }
+        withAnimation { editMode = .active }
     }
 
     /// Открывает форму добавления для конкретной ячейки
@@ -246,9 +252,12 @@ public struct HomeView: View {
 
     /// Начинает перетаскивание. Сам груз системе не нужен — операция живёт в
     /// состоянии экрана, — но без зарегистрированного представления перенос
-    /// не стартует
+    /// не стартует.
+    /// Бледнеть плитка начинает не здесь, а когда перенос дойдёт до ячейки:
+    /// «приподнятие» бывает и без переноса — пользователь просто удержал плитку,
+    /// чтобы включить правку, — и такая плитка осталась бы бледной навсегда
     private func beginDrag(of operation: InventoryOperation) -> NSItemProvider {
-        draggingID = operation.id
+        dragSourceID = operation.id
         let provider = NSItemProvider()
         provider.registerDataRepresentation(
             forTypeIdentifier: UTType.plainText.identifier,
@@ -263,6 +272,7 @@ public struct HomeView: View {
     private func dropDelegate(for slot: Int) -> OperationDropDelegate {
         OperationDropDelegate(
             slot: slot,
+            dragSourceID: $dragSourceID,
             draggingID: $draggingID,
             highlightedSlot: $highlightedSlot,
             onPlace: { id, destination in viewModel.placeOperation(id: id, at: destination) }

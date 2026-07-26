@@ -11,4 +11,4 @@
 - [REF:fr:ux.share-input-preview | FR-UX.SHARE-INPUT-PREVIEW] — Shared text or link shown above the transformation picker — [x]
 - [REF:fr:ux.sheet-height | FR-UX.SHEET-HEIGHT] — Share-extension sheet fits content and grows for results; iPad popover width fix — [ ]
 - [REF:fr:ux.staged-progress | FR-UX.STAGED-PROGRESS] — Staged progress messages (loading page / asking model) in the extension — [ ]
-- [REF:fr:ux.tile-arrange | FR-UX.TILE-ARRANGE] — Home screen as a grid of cells: any tile on any cell, gaps kept, "+ Add" on empty cells, wiggle and minus badge in edit mode — [x]
+- [REF:fr:ux.tile-arrange | FR-UX.TILE-ARRANGE] — Home screen as a grid of cells: any tile on any cell, gaps kept, "+ Add" on empty cells, wiggle and minus badge in edit mode, one hold both arranges and drags — [x]

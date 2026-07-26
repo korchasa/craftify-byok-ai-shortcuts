@@ -36,7 +36,4 @@ public enum OperationTileConstants {
     public static let emptyCellBorderOpacity: Double = 0.35
     /// Подсветка ячейки, над которой держат перетаскиваемую плитку
     public static let dropHighlightOpacity: Double = 0.18
-    /// Сколько держать плитку, чтобы включился режим правки. Столько же
-    /// система ждёт на удержании иконки домашнего экрана
-    public static let longPressToEditDuration: Double = 0.5
 }
