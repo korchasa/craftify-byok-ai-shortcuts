@@ -92,3 +92,5 @@ check_url.sh
 
 # Local secrets
 .env
+
+.claude
