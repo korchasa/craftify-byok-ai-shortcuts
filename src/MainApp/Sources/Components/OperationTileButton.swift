@@ -18,8 +18,6 @@ public struct OperationTileButton: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     /// Фаза качания: пока false — плитка отклонена в одну сторону, потом в другую
     @State private var isSwungForward = false
-    /// Удержание уже сработало, и отпускание пальца не должно открыть форму правки
-    @State private var didLongPress = false
 
     /// Создаёт плитку операции для главного экрана
     /// - Parameters:
@@ -104,9 +102,6 @@ public struct OperationTileButton: View {
         .onAppear { isSwungForward = isEditing }
         .onChange(of: isEditing) { newValue in
             isSwungForward = newValue
-            // Палец мог уехать после удержания, и кнопка своего нажатия не получила.
-            // Смена режима — надёжная точка, где флаг перестаёт быть нужен
-            didLongPress = false
         }
     }
 
@@ -128,10 +123,7 @@ public struct OperationTileButton: View {
             tileButton
                 .simultaneousGesture(
                     LongPressGesture(minimumDuration: OperationTileConstants.longPressToEditDuration)
-                        .onEnded { _ in
-                            didLongPress = true
-                            onLongPress()
-                        }
+                        .onEnded { _ in onLongPress() }
                 )
         } else {
             tileButton
@@ -143,17 +135,9 @@ public struct OperationTileButton: View {
         // В режиме правки тап ничего не открывает, но кнопку не выключаем:
         // выключенная бледнеет, а плитка должна оставаться такой же яркой,
         // как иконка приложения на домашнем экране.
-        // Отпускание пальца после удержания — не тап: кнопка всё равно получает
-        // своё нажатие, и без флага удержание заодно открывало бы форму правки
-        Button(action: {
-            if didLongPress {
-                didLongPress = false
-                return
-            }
-            if !isEditing {
-                onEdit()
-            }
-        }) {
+        // Открывать ли форму, решает `onEdit` на стороне экрана: наше `isEditing`
+        // к моменту отпускания пальца бывает устаревшим, а экран знает режим точно
+        Button(action: onEdit) {
             tile
         }
         .buttonStyle(PlainButtonStyle())

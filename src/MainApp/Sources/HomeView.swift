@@ -223,8 +223,16 @@ public struct HomeView: View {
         showAddOperation = true
     }
 
-    /// Открывает форму правки для выбранной операции
+    /// Открывает форму правки для выбранной операции.
+    /// Решение «открывать или нет» принимает экран, а не плитка: плитке режим
+    /// достаётся обычным значением и к моменту отпускания пальца успевает
+    /// устареть, а `editMode` здесь — состояние экрана и всегда актуально.
+    /// Так удержание, включившее режим правки, не открывает заодно и форму.
+    /// Сравниваем именно с `.active`: у режима есть ещё промежуточное значение
+    /// `.transient`, которое SwiftUI ставит сам, и «не .inactive» отсекало бы
+    /// обычный тап
     private func beginEditing(_ operation: InventoryOperation) {
+        guard editMode != .active else { return }
         editingIndex = viewModel.operations.firstIndex { $0.id == operation.id }
         editOperationViewModel = operation
     }
