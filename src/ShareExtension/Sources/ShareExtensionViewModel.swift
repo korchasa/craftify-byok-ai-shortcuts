@@ -13,8 +13,6 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public var operations: [InventoryOperation] = []
     /// Текст (или ссылка), над которым работаем — показывается в шапке экрана выбора
     @Published public private(set) var inputText: String = ""
-    /// Замеренная высота контента (PreferenceKey из ShareExtensionView) для адаптивного detent
-    @Published public var contentHeight: CGFloat = 0
     @Published public var isProcessing: Bool = false
     @Published public var errorMessage: String? = nil
     @Published public var displayResult: String? = nil

@@ -127,6 +127,22 @@ public final class OperationGridTests: XCTestCase {
         XCTAssertEqual(OperationGrid.displayOrder(cells, columns: 2).map(\.slot), [2, 3, 0, 1])
     }
 
+    /// Пустые ряды уходят, дырки внутри ряда остаются: расширение показывает
+    /// только подходящие входу операции и не должно зиять пустыми рядами
+    public func testWithoutEmptyRowsDropsRowsWithNoOperations() {
+        let first = makeOperation(.translate, slot: 1)
+        let second = makeOperation(.simplify, slot: 4)
+        let cells = OperationGrid.cells(for: [first, second], minimumCells: 0)
+
+        let trimmed = OperationGrid.withoutEmptyRows(cells, columns: 2)
+
+        XCTAssertEqual(trimmed.count, 4)
+        XCTAssertNil(trimmed[0])
+        XCTAssertEqual(trimmed[1]?.id, first.id)
+        XCTAssertEqual(trimmed[2]?.id, second.id)
+        XCTAssertNil(trimmed[3])
+    }
+
     /// Первая свободная ячейка — для кнопки «Добавить» внизу экрана
     public func testFirstFreeSlotSkipsOccupiedCells() {
         let first = makeOperation(.translate, slot: 0)

@@ -13,11 +13,11 @@
 - **Acceptance:** `run::check_localization (script step, key-set diff per bundle)` | `./run check`
 - **Status:** [x]
 
-### FR-UX.SHEET-HEIGHT: Adaptive share-extension sheet height [ANC:fr:ux.sheet-height]
+### FR-UX.SHEET-HEIGHT: Full-height share-extension sheet [ANC:fr:ux.sheet-height]
 
-- **Description:** Share-extension sheet fits its content (operations grid) and grows to `.large()` when a result is displayed; iPad popover is ~360–400pt wide, not 180pt.
+- **Description:** The share-extension sheet takes the whole screen: the shared text sits on the backdrop and the operations card is pinned to the bottom, mirroring the main screen where the tiles sit at the bottom. iPad popover is ~360–400pt wide, not 180pt, and takes a fixed share of the screen height.
 - **Tasks:** [REF:task:2026-07-ux-improvement-backlog | ux-improvement-backlog]
-- **Acceptance:** `src/ShareExtension/UnitTests/ShareExtensionViewHeightTests.swift::testDetentGrowsWithOperationsAndResult` | `./run check`
+- **Acceptance:** `src/ShareExtension/UnitTests/ShareExtensionViewHeightTests.swift::testPopoverHeightIsShareOfScreen` | `./run check`
 - **Status:** [x]
 
 ### FR-UX.DYNAMIC-TYPE: Dynamic Type support [ANC:fr:ux.dynamic-type]
@@ -71,7 +71,7 @@
 
 ### FR-UX.SHARE-INPUT-PREVIEW: Shared text visible above the transformation picker [ANC:fr:ux.share-input-preview]
 
-- **Description:** Before choosing an operation, the share extension shows the text (or link) it is about to transform at the top of the sheet, under a localized uppercase caption that distinguishes selected text from a shared link. The preview is clipped to a few lines so the sheet stays compact and the operations grid stays visible.
+- **Description:** Before choosing an operation, the share extension shows the text (or link) it is about to transform at the top of the sheet, under a localized uppercase caption that distinguishes selected text from a shared link. The preview is not clipped: it lays out in full on the backdrop above the operations card and scrolls when it does not fit.
 - **Tasks:** [REF:task:2026-07-operation-tiles-on-both-screens | operation-tiles-on-both-screens]
 - **Acceptance:** `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testUpdateInputText_PublishesPreviewAndDetectsURL` | `./run check`
 - **Status:** [x]

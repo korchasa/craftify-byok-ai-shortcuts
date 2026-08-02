@@ -4,6 +4,8 @@ import SwiftUI
 public protocol ShareExtensionColorPaletteProviding: ColorPaletteProviding {
     /// Цвет фона основного экрана
     func background() -> Color
+    /// Цвет подложки под карточкой операций — слой, на котором лежит текст
+    func backdrop() -> Color
     /// Цвет основного текста
     func primaryText() -> Color
     /// Цвет вторичного текста

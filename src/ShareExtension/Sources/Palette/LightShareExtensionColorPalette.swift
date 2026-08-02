@@ -47,6 +47,10 @@ public struct LightShareExtensionColorPalette: ShareExtensionColorPaletteProvidi
         Color(hex: "#ffffff")
     }
 
+    public func backdrop() -> Color {
+        Color(hex: "#f2f2f7")
+    }
+
     public func primaryText() -> Color {
         Color(hex: "#000000")
     }

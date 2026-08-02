@@ -12,8 +12,6 @@ public enum ShareExtensionViewConstants {
     public static let inputPreviewSpacing: CGFloat = 6
     /// Разрядка букв в подписи «над чем работаем»
     public static let inputPreviewCaptionKerning: CGFloat = 1.1
-    /// Сколько строк входного текста показываем в шапке
-    public static let inputPreviewLineLimit: Int = 4
     /// Отступ под шапкой с входным текстом
     public static let inputPreviewBottomSpacing: CGFloat = 20
     /// Радиус скругления overlay прогресса
@@ -26,8 +24,8 @@ public enum ShareExtensionViewConstants {
     public static let popoverWidth: CGFloat = 380
     /// Радиус blur при обработке
     public static let blurRadius: CGFloat = 2
-    /// Отступ над заголовком контента
-    public static let contentTopSpacing: CGFloat = 8
+    /// Скругление верхних углов карточки с операциями
+    public static let cardCornerRadius: CGFloat = 24
 }
 
 /// Расширение для уведомлений ShareExtension

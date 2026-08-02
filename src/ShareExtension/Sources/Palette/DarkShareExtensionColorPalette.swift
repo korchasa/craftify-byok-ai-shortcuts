@@ -47,6 +47,10 @@ public struct DarkShareExtensionColorPalette: ShareExtensionColorPaletteProvidin
         Color(hex: "#17171c")
     }
 
+    public func backdrop() -> Color {
+        Color(hex: "#000000")
+    }
+
     public func primaryText() -> Color {
         Color(hex: "#ffffff")
     }

@@ -91,6 +91,25 @@ public enum OperationGrid {
         }
     }
 
+    /// Выбрасывает ряды, где нет ни одной операции. Дырки внутри ряда остаются:
+    /// они держат плитки на своих местах. Нужно расширению — там показывают
+    /// только операции, подходящие входу, и пустые ряды раздували бы карточку.
+    /// - Parameters:
+    ///   - cells: Ячейки в порядке номеров
+    ///   - columns: Число колонок сетки
+    /// - Returns: Те же ячейки без целиком пустых рядов
+    public static func withoutEmptyRows(_ cells: [InventoryOperation?], columns: Int) -> [InventoryOperation?] {
+        guard columns > 0 else { return [] }
+        let rowCount = Int((Double(cells.count) / Double(columns)).rounded(.up))
+        return (0 ..< rowCount).flatMap { row -> [InventoryOperation?] in
+            let rowCells = (0 ..< columns).map { column -> InventoryOperation? in
+                let slot = row * columns + column
+                return slot < cells.count ? cells[slot] : nil
+            }
+            return rowCells.contains(where: { $0 != nil }) ? rowCells : []
+        }
+    }
+
     /// Первая свободная ячейка — туда кладёт операцию кнопка «Добавить» внизу экрана
     /// - Parameter operations: Операции инвентаря
     /// - Returns: Номер свободной ячейки

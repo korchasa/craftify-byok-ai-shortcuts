@@ -1,4 +1,3 @@
-import Combine
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
@@ -6,7 +5,6 @@ import UniformTypeIdentifiers
 /// NSExtensionPrincipalClass для Share Extension
 public final class ShareExtensionViewController: UIViewController {
     private var hostingController: UIHostingController<ShareExtensionView>?
-    private var cancellables = Set<AnyCancellable>()
 
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -46,10 +44,12 @@ public final class ShareExtensionViewController: UIViewController {
         ])
         hosting.didMove(toParent: self)
         self.hostingController = hosting
-        // Ограничение высоты через sheet detents (iOS 15+)
+        // Шторка занимает экран целиком: текст лежит на подложке, а карточка с
+        // операциями прижата к низу — свою скруглённую кромку она рисует сама
         if let sheet = self.sheetPresentationController {
-            sheet.prefersGrabberVisible = true
-            sheet.preferredCornerRadius = ShareExtensionViewConstants.overlayCornerRadius
+            sheet.detents = [.large()]
+            sheet.largestUndimmedDetentIdentifier = .large
+            sheet.prefersGrabberVisible = false
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
         } else if traitCollection.userInterfaceIdiom == .pad {
             // Для iPad — popover
@@ -60,52 +60,23 @@ public final class ShareExtensionViewController: UIViewController {
                 pop.permittedArrowDirections = []
             }
         }
-        // Высота следует за контентом: сетка операций подгоняется, результат разворачивает шторку
-        Publishers.CombineLatest3(viewModel.$contentHeight, viewModel.$displayResult, viewModel.$operations)
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] contentHeight, displayResult, operations in
-                self?.updatePresentationHeight(
-                    contentHeight: contentHeight,
-                    hasResult: displayResult != nil,
-                    operationsCount: operations.count
-                )
-            }
-            .store(in: &cancellables)
+        updatePopoverSize()
         // Load the input text from the extension context
         loadInputText()
         // Подписка на закрытие
         NotificationCenter.default.addObserver(self, selector: #selector(closeExtension), name: .closeShareExtension, object: nil)
     }
 
-    /// Подгоняет высоту шторки/popover под контент; при показе результата разворачивает на .large()
-    private func updatePresentationHeight(contentHeight: CGFloat, hasResult: Bool, operationsCount: Int) {
-        let screenHeight = UIScreen.main.bounds.height
-        let detentHeight = ShareExtensionViewHeight.detent(
-            measuredContentHeight: contentHeight,
-            operationsCount: operationsCount,
-            hasResult: hasResult,
-            screenHeight: screenHeight
+    /// На iPad расширение живёт в popover: там нет шторки, и размер задаём сами
+    private func updatePopoverSize() {
+        guard sheetPresentationController == nil else { return }
+        let width = traitCollection.userInterfaceIdiom == .pad
+            ? ShareExtensionViewConstants.popoverWidth
+            : view.bounds.width
+        preferredContentSize = CGSize(
+            width: width,
+            height: ShareExtensionViewHeight.maxHeight(screenHeight: UIScreen.main.bounds.height)
         )
-        if let sheet = sheetPresentationController {
-            sheet.animateChanges {
-                if let detentHeight {
-                    let detent = UISheetPresentationController.Detent.custom(identifier: .init("contentHeight")) { _ in
-                        detentHeight
-                    }
-                    sheet.detents = [detent]
-                    sheet.largestUndimmedDetentIdentifier = detent.identifier
-                } else {
-                    sheet.detents = [.large()]
-                    sheet.largestUndimmedDetentIdentifier = .large
-                }
-            }
-        } else {
-            let width = traitCollection.userInterfaceIdiom == .pad
-                ? ShareExtensionViewConstants.popoverWidth
-                : view.bounds.width
-            let height = detentHeight ?? ShareExtensionViewHeight.maxHeight(screenHeight: screenHeight)
-            preferredContentSize = CGSize(width: width, height: height)
-        }
     }
 
     /// Loads the shared text or URL from the extension context and updates the view model
