@@ -54,6 +54,7 @@
 - AppSettingsManager логирует все изменения настроек через LogManagerShared.
 
 ## Testing Strategy
+- Unit tests cannot resolve user-facing strings: `Bundle(for:)` inside a unit-test target has no compiled `Localizable.strings`, so `UserFacingErrorKey.localized(in:)` returns the key itself and an assertion on the translated text fails even for a long-existing key. Assert message/advice **keys** instead; that the keys have translations is guaranteed by `check_localization` in `./run check`, which compares every locale against `en` in all three bundles and verifies that every `UserFacingErrorKey` raw value has a string in the extension's `en.lproj`.
 - Unit tests for all managers and models.
 - UI tests for all main scenarios, including Explain and Summarize (display) and clipboard operations.
 - Checks that Explain and Summarize display the result, and other operations copy to the clipboard.

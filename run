@@ -340,6 +340,23 @@ function check_localization() {
       failed=1
     done
   done
+  # Ключ, объявленный в коде, но отсутствующий в строках, не ловится сверкой локалей между собой:
+  # localizedString(forKey:value:nil) молча вернёт сам ключ, и пользователь увидит его на экране.
+  local enum_file="src/Common/Sources/Models/UserFacingErrorKey.swift"
+  local ext_strings="src/ShareExtension/Resources/en.lproj/Localizable.strings"
+  local key
+  if [[ -f "$enum_file" && -f "$ext_strings" ]]; then
+    while read -r key; do
+      [[ -z "$key" ]] && continue
+      if ! grep -q "^\"$key\"" "$ext_strings"; then
+        echo -e "${RED}UserFacingErrorKey.$key has no string in $ext_strings${NC}"
+        failed=1
+      fi
+    done < <(grep -oE 'case [A-Za-z]+ = "[a-z0-9_]+"' "$enum_file" | grep -oE '"[a-z0-9_]+"' | tr -d '"')
+  else
+    echo -e "${RED}Missing $enum_file or $ext_strings${NC}"
+    failed=1
+  fi
   if [[ $failed -ne 0 ]]; then
     echo -e "${RED}Error: localization key sets diverge!${NC}"
     exit 1
