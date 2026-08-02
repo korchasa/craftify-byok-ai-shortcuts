@@ -1,29 +1,69 @@
 name: CI
 
+# Checks only. This workflow builds, lints and tests; it never signs, packages
+# or uploads anything — that happens outside this repository.
 on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# A re-push to the same ref makes the previous run obsolete.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  gitleaks:
-    name: Secret scan (gitleaks)
-    runs-on: ubuntu-latest
+  check:
+    name: Checks
+    # Pinned, not macos-latest: the project is developed against the Xcode that
+    # ships with this image.
+    runs-on: macos-26
+    # The suite builds every target and runs the tests; bound the job so a hang
+    # fails instead of idling.
+    timeout-minutes: 60
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
-          fetch-depth: 0 # full history so gitleaks scans every commit
+          # gitleaks scans the whole history, not just the tip commit.
+          fetch-depth: 0
 
-      - name: Install gitleaks
+      # periphery is deliberately absent: its dead-code scan needs a second full
+      # index build, and `lint` skips it with a warning when it is missing.
+      - name: Install CLI tools
+        run: brew install tuist swiftlint swiftformat swiftgen gitleaks
+
+      - name: Toolchain
         run: |
-          VERSION=8.30.1
-          curl -sSL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" \
-            | sudo tar -xz -C /usr/local/bin gitleaks
-          gitleaks version
+          swift --version
+          tuist version
+          swiftformat --version
+          swiftlint version
 
-      # Same invocation as `./run check` (secret_scan) so CI and local agree.
-      - name: Scan for secrets
-        run: gitleaks detect --source . --redact --no-banner
+      - name: Pick a simulator
+        # `run` defaults to a UDID from a developer's own machine, which does not
+        # exist here — the build/test destination has to be resolved at run time.
+        run: |
+          udid=$(xcrun simctl list devices available --json | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          print(next(d["udid"] for runtime in sorted(devices) for d in devices[runtime]
+                     if d["name"].startswith("iPhone")))')
+          echo "Using simulator $udid"
+          echo "SIMULATOR_ID=$udid" >> "$GITHUB_ENV"
+          echo "TEST_SIMULATOR_ID=$udid" >> "$GITHUB_ENV"
+
+      # The same command a developer runs locally, minus the simulator smoke run:
+      # gitleaks, generate, format, lint, localization parity, build + tests,
+      # comment scan.
+      - name: ./run ci
+        run: ./run ci
+
+      # `fmt` and `lint --fix` rewrite files in place, so they can never fail on
+      # a formatting issue — a clean tree afterwards is what proves the committed
+      # sources were already formatted.
+      - name: Formatter left no changes
+        run: git diff --exit-code

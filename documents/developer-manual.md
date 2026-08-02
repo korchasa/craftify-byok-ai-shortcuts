@@ -23,8 +23,10 @@
 - Periphery in lint
 
 ## Deploy
-- Release/publish: Fastlane
-- Signing/provision: Fastlane match
+- This repository builds and checks the app. It does not sign or upload it.
+- `./run dist`: build an UNSIGNED archive at `build/Craftify.xcarchive`.
+- Signing, packaging and upload to App Store Connect all happen outside this repository.
+  The archive path is part of that contract, so do not move it.
 
 ## Timeout Test
 - Only in ShareExtensionViewModel (30s, override in tests)
@@ -64,5 +66,5 @@
    - If the build never appears, check **App Store Connect ▸ Activity ▸ All Builds** for errors.
    - Common issues: outdated certificates, missing export compliance, or entitlements mismatch.
 
-> This manual path is intended for quick, ad-hoc TestFlight updates. CI/CD with Fastlane remains the canonical flow for repeatable releases.
+> This manual path is intended for quick, ad-hoc TestFlight updates, and it signs the build on this machine. The regular flow is the unsigned archive from `./run dist`, which is signed and uploaded outside this repository.
 

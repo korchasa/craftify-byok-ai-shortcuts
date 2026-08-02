@@ -31,13 +31,15 @@ This will install via Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
 - `./run init` — install all CLI tools
 - `./run sim` — build and run in simulator
 - `./run icons` — regenerate app icons (MainApp Icon Composer glyph + ShareExtension appiconset)
-- `./run check` — run all checks
+- `./run check` — run all checks, then install the app on the simulator and tail its log
+- `./run ci` — the same checks without the simulator step, so the command exits on its own
 - `./run clean` — clean build artifacts
 - `./run logs` — view logs
 
 ## CI/CD
-- All checks and builds are automated via GitHub Actions (`.github/workflows/ci.yml`)
-- Checking Share Extension size and test coverage ≥ 80% are mandatory for successful build
+- GitHub Actions runs `./run ci` on every pull request and on `main` (`.github/workflows/ci.yml`): secret scan, project generation, format, lint, localization parity, build and unit tests
+- Checks only. This repository never signs or uploads the app — `./run dist` produces an unsigned archive, and signing, packaging and delivery to App Store Connect happen outside it
+- Share Extension size and test coverage ≥ 80% are project targets, not gates — nothing enforces them automatically yet
 
 ## Architecture
 - Modules: MainApp, ShareExtension, Common (SPM)

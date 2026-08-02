@@ -31,11 +31,12 @@ Usage: $SCRIPT_NAME <command> [args...]
 Commands:
   clean          Full clean: deletion of all builds, caches, logs, and temporary files
   sim                 Build MainApp for simulator
-  dist                Build an UNSIGNED App Store archive (build/Craftify.xcarchive) for the factory
+  dist                Build an UNSIGNED App Store archive (build/Craftify.xcarchive) for external signing
   generate            Run SwiftGen and Tuist
   init                Install CLI tools
   logs                Stream MainApp logs
   check               Run all checks (gitleaks, generate, fmt, lint, analyze, build, test, comment-scan, deploy_simulator)
+  ci                  Same checks minus the simulator run — what the CI workflow executes
   test <test_id>      Run a test by id (e.g. MainAppUnitTests/TestExample). Always uses All plan.
   icons               Render app icons: ShareExtension AppIcon.appiconset PNGs from documents/icon.svg, and the MainApp Icon Composer glyph (AppIcon.icon) from documents/icon-glyph.svg
   help                Show this help
@@ -156,10 +157,9 @@ function size_report() {
 }
 
 function dist() {
-  # UNSIGNED App Store archive for the App Store Factory. The factory signs it
-  # later (xcodebuild -exportArchive) — NO signing happens here. Output path is
-  # exactly what the factory's apps.yml `build.artifact` expects:
-  # build/Craftify.xcarchive.
+  # UNSIGNED App Store archive. Signing, packaging and upload all happen outside
+  # this repository — NO signing happens here. The output path is part of that
+  # contract and must stay exactly build/Craftify.xcarchive.
   #
   # Regenerate the Tuist project from scratch: drop the generated workspace/project
   # (both gitignored) so `tuist generate` can't trip on a stale Package.resolved
@@ -169,7 +169,7 @@ function dist() {
   _start_section "Archiving MainApp for App Store (unsigned)"
   rm -rf build/Craftify.xcarchive
   # PATH=/usr/bin so xcodebuild's copy phase resolves system rsync, not the
-  # Homebrew one (the factory hits the same issue on -exportArchive).
+  # Homebrew one (the same problem shows up later, on -exportArchive).
   PATH=/usr/bin:$PATH xcodebuild archive \
     -workspace Craftify.xcworkspace \
     -scheme MainApp \
@@ -248,9 +248,12 @@ function fast_check_build_analyze_test() {
     -destination "$DEST_TEST_SIMULATOR" \
     -derivedDataPath "$DERIVED_DATA" \
     -quiet
-  # Test
+  # Test. --no-selective-testing is not optional: without it tuist skips targets
+  # it considers unchanged and exits 0 reporting "has no tests to run, finishing
+  # early", so the gate goes green having run nothing.
   tuist test AllTests \
     --configuration Debug \
+    --no-selective-testing \
     -- \
     -sdk iphonesimulator \
     -destination "$DEST_TEST_SIMULATOR" \
@@ -372,6 +375,20 @@ function secret_scan() {
   fi
   gitleaks detect --source . --redact --no-banner
   _end_section
+}
+
+# Every check that needs no Simulator UI and no interactive log stream, in the
+# order that fails cheapest first. `check` runs this and then boots the app on a
+# simulator; `ci` runs exactly this, so a green CI run means the same thing a
+# green local `check` does, minus the simulator smoke run.
+function check_core() {
+  secret_scan || { echo -e "${RED}===CHECK_FAILED=== (gitleaks)${NC}"; exit 1; }
+  generate || { echo -e "${RED}===CHECK_FAILED=== (generate)${NC}"; exit 1; }
+  fmt || { echo -e "${RED}===CHECK_FAILED=== (fmt)${NC}"; exit 1; }
+  lint || { echo -e "${RED}===CHECK_FAILED=== (lint)${NC}"; exit 1; }
+  check_localization || { echo -e "${RED}===CHECK_FAILED=== (localization)${NC}"; exit 1; }
+  fast_check_build_analyze_test || { echo -e "${RED}===CHECK_FAILED=== (test)${NC}"; exit 1; }
+  comment_scan || { echo -e "${RED}===CHECK_FAILED=== (comment_scan)${NC}"; exit 1; }
 }
 
 function _test_scheme() {
@@ -526,15 +543,10 @@ case "$CMD" in
     _test_scheme AllTests --test-targets "$test_id" --no-selective-testing
     ;;
   check)
-    secret_scan || { echo -e "${RED}===CHECK_FAILED=== (gitleaks)${NC}"; exit 1; }
-    generate || { echo -e "${RED}===CHECK_FAILED=== (generate)${NC}"; exit 1; }
-    fmt || { echo -e "${RED}===CHECK_FAILED=== (fmt)${NC}"; exit 1; }
-    lint || { echo -e "${RED}===CHECK_FAILED=== (lint)${NC}"; exit 1; }
-    check_localization || { echo -e "${RED}===CHECK_FAILED=== (localization)${NC}"; exit 1; }
-    fast_check_build_analyze_test || { echo -e "${RED}===CHECK_FAILED=== (test)${NC}"; exit 1; }
-    comment_scan || { echo -e "${RED}===CHECK_FAILED=== (comment_scan)${NC}"; exit 1; }
+    check_core
     deploy_simulator || { echo -e "${RED}===CHECK_FAILED=== (deploy_simulator)${NC}"; exit 1; }
     ;;
+  ci) check_core ;;
   l10n) check_localization "$@" ;;
   icons) icons "$@" ;;
   help|*) usage ;;
