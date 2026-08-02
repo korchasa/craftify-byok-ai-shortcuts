@@ -82,10 +82,24 @@ function clean() {
 }
 
 function generate() {
+  # SwiftGen does not create its own output directories, and a missing one is
+  # reported as an error while the process still exits 0 — so on a fresh clone
+  # (CI, or after a full clean) the strings enum is silently never written and
+  # the failure only surfaces much later as "cannot find 'L10n' in scope". Every
+  # output directory in swiftgen.yml must be listed here.
   mkdir -p src/MainApp/Resources/Generated
+  mkdir -p src/ShareExtension/Resources/Generated
   mkdir -p src/Common/Generated
   _start_section "Running SwiftGen"
   swiftgen "$@"
+  local generated
+  for generated in src/MainApp/Resources/Generated/Strings.swift \
+                   src/ShareExtension/Resources/Generated/Strings.swift; do
+    [[ -s "$generated" ]] || {
+      echo -e "${RED}SwiftGen wrote no $generated — check swiftgen.yml against the mkdir list above${NC}"
+      exit 1
+    }
+  done
   _end_section
   _start_section "Running Tuist generate"
   tuist generate "$@" --no-open
