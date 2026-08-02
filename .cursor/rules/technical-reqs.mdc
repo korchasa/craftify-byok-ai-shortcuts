@@ -16,5 +16,5 @@ alwaysApply: true
 - No manual setup in Xcode's GUI.
 - All settings must be defined in files (`Project.swift`, `.xcconfig`, `.plist`, etc.).
 - Builds must be reproducible using `tuist generate` and `xcodebuild`.
-- Automate signing, provisioning, and versioning.
+- Keep versioning defined in files. This repository does not sign or provision — that happens outside it.
 - Use only CLI tools that work with CI/CD.
