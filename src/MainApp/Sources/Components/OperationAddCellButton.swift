@@ -1,7 +1,7 @@
 import SwiftUI
 
 // [REF:fr:ux.tile-arrange]
-/// Пустая ячейка сетки в режиме правки: пунктирная рамка с «+ Добавить».
+/// Пустая ячейка сетки: пунктирная рамка с «+ Добавить».
 /// Нажатие создаёт операцию именно в этой ячейке, а не в конце списка.
 public struct OperationAddCellButton: View {
     private let slot: Int

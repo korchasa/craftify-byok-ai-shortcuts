@@ -108,16 +108,15 @@ public struct HomeView: View {
     }
 
     /// Ячейки сетки в порядке отрисовки. Нумерация идёт снизу вверх, поэтому
-    /// нулевая ячейка — левая нижняя, а новые прирастают сверху. В режиме
-    /// правки сверху всегда есть свободный ряд, куда можно добавить плитку
+    /// нулевая ячейка — левая нижняя, а новые прирастают сверху. Сверху всегда
+    /// держим свободный ряд: пустая ячейка — единственный способ добавить
+    /// операцию, и он не должен пропадать, когда сетка заполнена без остатка
     private var gridCells: [(slot: Int, operation: InventoryOperation?)] {
         var cells = OperationGrid.cells(for: viewModel.operations, minimumCells: 0)
-        if editMode == .active {
-            let columns = OperationTileConstants.columns
-            let rows = Int((Double(cells.count) / Double(columns)).rounded(.up))
-            let target = (rows + 1) * columns
-            cells.append(contentsOf: Array(repeating: nil, count: max(0, target - cells.count)))
-        }
+        let columns = OperationTileConstants.columns
+        let rows = Int((Double(cells.count) / Double(columns)).rounded(.up))
+        let target = (rows + 1) * columns
+        cells.append(contentsOf: Array(repeating: nil, count: max(0, target - cells.count)))
         return OperationGrid.displayOrder(cells, columns: OperationTileConstants.columns)
     }
 
@@ -137,25 +136,27 @@ public struct HomeView: View {
     /// Сетка плиток — ровно та же, что увидит пользователь в расширении.
     /// Здесь он задаёт состав и порядок плиток: перетаскивание меняет порядок,
     /// режим правки добавляет кнопки удаления
-    @ViewBuilder
     private var operationsList: some View {
-        if viewModel.operations.isEmpty {
-            emptyState
-        } else {
-            // Плитки прижаты к низу, чтобы до них доставал большой палец одной
-            // руки. Пустое место уходит наверх, а когда плиток больше, чем
-            // помещается на экран, список прокручивается как обычно
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(spacing: 0) {
+        // Плитки прижаты к низу, чтобы до них доставал большой палец одной
+        // руки. Пустое место уходит наверх, а когда плиток больше, чем
+        // помещается на экран, список прокручивается как обычно
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 0) {
+                    Spacer(minLength: 0)
+                    // Подсказку показываем над сеткой, а саму сетку оставляем
+                    // на месте: в ней лежат кнопки добавления, и без них с
+                    // пустого экрана некуда было бы нажать
+                    if viewModel.operations.isEmpty {
+                        emptyState
                         Spacer(minLength: 0)
-                        operationsGrid(containerWidth: geometry.size.width)
                     }
-                    .frame(minHeight: geometry.size.height, alignment: .bottom)
+                    operationsGrid(containerWidth: geometry.size.width)
                 }
+                .frame(minHeight: geometry.size.height, alignment: .bottom)
             }
-            .background(palette.background())
         }
+        .background(palette.background())
     }
 
     /// Ширину контейнера сетка получает снаружи и передаёт плиткам: превью
@@ -174,24 +175,20 @@ public struct HomeView: View {
         .padding(.top, FormStyleConstants.dividerBottomPadding)
     }
 
-    /// Одна ячейка сетки: плитка, кнопка добавления или пустое место.
-    /// Дырка между плитками сохраняется и вне режима правки — раскладку задаёт
-    /// пользователь, и она не должна схлопываться
+    /// Одна ячейка сетки: плитка или кнопка добавления. Дырка между плитками
+    /// сохраняется — раскладку задаёт пользователь, и она не должна
+    /// схлопываться, — а добавлять операцию можно из любой пустой ячейки
     @ViewBuilder
     private func gridCell(slot: Int, operation: InventoryOperation?, cellWidth: CGFloat) -> some View {
         if let operation {
             operationTile(operation, at: slot, cellWidth: cellWidth)
-        } else if editMode == .active {
+        } else {
             OperationAddCellButton(
                 slot: slot,
                 isHighlighted: highlightedSlot == slot,
                 action: { beginAdding(at: slot) }
             )
             .onDrop(of: [UTType.text], delegate: dropDelegate(for: slot))
-        } else {
-            Color.clear
-                .frame(height: OperationTileConstants.height)
-                .accessibilityHidden(true)
         }
     }
 
@@ -294,9 +291,9 @@ public struct HomeView: View {
                 .foregroundColor(palette.secondaryText())
                 .multilineTextAlignment(.center)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity)
         .padding(.horizontal, FormStyleConstants.titleBarHorizontalPadding)
-        .background(palette.background())
+        .padding(.vertical, FormStyleConstants.sectionSpacing)
     }
 
     /// Строка заголовка: крупный титул слева, Edit — на той же линии справа
@@ -318,23 +315,26 @@ public struct HomeView: View {
         .background(palette.background())
     }
 
+    /// Нижняя панель: одни настройки. Кнопка плоская и низкая — заливка и
+    /// высота полноценной кнопки спорили бы с плитками, а добавление операции
+    /// переехало в пустые ячейки сетки. По ширине кнопка равна двум столбцам
+    /// плиток и стоит с тем же отступом от краёв
     private var bottomBar: some View {
-        CraftifyButtonBar(backgroundColor: palette.background()) {
-            Button(action: { beginAdding(at: viewModel.firstFreeSlot) }) {
-                Label(L10n.homeAddOperation, systemImage: "plus")
-                    .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                    .foregroundColor(palette.primaryButtonText())
-            }
-            .buttonStyle(CraftifyPrimaryButtonStyle())
-            .accessibilityIdentifier("home_add_button")
-            Button(action: { showSettings = true }) {
-                Label(L10n.homeSettings, systemImage: "gearshape")
-                    .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                    .foregroundColor(palette.secondaryButtonText())
-            }
-            .buttonStyle(SettingsPrimaryButtonStyle())
-            .accessibilityIdentifier("home_settings_button")
+        Button(action: { showSettings = true }) {
+            Label(L10n.homeSettings, systemImage: "gearshape")
+                .font(.craftifyBody)
+                .fontWeight(.semibold)
+                .foregroundColor(palette.primaryText())
+                .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
+                .contentShape(Rectangle())
         }
+        .buttonStyle(PlainButtonStyle())
+        .accessibilityIdentifier("home_settings_button")
+        .padding(.horizontal, FormStyleConstants.titleBarHorizontalPadding)
+        // Воздух сверху отделяет настройки от нижнего ряда плиток
+        .padding(.top, FormStyleConstants.sectionSpacing)
+        .padding(.bottom, FormStyleConstants.bottomPadding)
+        .background(palette.background().ignoresSafeArea())
     }
 }
 

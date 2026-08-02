@@ -70,18 +70,16 @@ final class OperationEditingUITests: XCTestCase {
         XCTAssertTrue(tile.exists, "Cancelling the confirmation must keep the operation")
     }
 
-    func testEditModeShowsAddButtonOnEmptyCells() {
+    /// Добавлять операции можно только из пустых ячеек — отдельной кнопки внизу
+    /// больше нет, поэтому ячейки зовут добавить в любом режиме
+    func testEmptyCellsOfferAddingOutsideEditMode() {
         let app = launchAndSkipOnboarding()
 
         XCTAssertTrue(app.buttons["operation_row_translate"].firstMatch.waitForExistence(timeout: 5))
         // Дефолтный набор занимает не больше семи ячеек (сколько именно — зависит от
         // языка системы), значит восьмая пуста и предлагает добавить
-        XCTAssertFalse(app.buttons["operation_add_slot_7"].exists, "Пустые ячейки не должны звать добавлять вне режима правки")
-
-        app.buttons["Edit"].firstMatch.tap()
-
         let addCell = app.buttons["operation_add_slot_7"].firstMatch
-        XCTAssertTrue(addCell.waitForExistence(timeout: 3), "Edit mode did not reveal the add button on the empty cell")
+        XCTAssertTrue(addCell.waitForExistence(timeout: 3), "Пустая ячейка должна звать добавить и вне режима правки")
 
         addCell.tap()
         XCTAssertTrue(
