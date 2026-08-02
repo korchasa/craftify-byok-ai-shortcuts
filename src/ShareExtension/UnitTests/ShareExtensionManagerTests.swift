@@ -1,9 +1,80 @@
 // import ShareExtension
 
+import Foundation
 import XCTest
+
+/// Обработка, которая всегда падает заданной ошибкой провайдера
+private final class FailingProviderProcessingStub: NSObject, ProcessingManaging {
+    private let error: Error
+
+    init(error: Error) {
+        self.error = error
+    }
+
+    func process(text _: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+        completion(.failure(error))
+    }
+
+    func cancel() {}
+}
 
 public final class ShareExtensionManagerTests: XCTestCase {
     deinit {}
+
+    /// Ошибка провайдера должна доходить до пользователя своим сообщением,
+    /// а не подменяться «неизвестной ошибкой»
+    public func testProcess_ProviderErrorKeepsItsUserFacingMessage() async {
+        let cases: [(LLMAPIClientError, UserFacingError)] = [
+            (.unauthorized, UserFacingError(messageKey: .errorInvalidApiKey, adviceKey: .adviceCheckApiKey)),
+            (.insufficientCredits, UserFacingError(messageKey: .errorInsufficientCredits, adviceKey: .adviceTopUpBalance)),
+            (.accessDenied, UserFacingError(messageKey: .errorAccessDenied, adviceKey: .adviceCheckKeyAccess)),
+            (.contentFiltered, UserFacingError(messageKey: .errorContentFiltered, adviceKey: .adviceChangeText)),
+            (.contextTooLong, UserFacingError(messageKey: .errorContextTooLong, adviceKey: .adviceShortenText)),
+            (.timedOut, UserFacingError(messageKey: .errorTimeout, adviceKey: .adviceTryAgainLater)),
+            (.tooManyRequests, UserFacingError(messageKey: .errorRateLimited, adviceKey: .adviceTryAgainLater)),
+            (.unknownModel("vendor/no-such-model"), UserFacingError(messageKey: .errorUnknownModel, adviceKey: .adviceChangeModel)),
+            (.serverError, UserFacingError(messageKey: .errorProviderUnavailable, adviceKey: .adviceTryAgainLater)),
+            (.badRequest("Unsupported parameter"), UserFacingError(messageKey: .errorProviderRejectedRequest, adviceKey: .adviceChangeText)),
+            (.invalidResponse("Missing result/content"), UserFacingError(messageKey: .errorParsing, adviceKey: .adviceTryAgainLater)),
+            (.network(URLError(.notConnectedToInternet)), UserFacingError(messageKey: .errorNetwork, adviceKey: .adviceCheckConnection)),
+            (.cancelled, UserFacingError(messageKey: .errorCancelled, adviceKey: .adviceTryAgainLater))
+        ]
+        for (providerError, expected) in cases {
+            let consentManager = ConsentManagerStub()
+            consentManager.setConsent(true)
+            let manager = ShareExtensionManager(
+                inventoryManager: InventoryManagerStub(),
+                authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+                clipboardManager: ClipboardManagerStub(),
+                processingManager: FailingProviderProcessingStub(error: providerError),
+                consentManager: consentManager,
+                logManager: LogManagerSharedInMemory()
+            )
+            let op = InventoryOperation(operation: .translate, params: Data())
+            let result = await manager.process(text: "Hello", operation: op)
+            XCTAssertTrue(result?.success == false)
+            XCTAssertEqual(result?.error, expected, "Ошибка провайдера \(providerError) показана пользователю неверно")
+        }
+    }
+
+    /// Ошибка неизвестного типа остаётся «неизвестной» — это запасной путь, а не общий
+    public func testProcess_UnrecognizedErrorFallsBackToUnknown() async {
+        struct OpaqueError: Error {}
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: FailingProviderProcessingStub(error: OpaqueError()),
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let op = InventoryOperation(operation: .translate, params: Data())
+        let result = await manager.process(text: "Hello", operation: op)
+        XCTAssertEqual(result?.error, UserFacingError.unknown())
+    }
+
     public func testProcess_Success() async {
         let inventoryManager = InventoryManagerStub()
         let authManager = AuthManagerStub(key: "sk-valid-key-1234567890")

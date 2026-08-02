@@ -48,6 +48,17 @@
 "error_unknown_model" = "Неизвестен модел";
 "advice_change_model" = "Изберете друг модел в настройките на Craftify.";
 
+"error_insufficient_credits" = "Няма достатъчно кредит при доставчика";
+"advice_top_up_balance" = "Заредете сметката си в профила при доставчика и опитайте отново.";
+"error_access_denied" = "Доставчикът отказа достъп";
+"advice_check_key_access" = "Проверете правата на ключа и ограниченията по регион в профила при доставчика.";
+"error_content_filtered" = "Филтърът за безопасност на доставчика отхвърли текста";
+"advice_change_text" = "Променете текста или изберете друг модел.";
+"error_context_too_long" = "Текстът е твърде дълъг за този модел";
+"advice_shorten_text" = "Съкратете текста или изберете в настройките модел с по-голям контекстен прозорец.";
+"error_provider_unavailable" = "Доставчикът е временно недостъпен";
+"error_provider_rejected_request" = "Доставчикът отхвърли заявката";
+
 /* Selection screen: what we are working on */
 "share_input_caption" = "Избран текст";
 "share_input_caption_link" = "Споделен линк";

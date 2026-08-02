@@ -31,6 +31,16 @@ public enum UserFacingErrorKey: String {
     case adviceOpenAppToConsent = "advice_open_app_to_consent"
     case errorUnknownModel = "error_unknown_model"
     case adviceChangeModel = "advice_change_model"
+    case errorInsufficientCredits = "error_insufficient_credits"
+    case adviceTopUpBalance = "advice_top_up_balance"
+    case errorAccessDenied = "error_access_denied"
+    case adviceCheckKeyAccess = "advice_check_key_access"
+    case errorContentFiltered = "error_content_filtered"
+    case adviceChangeText = "advice_change_text"
+    case errorContextTooLong = "error_context_too_long"
+    case adviceShortenText = "advice_shorten_text"
+    case errorProviderUnavailable = "error_provider_unavailable"
+    case errorProviderRejectedRequest = "error_provider_rejected_request"
     // Добавьте другие ключи по мере необходимости
 
     /// Локализует ключ по таблице Localizable указанного бандла (rawValue совпадает с ключом локализации).

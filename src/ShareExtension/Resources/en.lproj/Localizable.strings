@@ -48,6 +48,17 @@
 "error_unknown_model" = "Unknown model";
 "advice_change_model" = "Choose a different model in Craftify settings.";
 
+"error_insufficient_credits" = "Not enough credits at the provider";
+"advice_top_up_balance" = "Top up your balance in the provider's dashboard and try again.";
+"error_access_denied" = "The provider denied access";
+"advice_check_key_access" = "Check the key's permissions and regional restrictions in the provider's dashboard.";
+"error_content_filtered" = "The provider's safety filter rejected the text";
+"advice_change_text" = "Rephrase the text or choose a different model.";
+"error_context_too_long" = "The text is too long for this model";
+"advice_shorten_text" = "Shorten the text or choose a model with a larger context window in Settings.";
+"error_provider_unavailable" = "The provider is temporarily unavailable";
+"error_provider_rejected_request" = "The provider rejected the request";
+
 /* Selection screen: what we are working on */
 "share_input_caption" = "Selected text";
 "share_input_caption_link" = "Shared link";

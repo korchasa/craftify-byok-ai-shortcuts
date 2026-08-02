@@ -48,6 +48,17 @@
 "error_unknown_model" = "不明なモデル";
 "advice_change_model" = "Craftifyの設定で別のモデルを選択してください。";
 
+"error_insufficient_credits" = "プロバイダーの残高が不足しています";
+"advice_top_up_balance" = "プロバイダーの管理画面で残高をチャージしてから、もう一度お試しください。";
+"error_access_denied" = "プロバイダーがアクセスを拒否しました";
+"advice_check_key_access" = "プロバイダーの管理画面でキーの権限と地域の制限を確認してください。";
+"error_content_filtered" = "プロバイダーの安全フィルターがテキストを拒否しました";
+"advice_change_text" = "テキストを書き換えるか、別のモデルを選択してください。";
+"error_context_too_long" = "テキストがこのモデルには長すぎます";
+"advice_shorten_text" = "テキストを短くするか、設定でコンテキストウィンドウの大きいモデルを選択してください。";
+"error_provider_unavailable" = "プロバイダーが一時的に利用できません";
+"error_provider_rejected_request" = "プロバイダーがリクエストを拒否しました";
+
 /* Selection screen: what we are working on */
 "share_input_caption" = "選択したテキスト";
 "share_input_caption_link" = "共有リンク";

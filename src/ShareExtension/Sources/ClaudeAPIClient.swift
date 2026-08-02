@@ -21,10 +21,6 @@ public final class ClaudeAPIClient: LLMClienting {
     private static let retryDelaysSeconds: [UInt64] = [retryDelayFirst, retryDelaySecond, retryDelayThird]
     private static let nanosecondsPerSecond: UInt64 = 1_000_000_000
     private static let httpStatusOK = 200
-    private static let httpStatusUnauthorized = 401
-    private static let httpStatusTooManyRequests = 429
-    private static let httpStatusServerErrorLowerBound = 500
-    private static let httpStatusServerErrorUpperBound = 600
 
     private let apiURL = URL(string: ClaudeAPIClient.apiURLString)!
     /// Идентификатор модели; задаётся пользователем в настройках, по умолчанию — из каталога
@@ -84,25 +80,12 @@ public final class ClaudeAPIClient: LLMClienting {
                     {
                         return content
                     }
+                    if let bodyError = LLMHTTPErrorMapper.errorInSuccessBody(data: data, model: model) {
+                        throw bodyError
+                    }
                     throw LLMAPIClientError.invalidResponse("Missing content")
-                case ClaudeAPIClient.httpStatusUnauthorized:
-                    throw LLMAPIClientError.unauthorized
-                case ClaudeAPIClient.httpStatusTooManyRequests:
-                    if attempt < maxRetries - 1 {
-                        try await Task.sleep(nanoseconds: retryDelays[attempt])
-                        continue
-                    }
-                    throw LLMAPIClientError.tooManyRequests
-                case ClaudeAPIClient.httpStatusServerErrorLowerBound ..< ClaudeAPIClient.httpStatusServerErrorUpperBound:
-                    throw LLMAPIClientError.serverError
                 default:
-                    if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                       let err = json["error"] as? [String: Any],
-                       let message = err["message"] as? String
-                    {
-                        throw LLMAPIClientError.invalidResponse(message)
-                    }
-                    throw LLMAPIClientError.unknown(http.statusCode)
+                    throw LLMHTTPErrorMapper.error(statusCode: http.statusCode, data: data, model: model)
                 }
             } catch is CancellationError {
                 throw LLMAPIClientError.cancelled
@@ -116,6 +99,9 @@ public final class ClaudeAPIClient: LLMClienting {
                 }
                 throw LLMAPIClientError.network(urlError)
             } catch {
+                if let llmError = error as? LLMAPIClientError, !llmError.isRetryable {
+                    throw error
+                }
                 lastError = error
                 if attempt < maxRetries - 1 {
                     try await Task.sleep(nanoseconds: retryDelays[attempt])

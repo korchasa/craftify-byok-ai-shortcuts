@@ -46,6 +46,10 @@
 - Retries for network errors (exponential backoff).
 - API key masking in logs.
 - In case of key access errors — prompt to open settings.
+- Provider responses are classified in one place — `LLMHTTPErrorMapper`; all four clients delegate both the error branch and the "200 with an error inside the body" case to it. Status code decides first; body markers (`error.code`, `error.type`, OpenRouter `metadata`, Mistral `detail`) only refine the ambiguous codes: 429 splits into rate limit vs spent quota, 403 into moderation vs permissions, 400/422 into context overflow, unknown model, moderation and plain rejection.
+- `LLMAPIClientError` carries the taxonomy and answers two questions: `userFacingError` — which localized message and advice to show, `isRetryable` — whether a retry can change anything. Clients stop retrying non-retryable errors immediately, and `ShareExtensionViewModel` offers the Retry button by the same rule.
+- `ShareExtensionManager.userFacingError(from:)` is the single conversion point from a thrown error to a user-facing one; without it provider errors degrade into "unknown error".
+- The provider's own explanation (`providerDetail`) is appended under the message for rejected requests and unknown models — for those cases it is the only specific information the user has.
 - Все операции выбрасывают NSError с описанием при ошибках входных данных.
 - AppSettingsManager логирует все изменения настроек через LogManagerShared.
 

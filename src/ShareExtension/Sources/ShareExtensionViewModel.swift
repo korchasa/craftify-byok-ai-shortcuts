@@ -38,6 +38,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         .errorNetwork,
         .errorRateLimited,
         .errorProcessing,
+        .errorProviderUnavailable,
         .errorDownloadFailed,
         .errorParsing,
         .errorTimeout,
@@ -409,6 +410,9 @@ public final class ShareExtensionViewModel: ObservableObject {
                 details = "\n\n\(localized(fetchError.userFacingError.messageKey))"
             } else if let userError = underlying as? UserFacingError {
                 details = "\n\n\(localized(userError.messageKey))"
+            } else if let llmError = underlying as? LLMAPIClientError, let detail = llmError.providerDetail {
+                // Текст провайдера — единственный источник подробностей о том, чем именно он недоволен
+                details = "\n\n\(detail)"
             }
         }
         return "\(message)\n\n\(advice)\(details)"

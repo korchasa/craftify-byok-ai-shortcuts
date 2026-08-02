@@ -347,6 +347,116 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertEqual(noConsentProcessing.calls, 0)
     }
 
+    /// Отказ провайдера по ключу пользователь видит как «неверный ключ»,
+    /// и повтор для него не предлагается — от повтора ключ не станет верным
+    func testProcess_ProviderUnauthorizedShowsKeyErrorWithoutRetry() async {
+        final class UnauthorizedProcessingStub: NSObject, ProcessingManaging {
+            private(set) var calls = 0
+            func process(text _: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+                calls += 1
+                completion(.failure(LLMAPIClientError.unauthorized))
+            }
+
+            func cancel() {}
+        }
+        let processingManager = UnauthorizedProcessingStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: processingManager,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+        viewModel.processingTimeoutSeconds = 2
+        manager.inputText = "Hello"
+
+        // Act: обработка падает отказом провайдера по ключу
+        let errorShown = expectation(description: "Error shown")
+        var cancellable: AnyCancellable?
+        cancellable = viewModel.$errorMessage.sink { msg in
+            if msg != nil {
+                errorShown.fulfill()
+                cancellable?.cancel()
+            }
+        }
+        viewModel.process(operation: InventoryOperation(operation: .translate, params: Data()))
+        await fulfillment(of: [errorShown], timeout: 1.0)
+
+        // Assert: показан именно ключевой текст, а не «неизвестная ошибка»
+        XCTAssertEqual(viewModel.lastErrorKey, .errorInvalidApiKey)
+        XCTAssertFalse(viewModel.isLastErrorRetryable)
+        viewModel.retry()
+        try? await Task.sleep(nanoseconds: 200_000_000)
+        XCTAssertEqual(processingManager.calls, 1)
+    }
+
+    /// У каждой ошибки провайдера должно быть своё сообщение с советом: ни одна не должна
+    /// сваливаться в «неизвестную ошибку» и ни одна не должна повторять чужую пару ключей.
+    /// Наличие самих переводов проверяет сверка ключей локализации в `./run check`.
+    func testEveryProviderErrorHasItsOwnMessageAndAdvice() {
+        let allErrors: [LLMAPIClientError] = [
+            .unauthorized, .insufficientCredits, .accessDenied, .contentFiltered,
+            .contextTooLong, .timedOut, .tooManyRequests, .serverError, .cancelled,
+            .badRequest("boom"), .invalidResponse("boom"), .unknownModel("vendor/model"),
+            .network(URLError(.notConnectedToInternet))
+        ]
+        var seenPairs: Set<String> = []
+        for error in allErrors {
+            let userError = error.userFacingError
+            XCTAssertNotEqual(userError.messageKey, .adviceUnknownError, "\(error) осталась «неизвестной ошибкой»")
+            let pair = "\(userError.messageKeyString)|\(userError.adviceKeyString)"
+            XCTAssertTrue(seenPairs.insert(pair).inserted, "\(error) повторяет сообщение другой ошибки: \(pair)")
+        }
+        // Нераспознанный ответ — единственный случай, которому нечего сказать по существу
+        XCTAssertEqual(LLMAPIClientError.unknown(418).userFacingError.messageKey, .adviceUnknownError)
+    }
+
+    /// Когда провайдер отклонил запрос, его собственное объяснение попадает в алерт —
+    /// без него пользователю нечего исправлять
+    func testProcess_BadRequestShowsProviderExplanation() async {
+        final class RejectingProcessingStub: NSObject, ProcessingManaging {
+            func process(text _: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+                completion(.failure(LLMAPIClientError.badRequest("This model does not support assistant message prefill.")))
+            }
+
+            func cancel() {}
+        }
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: RejectingProcessingStub(),
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+        viewModel.processingTimeoutSeconds = 2
+        manager.inputText = "Hello"
+        let errorShown = expectation(description: "Error shown")
+        var cancellable: AnyCancellable?
+        cancellable = viewModel.$errorMessage.sink { msg in
+            if msg != nil {
+                errorShown.fulfill()
+                cancellable?.cancel()
+            }
+        }
+        viewModel.process(operation: InventoryOperation(operation: .translate, params: Data()))
+        await fulfillment(of: [errorShown], timeout: 1.0)
+
+        XCTAssertEqual(viewModel.lastErrorKey, .errorProviderRejectedRequest)
+        XCTAssertFalse(viewModel.isLastErrorRetryable)
+        XCTAssertTrue(
+            viewModel.errorMessage?.contains("does not support assistant message prefill") == true,
+            "В алерте нет объяснения провайдера: \(viewModel.errorMessage ?? "nil")"
+        )
+    }
+
     func testCopyDisplayedResultAndClose_CopiesAndCloses() {
         // Arrange
         let inventoryManager = InventoryManagerStub()

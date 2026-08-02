@@ -49,6 +49,17 @@
 "error_unknown_model" = "Неизвестная модель";
 "advice_change_model" = "Выберите другую модель в настройках Craftify.";
 
+"error_insufficient_credits" = "Не хватает средств у провайдера";
+"advice_top_up_balance" = "Пополните счёт в кабинете провайдера и повторите.";
+"error_access_denied" = "Провайдер отказал в доступе";
+"advice_check_key_access" = "Проверьте права ключа и ограничения по региону в кабинете провайдера.";
+"error_content_filtered" = "Фильтр безопасности провайдера отклонил текст";
+"advice_change_text" = "Измените текст или выберите другую модель.";
+"error_context_too_long" = "Текст слишком длинный для этой модели";
+"advice_shorten_text" = "Сократите текст или выберите в настройках модель с большим окном контекста.";
+"error_provider_unavailable" = "Провайдер временно недоступен";
+"error_provider_rejected_request" = "Провайдер отклонил запрос";
+
 /* Selection screen: what we are working on */
 "share_input_caption" = "Выделенный текст";
 "share_input_caption_link" = "Ссылка";

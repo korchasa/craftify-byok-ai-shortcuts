@@ -105,10 +105,7 @@ public final class ShareExtensionManager {
             switch result {
             case let .failure(err):
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: ["error": err.localizedDescription]))
-                if let userError = err as? UserFacingError {
-                    return (false, userError)
-                }
-                return (false, UserFacingError.unknown(underlyingError: err))
+                return (false, Self.userFacingError(from: err))
             case let .success(str):
                 processedText = str
             }
@@ -118,10 +115,7 @@ public final class ShareExtensionManager {
                 processedText = try await processAsync(pm: pm, text: text, operation: op)
             } catch {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: ["error": error.localizedDescription]))
-                if let userError = error as? UserFacingError {
-                    return (false, userError)
-                }
-                return (false, UserFacingError.unknown(underlyingError: error))
+                return (false, Self.userFacingError(from: error))
             }
         } else {
             logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing manager unavailable", metadata: [:]))
@@ -156,6 +150,22 @@ public final class ShareExtensionManager {
         }
         logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Result copied to clipboard successfully", metadata: [:]))
         return (true, nil)
+    }
+
+    /// Приводит ошибку обработки к виду, пригодному для показа пользователю.
+    /// Ошибки провайдера несут собственное сопоставление: без него неверный ключ,
+    /// лимит частоты и несуществующая модель выглядели бы как «неизвестная ошибка».
+    private static func userFacingError(from error: Error) -> UserFacingError {
+        if let userError = error as? UserFacingError {
+            return userError
+        }
+        if let llmError = error as? LLMAPIClientError {
+            return llmError.userFacingError
+        }
+        if let fetchError = error as? FetchError {
+            return fetchError.userFacingError
+        }
+        return UserFacingError.unknown(underlyingError: error)
     }
 
     private func processAsync(pm: ProcessingManaging, text: String, operation: InventoryOperation) async throws -> String {

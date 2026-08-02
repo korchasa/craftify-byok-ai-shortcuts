@@ -48,6 +48,17 @@
 "error_unknown_model" = "Modèle inconnu";
 "advice_change_model" = "Choisissez un autre modèle dans les réglages de Craftify.";
 
+"error_insufficient_credits" = "Crédit insuffisant chez le fournisseur";
+"advice_top_up_balance" = "Rechargez votre solde dans l'espace du fournisseur, puis réessayez.";
+"error_access_denied" = "Le fournisseur a refusé l'accès";
+"advice_check_key_access" = "Vérifiez les autorisations de la clé et les restrictions régionales dans l'espace du fournisseur.";
+"error_content_filtered" = "Le filtre de sécurité du fournisseur a rejeté le texte";
+"advice_change_text" = "Reformulez le texte ou choisissez un autre modèle.";
+"error_context_too_long" = "Le texte est trop long pour ce modèle";
+"advice_shorten_text" = "Raccourcissez le texte ou choisissez dans les réglages un modèle avec une fenêtre de contexte plus grande.";
+"error_provider_unavailable" = "Le fournisseur est temporairement indisponible";
+"error_provider_rejected_request" = "Le fournisseur a rejeté la requête";
+
 /* Selection screen: what we are working on */
 "share_input_caption" = "Texte sélectionné";
 "share_input_caption_link" = "Lien partagé";

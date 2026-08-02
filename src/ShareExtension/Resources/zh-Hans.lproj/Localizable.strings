@@ -48,6 +48,17 @@
 "error_unknown_model" = "未知模型";
 "advice_change_model" = "请在 Craftify 设置中选择其他模型。";
 
+"error_insufficient_credits" = "服务商账户余额不足";
+"advice_top_up_balance" = "请在服务商的控制台充值后重试。";
+"error_access_denied" = "服务商拒绝了访问";
+"advice_check_key_access" = "请在服务商的控制台检查密钥权限和地区限制。";
+"error_content_filtered" = "服务商的安全过滤拒绝了该文本";
+"advice_change_text" = "请修改文本或选择其他模型。";
+"error_context_too_long" = "文本超出该模型的长度上限";
+"advice_shorten_text" = "请缩短文本，或在设置中选择上下文窗口更大的模型。";
+"error_provider_unavailable" = "服务商暂时不可用";
+"error_provider_rejected_request" = "服务商拒绝了该请求";
+
 /* Selection screen: what we are working on */
 "share_input_caption" = "所选文本";
 "share_input_caption_link" = "共享链接";

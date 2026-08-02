@@ -2,6 +2,24 @@
 
 import XCTest
 
+/// Потокобезопасный счётчик запросов: наблюдатель URLProtocolStub вызывается с загрузочного потока
+private final class Counter {
+    private let lock = NSLock()
+    private var count = 0
+
+    var value: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return count
+    }
+
+    func increment() {
+        lock.lock()
+        count += 1
+        lock.unlock()
+    }
+}
+
 /// Тесты для LLMAPIClient
 public final class LLMAPIClientTests: XCTestCase {
     override public func setUp() {
@@ -62,6 +80,54 @@ public final class LLMAPIClientTests: XCTestCase {
             XCTAssertEqual(error.errorDescription, LLMAPIClientError.unauthorized.errorDescription)
         } catch {
             XCTFail("Expected LLMAPIClientError.unauthorized, got: \(error)")
+        }
+    }
+
+    /// Неверный ключ от повтора не станет верным: запрос уходит один раз,
+    /// иначе пользователь ждёт лишние секунды, а провайдер считает неудачные попытки
+    public func test_unauthorized_doesNotRetry() async throws {
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [URLProtocolStub.self]
+        let session = URLSession(configuration: config)
+        let client = OpenAIAPIClient(session: session)
+        URLProtocolStub.data = Data(
+            """
+            { "error": { "message": "Unauthorized", "type": "invalid_api_key" } }
+            """.utf8
+        )
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 401, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.error = nil
+        let requestCount = Counter()
+        URLProtocolStub.requestObserver = { _ in requestCount.increment() }
+        // Act
+        do {
+            _ = try await client.send(messages: [LLMMessage(role: .user, content: "Hello")], apiKey: "sk-invalid-key")
+            XCTFail("Expected error for 401, but got success")
+        } catch {
+            XCTAssertEqual(error as? LLMAPIClientError, .unauthorized)
+        }
+        // Assert
+        XCTAssertEqual(requestCount.value, 1)
+    }
+
+    /// 503 — тоже сбой на стороне провайдера, а не «ошибка разбора ответа»
+    public func test_serviceUnavailable_returnsServerError() async throws {
+        let config = URLSessionConfiguration.ephemeral
+        config.protocolClasses = [URLProtocolStub.self]
+        let session = URLSession(configuration: config)
+        let client = OpenAIAPIClient(session: session)
+        URLProtocolStub.data = Data(
+            """
+            { "error": { "message": "Service Unavailable" } }
+            """.utf8
+        )
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 503, httpVersion: nil, headerFields: nil)
+        URLProtocolStub.error = nil
+        do {
+            _ = try await client.send(messages: [LLMMessage(role: .user, content: "Hello")], apiKey: "sk-test-key")
+            XCTFail("Expected error for 503, but got success")
+        } catch {
+            XCTAssertEqual(error as? LLMAPIClientError, .serverError)
         }
     }
 
