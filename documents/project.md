@@ -74,7 +74,7 @@
 ## DevOps
 - All config/code-based
 - No manual steps
-- Onboarding: `./run init && ./run generate`
+- Onboarding: `deno task init && deno task generate`
 
 ## AppSettingsManager
 - Centralized settings (incl. language)

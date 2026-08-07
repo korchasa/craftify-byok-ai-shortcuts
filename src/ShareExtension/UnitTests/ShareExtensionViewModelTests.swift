@@ -396,7 +396,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
 
     /// У каждой ошибки провайдера должно быть своё сообщение с советом: ни одна не должна
     /// сваливаться в «неизвестную ошибку» и ни одна не должна повторять чужую пару ключей.
-    /// Наличие самих переводов проверяет сверка ключей локализации в `./run check`.
+    /// Наличие самих переводов проверяет сверка ключей локализации в `deno task check`.
     func testEveryProviderErrorHasItsOwnMessageAndAdvice() {
         let allErrors: [LLMAPIClientError] = [
             .unauthorized, .insufficientCredits, .accessDenied, .contentFiltered,

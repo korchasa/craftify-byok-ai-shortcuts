@@ -27,7 +27,7 @@
 - LogManagerShared supports levels: debug, info, warning, error. In production, only message + metadata are logged.
 - API keys are always masked (only the first and last 4 characters are visible).
 - No third-party SDKs for analytics or crash reporting are used in the Share Extension (minimal size, App Store compliance).
-- Log export is not supported (system log limitation). Viewing is only via system tools or `./run logs`.
+- Log export is not supported (system log limitation). Viewing is only via system tools or `deno task logs`.
 - Log entries now include only the first 48 characters of the system prompt (`systemPreview`) instead of the full template, reducing log noise and protecting user privacy.
 
 ## Component Interaction
@@ -54,7 +54,7 @@
 - AppSettingsManager логирует все изменения настроек через LogManagerShared.
 
 ## Testing Strategy
-- Unit tests cannot resolve user-facing strings: `Bundle(for:)` inside a unit-test target has no compiled `Localizable.strings`, so `UserFacingErrorKey.localized(in:)` returns the key itself and an assertion on the translated text fails even for a long-existing key. Assert message/advice **keys** instead; that the keys have translations is guaranteed by `check_localization` in `./run check`, which compares every locale against `en` in all three bundles and verifies that every `UserFacingErrorKey` raw value has a string in the extension's `en.lproj`.
+- Unit tests cannot resolve user-facing strings: `Bundle(for:)` inside a unit-test target has no compiled `Localizable.strings`, so `UserFacingErrorKey.localized(in:)` returns the key itself and an assertion on the translated text fails even for a long-existing key. Assert message/advice **keys** instead; that the keys have translations is guaranteed by `check_localization` in `deno task check`, which compares every locale against `en` in all three bundles and verifies that every `UserFacingErrorKey` raw value has a string in the extension's `en.lproj`.
 - Unit tests for all managers and models.
 - UI tests for all main scenarios, including Explain and Summarize (display) and clipboard operations.
 - Checks that Explain and Summarize display the result, and other operations copy to the clipboard.
@@ -159,7 +159,7 @@ graph TD
 - No .xcodeproj or .xcworkspace files are tracked in VCS; they are generated on demand via tuist generate.
 - All configuration is code-based and reproducible, supporting CI/CD and DevOps best practices.
 - Manual editing of Xcode project files or use of XcodeGen is prohibited (all configuration is in Project.swift).
-- All build, test, and code generation steps are automated via ./run scripts and Tuist.
+- All build, test, and code generation steps are automated via the Deno task scripts (`deno.json`, `scripts/`) and Tuist.
 
 ## App Icon
 - MainApp ships an **iOS 26 Icon Composer bundle**: `src/MainApp/Resources/AppIcon.icon` (a folder with `icon.json` + `Assets/glyph.png`), referenced by `CFBundleIconName: "AppIcon"` and added as an explicit resource in Project.swift. `actool` compiles it into `Assets.car` and auto-derives the flat legacy renditions (120px iPhone, 152px iPad, 1024 marketing) that iOS 16–25 use — verified: `actool --minimum-deployment-target 16.0` emits `CFBundleIconFiles [AppIcon60x60, AppIcon76x76]` with no warnings.
@@ -167,7 +167,7 @@ graph TD
 - Appearance colours are per-appearance via `fill-specializations`: white "C" in light, black "C" in dark, over the same turquoise `#00C0B6` background. The background fill is duplicated into the dark specialization on purpose — a plain solid `fill` is treated as light-only and would fall back to system gray in dark.
 - `glyph.png` is only a **white alpha mask**; the manifest recolours it per appearance, so no separate dark PNG is needed.
 - ShareExtension keeps the classic `AppIcon.appiconset` (an extension never shows a Liquid Glass home-screen icon).
-- Sources live in `documents/`: `icon.svg` (flat letter-on-turquoise, feeds the ShareExtension appiconset) and `icon-glyph.svg` (transparent letter mask, feeds the `.icon` glyph). Regenerate all PNGs with `./run icons`.
+- Sources live in `documents/`: `icon.svg` (flat letter-on-turquoise, feeds the ShareExtension appiconset) and `icon-glyph.svg` (transparent letter mask, feeds the `.icon` glyph). Regenerate all PNGs with `deno task icons`.
 
 ## Benefits of Tuist-based Architecture
 - Single source of truth for project structure and configuration

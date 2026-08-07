@@ -3,19 +3,22 @@
 ---
 
 ## Install
-- `./run init`: install CLI tools (tuist, swiftlint, swiftformat, xcbeautify, swiftgen, periphery)
+- `deno task init`: install CLI tools (tuist, swiftlint, swiftformat, xcbeautify, swiftgen, periphery)
 
 ## Build
-- `./run generate`: tuist, swiftgen
-- `./run build`: build
+- `deno task generate`: tuist, swiftgen
+- `deno task dev`: build Debug, install on the simulator, tail logs
+- `deno task prod`: the same in Release
+- `deno task dist`: unsigned App Store archive (signed outside this repository)
 
 ## Test
-- `./run check`: unit/UI tests, lint, format
+- `deno task check`: the full gate — unit tests, lint, format, localization parity
+- `deno task test [test-id]`: the suite alone, or one target/case
 - Coverage auto-checked in CI
 
 ## Lint/Format
-- `./run lint`: lint
-- `./run format`: format
+- `deno task lint`: SwiftLint (strict) + Periphery
+- `deno task fmt`: SwiftFormat over the Swift sources, `deno fmt` over the task scripts
 
 ## CI/CD
 - All automated via GitHub Actions (`.github/workflows/ci.yml`)
@@ -24,7 +27,7 @@
 
 ## Deploy
 - This repository builds and checks the app. It does not sign or upload it.
-- `./run dist`: build an UNSIGNED archive at `build/Craftify.xcarchive`.
+- `deno task dist`: build an UNSIGNED archive at `build/Craftify.xcarchive`.
 - Signing, packaging and upload to App Store Connect all happen outside this repository.
   The archive path is part of that contract, so do not move it.
 
@@ -33,7 +36,7 @@
 - ShareExtensionManager: only logic
 
 ## Logs
-- `./run logs`: Unified Log (os_log, subsystem: Internal)
+- `deno task logs`: Unified Log (os_log, subsystem: Internal)
 - Change period: `log show --predicate 'subsystem == "Internal"' --style syslog --last 2h`
 
 ## Manual TestFlight Upload via Xcode
@@ -66,5 +69,5 @@
    - If the build never appears, check **App Store Connect ▸ Activity ▸ All Builds** for errors.
    - Common issues: outdated certificates, missing export compliance, or entitlements mismatch.
 
-> This manual path is intended for quick, ad-hoc TestFlight updates, and it signs the build on this machine. The regular flow is the unsigned archive from `./run dist`, which is signed and uploaded outside this repository.
+> This manual path is intended for quick, ad-hoc TestFlight updates, and it signs the build on this machine. The regular flow is the unsigned archive from `deno task dist`, which is signed and uploaded outside this repository.
 

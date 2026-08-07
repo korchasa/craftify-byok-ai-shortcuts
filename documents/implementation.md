@@ -11,10 +11,10 @@
 
 ## Setup
 1. Clone repo
-2. `./run init` (installs CLI tools)
-3. `./run generate` (tuist, swiftgen)
-4. `./run sim`
-5. Tests: `./run check`
+2. `deno task init` (installs CLI tools)
+3. `deno task generate` (tuist, swiftgen)
+4. `deno task dev`
+5. Tests: `deno task check`
 
 ## CLI Tools
 | Tool        | Version | Purpose                |
@@ -52,7 +52,7 @@
 - Key masking as in AuthManager
 
 ## Testing
-- Unit/UI: `./run check`
+- Unit/UI: `deno task check`
 - Coverage auto-checked in CI
 - All error branches tested
 
@@ -61,7 +61,7 @@
 - ShareExtensionManager: only logic
 
 ## Logs
-- `./run logs`: outputs os_log (last day, subsystem dev.korchasa.Craftify, JSON)
+- `deno task logs`: outputs os_log (last day, subsystem dev.korchasa.Craftify, JSON)
 
 ## Default Operations Inventory
 
@@ -212,4 +212,4 @@ This refactor removes the hard dependency on OpenAI and enables quick addition o
 ## Среда разработки и настройка
 - Все зависимости и конфигурация через Project.swift, swiftgen.yml, .xcconfig
 - Не требуется ручная настройка Xcode: всё воспроизводимо через CLI
-- Для запуска: `./run init && ./run generate && ./run check`
+- Для запуска: `deno task init && deno task generate && deno task check`

@@ -1,0 +1,29 @@
+{
+  "name": "craftify",
+  "version": "1.0.0",
+  "exports": {},
+  "tasks": {
+    "check": "deno run -A scripts/check.ts",
+    "ci": "deno run -A scripts/check.ts ci",
+    "test": "deno run -A scripts/test.ts",
+    "dev": "deno run -A scripts/dev.ts",
+    "prod": "deno run -A scripts/prod.ts",
+    "dist": "deno run -A scripts/dist.ts",
+    "fmt": "deno run -A scripts/fmt.ts",
+    "lint": "deno run -A scripts/lint.ts",
+    "generate": "deno run -A scripts/generate.ts",
+    "init": "deno run -A scripts/init.ts",
+    "logs": "deno run -A scripts/logs.ts",
+    "l10n": "deno run -A scripts/l10n.ts",
+    "icons": "deno run -A scripts/icons.ts",
+    "size-report": "deno run -A scripts/size-report.ts",
+    "clean": "deno run -A scripts/clean.ts"
+  },
+  "fmt": {
+    "include": ["scripts/", "deno.json"],
+    "lineWidth": 100
+  },
+  "lint": {
+    "include": ["scripts/"]
+  }
+}

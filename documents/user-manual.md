@@ -43,7 +43,7 @@
 - Result:
   - Most: copy + notify
   - Explain & Summarize: popup
-- All actions/errors logged (FIFO, `./run logs`)
+- All actions/errors logged (FIFO, `deno task logs`)
 
 ## Instruction Relevance
 - Build/test/update: always current in [developer-manual.md](developer-manual.md)
@@ -55,7 +55,7 @@
 
 ## Logs
 - All actions/errors: Unified Log (os_log, subsystem: Internal)
-- View: `./run logs` (filter: Internal, MainApp, ShareExt)
+- View: `deno task logs` (filter: Internal, MainApp, ShareExt)
 - No export
 
 ## Op Color
@@ -86,7 +86,7 @@
 
 ## Prod Build Safety
 - No test deps in prod app/ext
-- Build/link error: `./run clean` + rebuild
+- Build/link error: `deno task clean` + rebuild
 
 ## References
 - [Project Overview](project.md)
@@ -103,7 +103,7 @@
 - Change applies instantly, no restart
 
 ## Logs of Settings
-- All changes (incl. language): logged, view via `./run logs`
+- All changes (incl. language): logged, view via `deno task logs`
 
 ## Test Language Change
 1. Open Settings, select new language, Save
@@ -111,9 +111,9 @@
 3. To revert: repeat
 
 ## Build/Run
-- Quick: `./run check`
-- Simulator: `./run sim`
-- Logs: `./run logs`
+- Quick: `deno task check`
+- Simulator: `deno task dev`
+- Logs: `deno task logs`
 
 ## Update Settings
 - All settings: AppSettingsManager, App Group

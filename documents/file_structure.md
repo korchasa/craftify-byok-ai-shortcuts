@@ -83,7 +83,7 @@ graph TD
 
 ## Logging
 - All logs: Unified Log (os_log, subsystem: Internal)
-- View: `./run logs` (filter: Internal, MainApp, ShareExt)
+- View: `deno task logs` (filter: Internal, MainApp, ShareExt)
 - No export
 
 ## Testing/Isolation
@@ -232,7 +232,7 @@ src/
 
 ## Logging
 - Все логи пишутся через Unified Log (os_log, subsystem: Internal, только message + metadata).
-- Просмотр логов: ./run logs (фильтрация по subsystem Internal, MainApp и ShareExtension, все уровни).
+- Просмотр логов: deno task logs (фильтрация по subsystem Internal, MainApp и ShareExtension, все уровни).
 - Экспорт логов не поддерживается.
 
 - `src/ShareExtension/Sources/ShareExtensionView.swift` — основной UI-компонент окна шаринга, реализует разметку, закрепление кнопки закрытия, скроллирование и оверлеи.

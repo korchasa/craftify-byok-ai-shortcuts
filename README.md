@@ -11,34 +11,34 @@ cd Craftify
 ```
 2. Install all necessary CLI tools:
 ```sh
-./run init
+deno task init
 ```
 This will install via Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
 3. Generate the project:
 ```sh
-./run generate
+deno task generate
 ```
 4. Build and run the project:
 ```sh
-./run sim
+deno task dev
 ```
 5. To run checks:
 ```sh
-./run check
+deno task check
 ```
 
 ## Main Commands
-- `./run init` — install all CLI tools
-- `./run sim` — build and run in simulator
-- `./run icons` — regenerate app icons (MainApp Icon Composer glyph + ShareExtension appiconset)
-- `./run check` — run all checks, then install the app on the simulator and tail its log
-- `./run ci` — the same checks without the simulator step, so the command exits on its own
-- `./run clean` — clean build artifacts
-- `./run logs` — view logs
+- `deno task init` — install all CLI tools
+- `deno task dev` — build and run in simulator
+- `deno task icons` — regenerate app icons (MainApp Icon Composer glyph + ShareExtension appiconset)
+- `deno task check` — run all checks, then install the app on the simulator and tail its log
+- `deno task ci` — the same checks without the simulator step, so the command exits on its own
+- `deno task clean` — clean build artifacts
+- `deno task logs` — view logs
 
 ## CI/CD
-- GitHub Actions runs `./run ci` on every pull request and on `main` (`.github/workflows/ci.yml`): secret scan, project generation, format, lint, localization parity, build and unit tests
-- Checks only. This repository never signs or uploads the app — `./run dist` produces an unsigned archive, and signing, packaging and delivery to App Store Connect happen outside it
+- GitHub Actions runs `deno task ci` on every pull request and on `main` (`.github/workflows/ci.yml`): secret scan, project generation, format, lint, localization parity, build and unit tests
+- Checks only. This repository never signs or uploads the app — `deno task dist` produces an unsigned archive, and signing, packaging and delivery to App Store Connect happen outside it
 - Share Extension size and test coverage ≥ 80% are project targets, not gates — nothing enforces them automatically yet
 
 ## Architecture
@@ -56,13 +56,13 @@ This will install via Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
 The project is fully managed by Tuist:
 - All targets, dependencies, resources, and schemes are described in Project.swift and Workspace.swift.
 - XcodeGen, project.yml, .xcodeproj, and .xcworkspace are removed (replaced by Tuist manifests).
-- All builds and tests are run via tuist and CLI scripts (see ./run).
+- All builds and tests are run via tuist and the Deno task scripts (see `deno.json` and `scripts/`).
 - This ensures reproducible, DevOps-friendly, and CI/CD-compatible workflows.
 
 ## DevOps-friendly Process
 - The entire project structure and configuration are described in code (Project.swift, Workspace.swift, configs).
 - No manual steps: all builds, tests, and code generation are automated.
-- Easy project onboarding: just run ./run init and ./run generate.
+- Easy project onboarding: just run deno task init and deno task generate.
 
 ## Operations
 
