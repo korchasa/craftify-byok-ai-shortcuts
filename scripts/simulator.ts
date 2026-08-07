@@ -93,11 +93,16 @@ export async function deploySimulator(opts: DeployOptions): Promise<void> {
       args: [
         "build",
         "MainApp",
+        // `--configuration` is Tuist's own flag and MUST come before `--`.
+        // Everything after `--` is passed to xcodebuild, and Tuist copies the
+        // products from the configuration IT knows about — so a passthrough
+        // `-configuration Release` builds one thing and files it under
+        // `Debug-iphonesimulator`, which is where `prod` then failed to find it.
+        "--configuration",
+        configuration,
         "--build-output-path",
         "build/Products",
         "--",
-        "-configuration",
-        configuration,
         "-sdk",
         "iphonesimulator",
         "-destination",

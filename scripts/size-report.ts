@@ -12,22 +12,36 @@ const LIMIT_MB = 20;
 
 await generate();
 
+/** Where the device build lands; the appex sits under `Build/Products/<cfg>-<sdk>/`. */
+const DERIVED_DATA = "build/DerivedData_SizeReport";
+
 await step("Cleaning build artifacts", async () => {
   await Deno.remove("build", { recursive: true }).catch(() => {});
 });
 
+// Built through the xcodebuild wrapper rather than `tuist build`, because only
+// xcodebuild honours `-sdk iphoneos`: Tuist picks the destination itself and
+// files the products by ITS notion of configuration and platform. The previous
+// form passed `-configuration Release -sdk iphoneos` after `--`, and Tuist
+// happily produced `Debug-iphonesimulator` — so this gate had been measuring a
+// debug simulator build against a limit that exists for the device binary.
+// Signing is off: the size of the payload does not depend on it, and a device
+// build would otherwise need a provisioning profile.
 await step("Building ShareExtension for size report (Release/iphoneos)", async () => {
   await run("tuist", {
     args: [
+      "xcodebuild",
       "build",
+      "-scheme",
       "ShareExtension",
-      "--build-output-path",
-      "build/Products",
-      "--",
       "-configuration",
       "Release",
       "-sdk",
       "iphoneos",
+      "-derivedDataPath",
+      DERIVED_DATA,
+      "CODE_SIGNING_ALLOWED=NO",
+      "-quiet",
     ],
   });
 });
@@ -42,16 +56,19 @@ async function treeSize(root: string): Promise<number> {
   return total;
 }
 
+// Only the device build counts. The tree is cleaned above, so anything found
+// here was produced by the step above and nothing else.
+const products = `${DERIVED_DATA}/Build/Products`;
 const appexes: string[] = [];
-for await (const entry of Deno.readDir("build/Products")) {
-  if (!entry.isDirectory) continue;
-  for await (const inner of Deno.readDir(`build/Products/${entry.name}`)) {
+for await (const entry of Deno.readDir(products)) {
+  if (!entry.isDirectory || !entry.name.endsWith("-iphoneos")) continue;
+  for await (const inner of Deno.readDir(`${products}/${entry.name}`)) {
     if (inner.name === "ShareExtension.appex") {
-      appexes.push(`build/Products/${entry.name}/${inner.name}`);
+      appexes.push(`${products}/${entry.name}/${inner.name}`);
     }
   }
 }
-if (appexes.length === 0) fail("ShareExtension.appex not found");
+if (appexes.length === 0) fail(`ShareExtension.appex not found under ${products}/*-iphoneos`);
 
 let over = false;
 for (const appex of appexes) {
