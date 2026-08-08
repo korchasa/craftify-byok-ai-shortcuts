@@ -10,6 +10,7 @@ public struct HomeView: View {
     @State private var editOperationViewModel: InventoryOperation? = nil
     @State private var editingIndex: Int? = nil
     @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var editMode: EditMode = .inactive
     /// Поднятая с места операция; nil — плитку никто не поднимал
     @State private var dragSourceID: UUID? = nil
@@ -71,7 +72,7 @@ public struct HomeView: View {
                 showAddOperation = false
             })
             .environment(\.colorPalette, palette)
-            .compactFormPresentation()
+            .addFormPresentation(isRegularWidth: horizontalSizeClass == .regular)
         })
         .sheet(
             item: $editOperationViewModel,
@@ -360,5 +361,23 @@ private extension View {
     /// короткую форму на весь экран, из-за чего под ней зиял пустой провал.
     func compactFormPresentation() -> some View {
         presentationDetents([.medium, .large])
+    }
+
+    /// Лист добавления операции. На узком экране остаётся компактным, на широком
+    /// (iPad) открывается на всю страницу.
+    ///
+    /// Половинный детент на iPad ниже, чем нужно форме: у Translate и Summarize
+    /// появляется третья строка, и строка цвета уходит под нижнюю кромку листа.
+    /// Прокрутка её не достаёт — содержимое верстается по высоте `.large`, поэтому
+    /// считает, что помещается целиком, и лист просто обрезает лишнее. Оставался
+    /// один способ добраться до цвета — потянуть лист вверх, а об этом никто не
+    /// догадывается.
+    @ViewBuilder
+    func addFormPresentation(isRegularWidth: Bool) -> some View {
+        if isRegularWidth {
+            largeFormPresentation()
+        } else {
+            compactFormPresentation()
+        }
     }
 }
