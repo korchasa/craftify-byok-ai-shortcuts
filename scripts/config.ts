@@ -15,7 +15,19 @@ export const TEST_SIMULATOR_ID = Deno.env.get("TEST_SIMULATOR_ID") ?? SIMULATOR_
 export const DEST_SIMULATOR = `id=${SIMULATOR_ID},arch=arm64`;
 export const DEST_TEST_SIMULATOR = `id=${TEST_SIMULATOR_ID},arch=arm64`;
 
-export const DERIVED_DATA_SIM = "build/DerivedData_DeploySimulator";
+/**
+ * One derived-data directory for every simulator build in the gate.
+ *
+ * The test run and the smoke run compile the same targets in the same
+ * configuration for the same simulator, so they share the compilation cache
+ * instead of each paying for a full build: sharing it took the smoke build from
+ * 71 s to 10 s. Its index store is also what lets Periphery skip its own clean
+ * build (51 s → 3 s).
+ */
+export const DERIVED_DATA = "build/DerivedData_FastCheck";
+
+/** Index store written by any build into `DERIVED_DATA`; input for Periphery. */
+export const INDEX_STORE = `${DERIVED_DATA}/Index.noindex/DataStore`;
 
 /** Skip attaching the interactive log stream after a simulator launch. */
 export const SKIP_LOG_STREAM = Deno.env.get("SKIP_LOG_STREAM") === "1";

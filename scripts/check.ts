@@ -9,10 +9,10 @@
  */
 
 import { checkTooling, section } from "./lib.ts";
-import { step } from "./config.ts";
+import { INDEX_STORE, step } from "./config.ts";
 import { generate } from "./generate.ts";
 import { fmt } from "./fmt.ts";
-import { lint } from "./lint.ts";
+import { periphery, swiftLint } from "./lint.ts";
 import { checkLocalization, commentScan, secretScan } from "./scans.ts";
 import { buildAndTest } from "./tests.ts";
 import { deploySimulator } from "./simulator.ts";
@@ -23,9 +23,13 @@ export async function checkCore(): Promise<void> {
   await secretScan();
   await generate();
   await fmt();
-  await lint();
+  await swiftLint();
   await checkLocalization();
   await buildAndTest();
+  // Deliberately after the build rather than next to SwiftLint: Periphery needs
+  // an index, and the test run has just written one. Left where it was, it
+  // builds its own — a minute of work already done.
+  await periphery(INDEX_STORE);
   await commentScan();
 }
 

@@ -7,7 +7,7 @@
  */
 
 import { fail, run } from "./lib.ts";
-import { DEST_TEST_SIMULATOR, step } from "./config.ts";
+import { DERIVED_DATA, DEST_TEST_SIMULATOR, step } from "./config.ts";
 
 const SCHEME = "AllTests";
 
@@ -51,7 +51,9 @@ function collect(node: unknown, key: string): unknown[] {
 
 /** Build every target, then run the whole suite. Used by `check` and `ci`. */
 export async function buildAndTest(): Promise<void> {
-  const derivedData = "build/DerivedData_FastCheck";
+  // The shared cache: the smoke run builds into it too, and Periphery reads its
+  // index store. Changing it here changes it for both.
+  const derivedData = DERIVED_DATA;
   const resultBundle = "build/Results/AllTests.xcresult";
   await Deno.remove(resultBundle, { recursive: true }).catch(() => {});
 

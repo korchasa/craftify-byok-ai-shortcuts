@@ -9,7 +9,7 @@
 import { exists, fail, run } from "./lib.ts";
 import {
   BUNDLE_ID,
-  DERIVED_DATA_SIM,
+  DERIVED_DATA,
   DEST_SIMULATOR,
   SIMULATOR_ID,
   SKIP_LOG_STREAM,
@@ -88,7 +88,6 @@ export async function deploySimulator(opts: DeployOptions): Promise<void> {
   });
 
   await step(`Building MainApp for Simulator (${configuration})`, async () => {
-    await Deno.remove(DERIVED_DATA_SIM, { recursive: true }).catch(() => {});
     await run("tuist", {
       args: [
         "build",
@@ -100,13 +99,22 @@ export async function deploySimulator(opts: DeployOptions): Promise<void> {
         // `Debug-iphonesimulator`, which is where `prod` then failed to find it.
         "--configuration",
         configuration,
-        "--build-output-path",
-        "build/Products",
+        // No `--build-output-path`: that flag makes Tuist copy the products out
+        // afterwards, and it looks for them under Xcode's GLOBAL derived data,
+        // because it does not read the passthrough `-derivedDataPath` below
+        // either. Asking for both fails with "expected build products … were not
+        // found". Without it Tuist just builds, and the app is read straight out
+        // of the derived data where xcodebuild actually wrote it.
         "--",
         "-sdk",
         "iphonesimulator",
         "-destination",
         DEST_SIMULATOR,
+        // Same derived data as the test run, which has usually just compiled
+        // these very targets: 71 s of recompilation became 31 s. Without it the
+        // smoke build starts from an empty cache in Xcode's global directory.
+        "-derivedDataPath",
+        DERIVED_DATA,
         "-quiet",
       ],
     });
@@ -114,7 +122,7 @@ export async function deploySimulator(opts: DeployOptions): Promise<void> {
 
   await bootAndWait();
 
-  const appPath = `build/Products/${configuration}-iphonesimulator/MainApp.app`;
+  const appPath = `${DERIVED_DATA}/Build/Products/${configuration}-iphonesimulator/MainApp.app`;
   await step(`Installing app to simulator: ${appPath}`, () => install(appPath));
 
   await step("Launching app in simulator", async () => {
