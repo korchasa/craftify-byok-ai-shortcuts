@@ -18,8 +18,64 @@ private final class FailingProviderProcessingStub: NSObject, ProcessingManaging 
     func cancel() {}
 }
 
+/// Обработка, которая всегда возвращает заранее заданный текст
+private final class FixedResultProcessingStub: NSObject, ProcessingManaging {
+    private let result: String
+
+    init(result: String) {
+        self.result = result
+    }
+
+    func process(text _: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+        completion(.success(result))
+    }
+
+    func cancel() {}
+}
+
 public final class ShareExtensionManagerTests: XCTestCase {
     deinit {}
+
+    /// Модель охотно завершает ответ переводом строки, а иногда и начинает с него.
+    /// Ни в буфер обмена, ни на экран результата этот мусор попадать не должен.
+    public func testProcess_TrimsWhitespaceAroundResult() async {
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let clipboardManager = ClipboardManagerStub()
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: clipboardManager,
+            processingManager: FixedResultProcessingStub(result: "\n  Переведённый текст.\n\n  "),
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let op = InventoryOperation(operation: .translate, params: Data())
+        let result = await manager.process(text: "Translated text.", operation: op)
+        XCTAssertTrue(result?.success == true)
+        XCTAssertEqual(clipboardManager.copiedText, "Переведённый текст.")
+        XCTAssertEqual(manager.lastResult, "Переведённый текст.")
+    }
+
+    /// Переносы строк внутри результата — часть форматирования (списки, абзацы, код),
+    /// и обрезка краёв не имеет права их трогать
+    public func testProcess_KeepsLineBreaksInsideResult() async {
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let clipboardManager = ClipboardManagerStub()
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: clipboardManager,
+            processingManager: FixedResultProcessingStub(result: "- первый\n- второй\n\n- третий\n"),
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let op = InventoryOperation(operation: .translate, params: Data())
+        let result = await manager.process(text: "list", operation: op)
+        XCTAssertTrue(result?.success == true)
+        XCTAssertEqual(clipboardManager.copiedText, "- первый\n- второй\n\n- третий")
+    }
 
     /// Ошибка провайдера должна доходить до пользователя своим сообщением,
     /// а не подменяться «неизвестной ошибкой»

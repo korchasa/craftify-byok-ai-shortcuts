@@ -126,21 +126,25 @@ public final class ShareExtensionManager {
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Operation cancelled or superseded", metadata: [:]))
             return (false, UserFacingError(messageKey: .errorCancelled, adviceKey: .adviceTryAgainLater))
         }
+        // Модель нередко обрамляет ответ пробелами и переводами строк, и никакая
+        // инструкция в промпте это не убирает. Края срезаем здесь — один раз для
+        // всех провайдеров и обоих режимов результата; разметка внутри не страдает.
+        let cleanResult = processedText.trimmingCharacters(in: .whitespacesAndNewlines)
         // Настройка режима обработки результата и сохранение результата
         let mode = OperationFactory.make(kind: op.operation).resultMode
-        self.lastResult = processedText
+        self.lastResult = cleanResult
         if mode == .display {
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Result mode: display result", metadata: [:]))
             return (true, nil)
         }
         // Копирование в буфер обмена
         if let cb = clipboardManager as? ClipboardManagerStub {
-            if !cb.copy(text: processedText) {
+            if !cb.copy(text: cleanResult) {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
                 return (false, UserFacingError(messageKey: .errorClipboard, adviceKey: .adviceTryAgainLater))
             }
         } else if let cb = clipboardManager as? ClipboardManaging {
-            if !cb.copy(text: processedText) {
+            if !cb.copy(text: cleanResult) {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Clipboard access error", metadata: [:]))
                 return (false, UserFacingError(messageKey: .errorClipboard, adviceKey: .adviceTryAgainLater))
             }

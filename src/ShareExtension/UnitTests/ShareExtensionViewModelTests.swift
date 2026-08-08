@@ -515,6 +515,28 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.isInputURL)
     }
 
+    /// Выделение в чужом приложении часто захватывает пробелы и перевод строки по краям.
+    /// В промпт они попадать не должны: модель повторяет их в ответе.
+    func testUpdateInputText_TrimsWhitespaceAroundInput() {
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: ProcessingManagerStub(),
+            consentManager: ConsentManagerStub(),
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager)
+
+        viewModel.updateInputText("\n  Договор вступает в силу.\n\n")
+        XCTAssertEqual(viewModel.inputText, "Договор вступает в силу.")
+        XCTAssertEqual(manager.inputText, "Договор вступает в силу.")
+
+        // Внутренняя разметка входа остаётся нетронутой
+        viewModel.updateInputText("  первый абзац\n\nвторой абзац  ")
+        XCTAssertEqual(viewModel.inputText, "первый абзац\n\nвторой абзац")
+    }
+
     /// Слишком длинный вход обрезается одинаково и для обработки, и для шапки
     func testUpdateInputText_TruncatesPreviewLikeProcessingInput() {
         let manager = ShareExtensionManager(

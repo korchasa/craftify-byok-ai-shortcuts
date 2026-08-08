@@ -73,7 +73,7 @@ public final class ShareExtensionViewModel: ObservableObject {
 
         // Загружаем все операции по умолчанию, а затем отфильтруем их в updateInputText когда будет доступен контент
         self.operations = manager.inventoryManager.inventory
-        manager.inputText = Self.truncated(input)
+        manager.inputText = Self.normalizedInput(input)
         self.inputText = manager.inputText
     }
 
@@ -100,12 +100,12 @@ public final class ShareExtensionViewModel: ObservableObject {
     }
 
     public func updateInputText(_ text: String) {
-        let truncatedText = Self.truncated(text)
-        manager.inputText = truncatedText
-        inputText = truncatedText
+        let normalizedText = Self.normalizedInput(text)
+        manager.inputText = normalizedText
+        inputText = normalizedText
 
-        logTextUpdate(truncatedText)
-        updateOperationsForInput(truncatedText)
+        logTextUpdate(normalizedText)
+        updateOperationsForInput(normalizedText)
     }
 
     public func cancel() {
@@ -161,9 +161,12 @@ public final class ShareExtensionViewModel: ObservableObject {
         ))
     }
 
-    /// Обрезает вход до максимальной длины, чтобы длинный текст не блокировал обработку.
-    private static func truncated(_ text: String) -> String {
+    /// Готовит вход к обработке: обрезает до максимальной длины, чтобы длинный текст
+    /// не блокировал обработку, и снимает пробелы с переводами строк по краям —
+    /// выделение в чужом приложении часто захватывает их, а модель повторяет их в ответе.
+    private static func normalizedInput(_ text: String) -> String {
         String(text.prefix(ShareExtensionViewModelConstants.maxInputTextLength))
+            .trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     /// Сигнализирует об успехе хаптикой и закрывает расширение.

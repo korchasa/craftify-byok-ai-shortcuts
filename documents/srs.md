@@ -82,3 +82,10 @@
 - **Tasks:** [REF:task:2026-07-operation-tiles-on-both-screens | operation-tiles-on-both-screens]
 - **Acceptance:** `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testUpdateInputText_PublishesPreviewAndDetectsURL` | `deno task check`
 - **Status:** [x]
+
+### FR-UX.TRIM-EDGES: No stray whitespace around input and result [ANC:fr:ux.trim-edges]
+
+- **Description:** Neither the text the user shares nor the text the model returns carries stray whitespace at its edges. The shared selection is trimmed before it reaches the prompt, so a trailing newline captured by the selection is never echoed back by the model; the model's answer is trimmed once, in one place for all four providers, before it becomes the displayed result and before it is copied to the clipboard. Line breaks inside the text — paragraphs, lists, code blocks — are left untouched.
+- **Tasks:** [REF:task:2026-08-trim-whitespace-around-text | trim-whitespace-around-text]
+- **Acceptance:** `src/ShareExtension/UnitTests/ShareExtensionManagerTests.swift::testProcess_TrimsWhitespaceAroundResult` | `deno task check`
+- **Status:** [x]

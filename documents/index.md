@@ -13,3 +13,4 @@
 - [REF:fr:ux.sheet-height | FR-UX.SHEET-HEIGHT] — Share-extension sheet fits content and grows for results; iPad popover width fix — [ ]
 - [REF:fr:ux.staged-progress | FR-UX.STAGED-PROGRESS] — Staged progress messages (loading page / asking model) in the extension — [ ]
 - [REF:fr:ux.tile-arrange | FR-UX.TILE-ARRANGE] — Home screen as a grid of cells: any tile on any cell, gaps kept, "+ Add" on empty cells, wiggle and minus badge in edit mode, one hold both arranges and drags — [x]
+- [REF:fr:ux.trim-edges | FR-UX.TRIM-EDGES] — No stray whitespace around the shared input or the model's result — [x]
