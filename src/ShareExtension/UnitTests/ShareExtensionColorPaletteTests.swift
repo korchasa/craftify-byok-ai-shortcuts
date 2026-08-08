@@ -1,4 +1,3 @@
-@testable import ShareExtension
 import SwiftUI
 import XCTest
 

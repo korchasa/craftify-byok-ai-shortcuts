@@ -1,5 +1,4 @@
 import Combine
-@testable import ShareExtension
 import XCTest
 
 @MainActor

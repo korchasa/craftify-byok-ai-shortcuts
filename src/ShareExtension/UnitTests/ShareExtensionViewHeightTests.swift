@@ -1,4 +1,3 @@
-@testable import ShareExtension
 import XCTest
 
 final class ShareExtensionViewHeightTests: XCTestCase {
