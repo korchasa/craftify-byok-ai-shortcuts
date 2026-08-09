@@ -2,26 +2,7 @@ import Foundation
 
 public final class AddOperationViewModel: ObservableObject {
     @Published public var selectedKind: OperationKind? {
-        didSet {
-            guard let kind = selectedKind else { return }
-            switch kind {
-            case .translate:
-                targetLanguage = supportedLanguages.first?.code ?? ""
-                length = SummarizeLengths.defaultLength
-            case .simplify:
-                targetLanguage = ""
-                length = SummarizeLengths.defaultLength
-            case .correct:
-                targetLanguage = ""
-                length = SummarizeLengths.defaultLength
-            case .explain:
-                targetLanguage = ""
-                length = SummarizeLengths.defaultLength
-            case .summarize:
-                targetLanguage = ""
-                length = SummarizeLengths.defaultLength
-            }
-        }
+        didSet { applyDefaults(for: selectedKind) }
     }
 
     @Published public var targetLanguage: String = ""
@@ -40,11 +21,36 @@ public final class AddOperationViewModel: ObservableObject {
     }
 
     public let palette: [String]
+    private let settings: AppSettingsManager
 
-    public init(palette: [String] = LightMainAppColorPalette().palette()) {
-        self.selectedKind = OperationFactory.allKinds.first
+    public init(
+        palette: [String] = LightMainAppColorPalette().palette(),
+        settings: AppSettingsManager = .shared
+    ) {
         self.palette = palette
+        self.settings = settings
         self.selectedColorHex = palette.first!
+        // Присваивание проходит через обёртку @Published, поэтому наблюдатель
+        // didSet срабатывает и здесь — параметры типа по умолчанию выставляются
+        self.selectedKind = OperationFactory.allKinds.first
+    }
+
+    /// Параметры, с которыми форма открывается для выбранного типа операции
+    private func applyDefaults(for kind: OperationKind?) {
+        guard let kind else { return }
+        length = SummarizeLengths.defaultLength
+        targetLanguage = kind == .translate ? defaultTargetLanguage : ""
+    }
+
+    /// Язык перевода по умолчанию — родной язык из настроек. Первый элемент
+    /// общего списка для этого не годится: список отсортирован по коду ISO,
+    /// и в начале стоит афарский, одинаково случайный для всех
+    private var defaultTargetLanguage: String {
+        let native = settings.nativeLanguage
+        if supportedLanguages.contains(where: { $0.code == native }) {
+            return native
+        }
+        return supportedLanguages.first?.code ?? ""
     }
 
     /// Создает InventoryOperation через соответствующую реализацию OperationType
