@@ -9,7 +9,6 @@ public struct SettingsView: View {
     @ObservedObject public var viewModel: SettingsViewModel
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isTextFieldFocused: Bool
-    @State private var shouldDismiss = false
     @Environment(\.colorPalette) private var palette
     /// Диагностика полевого iPad-бага: шит настроек закрывался при тапе по строке модели
     fileprivate static let uiLog = OSLog(subsystem: "Internal", category: "SettingsUI")
@@ -33,6 +32,10 @@ public struct SettingsView: View {
                         .font(.craftifyBody)
                         .fontWeight(.bold)
                     SettingsApiKeySection(viewModel: viewModel, isTextFieldFocused: _isTextFieldFocused)
+                    // Сообщение стоит вплотную к ключу: почти все ошибки здесь
+                    // про него, а внизу формы оно оказывалось через две строки
+                    // от поля и не связывалось с ним
+                    SettingsErrorSection(errorMessage: viewModel.errorMessage)
 
                     HStack {
                         Text(L10n.settingsNativeLanguage)
@@ -52,21 +55,14 @@ public struct SettingsView: View {
                         .fontWeight(.regular)
                         .foregroundColor(palette.secondaryText())
                         .padding(.top, FormStyleConstants.nativeLanguageSectionTopPadding)
-
-                    SettingsErrorSection(errorMessage: viewModel.errorMessage)
                 }
                 .padding(.leading, FormStyleConstants.formLeadingPadding)
                 .padding(.trailing, FormStyleConstants.formTrailingPadding)
             },
             buttons: {
-                SettingsFormButtons(viewModel: viewModel, dismiss: dismiss, shouldDismiss: $shouldDismiss)
+                SettingsFormButtons(dismiss: dismiss)
             }
         )
-        .onChange(of: shouldDismiss) { newValue in
-            if newValue {
-                dismiss()
-            }
-        }
         .onAppear {
             os_log("%{public}@", log: SettingsView.uiLog, type: .info, "settings appeared")
         }
@@ -76,34 +72,26 @@ public struct SettingsView: View {
         .background(palette.background())
     }
 
+    /// Внизу экрана только выход. Общей кнопки сохранения здесь нет: провайдер,
+    /// модель и родной язык применяются сразу при выборе, а ключ сохраняется
+    /// своей кнопкой рядом с полем ввода. Прежняя кнопка «Сохранить» выглядела
+    /// так, будто относится ко всей форме, и оставалась серой после смены языка.
+    ///
+    /// Кнопка нарочно второстепенная, со стрелкой вниз: она ничего не сохраняет
+    /// и ничего не отменяет, а только закрывает лист. Основной зелёный стиль с
+    /// галочкой обещал бы действие, которого здесь нет
     private struct SettingsFormButtons: View {
-        @ObservedObject var viewModel: SettingsViewModel
         var dismiss: DismissAction
-        @Binding var shouldDismiss: Bool
         @Environment(\.colorPalette) private var palette
         var body: some View {
             CraftifyButtonBar(backgroundColor: palette.background()) {
                 Button(action: { dismiss() }) {
-                    Label(L10n.settingsDone, systemImage: "xmark")
+                    Label(L10n.settingsDone, systemImage: "chevron.down")
                         .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
                         .foregroundColor(.primary)
                 }
                 .buttonStyle(CraftifySecondaryButtonStyle())
-                Button(action: {
-                    Task {
-                        await viewModel.saveKey()
-                        if viewModel.errorMessage == nil {
-                            shouldDismiss = true
-                        }
-                    }
-                }) {
-                    Label(L10n.addOperationSave, systemImage: "checkmark")
-                        .frame(maxWidth: .infinity, minHeight: CraftifyButtonConstants.minButtonHeight)
-                        .foregroundColor(palette.primaryButtonText())
-                }
-                .buttonStyle(CraftifyPrimaryButtonStyle())
-                .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
-                .accessibilityIdentifier("settings_save_button")
+                .accessibilityIdentifier("settings_done_button")
             }
         }
     }
@@ -139,23 +127,31 @@ public struct SettingsView: View {
                         .foregroundColor(palette.destructive())
                 }
             }
-            .confirmationDialog(
-                L10n.settingsDeleteKeyConfirm,
-                isPresented: $showDeleteConfirmation,
-                titleVisibility: .visible
-            ) {
+            // Предупреждение, а не confirmationDialog: тот выходил выноской и
+            // прятал кнопку отмены, так что уйти из необратимого действия можно
+            // было только тапом мимо. Alert всегда рисует обе кнопки
+            .alert(L10n.settingsDeleteKeyConfirm, isPresented: $showDeleteConfirmation) {
                 Button(L10n.settingsDeleteKey, role: .destructive) {
                     Task { await viewModel.deleteKey() }
                 }
+                Button(L10n.settingsCancelEditing, role: .cancel) {}
             }
         }
 
-        /// Ввод нового ключа всегда начинается с пустого поля
+        /// Ввод нового ключа всегда начинается с пустого поля. Сохранение живёт
+        /// здесь же: ключ — единственная настройка, которую нельзя применить
+        /// сразу, потому что он проверяется запросом к провайдеру
         private var editingRow: some View {
             HStack {
                 SecureField(L10n.settingsLlmApiKeyPlaceholder, text: $viewModel.apiKey)
                     .focused($isTextFieldFocused)
                     .accessibilityLabel(L10n.settingsLlmApiKey)
+                Button(L10n.addOperationSave) {
+                    Task { await viewModel.saveKey() }
+                }
+                .font(.craftifyBody)
+                .disabled(viewModel.apiKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || viewModel.isLoading)
+                .accessibilityIdentifier("settings_save_button")
                 if viewModel.isEditingKey {
                     Button(L10n.settingsCancelEditing) { viewModel.cancelEditing() }
                         .font(.craftifyBody)

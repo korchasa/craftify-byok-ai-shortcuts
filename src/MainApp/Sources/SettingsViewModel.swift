@@ -31,6 +31,10 @@ public final class SettingsViewModel: ObservableObject {
             guard oldValue != selectedProvider else { return }
             settings.llmProvider = selectedProvider
             isEditingKey = false
+            // Ошибка относилась к ключу прежнего провайдера. Без сброса она
+            // остаётся на экране и читается как жалоба на новый провайдер,
+            // для которого ничего ещё не вводили
+            errorMessage = nil
             // Отображаем модель нового провайдера, но не персистим дефолт как явный выбор:
             // иначе будущая смена каталожного дефолта не дойдёт до тех, кто лишь щёлкал провайдеры.
             isSyncingModelForProvider = true

@@ -215,6 +215,27 @@ public final class SettingsViewModelTests: XCTestCase {
         XCTAssertNotNil(rejectingViewModel.errorMessage)
     }
 
+    /// Ошибка про ключ прежнего провайдера не должна переезжать на новый:
+    /// на экране она читается как жалоба на провайдер, который ещё не пробовали
+    public func testProviderSwitchClearsPreviousError() async {
+        let suite = "test.craftify.provider-error"
+        UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite)
+        defer { UserDefaults(suiteName: suite)?.removePersistentDomain(forName: suite) }
+        let settings = AppSettingsManager(suiteName: suite)
+        let rejectingViewModel = SettingsViewModel(
+            authManager: AuthManagerStub(key: nil),
+            verifier: APIKeyVerifierStub(outcome: .invalid),
+            settings: settings,
+            modelListFetcher: NoNetworkFetcherStub()
+        )
+        rejectingViewModel.apiKey = "sk-wrong-key-1234567890"
+        await rejectingViewModel.saveKey()
+        XCTAssertNotNil(rejectingViewModel.errorMessage)
+
+        rejectingViewModel.selectedProvider = .claude
+        XCTAssertNil(rejectingViewModel.errorMessage)
+    }
+
     public func testSaveKey_ProviderUnreachableStillSaves() async {
         let offlineViewModel = SettingsViewModel(
             authManager: AuthManagerStub(key: nil),

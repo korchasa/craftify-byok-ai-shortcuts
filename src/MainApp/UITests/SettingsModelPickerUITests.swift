@@ -45,8 +45,10 @@ final class SettingsModelPickerUITests: XCTestCase {
             searchField.waitForNonExistence(timeout: 5),
             "Back button did not leave the model picker:\n\(app.debugDescription)"
         )
+        // Маркером присутствия настроек служит кнопка выхода: она есть всегда,
+        // в отличие от кнопки сохранения ключа, которая живёт в строке ввода
         XCTAssertTrue(
-            app.buttons["settings_save_button"].waitForExistence(timeout: 5),
+            app.buttons["settings_done_button"].waitForExistence(timeout: 5),
             "Settings sheet is gone after leaving the model picker:\n\(app.debugDescription)"
         )
     }

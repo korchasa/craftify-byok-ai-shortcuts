@@ -32,7 +32,7 @@
 "settings_delete_key" = "Удалить";
 "settings_delete_key_confirm" = "Удалить API-ключ?";
 "settings_cancel_editing" = "Отмена";
-"settings_done" = "Отмена";
+"settings_done" = "Закрыть";
 "settings_native_language" = "Родной язык";
 "settings_native_language_section" = "Выберите родной язык. Он будет использоваться для краткого изложения и объяснения. По умолчанию — язык системы.";
 

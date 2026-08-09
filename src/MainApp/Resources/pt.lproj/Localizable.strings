@@ -32,7 +32,7 @@
 "settings_delete_key" = "Excluir";
 "settings_delete_key_confirm" = "Excluir a chave de API?";
 "settings_cancel_editing" = "Cancelar";
-"settings_done" = "Cancel";
+"settings_done" = "Fechar";
 "settings_native_language" = "Native language";
 "settings_native_language_section" = "Select your native language. It will be used as the main language for summarize and explain operations.";
 

@@ -32,7 +32,7 @@
 "settings_delete_key" = "删除";
 "settings_delete_key_confirm" = "删除 API 密钥？";
 "settings_cancel_editing" = "取消";
-"settings_done" = "取消";
+"settings_done" = "关闭";
 "settings_native_language" = "母语";
 "settings_native_language_section" = "选择你的母语。它将用于摘要和解释操作。";
 
