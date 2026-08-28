@@ -6,8 +6,8 @@ public final class ConsentManager: ConsentManaging {
     private let consentKey = "CraftifyConsentGiven"
 
     /// Инициализация менеджера согласия
-    /// - Parameter appGroupSuiteName: Suite name App Group (по умолчанию — group.dev.korchasa.Craftify)
-    public init(appGroupSuiteName: String = "group.dev.korchasa.Craftify") {
+    /// - Parameter appGroupSuiteName: Suite name App Group (по умолчанию — группа этой сборки)
+    public init(appGroupSuiteName: String = AppGroup.identifier) {
         guard let appGroupDefaults = UserDefaults(suiteName: appGroupSuiteName) else {
             fatalError("App Group UserDefaults not found")
         }

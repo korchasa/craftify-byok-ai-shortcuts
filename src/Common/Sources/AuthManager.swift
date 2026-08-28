@@ -3,7 +3,7 @@ import Security
 
 /// Production-реализация AuthManaging с поддержкой Keychain Sharing (App Group)
 public final class AuthManager: AuthManaging, @unchecked Sendable {
-    private let accessGroup = "78M3ZDR5UH.group.dev.korchasa.Craftify"
+    private let accessGroup = AppGroup.keychainAccessGroup
 
     public init() {}
 

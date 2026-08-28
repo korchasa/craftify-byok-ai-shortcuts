@@ -9,7 +9,7 @@ public final class ShareExtensionViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         // Инициализация менеджеров
-        let userDefaults = UserDefaults(suiteName: "group.dev.korchasa.Craftify")!
+        let userDefaults = UserDefaults(suiteName: AppGroup.identifier)!
         let inventoryManager = InventoryManager(userDefaults: userDefaults)
         // Пользователь мог поделиться текстом, ни разу не открыв приложение — сетка не должна быть пустой
         inventoryManager.fillWithDefaultOperationsIfNeeded()
@@ -21,7 +21,7 @@ public final class ShareExtensionViewController: UIViewController {
             logManager: logManager,
             authManager: authManager
         )
-        let consentManager = ConsentManager(appGroupSuiteName: "group.dev.korchasa.Craftify")
+        let consentManager = ConsentManager()
         let manager = ShareExtensionManager(
             inventoryManager: inventoryManager,
             authManager: authManager,

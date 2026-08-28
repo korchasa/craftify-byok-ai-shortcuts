@@ -6,7 +6,7 @@ import os
 /// Use this class to get and set user preferences such as native language.
 public final class AppSettingsManager {
     /// Shared singleton instance (always uses App Group)
-    public static let shared = AppSettingsManager(suiteName: "group.dev.korchasa.Craftify")
+    public static let shared = AppSettingsManager(suiteName: AppGroup.identifier)
     private let userDefaults: UserDefaults
     private let nativeLanguageKey = "CraftifyNativeLanguage"
     private let llmProviderKey = "CraftifyLLMProvider"

@@ -1,5 +1,13 @@
 import ProjectDescription
 
+/// Test bundles are built without the app's build settings, so the values the
+/// production code reads through `AppGroup` have to be spelled out here. Any
+/// valid group works — the tests only need the lookup to succeed.
+public let testBundleInfoPlist: [String: Plist.Value] = [
+    "AppGroupIdentifier": .string("group.dev.korchasa.Craftify"),
+    "KeychainAccessGroup": .string("78M3ZDR5UH.group.dev.korchasa.Craftify")
+]
+
 /// Main Tuist project manifest for Craftify. Defines all targets, packages, settings, and schemes.
 public let project = Project(
     name: "Craftify",
@@ -39,6 +47,10 @@ public let project = Project(
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": .string("Craftify"),
                 "CFBundleIconName": .string("AppIcon"),
+                // Общее хранилище объявлено здесь, а не зашито в код: сборка с
+                // другим идентификатором бандла получает и своё хранилище.
+                "AppGroupIdentifier": .string("$(APP_GROUPS)"),
+                "KeychainAccessGroup": .string("78M3ZDR5UH.$(APP_GROUPS)"),
                 "UILaunchStoryboardName": .string("LaunchScreen"),
                 "UIRequiresFullScreen": .boolean(true),
                 "UISupportedInterfaceOrientations": .array([
@@ -88,7 +100,7 @@ public let project = Project(
             product: .unitTests,
             bundleId: "dev.korchasa.CraftifyUnitTests",
             deploymentTargets: .iOS("16.0"),
-            infoPlist: .default,
+            infoPlist: .extendingDefault(with: testBundleInfoPlist),
             sources: [
                 "src/Common/Sources/**",
                 "src/MainApp/UnitTests/**",
@@ -103,7 +115,7 @@ public let project = Project(
                 .package(product: "SwiftSoup")
             ],
             settings: .settings(base: [
-                "GENERATE_INFOPLIST_FILE": "YES",
+                "GENERATE_INFOPLIST_FILE": "NO",
                 "ENABLE_TESTING_SEARCH_PATHS": "YES",
                 "SDKROOT": "iphonesimulator",
                 "OTHER_LDFLAGS": [
@@ -119,7 +131,7 @@ public let project = Project(
             product: .uiTests,
             bundleId: "dev.korchasa.CraftifyUITests",
             deploymentTargets: .iOS("16.0"),
-            infoPlist: .default,
+            infoPlist: .extendingDefault(with: testBundleInfoPlist),
             sources: [
                 "src/MainApp/UITests/**"
             ],
@@ -127,7 +139,7 @@ public let project = Project(
                 .target(name: "MainApp")
             ],
             settings: .settings(base: [
-                "GENERATE_INFOPLIST_FILE": "YES",
+                "GENERATE_INFOPLIST_FILE": "NO",
                 "TEST_TARGET_NAME": "MainApp"
             ])
         ),
@@ -139,6 +151,8 @@ public let project = Project(
             deploymentTargets: .iOS("16.0"),
             infoPlist: .extendingDefault(with: [
                 "CFBundleDisplayName": .string("Craftify Share"),
+                "AppGroupIdentifier": .string("$(APP_GROUPS)"),
+                "KeychainAccessGroup": .string("78M3ZDR5UH.$(APP_GROUPS)"),
                 "CFBundleShortVersionString": .string("$(MARKETING_VERSION)"),
                 "CFBundleVersion": .string("$(CURRENT_PROJECT_VERSION)"),
                 "NSExtension": .dictionary([
@@ -190,7 +204,7 @@ public let project = Project(
             product: .unitTests,
             bundleId: "dev.korchasa.Craftify.ShareExtensionUnitTests",
             deploymentTargets: .iOS("16.0"),
-            infoPlist: .default,
+            infoPlist: .extendingDefault(with: testBundleInfoPlist),
             sources: [
                 "src/Common/Sources/**",
                 "src/ShareExtension/UnitTests/**",
@@ -204,7 +218,7 @@ public let project = Project(
                 .package(product: "SwiftSoup")
             ],
             settings: .settings(base: [
-                "GENERATE_INFOPLIST_FILE": "YES",
+                "GENERATE_INFOPLIST_FILE": "NO",
                 "ENABLE_TESTING_SEARCH_PATHS": "YES",
                 "SDKROOT": "iphonesimulator",
                 "OTHER_LDFLAGS": [
@@ -220,7 +234,7 @@ public let project = Project(
             product: .unitTests,
             bundleId: "dev.korchasa.Craftify.CommonUnitTests",
             deploymentTargets: .iOS("16.0"),
-            infoPlist: .default,
+            infoPlist: .extendingDefault(with: testBundleInfoPlist),
             sources: [
                 "src/Common/Sources/**",
                 "src/Common/UnitTests/**",
@@ -233,7 +247,7 @@ public let project = Project(
                 .package(product: "SwiftSoup")
             ],
             settings: .settings(base: [
-                "GENERATE_INFOPLIST_FILE": "YES",
+                "GENERATE_INFOPLIST_FILE": "NO",
                 "ENABLE_TESTING_SEARCH_PATHS": "YES",
                 "SDKROOT": "iphonesimulator",
                 "OTHER_LDFLAGS": [

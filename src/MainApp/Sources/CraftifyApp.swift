@@ -13,7 +13,7 @@ public struct CraftifyApp: App {
     private static let resetInventoryArgument = "-CraftifyResetInventory"
 
     public init() {
-        let userDefaults = UserDefaults(suiteName: "group.dev.korchasa.Craftify") ?? .standard
+        let userDefaults = UserDefaults(suiteName: AppGroup.identifier) ?? .standard
         // Только приложение дописывает идентификаторы старым записям: расширение
         // читает то же хранилище и своей записью затёрло бы чужие UUID
         let inventoryManager = InventoryManager(userDefaults: userDefaults, migratesIdentifiers: true)
