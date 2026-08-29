@@ -27,8 +27,8 @@ public let project = Project(
             "SWIFT_OPTIMIZATION_LEVEL": "-Onone",
             "CODE_SIGN_ALLOW_ENTITLEMENTS_MODIFICATION": "YES",
             "SWIFT_TREAT_WARNINGS_AS_ERRORS": "YES",
-            "MARKETING_VERSION": "2.0.1",
-            "CURRENT_PROJECT_VERSION": "8",
+            "MARKETING_VERSION": "2.0.2",
+            "CURRENT_PROJECT_VERSION": "9",
             "ENABLE_USER_SCRIPT_SANDBOXING": "YES",
             "ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS": "YES"
         ],
