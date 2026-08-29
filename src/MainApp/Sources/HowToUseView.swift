@@ -9,14 +9,7 @@ public struct HowToUseView: View {
 
     @ObservedObject private var viewModel: HowToUseViewModel
     private var onConsent: (() -> Void)?
-    @Environment(\.colorScheme) private var colorScheme
-
-    /// Онбординг открывается раньше HomeView, поэтому палитру в окружение кладёт
-    /// он сам. Без этого экран брал светлую палитру по умолчанию, а системный
-    /// текст следовал тёмной теме — белые надписи на белом фоне
-    private var palette: MainAppColorPaletteProviding {
-        ColorPaletteFactory.palette(for: colorScheme)
-    }
+    @Environment(\.colorPalette) private var palette
 
     public var body: some View {
         ZStack {
@@ -54,7 +47,6 @@ public struct HowToUseView: View {
                 .padding(.horizontal)
             }
         }
-        .environment(\.colorPalette, palette)
         .sheet(isPresented: $viewModel.showModelStep, onDismiss: handleModelStepDismiss) {
             // NavigationStack здесь только ради заголовка: сам пикер больше
             // не носит собственный стек (см. комментарий в ModelPickerView)

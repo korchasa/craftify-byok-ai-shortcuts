@@ -9,7 +9,6 @@ public struct HomeView: View {
     @State private var showSettings = false
     @State private var editOperationViewModel: InventoryOperation? = nil
     @State private var editingIndex: Int? = nil
-    @Environment(\.colorScheme) private var colorScheme
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @State private var editMode: EditMode = .inactive
     /// Поднятая с места операция; nil — плитку никто не поднимал
@@ -22,9 +21,9 @@ public struct HomeView: View {
     @State private var addTargetSlot: Int = 0
     /// Операция, для которой нажали минус и ждут подтверждения
     @State private var pendingDeletion: InventoryOperation? = nil
-    private var palette: MainAppColorPaletteProviding {
-        ColorPaletteFactory.palette(for: colorScheme)
-    }
+    /// Палитру по системной теме кладёт RootView; шиты получают её явно, потому
+    /// что окружение до них не всегда доходит
+    @Environment(\.colorPalette) private var palette
 
     /// Диагностика полевого iPad-бага: шит настроек закрывался при тапе по строке модели
     fileprivate static let uiLog = OSLog(subsystem: "Internal", category: "SettingsUI")
@@ -54,7 +53,6 @@ public struct HomeView: View {
                 .environment(\.editMode, $editMode)
         }
         .background(palette.background())
-        .environment(\.colorPalette, palette)
         .alert(
             L10n.homeDeleteConfirm,
             isPresented: deletionConfirmationBinding,

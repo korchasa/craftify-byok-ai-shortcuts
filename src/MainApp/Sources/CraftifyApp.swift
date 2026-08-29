@@ -27,16 +27,7 @@ public struct CraftifyApp: App {
 
     public var body: some Scene {
         WindowGroup {
-            Group {
-                if appState.isConsentGiven {
-                    HomeView(viewModel: viewModel)
-                } else {
-                    HowToUseView(onConsent: {
-                        appState.setConsentGiven(true)
-                    })
-                }
-            }
-            .frame(maxWidth: ViewConstants.rootContentMaxWidth)
+            RootView(appState: appState, viewModel: viewModel)
         }
     }
 }
