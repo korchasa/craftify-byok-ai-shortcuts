@@ -6,7 +6,7 @@ tags: [share-extension, clipboard, prompt]
 related_tasks: []
 ---
 
-# Strip stray whitespace around the input and the result
+# Strip stray whitespace around the input and the result [ANC:task:2026-08-trim-whitespace-around-text]
 
 ## Goal
 
