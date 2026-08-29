@@ -9,7 +9,14 @@ public struct HowToUseView: View {
 
     @ObservedObject private var viewModel: HowToUseViewModel
     private var onConsent: (() -> Void)?
-    @Environment(\.colorPalette) private var palette
+    @Environment(\.colorScheme) private var colorScheme
+
+    /// Онбординг открывается раньше HomeView, поэтому палитру в окружение кладёт
+    /// он сам. Без этого экран брал светлую палитру по умолчанию, а системный
+    /// текст следовал тёмной теме — белые надписи на белом фоне
+    private var palette: MainAppColorPaletteProviding {
+        ColorPaletteFactory.palette(for: colorScheme)
+    }
 
     public var body: some View {
         ZStack {
@@ -30,6 +37,7 @@ public struct HowToUseView: View {
                     Text(L10n.howtouseConsent)
                         .font(Font.craftifyBody)
                         .fontWeight(.semibold)
+                        .foregroundColor(palette.primaryText())
                         .multilineTextAlignment(.leading)
                         .padding(.horizontal)
 
@@ -46,6 +54,7 @@ public struct HowToUseView: View {
                 .padding(.horizontal)
             }
         }
+        .environment(\.colorPalette, palette)
         .sheet(isPresented: $viewModel.showModelStep, onDismiss: handleModelStepDismiss) {
             // NavigationStack здесь только ради заголовка: сам пикер больше
             // не носит собственный стек (см. комментарий в ModelPickerView)
@@ -64,6 +73,7 @@ public struct HowToUseView: View {
                     }
                 )
             }
+            .environment(\.colorPalette, palette)
         }
     }
 
@@ -73,20 +83,24 @@ public struct HowToUseView: View {
 
     private struct HowToUseTitle: View {
         let topPadding: CGFloat
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             Text(L10n.howtouseTitle)
                 .font(Font.craftifyTitle)
                 .fontWeight(.bold)
+                .foregroundColor(palette.primaryText())
                 .multilineTextAlignment(.center)
                 .padding(.top, topPadding)
         }
     }
 
     private struct HowToUseInstruction: View {
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             Text(L10n.howtouseInstruction)
                 .font(Font.craftifyBody)
                 .fontWeight(.semibold)
+                .foregroundColor(palette.primaryText())
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
                 .dynamicTypeSize(.medium ... .accessibility5)
@@ -103,6 +117,7 @@ public struct HowToUseView: View {
                     Text(LocalizedStringKey(L10n.settingsLlmProvider))
                         .font(.craftifyBody)
                         .fontWeight(.bold)
+                        .foregroundColor(palette.primaryText())
                     Spacer()
                     Picker(L10n.settingsLlmProvider, selection: $viewModel.selectedProvider) {
                         ForEach(LLMProvider.allCases, id: \.rawValue) { provider in
@@ -144,10 +159,12 @@ public struct HowToUseView: View {
 
     /// Privacy policy text collapsed behind a disclosure to keep the screen focused
     private struct HowToUsePrivacyPolicyFullView: View {
+        @Environment(\.colorPalette) private var palette
         var body: some View {
             DisclosureGroup(L10n.privacyPolicyTitle) {
                 Text(L10n.privacyPolicyFull)
                     .font(.body)
+                    .foregroundColor(palette.primaryText())
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .dynamicTypeSize(.small ... .accessibility5)
