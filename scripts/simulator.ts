@@ -73,6 +73,30 @@ async function install(appPath: string): Promise<void> {
   fail("failed to install the app after 5 attempts");
 }
 
+/**
+ * Bring up a window showing the simulator, so the launch can be watched.
+ *
+ * Xcode 27 ships no Simulator.app at all — DeviceHub replaced it — while older
+ * Xcodes have only Simulator.app. Both are addressed by bundle id, which
+ * survives a rename, and neither is required: everything after this step goes
+ * through `simctl`, which needs no window. So a missing app is reported and the
+ * deploy carries on.
+ */
+async function openSimulatorWindow(): Promise<void> {
+  const candidates = [
+    { id: "com.apple.dt.Devices", name: "DeviceHub (Xcode 27 and newer)" },
+    { id: "com.apple.iphonesimulator", name: "Simulator (Xcode 26 and older)" },
+  ];
+  for (const candidate of candidates) {
+    const result = await run("open", { args: ["-b", candidate.id], allowFailure: true });
+    if (result.code === 0) return;
+  }
+  console.log(
+    `Neither ${candidates.map((c) => c.name).join(" nor ")} could be opened; ` +
+      "continuing without a window — install, launch and logs do not need one.",
+  );
+}
+
 export interface DeployOptions {
   configuration: "Debug" | "Release";
   /** Attach the (endless) log stream after launching. Never true for a gate. */
@@ -83,9 +107,7 @@ export interface DeployOptions {
 export async function deploySimulator(opts: DeployOptions): Promise<void> {
   const { configuration } = opts;
 
-  await step("Opening Simulator", async () => {
-    await run("open", { args: ["-a", "Simulator"] });
-  });
+  await step("Opening the simulator window", openSimulatorWindow);
 
   await step(`Building MainApp for Simulator (${configuration})`, async () => {
     await run("tuist", {
