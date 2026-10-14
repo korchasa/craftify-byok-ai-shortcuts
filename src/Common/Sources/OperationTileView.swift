@@ -44,13 +44,13 @@ public struct OperationTileView: View {
                 Text(OperationDisplay.title(for: operation.operation))
                     .font(.craftifyBody)
                     .fontWeight(.bold)
-                    .lineLimit(1)
+                    .lineLimit(OperationTileConstants.maxTextLines)
                 if !settingValue.isEmpty {
                     Text(settingValue)
                         .font(.craftifyFootnote)
                         .fontWeight(.medium)
                         .opacity(OperationTileConstants.settingOpacity)
-                        .lineLimit(1)
+                        .lineLimit(OperationTileConstants.maxTextLines)
                 }
             }
             .multilineTextAlignment(.leading)

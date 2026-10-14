@@ -37,18 +37,17 @@ public struct SettingsView: View {
                     // от поля и не связывалось с ним
                     SettingsErrorSection(errorMessage: viewModel.errorMessage)
 
-                    HStack {
+                    FormRow {
                         Text(L10n.settingsNativeLanguage)
                             .font(.craftifyBody)
                             .fontWeight(.bold)
-                        Spacer()
+                    } value: {
                         Picker(L10n.settingsNativeLanguage, selection: $viewModel.selectedNativeLanguage) {
                             ForEach(viewModel.supportedLanguages, id: \.code) { lang in
                                 Text(lang.name).tag(lang.code)
                             }
                         }
                         .pickerStyle(MenuPickerStyle())
-                        .frame(maxWidth: .infinity, alignment: .trailing)
                     }
                     Text(L10n.settingsNativeLanguageSection)
                         .font(.craftifyFootnote)
@@ -111,13 +110,13 @@ public struct SettingsView: View {
 
         /// Сохранённый ключ показывается только короткой маской с действиями «Изменить»/«Удалить»
         private var maskedKeyRow: some View {
-            HStack {
+            AdaptiveStack {
                 Text(viewModel.maskedApiKey)
                     .font(.craftifyBody)
                     .fontWeight(.regular)
                     .foregroundColor(palette.secondaryText())
                     .accessibilityLabel(L10n.settingsLlmApiKey)
-                Spacer()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 Button(L10n.settingsChangeKey) { viewModel.beginEditing() }
                     .font(.craftifyBody)
                     .accessibilityIdentifier("settings_change_key_button")
@@ -142,7 +141,7 @@ public struct SettingsView: View {
         /// здесь же: ключ — единственная настройка, которую нельзя применить
         /// сразу, потому что он проверяется запросом к провайдеру
         private var editingRow: some View {
-            HStack {
+            AdaptiveStack {
                 SecureField(L10n.settingsLlmApiKeyPlaceholder, text: $viewModel.apiKey)
                     .focused($isTextFieldFocused)
                     .accessibilityLabel(L10n.settingsLlmApiKey)
@@ -181,11 +180,11 @@ public struct SettingsView: View {
         @State private var showModelPicker = false
         @Environment(\.colorPalette) private var palette
         var body: some View {
-            HStack {
+            FormRow {
                 Text(L10n.settingsModel)
                     .font(.craftifyBody)
                     .fontWeight(.bold)
-                Spacer()
+            } value: {
                 Button(action: {
                     os_log("%{public}@", log: SettingsView.uiLog, type: .info, "model row tapped")
                     showModelPicker = true
@@ -245,18 +244,17 @@ public struct SettingsView: View {
     private struct SettingsProviderSection: View {
         @ObservedObject var viewModel: SettingsViewModel
         var body: some View {
-            HStack {
+            FormRow {
                 Text(LocalizedStringKey(L10n.settingsLlmProvider))
                     .font(.craftifyBody)
                     .fontWeight(.bold)
-                Spacer()
+            } value: {
                 Picker(L10n.settingsLlmProvider, selection: $viewModel.selectedProvider) {
                     ForEach(LLMProvider.allCases, id: \.rawValue) { provider in
                         Text(provider.displayName).tag(provider)
                     }
                 }
                 .pickerStyle(MenuPickerStyle())
-                .frame(maxWidth: .infinity, alignment: .trailing)
                 .accessibilityIdentifier("settings_provider_picker")
             }
         }

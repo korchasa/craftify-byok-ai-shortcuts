@@ -47,6 +47,14 @@ public struct HowToUseView: View {
                 .padding(.horizontal)
             }
         }
+        // Экран без навигационной панели, поэтому прокрутка уходила под
+        // строку состояния и текст наезжал на часы. Подложка цвета фона
+        // закрывает эту полосу, как шапка на главном экране
+        .safeAreaInset(edge: .top, spacing: 0) {
+            Color.clear
+                .frame(height: 0)
+                .background(palette.background(), ignoresSafeAreaEdges: .top)
+        }
         .sheet(isPresented: $viewModel.showModelStep, onDismiss: handleModelStepDismiss) {
             // NavigationStack здесь только ради заголовка: сам пикер больше
             // не носит собственный стек (см. комментарий в ModelPickerView)
@@ -105,19 +113,18 @@ public struct HowToUseView: View {
         @Environment(\.colorPalette) private var palette
         var body: some View {
             VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
-                HStack {
+                FormRow {
                     Text(LocalizedStringKey(L10n.settingsLlmProvider))
                         .font(.craftifyBody)
                         .fontWeight(.bold)
                         .foregroundColor(palette.primaryText())
-                    Spacer()
+                } value: {
                     Picker(L10n.settingsLlmProvider, selection: $viewModel.selectedProvider) {
                         ForEach(LLMProvider.allCases, id: \.rawValue) { provider in
                             Text(provider.displayName).tag(provider)
                         }
                     }
                     .pickerStyle(MenuPickerStyle())
-                    .frame(maxWidth: .infinity, alignment: .trailing)
                 }
                 SecureField(L10n.settingsLlmApiKey, text: $viewModel.apiKey)
                     .textFieldStyle(.roundedBorder)

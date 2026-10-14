@@ -10,6 +10,8 @@ public struct HomeView: View {
     @State private var editOperationViewModel: InventoryOperation? = nil
     @State private var editingIndex: Int? = nil
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    /// На размерах шрифта «Универсального доступа» сетка становится одной колонкой
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var editMode: EditMode = .inactive
     /// Поднятая с места операция; nil — плитку никто не поднимал
     @State private var dragSourceID: UUID? = nil
@@ -70,7 +72,9 @@ public struct HomeView: View {
                 showAddOperation = false
             })
             .environment(\.colorPalette, palette)
-            .addFormPresentation(isRegularWidth: horizontalSizeClass == .regular)
+            .addFormPresentation(
+                needsFullHeight: horizontalSizeClass == .regular || dynamicTypeSize.isAccessibilitySize
+            )
         })
         .sheet(
             item: $editOperationViewModel,
@@ -112,11 +116,16 @@ public struct HomeView: View {
     /// операцию, и он не должен пропадать, когда сетка заполнена без остатка
     private var gridCells: [(slot: Int, operation: InventoryOperation?)] {
         var cells = OperationGrid.cells(for: viewModel.operations, minimumCells: 0)
-        let columns = OperationTileConstants.columns
+        let columns = columnCount
         let rows = Int((Double(cells.count) / Double(columns)).rounded(.up))
         let target = (rows + 1) * columns
         cells.append(contentsOf: Array(repeating: nil, count: max(0, target - cells.count)))
-        return OperationGrid.displayOrder(cells, columns: OperationTileConstants.columns)
+        return OperationGrid.displayOrder(cells, columns: columns)
+    }
+
+    /// Число колонок сетки при текущем размере шрифта
+    private var columnCount: Int {
+        OperationGridLayout.columnCount(for: dynamicTypeSize)
     }
 
     /// Показ подтверждения удаления завязан на выбранную операцию
@@ -154,6 +163,7 @@ public struct HomeView: View {
                 }
                 .frame(minHeight: geometry.size.height, alignment: .bottom)
             }
+            .startsAtBottom()
         }
         .background(palette.background())
     }
@@ -163,9 +173,13 @@ public struct HomeView: View {
     private func operationsGrid(containerWidth: CGFloat) -> some View {
         let cellWidth = OperationGridLayout.cellWidth(
             containerWidth: containerWidth,
-            horizontalPadding: FormStyleConstants.titleBarHorizontalPadding
+            horizontalPadding: FormStyleConstants.titleBarHorizontalPadding,
+            columnCount: columnCount
         )
-        return LazyVGrid(columns: OperationGridLayout.columns, spacing: OperationTileConstants.gridSpacing) {
+        return LazyVGrid(
+            columns: OperationGridLayout.columns(count: columnCount),
+            spacing: OperationTileConstants.gridSpacing
+        ) {
             ForEach(gridCells, id: \.slot) { cell in
                 gridCell(slot: cell.slot, operation: cell.operation, cellWidth: cellWidth)
             }
@@ -338,6 +352,19 @@ public struct HomeView: View {
 }
 
 private extension View {
+    /// Длинный список открывается снизу, у плиток под большим пальцем. При
+    /// крупном тексте плитки стоят в одну колонку и не помещаются на экран, а
+    /// сверху оказались бы пустая ячейка и редкие плитки. На iOS 16 системного
+    /// способа нет, и список открывается сверху, как раньше.
+    @ViewBuilder
+    func startsAtBottom() -> some View {
+        if #available(iOS 17.0, *) {
+            defaultScrollAnchor(.bottom)
+        } else {
+            self
+        }
+    }
+
     /// Крупный лист формы для экранов операций и настроек. На iPhone лист
     /// растягивается до `.large`; на iPad с iOS 18 занимает размер страницы
     /// вместо тесного системного formSheet, где редактор промпта и поля были
@@ -362,17 +389,18 @@ private extension View {
     }
 
     /// Лист добавления операции. На узком экране остаётся компактным, на широком
-    /// (iPad) открывается на всю страницу.
+    /// (iPad) и при крупном тексте открывается на всю страницу.
     ///
     /// Половинный детент на iPad ниже, чем нужно форме: у Translate и Summarize
     /// появляется третья строка, и строка цвета уходит под нижнюю кромку листа.
     /// Прокрутка её не достаёт — содержимое верстается по высоте `.large`, поэтому
     /// считает, что помещается целиком, и лист просто обрезает лишнее. Оставался
     /// один способ добраться до цвета — потянуть лист вверх, а об этом никто не
-    /// догадывается.
+    /// догадывается. Так же выходит при крупном тексте на iPhone: кнопки там
+    /// стоят друг под другом, и на половине экрана от формы оставалась одна строка.
     @ViewBuilder
-    func addFormPresentation(isRegularWidth: Bool) -> some View {
-        if isRegularWidth {
+    func addFormPresentation(needsFullHeight: Bool) -> some View {
+        if needsFullHeight {
             largeFormPresentation()
         } else {
             compactFormPresentation()

@@ -13,6 +13,11 @@ public struct RootView: View {
         self.viewModel = viewModel
     }
 
+    /// Палитра под текущую системную тему
+    private var palette: MainAppColorPaletteProviding {
+        ColorPaletteFactory.palette(for: colorScheme)
+    }
+
     public var body: some View {
         Group {
             if appState.isConsentGiven {
@@ -23,7 +28,12 @@ public struct RootView: View {
                 })
             }
         }
-        .environment(\.colorPalette, ColorPaletteFactory.palette(for: colorScheme))
+        .environment(\.colorPalette, palette)
         .frame(maxWidth: ViewConstants.rootContentMaxWidth)
+        // Поля по бокам от колонки на iPad красим фоном экрана. Без этого там
+        // проступал фон окна: в светлой теме он совпадает с нашим белым, а в
+        // тёмной чёрный и выделялся полосами рядом с тёмно-серой колонкой
+        .frame(maxWidth: .infinity)
+        .background(palette.background().ignoresSafeArea())
     }
 }

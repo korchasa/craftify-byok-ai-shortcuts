@@ -1,6 +1,8 @@
 import SwiftUI
 
-/// Универсальная панель для кнопок внизу формы Craftify
+/// Универсальная панель для кнопок внизу формы Craftify. На размерах шрифта
+/// «Универсального доступа» кнопки встают друг под другом: вдвоём в одной
+/// строке от «Отмены» и «Сохранить» оставались первые буквы
 public struct CraftifyButtonBar<Content: View>: View {
     private let content: () -> Content
     private let backgroundColor: Color
@@ -10,7 +12,7 @@ public struct CraftifyButtonBar<Content: View>: View {
     }
 
     public var body: some View {
-        HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+        AdaptiveStack(spacing: CraftifyButtonConstants.horizontalPadding) {
             content()
         }
         .frame(maxWidth: .infinity)

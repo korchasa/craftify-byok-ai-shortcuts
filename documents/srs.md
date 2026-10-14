@@ -22,9 +22,9 @@
 
 ### FR-UX.DYNAMIC-TYPE: Dynamic Type support [ANC:fr:ux.dynamic-type]
 
-- **Description:** All app and extension text scales with the system font size setting; layouts stay usable at accessibility sizes (capped where needed).
-- **Tasks:** [REF:task:2026-07-ux-improvement-backlog | ux-improvement-backlog]
-- **Acceptance:** `src/MainApp/UnitTests/FontCraftifyTests.swift::testCraftifyFontsUseTextStyles` | `deno task check`
+- **Description:** All app and extension text scales with the system font size setting; layouts stay usable at accessibility sizes (capped where needed). At accessibility sizes nothing truncates: the tile grids become one column, form rows put the control under its label, and paired buttons stack.
+- **Tasks:** [REF:task:2026-07-ux-improvement-backlog | ux-improvement-backlog], [REF:task:2026-10-accessibility-text-sizes | accessibility-text-sizes]
+- **Acceptance:** `src/MainApp/UnitTests/FontCraftifyTests.swift::testCraftifyFontsUseTextStyles` | `src/Common/UnitTests/OperationGridLayoutTests.swift::testColumnCountDropsToOneAtAccessibilitySizes` | `deno task check`
 - **Status:** [x]
 
 ### FR-UX.STAGED-PROGRESS: Staged progress messages during processing [ANC:fr:ux.staged-progress]
@@ -64,7 +64,7 @@
 
 ### FR-UX.OPERATION-TILES: The same operation tile on the home screen and the picker [ANC:fr:ux.operation-tiles]
 
-- **Description:** The operations list in the app and the transformation picker in the share extension render every operation with one and the same tile — icon on the left, operation name, and the configured setting on a second line — laid out in the same two-column grid. The setting value goes through one shared localized formatter: summarize shows the localized label, never the canonical English string that goes into the prompt, and translate shows the bare language name. Whatever the user arranges in the app is what the extension shows.
+- **Description:** The operations list in the app and the transformation picker in the share extension render every operation with one and the same tile — icon on the left, operation name, and the configured setting on a second line — laid out in the same two-column grid (one column at accessibility text sizes, see [REF:fr:ux.dynamic-type | FR-UX.DYNAMIC-TYPE]). The setting value goes through one shared localized formatter: summarize shows the localized label, never the canonical English string that goes into the prompt, and translate shows the bare language name. Whatever the user arranges in the app is what the extension shows.
 - **Tasks:** [REF:task:2026-07-operation-tiles-on-both-screens | operation-tiles-on-both-screens]
 - **Acceptance:** `src/Common/UnitTests/OperationDisplayTests.swift::testSummarizeShowsLocalizedLabelNotCanonicalValue` | `deno task check`
 - **Status:** [x]

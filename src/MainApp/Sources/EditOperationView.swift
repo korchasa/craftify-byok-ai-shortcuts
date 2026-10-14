@@ -77,17 +77,17 @@ public struct EditOperationView: View {
         /// Строки над редактором: тип операции, параметры, цвет и заголовок промпта
         private var header: some View {
             VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
-                HStack {
+                FormRow {
                     Text(L10n.addOperationType)
                         .font(.craftifyBody).bold()
-                    Spacer()
+                } value: {
                     EditOperationTypeSection(viewModel: viewModel)
                 }
                 EditOperationFields(viewModel: viewModel)
-                HStack {
+                FormRow {
                     Text(L10n.color)
                         .font(.craftifyBody).bold()
-                    Spacer()
+                } value: {
                     OperationColorPicker(
                         symbol: viewModel.selectedKind?.sfSymbol ?? "",
                         palette: viewModel.palette,
@@ -95,10 +95,10 @@ public struct EditOperationView: View {
                         accessibilityID: "edit_color_button"
                     )
                 }
-                HStack {
+                FormRow {
                     Text(L10n.editOperationPrompt)
                         .font(.craftifyBody).bold()
-                    Spacer()
+                } value: {
                     Button(action: { viewModel.resetPrompt() }) {
                         Label(L10n.editOperationPromptReset, systemImage: "arrow.counterclockwise")
                             .font(.craftifyFootnote)
@@ -167,7 +167,6 @@ public struct EditOperationView: View {
             Text(viewModel.selectedKind.map { label(for: $0) } ?? "")
                 .font(.craftifyBody)
                 .foregroundColor(palette.secondaryText())
-                .frame(maxWidth: .infinity, alignment: .trailing)
                 .accessibilityLabel(L10n.addOperationType)
         }
 
@@ -205,10 +204,10 @@ public struct EditOperationView: View {
     private struct EditOperationTranslateSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            HStack {
+            FormRow {
                 Text(L10n.operationParamTargetLanguage)
                     .font(.craftifyBody).bold()
-                Spacer()
+            } value: {
                 Picker(L10n.operationParamTargetLanguage, selection: $viewModel.targetLanguage) {
                     ForEach(viewModel.supportedLanguages, id: \.code) { lang in
                         Text(lang.name).tag(lang.code)
@@ -216,7 +215,6 @@ public struct EditOperationView: View {
                 }
                 .pickerStyle(DefaultPickerStyle())
                 .accessibilityLabel(L10n.operationParamTargetLanguage)
-                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
     }
@@ -224,10 +222,10 @@ public struct EditOperationView: View {
     private struct EditOperationSummarizeSection: View {
         @ObservedObject var viewModel: EditOperationViewModel
         var body: some View {
-            HStack {
+            FormRow {
                 Text(L10n.operationParamLength)
                     .font(.craftifyBody).bold()
-                Spacer()
+            } value: {
                 Picker(L10n.operationParamLength, selection: $viewModel.length) {
                     ForEach(SummarizeLengths.all, id: \.self) { length in
                         Text(SummarizeLengthDisplay.label(for: length)).tag(length)
@@ -237,7 +235,6 @@ public struct EditOperationView: View {
                 }
                 .pickerStyle(DefaultPickerStyle())
                 .accessibilityLabel(L10n.operationParamLength)
-                .frame(maxWidth: .infinity, alignment: .trailing)
             }
         }
     }

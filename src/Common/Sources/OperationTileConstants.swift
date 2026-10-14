@@ -20,6 +20,10 @@ public enum OperationTileConstants {
     public static let titleSpacing: CGFloat = 2
     /// Размер символа операции
     public static let symbolSize: CGFloat = 20
+    /// Сколько строк может занять подпись на плитке. Одной строки хватает в
+    /// обычных размерах шрифта, а при крупном тексте длинное название или
+    /// язык переносится на вторую строку вместо многоточия
+    public static let maxTextLines: Int = 2
     /// Прозрачность значения настройки на плитке
     public static let settingOpacity: Double = 0.75
     /// Диаметр кружка с минусом в режиме правки

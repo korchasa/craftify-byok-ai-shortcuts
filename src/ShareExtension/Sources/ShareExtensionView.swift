@@ -7,6 +7,8 @@ public struct ShareExtensionView: View {
     @State private var alertMessage = ""
     @State private var isProcessing = false
     @Environment(\.colorScheme) private var colorScheme
+    /// На размерах шрифта «Универсального доступа» сетка становится одной колонкой
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     private var palette: ShareExtensionColorPaletteProviding {
         ShareExtensionColorPaletteFactory.palette(for: colorScheme)
     }
@@ -98,7 +100,7 @@ public struct ShareExtensionView: View {
 
     /// Кнопки под сеткой: закрытие всегда, копирование — когда есть результат
     private var buttonRow: some View {
-        HStack(spacing: CraftifyButtonConstants.horizontalPadding) {
+        AdaptiveStack(spacing: CraftifyButtonConstants.horizontalPadding) {
             closeButton
             if viewModel.displayResult != nil {
                 copyAndCloseButton
@@ -126,7 +128,9 @@ public struct ShareExtensionView: View {
         }
         .background(palette.backdrop().ignoresSafeArea())
         .zIndex(ZIndexConstants.overlay)
-        // Крупные размеры ограничиваем, чтобы сетка 2xN оставалась пригодной
+        // Карточка делит экран с текстом, над которым работают, поэтому рост
+        // шрифта здесь остановлен на третьем крупном размере. На крупных
+        // размерах плитки уже стоят в одну колонку, а кнопки — друг под другом
         .dynamicTypeSize(.xSmall ... .accessibility3)
         .environment(\.shareExtensionColorPalette, palette)
         // ViewModel subscriptions & alerts
@@ -185,12 +189,16 @@ public struct ShareExtensionView: View {
     /// Целиком пустые ряды выбрасываем: подходящих входу операций бывает
     /// меньше, чем плиток, и такие ряды оставляли бы дыру над кнопкой
     private var operationsGrid: some View {
+        let columnCount = OperationGridLayout.columnCount(for: dynamicTypeSize)
         let cells = OperationGrid.withoutEmptyRows(
             OperationGrid.cells(for: viewModel.operations, minimumCells: 0),
-            columns: OperationTileConstants.columns
+            columns: columnCount
         )
-        return LazyVGrid(columns: OperationGridLayout.columns, spacing: OperationTileConstants.gridSpacing) {
-            ForEach(OperationGrid.displayOrder(cells, columns: OperationTileConstants.columns), id: \.slot) { cell in
+        return LazyVGrid(
+            columns: OperationGridLayout.columns(count: columnCount),
+            spacing: OperationTileConstants.gridSpacing
+        ) {
+            ForEach(OperationGrid.displayOrder(cells, columns: columnCount), id: \.slot) { cell in
                 if let operation = cell.operation {
                     operationButton(for: operation)
                 } else {

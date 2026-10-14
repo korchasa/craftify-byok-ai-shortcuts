@@ -16,17 +16,17 @@ public struct AddOperationView: View {
             title: LocalizedStringKey(L10n.addOperationTitle),
             content: { _ in
                 VStack(alignment: .leading, spacing: FormStyleConstants.sectionSpacing) {
-                    HStack {
+                    FormRow {
                         Text(L10n.addOperationType)
                             .font(.craftifyBody).bold()
-                        Spacer()
+                    } value: {
                         AddOperationTypeSection(viewModel: viewModel)
                     }
                     AddOperationFields(viewModel: viewModel)
-                    HStack {
+                    FormRow {
                         Text(L10n.color)
                             .font(.craftifyBody).bold()
-                        Spacer()
+                    } value: {
                         OperationColorPicker(
                             symbol: viewModel.selectedKind?.sfSymbol ?? "",
                             palette: viewModel.palette,
@@ -94,7 +94,6 @@ public struct AddOperationView: View {
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.addOperationType)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
 
         private func label(for kind: OperationKind) -> String {
@@ -128,10 +127,10 @@ public struct AddOperationView: View {
         }
 
         private var translateSection: some View {
-            HStack {
+            FormRow {
                 Text(L10n.operationParamTargetLanguage)
                     .font(.craftifyBody).bold()
-                Spacer()
+            } value: {
                 AddOperationTranslateSection(viewModel: viewModel)
             }
         }
@@ -144,10 +143,10 @@ public struct AddOperationView: View {
         }
 
         private var summarizeSection: some View {
-            HStack {
+            FormRow {
                 Text(L10n.operationParamLength)
                     .font(.craftifyBody).bold()
-                Spacer()
+            } value: {
                 AddOperationSummarizeSection(viewModel: viewModel)
             }
         }
@@ -163,7 +162,6 @@ public struct AddOperationView: View {
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationParamTargetLanguage)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 
@@ -179,7 +177,6 @@ public struct AddOperationView: View {
             }
             .pickerStyle(DefaultPickerStyle())
             .accessibilityLabel(L10n.operationParamLength)
-            .frame(maxWidth: .infinity, alignment: .trailing)
         }
     }
 }
