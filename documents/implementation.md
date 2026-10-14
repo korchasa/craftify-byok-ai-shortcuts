@@ -118,7 +118,7 @@ graph TD
 ## URL Sharing
 - ShareExt: text (UTType.plainText), URL (UTType.url)
 - If both: text priority
-- 5000 char limit
+- 100,000 char limit
 - UI: only ops with URL support shown
 - Summarize: text or URL
 

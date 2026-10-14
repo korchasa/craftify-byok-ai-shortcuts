@@ -66,7 +66,7 @@
 ## Share Extension Architecture
 - All managers are injected via DI, including OSLogManagerShared.
 - Logging of all actions and errors, key masking.
-- Text limit: 5000 characters, enforced in UI and manager.
+- Text limit: 100,000 characters (`ShareExtensionManager.maxTextLength`), enforced in UI and manager.
 - Timeouts: 15 seconds per request, 30 seconds total limit.
 - Error handling: all scenarios covered (no text, limit, no consent, invalid key, network, parsing, clipboard, cancel).
 - Covered by unit and UI tests (display, selection, saving color, result processing modes).

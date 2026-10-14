@@ -108,7 +108,7 @@ File: [SummarizeOperation.swift](src/Common/Sources/Models/SummarizeOperation.sw
 
 **Key rules:**
 - Default `resultMode` is `clipboard`; Explain and Summarize override it to `display`.
-- Maximum input length: 5000 characters (controlled in Share Extension).
+- Maximum input length: 100,000 characters (controlled in Share Extension).
 - URL input is accepted by Summarize and Simplify (`supportsURL`). Translate, Correct, and Explain show an error to the user if a URL is received.
 - Explain and Summarize produce their output in the current app language (`AppSettingsManager`); Translate uses its `targetLanguage` parameter; Correct and Simplify keep the language of the input.
 

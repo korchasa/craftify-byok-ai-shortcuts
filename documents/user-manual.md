@@ -4,7 +4,7 @@
 1. Open app
 2. On first launch: review full Privacy Policy and tap **Accept & Continue** to grant consent
 3. Add operations (Translate, Simplify, Correct, Explain, Summarize) via HomeView
-4. Choose **LLM provider** (OpenAI or Claude) and enter the corresponding **API key** in SettingsView
+4. Choose **LLM provider** (OpenAI, Claude, Mistral or OpenRouter) and enter the corresponding **API key** in SettingsView
 5. To process text:
    - Select text in any app
    - Share → Craftify
@@ -78,7 +78,7 @@
 ## Share Links
 - Share links (URLs) via Share menu
 - If both text+link: text priority
-- 5000 char limit
+- 100,000 char limit
 
 ## Button Styles
 - Unified: color, corners, padding, press effect
