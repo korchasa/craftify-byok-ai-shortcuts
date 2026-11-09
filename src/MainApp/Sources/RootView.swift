@@ -12,6 +12,8 @@ public struct RootView: View {
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.scenePhase) private var scenePhase
     @Environment(\.requestReview) private var requestReview
+    /// Отсчёт до просьбы об оценке: начинается с закрытия экрана задачи
+    @State private var reviewTrigger = ReviewPromptTrigger()
 
     /// - Parameters:
     ///   - appState: согласие пользователя с политикой
@@ -28,35 +30,43 @@ public struct RootView: View {
         ColorPaletteFactory.palette(for: colorScheme)
     }
 
-    /// Просит системное окно оценки, когда набралось нужное число успешных
-    /// операций. Только на главном экране и только после короткой паузы, чтобы
-    /// экран успел показаться; уход с переднего плана паузу отменяет.
-    private func requestReviewIfDue() async {
-        // [REF:fr:ux.review-request] — просьба об оценке в спокойный момент
-        guard scenePhase == .active, reviewPolicy.shouldRequestReview() else { return }
+    /// Просит системное окно оценки, когда истёк отсчёт после закрытия экрана
+    /// задачи. Открытие нового экрана или уход с переднего плана меняет номер
+    /// отсчёта, и SwiftUI отменяет это ожидание.
+    private func requestReviewAfterCountdown() async {
+        // [REF:fr:ux.review-request] — просьба об оценке в конце законченного дела
+        guard let countdown = reviewTrigger.countdown else { return }
         do {
             try await Task.sleep(nanoseconds: ViewConstants.reviewRequestDelayNanoseconds)
         } catch {
+            log("Review request: countdown cancelled")
             return
         }
-        guard reviewPolicy.shouldRequestReview() else { return }
+        guard reviewTrigger.mayAsk(afterCountdown: countdown) else { return }
+        let decision = reviewPolicy.reviewDecision()
+        guard decision == .due else {
+            log("Review request: not asked", metadata: ["reason": decision.rawValue])
+            return
+        }
         requestReview()
         reviewPolicy.markReviewRequested()
-        logManager.log(LogEntry(
-            level: .info,
-            module: "RootView",
-            message: "Review request: asked the system for a rating",
-            metadata: [:],
-            timestamp: Date()
-        ))
+        log("Review request: asked the system for a rating")
+    }
+
+    private func log(_ message: String, metadata: [String: String] = [:]) {
+        logManager.log(LogEntry(level: .info, module: "RootView", message: message, metadata: metadata, timestamp: Date()))
     }
 
     public var body: some View {
         Group {
             if appState.isConsentGiven {
-                HomeView(viewModel: viewModel)
-                    // Каждый выход на передний план заново проверяет, пора ли просить оценку
-                    .task(id: scenePhase) { await requestReviewIfDue() }
+                HomeView(viewModel: viewModel, onTaskSheetChange: { isShown in
+                    reviewTrigger.taskSheetChanged(isShown: isShown)
+                })
+                .task(id: reviewTrigger.countdown) { await requestReviewAfterCountdown() }
+                .onChange(of: scenePhase) { phase in
+                    reviewTrigger.foregroundChanged(isActive: phase == .active)
+                }
             } else {
                 HowToUseView(onConsent: {
                     appState.setConsentGiven(true)

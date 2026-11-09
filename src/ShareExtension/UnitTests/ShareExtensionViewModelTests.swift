@@ -80,7 +80,14 @@ final class ShareExtensionViewModelTests: XCTestCase {
         viewModel.process(operation: operation)
         await waitUntilIdle(viewModel)
         XCTAssertEqual(reviewPolicy.successCount, 3)
-        XCTAssertTrue(reviewPolicy.shouldRequestReview())
+        XCTAssertNotNil(reviewPolicy.firstSuccessDate, "the first counted success records its day")
+        // В день первого успеха не просят; приложение, открытое позже, увидит то же хранилище
+        let later = ReviewRequestPolicy(
+            userDefaults: UserDefaults(suiteName: Self.reviewSuiteName) ?? .standard,
+            appVersion: "2.0.3",
+            now: { Date().addingTimeInterval(2 * 86400) }
+        )
+        XCTAssertTrue(later.shouldRequestReview())
     }
 
     func testProcess_Timeout() async {

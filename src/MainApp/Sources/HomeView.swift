@@ -27,11 +27,20 @@ public struct HomeView: View {
     /// что окружение до них не всегда доходит
     @Environment(\.colorPalette) private var palette
 
+    /// Сообщает, открыт ли сейчас экран задачи: по его закрытию приложение
+    /// решает, не пора ли попросить оценку
+    private let onTaskSheetChange: (Bool) -> Void
+
     /// Диагностика полевого iPad-бага: шит настроек закрывался при тапе по строке модели
     fileprivate static let uiLog = OSLog(subsystem: "Internal", category: "SettingsUI")
 
-    public init(viewModel: HomeViewModel) {
+    /// - Parameters:
+    ///   - viewModel: модель списка операций
+    ///   - onTaskSheetChange: получает true, когда открылся экран задачи
+    ///     (добавление, правка операции или настройки), и false, когда закрылся
+    public init(viewModel: HomeViewModel, onTaskSheetChange: @escaping (Bool) -> Void = { _ in }) {
         self.viewModel = viewModel
+        self.onTaskSheetChange = onTaskSheetChange
         // Ключ остался в ресурсах без применения; трогаем, чтобы Periphery не ругался
         _ = L10n.homeOrder
     }
@@ -108,6 +117,15 @@ public struct HomeView: View {
         .onChange(of: showSettings) { newValue in
             os_log("%{public}@", log: HomeView.uiLog, type: .info, "showSettings changed: \(newValue)")
         }
+        // [REF:fr:ux.review-request] — закрытие экрана задачи
+        .onChange(of: isTaskSheetShown) { isShown in
+            onTaskSheetChange(isShown)
+        }
+    }
+
+    /// Открыт ли экран задачи: форма добавления, форма правки или настройки
+    private var isTaskSheetShown: Bool {
+        showAddOperation || showSettings || editOperationViewModel != nil
     }
 
     /// Ячейки сетки в порядке отрисовки. Нумерация идёт снизу вверх, поэтому

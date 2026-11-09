@@ -56,7 +56,8 @@ graph TD
   - LLMModelListFetcher.swift: fetches the provider's live model list from `/v1/models`
   - MarkdownLLMView.swift: SwiftUI view for Markdown rendering of LLM responses
   - URLInputResolver.swift: Resolves URL → plain text via pluggable TextFetching layer
-  - ReviewRequestPolicy.swift: success counter and once-per-version rule for the App Store rating prompt (App Group defaults)
+  - ReviewRequestPolicy.swift: success counter, first-success day and once-per-version rule for the App Store rating prompt (App Group defaults)
+  - ReviewDecision.swift: why the rating is or is not due (logged as the reason when the app does not ask)
 - **UnitTests/**: tests for all logic
 - **Config/**: SPM target config
 - **Resources/**: l10n
@@ -163,7 +164,7 @@ src/
       AppSettingsManager.swift       # Centralized service for all application settings, stores language and logs changes
       MarkdownLLMView.swift         # SwiftUI view for Markdown rendering of LLM responses
       URLInputResolver.swift        # Resolves URL → plain text via pluggable TextFetching layer
-      ReviewRequestPolicy.swift     # When to ask for an App Store rating: 3 successes, once per marketing version; the extension counts, the app asks
+      ReviewRequestPolicy.swift     # When to ask for an App Store rating: 3 successes, not on the day of the first, once per marketing version; the extension counts, the app asks
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests
@@ -185,6 +186,7 @@ src/
     Sources/
       CraftifyApp.swift         # App entry point
       HomeView.swift            # Main inventory screen
+      ReviewPromptTrigger.swift # Starts the rating countdown when a task sheet closes; opening a sheet or leaving the foreground cancels it
       SettingsView.swift        # API key and settings UI
       HowToUseView.swift        # Onboarding UI
       AddOperationView.swift    # Add operation UI
