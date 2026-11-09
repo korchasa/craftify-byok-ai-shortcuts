@@ -3,6 +3,86 @@ import XCTest
 
 @MainActor
 final class ShareExtensionViewModelTests: XCTestCase {
+    private static let reviewSuiteName = "ShareExtensionViewModelTests.review"
+
+    /// Счётчик успехов для просьбы об оценке — в своём хранилище, чистом в начале каждого теста
+    private static func makeReviewPolicy() -> ReviewRequestPolicy {
+        UserDefaults.standard.removePersistentDomain(forName: reviewSuiteName)
+        let defaults = UserDefaults(suiteName: reviewSuiteName) ?? .standard
+        return ReviewRequestPolicy(userDefaults: defaults, appVersion: "2.0.3")
+    }
+
+    /// Ждёт, пока прогон обработки завершится
+    private func waitUntilIdle(_ viewModel: ShareExtensionViewModel) async {
+        for _ in 0 ..< 200 where viewModel.isProcessing {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+    }
+
+    /// К просьбе об оценке ведёт только успех: ошибка и отмена счётчик не трогают,
+    /// даже если результат отменённого прогона приходит позже
+    func testProcess_OnlySuccessCountsTowardReview() async {
+        final class ScriptedProcessingStub: NSObject, ProcessingManaging {
+            enum Mode { case succeed, fail, hang }
+            var mode = Mode.succeed
+            var pending: ((Result<String, Error>) -> Void)?
+            func process(text: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+                switch mode {
+                case .succeed: completion(.success("Processed: \(text)"))
+                case .fail: completion(.failure(LLMAPIClientError.unauthorized))
+                case .hang: pending = completion
+                }
+            }
+
+            func cancel() {}
+        }
+        let processing = ScriptedProcessingStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: processing,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let reviewPolicy = Self.makeReviewPolicy()
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: reviewPolicy)
+        viewModel.processingTimeoutSeconds = 2
+        manager.inputText = "Hello"
+        let operation = InventoryOperation(operation: .translate, params: Data())
+
+        viewModel.process(operation: operation)
+        await waitUntilIdle(viewModel)
+        XCTAssertEqual(reviewPolicy.successCount, 1, "a success counts")
+
+        processing.mode = .fail
+        viewModel.process(operation: operation)
+        await waitUntilIdle(viewModel)
+        XCTAssertNotNil(viewModel.errorMessage)
+        XCTAssertEqual(reviewPolicy.successCount, 1, "an error does not count")
+        viewModel.dismissError()
+
+        processing.mode = .hang
+        viewModel.process(operation: operation)
+        for _ in 0 ..< 200 where processing.pending == nil {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+        viewModel.cancel()
+        processing.pending?(.success("late"))
+        try? await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertEqual(reviewPolicy.successCount, 1, "a cancelled operation does not count")
+
+        processing.mode = .succeed
+        viewModel.process(operation: operation)
+        await waitUntilIdle(viewModel)
+        viewModel.process(operation: operation)
+        await waitUntilIdle(viewModel)
+        XCTAssertEqual(reviewPolicy.successCount, 3)
+        XCTAssertTrue(reviewPolicy.shouldRequestReview())
+    }
+
     func testProcess_Timeout() async {
         // Arrange: Stub менеджеры
         let inventoryManager = InventoryManagerStub()
@@ -19,7 +99,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
         await MainActor.run { viewModel.processingTimeoutSeconds = 0.1 } // короткий таймаут для теста
         let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
@@ -58,7 +138,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
         viewModel.processingTimeoutSeconds = 2 // достаточно для успешной обработки
         let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
@@ -108,7 +188,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         inventoryManager.saveInventory(allOps)
 
         // Создаем ViewModel с начальным пустым вводом
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
 
         // 1. Изначально должны загрузиться все операции
         XCTAssertEqual(viewModel.operations.count, allOps.count)
@@ -148,7 +228,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         }
         inventoryManager.saveInventory(allOps)
 
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
 
         // Act - Устанавливаем слишком длинный текст
         let longText = String(repeating: "a", count: ShareExtensionViewModelConstants.maxInputTextLength + 1)
@@ -196,7 +276,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
         await MainActor.run { viewModel.processingTimeoutSeconds = 0.1 }
         let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
@@ -235,7 +315,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
         viewModel.processingTimeoutSeconds = 2
         let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
@@ -282,7 +362,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
         viewModel.processingTimeoutSeconds = 2
         let op = InventoryOperation(operation: .translate, params: Data())
         manager.inputText = "Hello"
@@ -327,7 +407,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: noConsent,
             logManager: LogManagerSharedInMemory()
         )
-        let consentViewModel = ShareExtensionViewModel(manager: noConsentManager)
+        let consentViewModel = ShareExtensionViewModel(manager: noConsentManager, reviewPolicy: Self.makeReviewPolicy())
         consentViewModel.processingTimeoutSeconds = 2
         noConsentManager.inputText = "Hello"
         let consentError = expectation(description: "Consent error")
@@ -369,7 +449,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
         viewModel.processingTimeoutSeconds = 2
         manager.inputText = "Hello"
 
@@ -434,7 +514,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
         viewModel.processingTimeoutSeconds = 2
         manager.inputText = "Hello"
         let errorShown = expectation(description: "Error shown")
@@ -472,7 +552,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: consentManager,
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
 
         // Предварительно устанавливаем отображаемый результат
         let expectedText = """
@@ -502,7 +582,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: ConsentManagerStub(),
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
 
         viewModel.updateInputText("Договор вступает в силу с момента подписания.")
         XCTAssertEqual(viewModel.inputText, "Договор вступает в силу с момента подписания.")
@@ -525,7 +605,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: ConsentManagerStub(),
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
 
         viewModel.updateInputText("\n  Договор вступает в силу.\n\n")
         XCTAssertEqual(viewModel.inputText, "Договор вступает в силу.")
@@ -546,7 +626,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             consentManager: ConsentManagerStub(),
             logManager: LogManagerSharedInMemory()
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
 
         let long = String(repeating: "a", count: ShareExtensionViewModelConstants.maxInputTextLength + 100)
         viewModel.updateInputText(long)

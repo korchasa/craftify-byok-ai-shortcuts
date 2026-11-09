@@ -89,3 +89,10 @@
 - **Tasks:** [REF:task:2026-08-trim-whitespace-around-text | trim-whitespace-around-text]
 - **Acceptance:** `src/ShareExtension/UnitTests/ShareExtensionManagerTests.swift::testProcess_TrimsWhitespaceAroundResult` | `deno task check`
 - **Status:** [x]
+
+### FR-UX.REVIEW-REQUEST: Ask for an App Store rating after the third success [ANC:fr:ux.review-request]
+
+- **Description:** After the user's third successful text operation, Craftify asks the system to show Apple's App Store rating prompt — Apple's own sheet, no custom dialog and no "rate us" button anywhere. Successes are counted where the operations run, in the share extension, and kept in the App Group defaults; the request itself is made by the app, on the home screen, shortly after the app comes to the foreground. An error, a timeout or a cancelled operation never counts, and nothing is asked at first launch or while an operation is in progress. The app asks at most once per marketing version (`CFBundleShortVersionString`): after a request it remembers the version, successes made later in that version do not count, and a later version needs 3 new successes. Apple's own cap of 3 prompts per 365 days applies on top.
+- **Tasks:** [REF:task:2026-11-app-store-rating-request | app-store-rating-request]
+- **Acceptance:** `src/Common/UnitTests/ReviewRequestPolicyTests.swift::testRequestsReviewOnThirdSuccessOncePerVersion` | `src/ShareExtension/UnitTests/ShareExtensionViewModelTests.swift::testProcess_OnlySuccessCountsTowardReview` | `deno task check`
+- **Status:** [x]

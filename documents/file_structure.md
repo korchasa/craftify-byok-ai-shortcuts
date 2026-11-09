@@ -56,6 +56,7 @@ graph TD
   - LLMModelListFetcher.swift: fetches the provider's live model list from `/v1/models`
   - MarkdownLLMView.swift: SwiftUI view for Markdown rendering of LLM responses
   - URLInputResolver.swift: Resolves URL → plain text via pluggable TextFetching layer
+  - ReviewRequestPolicy.swift: success counter and once-per-version rule for the App Store rating prompt (App Group defaults)
 - **UnitTests/**: tests for all logic
 - **Config/**: SPM target config
 - **Resources/**: l10n
@@ -162,6 +163,7 @@ src/
       AppSettingsManager.swift       # Centralized service for all application settings, stores language and logs changes
       MarkdownLLMView.swift         # SwiftUI view for Markdown rendering of LLM responses
       URLInputResolver.swift        # Resolves URL → plain text via pluggable TextFetching layer
+      ReviewRequestPolicy.swift     # When to ask for an App Store rating: 3 successes, once per marketing version; the extension counts, the app asks
     UnitTests/
       AuthManagerTests.swift    # Keychain logic tests
       LogManagerSharedInMemoryTests.swift # Logging tests

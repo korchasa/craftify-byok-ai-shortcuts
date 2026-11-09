@@ -25,6 +25,8 @@ public final class ShareExtensionViewModel: ObservableObject {
     // MARK: - Properties
 
     public let manager: ShareExtensionManager
+    /// Счётчик успехов, по которому приложение решает, когда попросить оценку
+    private let reviewPolicy: ReviewRequestPolicy
     private var currentResultMode: ResultMode = .clipboard
     public var processingTask: Task<Void, Never>?
     public var processingTimeoutSeconds: Double = 30
@@ -57,8 +59,12 @@ public final class ShareExtensionViewModel: ObservableObject {
 
     // MARK: - Initialization
 
-    public init(manager: ShareExtensionManager) {
+    /// - Parameters:
+    ///   - manager: бизнес-логика расширения
+    ///   - reviewPolicy: счётчик успешных операций для просьбы об оценке
+    public init(manager: ShareExtensionManager, reviewPolicy: ReviewRequestPolicy) {
         self.manager = manager
+        self.reviewPolicy = reviewPolicy
         let input = manager.inputText
         let inputPreview = String(input.prefix(100))
 
@@ -390,12 +396,27 @@ public final class ShareExtensionViewModel: ObservableObject {
                 errorMessage = msg
             }
         } else if result?.success == true {
+            recordSuccessForReview()
             if currentResultMode == .display {
                 displayResult = manager.lastResult
             } else {
                 notifySuccessAndClose()
             }
         }
+    }
+
+    /// Засчитывает успех для просьбы об оценке. Сама просьба — в приложении:
+    /// здесь пользователь ещё не закончил свою задачу
+    private func recordSuccessForReview() {
+        // [REF:fr:ux.review-request] — считаются только успешные операции
+        reviewPolicy.recordSuccess()
+        logManager.log(LogEntry(
+            level: .info,
+            module: "ShareExtensionViewModel",
+            message: "Review request: success recorded",
+            metadata: ["success_count": String(reviewPolicy.successCount)],
+            timestamp: Date()
+        ))
     }
 
     /// Локализует ключ ошибки по таблице Localizable бандла расширения

@@ -7,6 +7,8 @@ import SwiftUI
 public struct CraftifyApp: App {
     @StateObject private var appState = AppState()
     private let viewModel: HomeViewModel
+    /// Счётчик успехов ведёт расширение; приложение по нему просит оценку
+    private let reviewPolicy: ReviewRequestPolicy
     /// Аргумент запуска для UI-тестов: список операций сбрасывается к дефолтному.
     /// Хранилище лежит в App Group и переживает перезапуск, поэтому тест, который
     /// что-то удаляет, без сброса испортил бы все следующие прогоны.
@@ -22,12 +24,13 @@ public struct CraftifyApp: App {
         }
         inventoryManager.fillWithDefaultOperationsIfNeeded()
         self.viewModel = HomeViewModel(inventoryManager: inventoryManager)
+        self.reviewPolicy = ReviewRequestPolicy(userDefaults: userDefaults, appVersion: ReviewRequestPolicy.appVersion(of: .main))
         // Удалена инициализация New Relic
     }
 
     public var body: some Scene {
         WindowGroup {
-            RootView(appState: appState, viewModel: viewModel)
+            RootView(appState: appState, viewModel: viewModel, reviewPolicy: reviewPolicy)
         }
     }
 }

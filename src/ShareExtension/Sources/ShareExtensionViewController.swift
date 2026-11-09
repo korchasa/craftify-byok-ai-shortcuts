@@ -30,7 +30,11 @@ public final class ShareExtensionViewController: UIViewController {
             consentManager: consentManager,
             logManager: logManager
         )
-        let viewModel = ShareExtensionViewModel(manager: manager)
+        let reviewPolicy = ReviewRequestPolicy(
+            userDefaults: userDefaults,
+            appVersion: ReviewRequestPolicy.appVersion(of: .main)
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: reviewPolicy)
         let rootView = ShareExtensionView(viewModel: viewModel)
         let hosting = UIHostingController(rootView: rootView)
         addChild(hosting)

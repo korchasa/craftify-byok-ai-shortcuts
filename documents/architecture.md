@@ -87,6 +87,13 @@ graph TD
   ShareExtension -->|resultMode .display| ShareExtensionView[ShareExtensionView: Display Result]
 ```
 
+## App Store Rating Request [ANC:sds:review-request]
+Implements [REF:fr:ux.review-request | FR-UX.REVIEW-REQUEST]; the extension-or-app decision is recorded in [REF:task:2026-11-app-store-rating-request | app-store-rating-request].
+- `ReviewRequestPolicy` (Common) is the whole rule, with no UI: a success counter and the version that was last asked, both in the App Group defaults (`CraftifyReviewSuccessCount`, `CraftifyReviewRequestedVersion`), plus the threshold of 3. The version is `CFBundleShortVersionString` of the running bundle; the app and the extension share `MARKETING_VERSION`.
+- The share extension counts: `ShareExtensionViewModel` calls `recordSuccess()` only in the success branch of `handleResult`, for both result modes. Errors, the timeout and `cancel()` never reach it.
+- The app asks: `RootView`, on the home branch, runs a task keyed by `scenePhase`. When the scene is active it waits a moment for the home screen to settle, and if `shouldRequestReview()` holds it calls SwiftUI's `requestReview` and `markReviewRequested()`, which stores the version and resets the counter. Leaving the foreground cancels the wait.
+- Why not in the extension: the call compiles there (the SDK marks none of the review APIs unavailable to extensions), but a clipboard operation closes the extension at the moment of success, a displayed result leaves the user mid-task, and the extension's bundle is not the App Store product.
+
 ## Timeout Mechanism
 - Processing timeout is implemented only at the ShareExtensionViewModel level (default 30 seconds, can be overridden in tests).
 - ShareExtensionManager does not implement a timeout, only business logic for processing and errors.
