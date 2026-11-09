@@ -29,6 +29,24 @@ export const DERIVED_DATA = "build/DerivedData_FastCheck";
 /** Index store written by any build into `DERIVED_DATA`; input for Periphery. */
 export const INDEX_STORE = `${DERIVED_DATA}/Index.noindex/DataStore`;
 
+/**
+ * The one SwiftFormat release every format pass runs, here and in CI.
+ *
+ * Its rules change between releases: on 2026-11-09 the CI runner picked up
+ * 0.64.5 from Homebrew and rewrote three files that 0.63.1 had accepted, so
+ * an untouched tree failed the "formatter left no changes" gate. `deno task
+ * init` downloads exactly this release and checks its digest; `deno task fmt`
+ * refuses to run anything else. Bump the version and the digest together
+ * (the digest is on the release page next to `swiftformat.zip`).
+ */
+export const SWIFTFORMAT_VERSION = "0.64.6";
+export const SWIFTFORMAT_SHA256 =
+  "70e6b2057647fb1c54d620ebbb6649274de56534c57f91f67461a129ebaaba3e";
+export const SWIFTFORMAT_URL =
+  `https://github.com/nicklockwood/SwiftFormat/releases/download/${SWIFTFORMAT_VERSION}/swiftformat.zip`;
+/** Outside `build/` and `.build/`, so `deno task clean` does not remove it. */
+export const SWIFTFORMAT_BIN = `.tools/swiftformat-${SWIFTFORMAT_VERSION}/swiftformat`;
+
 /** Skip attaching the interactive log stream after a simulator launch. */
 export const SKIP_LOG_STREAM = Deno.env.get("SKIP_LOG_STREAM") === "1";
 

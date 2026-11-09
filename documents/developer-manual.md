@@ -3,7 +3,7 @@
 ---
 
 ## Install
-- `deno task init`: install CLI tools (tuist, swiftlint, swiftformat, xcbeautify, swiftgen, periphery)
+- `deno task init`: install CLI tools (tuist, swiftlint, swiftgen, gitleaks via Homebrew; SwiftFormat at the version pinned in `scripts/config.ts`, downloaded into `.tools/` and checked against its SHA-256)
 
 ## Build
 - `deno task generate`: tuist, swiftgen
@@ -18,7 +18,7 @@
 
 ## Lint/Format
 - `deno task lint`: SwiftLint (strict) + Periphery
-- `deno task fmt`: SwiftFormat over the Swift sources, `deno fmt` over the task scripts
+- `deno task fmt`: the pinned SwiftFormat over the Swift sources, `deno fmt` over the task scripts; it refuses to run without the pinned release, because another release formats the same tree differently
 
 ## CI/CD
 - All automated via GitHub Actions (`.github/workflows/ci.yml`)

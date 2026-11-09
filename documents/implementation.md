@@ -21,7 +21,7 @@
 |-------------|---------|------------------------|
 | Tuist       | latest  | Xcode project gen      |
 | SwiftLint   | 0.59.1  | Style analyzer         |
-| SwiftFormat | 0.55.5  | Code formatter         |
+| SwiftFormat | 0.64.6, pinned in `scripts/config.ts` | Code formatter |
 | xcbeautify  | 2.28.0  | xcodebuild output      |
 | swiftgen    | 6.6.3   | L10n code gen          |
 

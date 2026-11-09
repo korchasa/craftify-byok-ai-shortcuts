@@ -13,7 +13,7 @@ cd Craftify
 ```sh
 deno task init
 ```
-This will install via Homebrew: swiftlint, swiftformat, xcbeautify, swiftgen.
+This will install via Homebrew: tuist, swiftlint, swiftgen, gitleaks. SwiftFormat comes from its GitHub release instead, at the exact version pinned in `scripts/config.ts`, into `.tools/`.
 3. Generate the project:
 ```sh
 deno task generate

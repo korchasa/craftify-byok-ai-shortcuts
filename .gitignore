@@ -94,3 +94,6 @@ check_url.sh
 .env
 
 .claude
+
+# Pinned SwiftFormat release, downloaded by `deno task init`
+.tools/

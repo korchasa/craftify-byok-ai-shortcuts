@@ -38,15 +38,19 @@ jobs:
 
       # periphery is deliberately absent: its dead-code scan needs a second full
       # index build, and `lint` skips it with a warning when it is missing.
+      # SwiftFormat is not taken from Homebrew: `deno task init` downloads the
+      # release pinned in scripts/config.ts, the one a developer formats with.
       - name: Install CLI tools
-        run: brew install tuist swiftlint swiftformat swiftgen gitleaks
+        run: |
+          brew install tuist swiftlint swiftgen gitleaks
+          deno task init
 
       - name: Toolchain
         run: |
           swift --version
           deno --version
           tuist version
-          swiftformat --version
+          .tools/swiftformat-*/swiftformat --version
           swiftlint version
 
       - name: Pick a simulator
