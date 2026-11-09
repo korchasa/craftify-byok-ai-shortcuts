@@ -8,11 +8,11 @@ public enum ColorPaletteFactory {
     public static func palette(for scheme: ColorScheme) -> MainAppColorPaletteProviding {
         switch scheme {
         case .light:
-            return LightMainAppColorPalette()
+            LightMainAppColorPalette()
         case .dark:
-            return DarkMainAppColorPalette()
+            DarkMainAppColorPalette()
         @unknown default:
-            return LightMainAppColorPalette()
+            LightMainAppColorPalette()
         }
     }
 }

@@ -8,11 +8,11 @@ public enum ShareExtensionColorPaletteFactory {
     public static func palette(for scheme: ColorScheme) -> ShareExtensionColorPaletteProviding {
         switch scheme {
         case .light:
-            return LightShareExtensionColorPalette()
+            LightShareExtensionColorPalette()
         case .dark:
-            return DarkShareExtensionColorPalette()
+            DarkShareExtensionColorPalette()
         @unknown default:
-            return LightShareExtensionColorPalette()
+            LightShareExtensionColorPalette()
         }
     }
 }

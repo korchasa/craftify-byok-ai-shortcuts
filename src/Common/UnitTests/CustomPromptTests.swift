@@ -26,9 +26,9 @@ public final class CustomPromptTests: XCTestCase {
     }
 
     public func testInventoryOperationDecodesLegacyJSONWithoutCustomPrompt() throws {
-        let legacy = """
+        let legacy = try XCTUnwrap("""
         {"operation":"translate","params":"","colorHex":"3288bd"}
-        """.data(using: .utf8)!
+        """.data(using: .utf8))
         let decoded = try JSONDecoder().decode(InventoryOperation.self, from: legacy)
         XCTAssertNil(decoded.customPrompt)
     }
