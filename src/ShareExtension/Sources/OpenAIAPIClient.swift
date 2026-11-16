@@ -7,8 +7,6 @@ public final class OpenAIAPIClient: LLMClienting {
     private let session: URLSession
     private static let apiURLString = "https://api.openai.com/v1/chat/completions"
     private static let modelName = "gpt-5.6-luna"
-    private static let defaultTemperature: Double = 0.7
-    private static let defaultMaxTokens: Int = 2048
     /// Request timeout (sec)
     public static let requestTimeout: TimeInterval = 15
     private static let maxRetryCount = 3
@@ -25,8 +23,6 @@ public final class OpenAIAPIClient: LLMClienting {
     private let apiURL = URL(string: OpenAIAPIClient.apiURLString)!
     /// Идентификатор модели; задаётся пользователем в настройках, по умолчанию — из каталога
     public let model: String
-    private let temperature: Double = OpenAIAPIClient.defaultTemperature
-    private let maxTokens: Int = OpenAIAPIClient.defaultMaxTokens
     private let maxRetries = OpenAIAPIClient.maxRetryCount
     private let retryDelays: [UInt64] = OpenAIAPIClient.retryDelaysSeconds.map { $0 * OpenAIAPIClient.nanosecondsPerSecond }
 
@@ -46,11 +42,13 @@ public final class OpenAIAPIClient: LLMClienting {
                 request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 let messagesArray: [[String: String]] = messages.map { ["role": $0.role.rawValue, "content": $0.content] }
+                // Модели GPT-5 отвергают `max_tokens` и любую `temperature`, кроме 1, а в
+                // `max_completion_tokens` входят токены рассуждения: при малом лимите модель
+                // тратит его целиком на рассуждение и возвращает пустой ответ. Оба параметра
+                // необязательны, поэтому не передаём ни один.
                 let body: [String: Any] = [
                     "model": model,
-                    "messages": messagesArray,
-                    "temperature": temperature,
-                    "max_tokens": maxTokens
+                    "messages": messagesArray
                 ]
                 request.httpBody = try JSONSerialization.data(withJSONObject: body)
                 let (data, response) = try await session.data(for: request)

@@ -73,8 +73,11 @@ public final class LLMAPIClientIntegrationTests: XCTestCase {
             }
             let body = try JSONSerialization.jsonObject(with: httpBody) as? [String: Any]
             XCTAssertEqual(body?["model"] as? String, "gpt-5.6-luna")
-            XCTAssertEqual(body?["temperature"] as? Double, 0.7)
-            XCTAssertEqual(body?["max_tokens"] as? Int, 2048)
+            // Модели GPT-5 отвергают `max_tokens` и `temperature`, отличную от 1, а в
+            // `max_completion_tokens` входят токены рассуждения — поэтому ни одного из них нет
+            XCTAssertNil(body?["temperature"])
+            XCTAssertNil(body?["max_tokens"])
+            XCTAssertNil(body?["max_completion_tokens"])
             let messages = body?["messages"] as? [[String: Any]]
             XCTAssertEqual(messages?.count, 2)
             XCTAssertEqual(messages?.first? ["role"] as? String, "system")
