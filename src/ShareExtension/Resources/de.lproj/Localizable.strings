@@ -54,6 +54,7 @@
 "advice_check_key_access" = "Prüfe die Berechtigungen des Schlüssels und die Regionsbeschränkungen im Konto des Anbieters.";
 "error_content_filtered" = "Der Sicherheitsfilter des Anbieters hat den Text abgelehnt";
 "advice_change_text" = "Formuliere den Text um oder wähle ein anderes Modell.";
+"advice_report_rejected_request" = "Craftify hat eine Anfrage gesendet, die dieses Modell nicht akzeptiert. Wähle in den Einstellungen ein anderes Modell und melde die Details unten unter craftify.korchasa.dev/support.";
 "error_context_too_long" = "Der Text ist zu lang für dieses Modell";
 "advice_shorten_text" = "Kürze den Text oder wähle in den Einstellungen ein Modell mit größerem Kontextfenster.";
 "error_provider_unavailable" = "Der Anbieter ist vorübergehend nicht erreichbar";

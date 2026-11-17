@@ -54,6 +54,7 @@
 "advice_check_key_access" = "プロバイダーの管理画面でキーの権限と地域の制限を確認してください。";
 "error_content_filtered" = "プロバイダーの安全フィルターがテキストを拒否しました";
 "advice_change_text" = "テキストを書き換えるか、別のモデルを選択してください。";
+"advice_report_rejected_request" = "Craftify が送信したリクエストをこのモデルは受け付けませんでした。設定で別のモデルを選び、下の詳細を craftify.korchasa.dev/support からお知らせください。";
 "error_context_too_long" = "テキストがこのモデルには長すぎます";
 "advice_shorten_text" = "テキストを短くするか、設定でコンテキストウィンドウの大きいモデルを選択してください。";
 "error_provider_unavailable" = "プロバイダーが一時的に利用できません";

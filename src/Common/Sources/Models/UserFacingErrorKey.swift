@@ -37,6 +37,7 @@ public enum UserFacingErrorKey: String {
     case adviceCheckKeyAccess = "advice_check_key_access"
     case errorContentFiltered = "error_content_filtered"
     case adviceChangeText = "advice_change_text"
+    case adviceReportRejectedRequest = "advice_report_rejected_request"
     case errorContextTooLong = "error_context_too_long"
     case adviceShortenText = "advice_shorten_text"
     case errorProviderUnavailable = "error_provider_unavailable"

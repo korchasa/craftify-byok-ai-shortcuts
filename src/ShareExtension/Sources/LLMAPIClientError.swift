@@ -74,7 +74,10 @@ public enum LLMAPIClientError: Error, LocalizedError, Equatable {
         case .badRequest:
             UserFacingError(
                 messageKey: .errorProviderRejectedRequest,
-                adviceKey: .adviceChangeText,
+                // Отказ без признаков модерации, длины или модели — это отказ самой формы
+                // запроса: перефразирование не поможет, помогает другая модель или исправление
+                // в приложении, для которого нужен текст ответа провайдера
+                adviceKey: .adviceReportRejectedRequest,
                 underlyingError: self
             )
         case .invalidResponse:

@@ -54,6 +54,7 @@
 "advice_check_key_access" = "Vérifiez les autorisations de la clé et les restrictions régionales dans l'espace du fournisseur.";
 "error_content_filtered" = "Le filtre de sécurité du fournisseur a rejeté le texte";
 "advice_change_text" = "Reformulez le texte ou choisissez un autre modèle.";
+"advice_report_rejected_request" = "Craftify a envoyé une requête que ce modèle n'a pas acceptée. Choisissez un autre modèle dans les Réglages et signalez les détails ci-dessous sur craftify.korchasa.dev/support.";
 "error_context_too_long" = "Le texte est trop long pour ce modèle";
 "advice_shorten_text" = "Raccourcissez le texte ou choisissez dans les réglages un modèle avec une fenêtre de contexte plus grande.";
 "error_provider_unavailable" = "Le fournisseur est temporairement indisponible";

@@ -54,6 +54,7 @@
 "advice_check_key_access" = "Verifique as permissões da chave e as restrições por região no painel do provedor.";
 "error_content_filtered" = "O filtro de segurança do provedor rejeitou o texto";
 "advice_change_text" = "Reformule o texto ou escolha outro modelo.";
+"advice_report_rejected_request" = "O Craftify enviou um pedido que este modelo não aceitou. Escolha outro modelo nas Definições e comunique os detalhes abaixo em craftify.korchasa.dev/support.";
 "error_context_too_long" = "O texto é longo demais para este modelo";
 "advice_shorten_text" = "Encurte o texto ou escolha nas configurações um modelo com janela de contexto maior.";
 "error_provider_unavailable" = "O provedor está temporariamente indisponível";

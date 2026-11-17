@@ -90,7 +90,7 @@ public final class ShareExtensionManagerTests: XCTestCase {
             (.tooManyRequests, UserFacingError(messageKey: .errorRateLimited, adviceKey: .adviceTryAgainLater)),
             (.unknownModel("vendor/no-such-model"), UserFacingError(messageKey: .errorUnknownModel, adviceKey: .adviceChangeModel)),
             (.serverError, UserFacingError(messageKey: .errorProviderUnavailable, adviceKey: .adviceTryAgainLater)),
-            (.badRequest("Unsupported parameter"), UserFacingError(messageKey: .errorProviderRejectedRequest, adviceKey: .adviceChangeText)),
+            (.badRequest("Unsupported parameter"), UserFacingError(messageKey: .errorProviderRejectedRequest, adviceKey: .adviceReportRejectedRequest)),
             (.invalidResponse("Missing result/content"), UserFacingError(messageKey: .errorParsing, adviceKey: .adviceTryAgainLater)),
             (.network(URLError(.notConnectedToInternet)), UserFacingError(messageKey: .errorNetwork, adviceKey: .adviceCheckConnection)),
             (.cancelled, UserFacingError(messageKey: .errorCancelled, adviceKey: .adviceTryAgainLater))

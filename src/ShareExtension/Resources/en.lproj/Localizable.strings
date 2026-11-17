@@ -54,6 +54,7 @@
 "advice_check_key_access" = "Check the key's permissions and regional restrictions in the provider's dashboard.";
 "error_content_filtered" = "The provider's safety filter rejected the text";
 "advice_change_text" = "Rephrase the text or choose a different model.";
+"advice_report_rejected_request" = "Craftify sent a request this model did not accept. Choose a different model in Settings, and report the details below at craftify.korchasa.dev/support.";
 "error_context_too_long" = "The text is too long for this model";
 "advice_shorten_text" = "Shorten the text or choose a model with a larger context window in Settings.";
 "error_provider_unavailable" = "The provider is temporarily unavailable";

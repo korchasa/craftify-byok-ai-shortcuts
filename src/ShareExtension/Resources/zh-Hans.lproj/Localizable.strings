@@ -54,6 +54,7 @@
 "advice_check_key_access" = "请在服务商的控制台检查密钥权限和地区限制。";
 "error_content_filtered" = "服务商的安全过滤拒绝了该文本";
 "advice_change_text" = "请修改文本或选择其他模型。";
+"advice_report_rejected_request" = "Craftify 发送的请求未被此模型接受。请在设置中选择其他模型，并在 craftify.korchasa.dev/support 报告下方的详细信息。";
 "error_context_too_long" = "文本超出该模型的长度上限";
 "advice_shorten_text" = "请缩短文本，或在设置中选择上下文窗口更大的模型。";
 "error_provider_unavailable" = "服务商暂时不可用";
