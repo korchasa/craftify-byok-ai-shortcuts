@@ -97,13 +97,7 @@ public struct AddOperationView: View {
         }
 
         private func label(for kind: OperationKind) -> String {
-            switch kind {
-            case .translate: L10n.operationLabelTranslate
-            case .simplify: L10n.operationLabelSimplify
-            case .correct: L10n.operationLabelCorrect
-            case .explain: L10n.operationLabelExplain
-            case .summarize: L10n.operationLabelSummarize
-            }
+            OperationDisplay.title(for: kind)
         }
     }
 
@@ -117,7 +111,7 @@ public struct AddOperationView: View {
                 EmptyView()
             case .correct:
                 EmptyView()
-            case .explain:
+            case .explain, .findErrors:
                 explainSection
             case .summarize:
                 summarizeSection

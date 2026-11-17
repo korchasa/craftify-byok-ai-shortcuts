@@ -12,6 +12,10 @@
 "operation_label_correct" = "纠正";
 "operation_label_explain" = "解释";
 "operation_label_summarize" = "总结";
+"operation_label_find_errors" = "查找错误";
+"find_errors_none" = "未发现错误。";
+"find_errors_count" = "发现错误：%d";
+"find_errors_position" = "第%1$d行，第%2$d列";
 
 "processing" = "处理中...";
 "progress_loading_page" = "正在加载页面…";

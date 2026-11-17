@@ -12,7 +12,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
                 targetLanguage = ""
             case .correct:
                 targetLanguage = ""
-            case .explain:
+            case .explain, .findErrors:
                 targetLanguage = ""
             case .summarize:
                 targetLanguage = ""
@@ -77,7 +77,7 @@ public final class EditOperationViewModel: ObservableObject, Identifiable {
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
             self.originalLength = SummarizeLengths.defaultLength
-        case .explain:
+        case .explain, .findErrors:
             self.targetLanguage = ""
             self.originalTargetLanguage = ""
             self.originalLength = SummarizeLengths.defaultLength

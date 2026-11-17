@@ -47,6 +47,10 @@
 "operation_label_correct" = "Коригирай";
 "operation_label_explain" = "Обясни";
 "operation_label_summarize" = "Обобщи";
+"operation_label_find_errors" = "Намери грешки";
+"find_errors_none" = "Не са открити грешки.";
+"find_errors_count" = "Открити грешки: %d";
+"find_errors_position" = "Ред %1$d, колона %2$d";
 
 "error" = "Грешка";
 "color" = "Цвят";

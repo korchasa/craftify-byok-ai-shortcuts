@@ -12,6 +12,10 @@
 "operation_label_correct" = "Виправити";
 "operation_label_explain" = "Пояснити";
 "operation_label_summarize" = "Скоротити";
+"operation_label_find_errors" = "Знайти помилки";
+"find_errors_none" = "Помилок не знайдено.";
+"find_errors_count" = "Знайдено помилок: %d";
+"find_errors_position" = "Рядок %1$d, стовпець %2$d";
 
 "processing" = "Обробка...";
 "progress_loading_page" = "Завантажуємо сторінку…";

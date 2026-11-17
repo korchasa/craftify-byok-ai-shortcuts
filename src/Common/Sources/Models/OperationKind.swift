@@ -7,6 +7,7 @@ public enum OperationKind: String, Codable, CaseIterable, Equatable {
     case simplify = "simplify"
     case translate = "translate"
     case summarize = "summarize"
+    case findErrors = "find_errors"
 
     /// SF Symbol name for each operation type
     public var sfSymbol: String {
@@ -16,6 +17,7 @@ public enum OperationKind: String, Codable, CaseIterable, Equatable {
         case .correct: "checkmark.circle"
         case .explain: "lightbulb"
         case .summarize: "list.bullet"
+        case .findErrors: "text.magnifyingglass"
         }
     }
 }

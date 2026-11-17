@@ -171,13 +171,7 @@ public struct EditOperationView: View {
         }
 
         private func label(for kind: OperationKind) -> String {
-            switch kind {
-            case .translate: L10n.operationLabelTranslate
-            case .simplify: L10n.operationLabelSimplify
-            case .correct: L10n.operationLabelCorrect
-            case .explain: L10n.operationLabelExplain
-            case .summarize: L10n.operationLabelSummarize
-            }
+            OperationDisplay.title(for: kind)
         }
     }
 
@@ -191,7 +185,7 @@ public struct EditOperationView: View {
                 AnyView(EmptyView())
             case .correct:
                 AnyView(EmptyView())
-            case .explain:
+            case .explain, .findErrors:
                 AnyView(EditOperationExplainSection())
             case .summarize:
                 AnyView(EditOperationSummarizeSection(viewModel: viewModel))

@@ -12,6 +12,10 @@
 "operation_label_correct" = "Исправить";
 "operation_label_explain" = "Объяснить";
 "operation_label_summarize" = "Сократить";
+"operation_label_find_errors" = "Найти ошибки";
+"find_errors_none" = "Ошибок не найдено.";
+"find_errors_count" = "Найдено ошибок: %d";
+"find_errors_position" = "Строка %1$d, столбец %2$d";
 
 "processing" = "Обработка...";
 "progress_loading_page" = "Загружаем страницу…";

@@ -12,6 +12,10 @@
 "operation_label_correct" = "Korrigieren";
 "operation_label_explain" = "Erklären";
 "operation_label_summarize" = "Zusammenfassen";
+"operation_label_find_errors" = "Fehler finden";
+"find_errors_none" = "Keine Fehler gefunden.";
+"find_errors_count" = "Gefundene Fehler: %d";
+"find_errors_position" = "Zeile %1$d, Spalte %2$d";
 
 "processing" = "Verarbeitung...";
 "progress_loading_page" = "Seite wird geladen…";

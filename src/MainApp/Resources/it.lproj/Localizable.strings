@@ -47,6 +47,10 @@
 "operation_label_correct" = "Correggi";
 "operation_label_explain" = "Spiega";
 "operation_label_summarize" = "Riassumi";
+"operation_label_find_errors" = "Trova errori";
+"find_errors_none" = "Nessun errore trovato.";
+"find_errors_count" = "Errori trovati: %d";
+"find_errors_position" = "Riga %1$d, colonna %2$d";
 
 "error" = "Errore";
 "color" = "Colore";

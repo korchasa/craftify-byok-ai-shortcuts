@@ -13,6 +13,7 @@ public enum OperationFactory {
         case .correct: CorrectOperation()
         case .explain: ExplainOperation()
         case .summarize: SummarizeOperation(logManager: logManager)
+        case .findErrors: FindErrorsOperation()
         }
     }
 }

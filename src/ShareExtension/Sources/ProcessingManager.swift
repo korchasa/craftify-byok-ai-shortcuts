@@ -93,7 +93,7 @@ public final class ProcessingManager: ProcessingManaging {
             logRequest(operation: operation, apiKey: apiKey, messages: messages)
             let result = try await llmClient.send(messages: messages, apiKey: apiKey)
             logResponse(operation: operation, text: text, result: result)
-            completion(.success(result))
+            completion(.success(opType.presentResult(result, sourceText: text)))
         } catch {
             logError(error: error)
             if let llmError = error as? LLMAPIClientError {

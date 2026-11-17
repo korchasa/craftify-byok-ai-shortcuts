@@ -40,6 +40,13 @@ public protocol OperationType {
 
     /// Поддерживает ли операция обработку URL (скачивание контента)
     var supportsURL: Bool { get }
+
+    /// Превращает ответ модели в то, что увидит пользователь
+    /// - Parameters:
+    ///   - output: Ответ модели
+    ///   - sourceText: Текст, который обрабатывала операция
+    /// - Returns: Текст для показа или копирования
+    func presentResult(_ output: String, sourceText: String) -> String
 }
 
 /// Дефолтная реализация resultMode: результат копируется в буфер обмена
@@ -79,6 +86,11 @@ public extension OperationType {
     /// По умолчанию операция не поддерживает URL
     var supportsURL: Bool {
         false
+    }
+
+    /// По умолчанию ответ модели показывается без изменений
+    func presentResult(_ output: String, sourceText _: String) -> String {
+        output
     }
 
     /// Default async resolveInput implementation: supports optional URL fetching using `URLInputResolver`.

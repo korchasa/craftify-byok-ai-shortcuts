@@ -16,6 +16,7 @@ public enum OperationDisplay {
         case .correct: L10n.operationLabelCorrect
         case .explain: L10n.operationLabelExplain
         case .summarize: L10n.operationLabelSummarize
+        case .findErrors: L10n.operationLabelFindErrors
         }
     }
 
@@ -34,7 +35,7 @@ public enum OperationDisplay {
                 return ""
             }
             return SummarizeLengthDisplay.label(for: params.length)
-        case .simplify, .correct, .explain:
+        case .simplify, .correct, .explain, .findErrors:
             return ""
         }
     }
