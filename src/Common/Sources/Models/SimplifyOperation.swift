@@ -83,6 +83,18 @@ public struct SimplifyOperation: OperationType {
         true
     }
 
+    /// Упрощённый текст показывается по мере написания, а готовый уходит в буфер обмена,
+    /// как и раньше, когда операция только копировала
+    public var resultMode: ResultMode {
+        // [REF:fr:ux.streaming]
+        .displayAndCopy
+    }
+
+    /// Ответ показывается на экране, поэтому выводится по мере написания
+    public var streamsResult: Bool {
+        true
+    }
+
     public func decodeInput(from _: Data) -> OperationInput {
         // Нет параметров для декодирования
         OperationInput()

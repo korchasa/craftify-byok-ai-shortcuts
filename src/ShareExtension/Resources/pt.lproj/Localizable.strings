@@ -2,7 +2,8 @@
 "share_title" = "Craftify";
 "share_cancel" = "Close";
 "retry" = "Tentar novamente";
-"share_copy_close" = "Copy & Close";
+"share_copy_close" = "Copiar e fechar";
+"result_copied_note" = "Copiado para a área de transferência.";
 
 /* Picker Values */
 

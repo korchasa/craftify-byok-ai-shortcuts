@@ -3,6 +3,7 @@
 "share_cancel" = "Fermer";
 "retry" = "Réessayer";
 "share_copy_close" = "Copier et fermer";
+"result_copied_note" = "Copié dans le presse-papiers.";
 
 /* Picker Values */
 

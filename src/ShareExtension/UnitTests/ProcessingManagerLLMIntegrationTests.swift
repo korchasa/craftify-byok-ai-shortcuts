@@ -209,4 +209,43 @@ final class ProcessingManagerLLMIntegrationTests: XCTestCase {
         }
         await fulfillment(of: [exp], timeout: 8.0)
     }
+
+    /// Операция с показом результата получает растущий текст, а завершение — весь ответ
+    func test_streamingOperation_reportsGrowingText() async throws {
+        let manager = makeProcessingManager()
+        let op = try XCTUnwrap(ExplainOperation().makeInventoryOperation(input: OperationInput(), colorHex: "3288bd"))
+        URLProtocolStub.data = Data("""
+        data: {"choices":[{"delta":{"content":"Hello"}}]}
+
+        data: {"choices":[{"delta":{"content":" world"}}]}
+
+        data: [DONE]
+
+        """.utf8)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
+        var partials: [String] = []
+        let exp = expectation(description: "Ожидание ответа LLM")
+        manager.process(text: "Nocebo", operation: op, onPartial: { partials.append($0) }, completion: { result in
+            XCTAssertEqual(try? result.get(), "Hello world")
+            exp.fulfill()
+        })
+        await fulfillment(of: [exp], timeout: 5)
+        XCTAssertEqual(partials.first, "Hello")
+    }
+
+    /// Отчёт «Найти ошибки» строится по всему ответу, поэтому она не идёт потоком даже при наличии получателя частей
+    func test_findErrors_isNotStreamed() async throws {
+        let manager = makeProcessingManager()
+        let op = try XCTUnwrap(FindErrorsOperation().makeInventoryOperation(input: OperationInput(), colorHex: "3288bd"))
+        URLProtocolStub.data = Data(#"{ "choices": [ { "message": { "content": "{\"errors\": []}" } } ] }"#.utf8)
+        URLProtocolStub.response = try HTTPURLResponse(url: XCTUnwrap(URL(string: "https://api.openai.com/v1/chat/completions")), statusCode: 200, httpVersion: nil, headerFields: nil)
+        var partials: [String] = []
+        let exp = expectation(description: "Ожидание ответа LLM")
+        manager.process(text: "Fine.", operation: op, onPartial: { partials.append($0) }, completion: { result in
+            XCTAssertEqual(try? result.get(), "Fine.\n\n**\(L10n.findErrorsNone)**")
+            exp.fulfill()
+        })
+        await fulfillment(of: [exp], timeout: 5)
+        XCTAssertTrue(partials.isEmpty)
+    }
 }

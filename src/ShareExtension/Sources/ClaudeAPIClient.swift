@@ -41,29 +41,7 @@ public final class ClaudeAPIClient: LLMClienting {
         var lastError: Error?
         for attempt in 0 ..< maxRetries {
             do {
-                var request = URLRequest(url: apiURL)
-                request.httpMethod = "POST"
-                request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
-                request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-                // Anthropic expects system prompt separate and messages array without system role
-                let systemContent = messages.first(where: { $0.role == .system })?.content ?? ""
-                let userAssistantMessages = messages.filter { $0.role != .system }
-                let formattedMessages: [[String: Any]] = userAssistantMessages.map { msg in
-                    [
-                        "role": msg.role.rawValue,
-                        "content": [["type": "text", "text": msg.content]]
-                    ]
-                }
-                let body: [String: Any] = [
-                    "model": model,
-                    "temperature": temperature,
-                    "max_tokens": maxTokens,
-                    "system": systemContent,
-                    "messages": formattedMessages
-                ]
-                request.httpBody = try JSONSerialization.data(withJSONObject: body)
+                let request = try makeRequest(messages: messages, apiKey: apiKey, stream: false)
 
                 let (data, response) = try await session.data(for: request)
                 try Task.checkCancellation()
@@ -111,5 +89,50 @@ public final class ClaudeAPIClient: LLMClienting {
             }
         }
         throw lastError ?? LLMAPIClientError.unknown(-1)
+    }
+
+    /// Собирает запрос к API; `stream` просит отдавать ответ по кускам
+    private func makeRequest(messages: [LLMMessage], apiKey: String, stream: Bool) throws -> URLRequest {
+        var request = URLRequest(url: apiURL)
+        request.httpMethod = "POST"
+        request.setValue(apiKey, forHTTPHeaderField: "x-api-key")
+        request.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // Anthropic expects system prompt separate and messages array without system role
+        let systemContent = messages.first(where: { $0.role == .system })?.content ?? ""
+        let userAssistantMessages = messages.filter { $0.role != .system }
+        let formattedMessages: [[String: Any]] = userAssistantMessages.map { msg in
+            [
+                "role": msg.role.rawValue,
+                "content": [["type": "text", "text": msg.content]]
+            ]
+        }
+        var body: [String: Any] = [
+            "model": model,
+            "temperature": temperature,
+            "max_tokens": maxTokens,
+            "system": systemContent,
+            "messages": formattedMessages
+        ]
+        if stream {
+            body["stream"] = true
+        }
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        return request
+    }
+
+    public func stream(messages: [LLMMessage], apiKey: String) -> AsyncThrowingStream<String, Error> {
+        // [REF:fr:ux.streaming]
+        let request: URLRequest
+        do {
+            request = try makeRequest(messages: messages, apiKey: apiKey, stream: true)
+        } catch {
+            return AsyncThrowingStream { $0.finish(throwing: error) }
+        }
+        let requestedModel = model
+        return LLMEventStream.run(request: request, session: session, model: requestedModel) { event, data in
+            try LLMStreamParsing.claudePiece(event: event, data: data, model: requestedModel)
+        }
     }
 }

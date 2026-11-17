@@ -38,19 +38,7 @@ public final class MistralAPIClient: LLMClienting {
         var lastError: Error?
         for attempt in 0 ..< maxRetries {
             do {
-                var request = URLRequest(url: apiURL)
-                request.httpMethod = "POST"
-                request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-                let messagesArray: [[String: String]] = messages.map { ["role": $0.role.rawValue, "content": $0.content] }
-                let body: [String: Any] = [
-                    "model": model,
-                    "messages": messagesArray,
-                    "temperature": temperature,
-                    "max_tokens": maxTokens
-                ]
-                request.httpBody = try JSONSerialization.data(withJSONObject: body)
+                let request = try makeRequest(messages: messages, apiKey: apiKey, stream: false)
 
                 let (data, response) = try await session.data(for: request)
                 try Task.checkCancellation()
@@ -97,5 +85,40 @@ public final class MistralAPIClient: LLMClienting {
             }
         }
         throw lastError ?? LLMAPIClientError.unknown(-1)
+    }
+
+    /// Собирает запрос к API; `stream` просит отдавать ответ по кускам
+    private func makeRequest(messages: [LLMMessage], apiKey: String, stream: Bool) throws -> URLRequest {
+        var request = URLRequest(url: apiURL)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let messagesArray: [[String: String]] = messages.map { ["role": $0.role.rawValue, "content": $0.content] }
+        var body: [String: Any] = [
+            "model": model,
+            "messages": messagesArray,
+            "temperature": temperature,
+            "max_tokens": maxTokens
+        ]
+        if stream {
+            body["stream"] = true
+        }
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        return request
+    }
+
+    public func stream(messages: [LLMMessage], apiKey: String) -> AsyncThrowingStream<String, Error> {
+        // [REF:fr:ux.streaming]
+        let request: URLRequest
+        do {
+            request = try makeRequest(messages: messages, apiKey: apiKey, stream: true)
+        } catch {
+            return AsyncThrowingStream { $0.finish(throwing: error) }
+        }
+        let requestedModel = model
+        return LLMEventStream.run(request: request, session: session, model: requestedModel) { _, data in
+            try LLMStreamParsing.openAIChatPiece(data: data, model: requestedModel)
+        }
     }
 }

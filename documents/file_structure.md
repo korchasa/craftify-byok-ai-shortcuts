@@ -143,7 +143,7 @@ src/
       LogManagerShared.swift    # Centralized logging
       Masking.swift            # Key masking utilities
       Models/                  # Shared data models
-        ResultMode.swift           # Режим обработки результата (clipboard/display)
+        ResultMode.swift           # Режим обработки результата (clipboard/display/displayAndCopy)
         OperationType.swift        # Протокол операций с resultMode
         ExplainOperation.swift     # Операция Explain с режимом display
         LLMProvider.swift         # Enum of supported LLM providers (openAI, claude, mistral, openRouter)
@@ -156,7 +156,7 @@ src/
       TextFetcher/                 # Module for loading and extracting text from URL
         TextFetching.swift         # Protocol for loading text
         SwiftSoupTextFetcher.swift # Implementation using SwiftSoup and URLSession
-      LLMClienting.swift          # Protocol describing capabilities of LLM clients
+      LLMClienting.swift          # Protocol describing capabilities of LLM clients (send and stream)
       OperationInput.swift         # Added fields `url: String?`, `text: String?` for passing URL or text in operations, not containing nativeLanguage
       SummarizeOperation.swift     # Integration with TextFetcher, asynchronous text retrieval by URL, uses AppSettingsManager.shared.nativeLanguage
       CraftifyButtonConstants.swift # Единые константы для стилей кнопок (цвета, радиус, отступы, масштаб)
@@ -217,6 +217,9 @@ src/
       ClaudeAPIClient.swift         # Anthropic Claude client (default claude-sonnet-5)
       LLMClientFactory.swift        # Factory returning concrete client based on `LLMProvider`
       ClipboardManager.swift        # Clipboard integration
+      LLMEventStream.swift          # Streaming request runner: server-sent events, HTTP errors, retries
+      LLMStreamParsing.swift        # Provider event parsers (OpenAI chat format, Claude events)
+      LLMStreamPiece.swift          # One parsed stream event: text, done or skip
       ShareExtensionView.swift      # SwiftUI UI for extension (поддержка display/clipboard)
       ShareExtensionViewController.swift # Hosting controller
     UnitTests/

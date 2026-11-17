@@ -53,8 +53,13 @@ public final class ShareExtensionManager {
     /// - Parameters:
     ///   - text: Исходный текст для обработки.
     ///   - operation: Операция из inventory (InventoryOperation?).
+    ///   - onPartial: Получает текст ответа, пока модель его пишет (для операций, которые выводят его по мере написания).
     /// - Returns: Кортеж (успех: Bool, ошибка: UserFacingError?) или nil, если операция не выполнена.
-    public func process(text: String, operation: InventoryOperation?) async -> (success: Bool, error: UserFacingError?)? {
+    public func process(
+        text: String,
+        operation: InventoryOperation?,
+        onPartial: ((String) -> Void)? = nil
+    ) async -> (success: Bool, error: UserFacingError?)? {
         let generation = runGeneration
         if isCancelled {
             isCancelled = false
@@ -112,7 +117,7 @@ public final class ShareExtensionManager {
         } else if let pm = processingManager as? ProcessingManaging {
             // Асинхронная обработка через continuation
             do {
-                processedText = try await processAsync(pm: pm, text: text, operation: op)
+                processedText = try await processAsync(pm: pm, text: text, operation: op, onPartial: onPartial)
             } catch {
                 logManager.log(LogEntry(level: .error, module: "ShareExtension", message: "Processing error", metadata: ["error": error.localizedDescription]))
                 return (false, Self.userFacingError(from: error))
@@ -137,6 +142,7 @@ public final class ShareExtensionManager {
             logManager.log(LogEntry(level: .info, module: "ShareExtension", message: "Result mode: display result", metadata: [:]))
             return (true, nil)
         }
+        // [REF:fr:ux.streaming] — .displayAndCopy копирует так же, как .clipboard; показ решает экран
         // Копирование в буфер обмена
         if let cb = clipboardManager as? ClipboardManagerStub {
             if !cb.copy(text: cleanResult) {
@@ -172,9 +178,18 @@ public final class ShareExtensionManager {
         return UserFacingError.unknown(underlyingError: error)
     }
 
-    private func processAsync(pm: ProcessingManaging, text: String, operation: InventoryOperation) async throws -> String {
-        try await withCheckedThrowingContinuation { continuation in
-            pm.process(text: text, operation: operation) { result in
+    private func processAsync(
+        pm: ProcessingManaging,
+        text: String,
+        operation: InventoryOperation,
+        onPartial: ((String) -> Void)?
+    ) async throws -> String {
+        // Начало ответа модель тоже нередко отбивает пустой строкой — на экране её не видно
+        let trimmedPartial = onPartial.map { report in
+            { (partial: String) in report(String(partial.drop(while: \.isWhitespace))) }
+        }
+        return try await withCheckedThrowingContinuation { continuation in
+            pm.process(text: text, operation: operation, onPartial: trimmedPartial) { result in
                 switch result {
                 case let .success(str):
                     continuation.resume(returning: str)

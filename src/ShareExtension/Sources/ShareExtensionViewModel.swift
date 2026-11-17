@@ -21,6 +21,8 @@ public final class ShareExtensionViewModel: ObservableObject {
     @Published public private(set) var stage: ProcessingStage? = nil
     /// Ключ последней ошибки — определяет, доступен ли повтор
     @Published public private(set) var lastErrorKey: UserFacingErrorKey? = nil
+    /// Готовый результат уже скопирован в буфер обмена (режим «показать и скопировать»)
+    @Published public private(set) var resultWasCopied: Bool = false
 
     // MARK: - Properties
 
@@ -34,6 +36,10 @@ public final class ShareExtensionViewModel: ObservableObject {
     private var hasCompleted = false
     /// Последняя запущенная операция — цель для повтора после транзиентной ошибки
     private var lastOperation: InventoryOperation?
+    /// Номер прогона: кусок ответа прежнего прогона не должен попасть на экран нового
+    private var runID = 0
+    /// В этом прогоне уже показан текст ответа — ограничение времени его больше не обрывает
+    private var hasStreamedText = false
 
     /// Транзиентные ошибки, для которых имеет смысл кнопка «Повторить»
     private static let retryableErrorKeys: Set<UserFacingErrorKey> = [
@@ -101,6 +107,9 @@ public final class ShareExtensionViewModel: ObservableObject {
 
         currentResultMode = OperationFactory.make(kind: operation.operation, logManager: self.logManager).resultMode
         displayResult = nil
+        resultWasCopied = false
+        hasStreamedText = false
+        runID += 1
 
         startProcessing(operation: operation)
     }
@@ -215,11 +224,27 @@ public final class ShareExtensionViewModel: ObservableObject {
             logResolvedInput(resolvedText)
 
             setStage(.askingModel)
-            let result = await manager.process(text: resolvedText, operation: operation)
+            let run = runID
+            let result = await manager.process(text: resolvedText, operation: operation) { [weak self] partial in
+                Task { @MainActor in
+                    self?.showPartial(partial, run: run)
+                }
+            }
             return .finished(result)
         } catch {
             return .failed(error)
         }
+    }
+
+    /// Показывает текст ответа, пока модель его пишет
+    /// - Parameters:
+    ///   - partial: Накопленный текст ответа
+    ///   - run: Номер прогона, которому принадлежит текст
+    private func showPartial(_ partial: String, run: Int) {
+        // [REF:fr:ux.streaming] — после итога, отмены или в чужом прогоне кусок уже устарел
+        guard run == runID, !hasCompleted, isProcessing, !partial.isEmpty else { return }
+        hasStreamedText = true
+        displayResult = partial
     }
 
     /// Публикует стадию обработки и логирует переход
@@ -338,7 +363,13 @@ public final class ShareExtensionViewModel: ObservableObject {
                 await timeoutTask.value
                 return (1, nil)
             }
-            let (finishedFirst, outcome) = await group.next() ?? (1, nil)
+            var (finishedFirst, outcome) = await group.next() ?? (1, nil)
+            // [REF:fr:ux.streaming] — ограничение ждёт только начала ответа: ответ, который
+            // уже пишется на экране, дожидаемся до конца
+            if finishedFirst == 1, await MainActor.run(body: { self.hasStreamedText }) {
+                outcome = await workTask.value
+                finishedFirst = 0
+            }
             workTask.cancel()
             timeoutTask.cancel()
             await MainActor.run {
@@ -375,6 +406,7 @@ public final class ShareExtensionViewModel: ObservableObject {
                 lastErrorKey = .errorTimeout
                 errorMessage = L10n.errorTimeout
             }
+            displayResult = nil
             manager.cancelProcessing()
         } else {
             handleResult(result: result)
@@ -395,11 +427,17 @@ public final class ShareExtensionViewModel: ObservableObject {
             if errorMessage == nil {
                 errorMessage = msg
             }
+            // Оборванный ответ не выдаём за результат: после ошибки пользователь возвращается к операциям
+            displayResult = nil
         } else if result?.success == true {
             recordSuccessForReview()
-            if currentResultMode == .display {
+            switch currentResultMode {
+            case .display:
                 displayResult = manager.lastResult
-            } else {
+            case .displayAndCopy:
+                displayResult = manager.lastResult
+                resultWasCopied = true
+            case .clipboard:
                 notifySuccessAndClose()
             }
         }
@@ -446,6 +484,7 @@ public final class ShareExtensionViewModel: ObservableObject {
         guard !hasCompleted else { return }
         hasCompleted = true
         isProcessing = false
+        displayResult = nil
         let errorType = String(describing: type(of: error))
         var errorMsg: String? = nil
         if let userError = error as? UserFacingError {

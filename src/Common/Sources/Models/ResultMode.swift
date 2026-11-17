@@ -6,4 +6,6 @@ public enum ResultMode {
     case clipboard
     /// Отображать результат во всплывающем окне
     case display
+    /// Отображать результат и, когда он готов, скопировать его в буфер обмена
+    case displayAndCopy
 }

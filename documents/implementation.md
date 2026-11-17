@@ -193,10 +193,12 @@ graph TD
 
 ## LLM Provider & Factory
 
-- `LLMProvider` (enum) lists supported providers: `openAI`, `claude`.
+- `LLMProvider` (enum) lists supported providers: `openAI`, `claude`, `mistral`, `openRouter`.
   Stored in `AppSettingsManager.llmProvider` and selectable in **SettingsView** via a `Picker`.
-- `LLMClienting` protocol defines a single `send(messages: [LLMMessage], apiKey: String) async` method that accepts a provider-agnostic chat history.
-- `OpenAIAPIClient` and `ClaudeAPIClient` conform to `LLMClienting` and wrap the respective REST APIs (retry logic, time-outs, JSON parsing).
+- `LLMClienting` protocol accepts a provider-agnostic chat history in two ways: `send(messages:apiKey:) async` returns the whole answer, `stream(messages:apiKey:)` returns an `AsyncThrowingStream<String, Error>` of text pieces as the model writes them (a protocol-extension default wraps `send` in one piece).
+- `OpenAIAPIClient`, `ClaudeAPIClient`, `MistralAPIClient` and `OpenRouterAPIClient` conform to `LLMClienting` and wrap the respective REST APIs (retry logic, time-outs, JSON parsing). Each builds its request in one `makeRequest(messages:apiKey:stream:)`; `stream` adds `"stream": true`.
+- Streaming (FR-UX.STREAMING): `LLMEventStream.run` reads the server-sent events over `URLSession.bytes`, maps a non-200 status through `LLMHTTPErrorMapper`, retries connection failures only before the first piece, and hands each `data:` line to a provider parser. `LLMStreamParsing.openAIChatPiece` covers OpenAI, Mistral and OpenRouter (`choices[0].delta.content`, `[DONE]`); `LLMStreamParsing.claudePiece` covers Claude (`content_block_delta`/`text_delta`, `message_stop`, `error` events mapped by error type to the matching HTTP status).
+- Which operations stream is decided by `OperationType.streamsResult` (Explain, Summarize, Simplify). `ProcessingManager` streams only when the operation allows it and a caller passed `onPartial`; it reports the accumulated text at most every 0.1 s. `ShareExtensionViewModel` shows that text in `displayResult`, hides the progress overlay, and lets the 30-second limit lapse once text has appeared. `ResultMode.displayAndCopy` (Simplify) shows the result and copies the finished text.
 - `LLMClientFactory` instantiates the proper client based on the selected provider.
   By default `ProcessingManager` asks the factory every time to stay in sync with user choice.
 

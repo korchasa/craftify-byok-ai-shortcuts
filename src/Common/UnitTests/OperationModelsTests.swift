@@ -49,11 +49,18 @@ public final class OperationModelsTests: XCTestCase {
     /// Проверяет режим обработки результата по умолчанию (clipboard)
     public func testDefaultResultMode() {
         let translateOp = TranslateOperation()
-        let simplifyOp = SimplifyOperation()
         let correctOp = CorrectOperation()
         XCTAssertEqual(translateOp.resultMode, .clipboard)
-        XCTAssertEqual(simplifyOp.resultMode, .clipboard)
         XCTAssertEqual(correctOp.resultMode, .clipboard)
+        XCTAssertFalse(translateOp.streamsResult)
+        XCTAssertFalse(correctOp.streamsResult)
+    }
+
+    /// «Упростить» показывает ответ по мере написания и копирует готовый текст
+    public func testSimplifyOperationResultMode() {
+        let simplifyOp = SimplifyOperation()
+        XCTAssertEqual(simplifyOp.resultMode, .displayAndCopy)
+        XCTAssertTrue(simplifyOp.streamsResult)
     }
 
     /// Проверяет режим обработки результата для ExplainOperation (display)

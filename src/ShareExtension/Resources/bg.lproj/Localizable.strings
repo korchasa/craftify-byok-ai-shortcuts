@@ -3,6 +3,7 @@
 "share_cancel" = "Затвори";
 "retry" = "Опитай отново";
 "share_copy_close" = "Копирай и затвори";
+"result_copied_note" = "Копирано в клипборда.";
 
 /* Picker Values */
 

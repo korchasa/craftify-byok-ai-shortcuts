@@ -3,6 +3,7 @@
 "share_cancel" = "关闭";
 "retry" = "重试";
 "share_copy_close" = "复制并关闭";
+"result_copied_note" = "已复制到剪贴板。";
 
 /* Picker Values */
 

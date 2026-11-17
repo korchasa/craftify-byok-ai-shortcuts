@@ -91,6 +91,12 @@ public struct ShareExtensionView: View {
                 .fontWeight(.bold)
                 .accessibilityAddTraits(.isHeader)
                 .padding(.top, ShareExtensionViewConstants.topPadding)
+            // [REF:fr:ux.streaming] — «Упростить» сама копирует готовый текст; говорим об этом
+            if viewModel.resultWasCopied {
+                Label(L10n.resultCopiedNote, systemImage: "checkmark.circle")
+                    .font(.craftifyFootnote)
+                    .foregroundColor(palette.secondaryText())
+            }
             ScrollView {
                 DisplayResultView(text: viewModel.displayResult ?? "")
             }
@@ -122,7 +128,8 @@ public struct ShareExtensionView: View {
                 card
             }
             // Processing overlay
-            if isProcessing {
+            // Как только пошёл текст ответа, индикатор уступает место экрану результата
+            if isProcessing, viewModel.displayResult == nil {
                 progressOverlay
             }
         }
@@ -266,7 +273,11 @@ public struct ShareExtensionView: View {
     /// Закрытие оформлено как «Настройки» на главном экране: плоская строка
     /// без заливки, чтобы не спорить с плитками
     private var closeButton: some View {
-        Button(action: { viewModel.shouldCloseExtension = true }) {
+        Button(action: {
+            // Если ответ ещё пишется, закрытие его отменяет
+            viewModel.cancel()
+            viewModel.shouldCloseExtension = true
+        }) {
             Label(L10n.shareCancel, systemImage: "xmark")
                 .font(.craftifyBody)
                 .fontWeight(.semibold)
@@ -284,5 +295,7 @@ public struct ShareExtensionView: View {
                 .foregroundColor(palette.primaryButtonText())
         }
         .buttonStyle(ShareExtensionPrimaryButtonStyle())
+        // Пока ответ дописывается, копировать нечего: текст ещё не готов
+        .disabled(isProcessing)
     }
 }

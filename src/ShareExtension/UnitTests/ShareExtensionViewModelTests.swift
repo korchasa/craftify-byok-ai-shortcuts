@@ -645,6 +645,90 @@ final class ShareExtensionViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.inputText.count, ShareExtensionViewModelConstants.maxInputTextLength)
         XCTAssertEqual(viewModel.inputText, manager.inputText)
     }
+
+    /// Обработка, которая отдаёт часть ответа и держит прогон открытым, пока тест его не завершит
+    private final class StreamingProcessingStub: NSObject, ProcessingManaging {
+        let partial: String
+        let finishAfter: TimeInterval?
+        let finalText: String
+        var finish: ((Result<String, Error>) -> Void)?
+
+        init(partial: String, finalText: String, finishAfter: TimeInterval? = nil) {
+            self.partial = partial
+            self.finalText = finalText
+            self.finishAfter = finishAfter
+        }
+
+        func process(text: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+            completion(.success(text))
+        }
+
+        func process(
+            text _: String,
+            operation _: InventoryOperation,
+            onPartial: ((String) -> Void)?,
+            completion: @escaping (Result<String, Error>) -> Void
+        ) {
+            onPartial?(partial)
+            finish = completion
+            if let finishAfter {
+                let finalText = finalText
+                DispatchQueue.global().asyncAfter(deadline: .now() + finishAfter) {
+                    completion(.success(finalText))
+                }
+            }
+        }
+
+        func cancel() {}
+    }
+
+    private func makeStreamingViewModel(_ processing: StreamingProcessingStub, timeout: Double) -> ShareExtensionViewModel {
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: processing,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
+        viewModel.processingTimeoutSeconds = timeout
+        manager.inputText = "Nocebo"
+        return viewModel
+    }
+
+    /// Первая часть ответа появляется на экране результата, пока модель ещё пишет
+    func testProcess_StreamedTextIsShownBeforeCompletion() async {
+        let processing = StreamingProcessingStub(partial: "Partial answer", finalText: "")
+        let viewModel = makeStreamingViewModel(processing, timeout: 5)
+
+        viewModel.process(operation: InventoryOperation(operation: .explain, params: Data()))
+        for _ in 0 ..< 200 where viewModel.displayResult == nil {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+
+        XCTAssertEqual(viewModel.displayResult, "Partial answer")
+        XCTAssertTrue(viewModel.isProcessing, "the answer is still arriving")
+        processing.finish?(.success("Partial answer, complete.\n"))
+        await waitUntilIdle(viewModel)
+        XCTAssertEqual(viewModel.displayResult, "Partial answer, complete.")
+        XCTAssertNil(viewModel.errorMessage)
+    }
+
+    /// Ограничение времени ждёт только начала ответа: ответ, который уже пишется, оно не обрывает
+    func testProcess_TimeoutDoesNotCutAStreamingAnswer() async {
+        let processing = StreamingProcessingStub(partial: "Start", finalText: "Start and the rest", finishAfter: 0.6)
+        let viewModel = makeStreamingViewModel(processing, timeout: 0.2)
+
+        viewModel.process(operation: InventoryOperation(operation: .explain, params: Data()))
+        try? await Task.sleep(nanoseconds: 50_000_000)
+        await waitUntilIdle(viewModel)
+
+        XCTAssertNil(viewModel.errorMessage, "the timer must not fail a streaming answer")
+        XCTAssertEqual(viewModel.displayResult, "Start and the rest")
+    }
 }
 
 /// Stub для медленной обработки

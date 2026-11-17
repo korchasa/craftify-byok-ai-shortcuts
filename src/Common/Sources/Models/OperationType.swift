@@ -47,6 +47,9 @@ public protocol OperationType {
     ///   - sourceText: Текст, который обрабатывала операция
     /// - Returns: Текст для показа или копирования
     func presentResult(_ output: String, sourceText: String) -> String
+
+    /// Показывать ли ответ по мере того, как модель его пишет
+    var streamsResult: Bool { get }
 }
 
 /// Дефолтная реализация resultMode: результат копируется в буфер обмена
@@ -85,6 +88,12 @@ public extension OperationType {
 
     /// По умолчанию операция не поддерживает URL
     var supportsURL: Bool {
+        false
+    }
+
+    /// По умолчанию ответ приходит целиком: текст, который сразу уходит в буфер обмена,
+    /// показывать по кускам незачем
+    var streamsResult: Bool {
         false
     }
 

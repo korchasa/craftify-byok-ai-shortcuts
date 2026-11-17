@@ -3,6 +3,7 @@
 "share_cancel" = "Закрыть";
 "retry" = "Повторить";
 "share_copy_close" = "Скопировать и закрыть";
+"result_copied_note" = "Скопировано в буфер обмена.";
 
 /* Picker Values */
 

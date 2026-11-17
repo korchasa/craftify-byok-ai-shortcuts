@@ -87,6 +87,12 @@ public struct ExplainOperation: OperationType {
         .display
     }
 
+    /// Ответ показывается на экране, поэтому выводится по мере написания
+    public var streamsResult: Bool {
+        // [REF:fr:ux.streaming]
+        true
+    }
+
     public func resolveInput(input: OperationInput) throws -> String {
         if let text = input.text, !text.isEmpty {
             return text

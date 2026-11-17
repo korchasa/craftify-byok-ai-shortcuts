@@ -36,6 +36,28 @@ private final class FixedResultProcessingStub: NSObject, ProcessingManaging {
 public final class ShareExtensionManagerTests: XCTestCase {
     deinit {}
 
+    /// «Упростить» показывает результат и сама кладёт готовый текст в буфер обмена
+    public func testSimplifyShowsResultAndCopiesIt() async {
+        let clipboard = ClipboardManagerStub()
+        let consent = ConsentManagerStub()
+        consent.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: clipboard,
+            processingManager: FixedResultProcessingStub(result: "Simple text\n"),
+            consentManager: consent,
+            logManager: LogManagerSharedInMemory()
+        )
+
+        let result = await manager.process(text: "A convoluted text", operation: InventoryOperation(operation: .simplify, params: Data()))
+
+        XCTAssertEqual(OperationFactory.make(kind: .simplify).resultMode, .displayAndCopy)
+        XCTAssertEqual(result?.success, true)
+        XCTAssertEqual(manager.lastResult, "Simple text")
+        XCTAssertEqual(clipboard.copiedText, "Simple text")
+    }
+
     /// Модель охотно завершает ответ переводом строки, а иногда и начинает с него.
     /// Ни в буфер обмена, ни на экран результата этот мусор попадать не должен.
     public func testProcess_TrimsWhitespaceAroundResult() async {

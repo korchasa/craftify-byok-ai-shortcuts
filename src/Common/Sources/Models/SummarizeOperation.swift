@@ -132,6 +132,12 @@ public struct SummarizeOperation: OperationType {
         .display
     }
 
+    /// Ответ показывается на экране, поэтому выводится по мере написания
+    public var streamsResult: Bool {
+        // [REF:fr:ux.streaming]
+        true
+    }
+
     public var supportsURL: Bool {
         true
     }

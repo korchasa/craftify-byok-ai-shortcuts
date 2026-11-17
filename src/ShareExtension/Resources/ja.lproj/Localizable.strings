@@ -3,6 +3,7 @@
 "share_cancel" = "閉じる";
 "retry" = "再試行";
 "share_copy_close" = "コピーして閉じる";
+"result_copied_note" = "クリップボードにコピーしました。";
 
 /* Picker Values */
 

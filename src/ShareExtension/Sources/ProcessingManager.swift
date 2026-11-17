@@ -8,6 +8,9 @@ public final class ProcessingManager: ProcessingManaging {
     private enum Constants {
         static let resultPreviewLength = 128
         static let systemPreviewLength: Int = 48
+        /// Не чаще одного обновления экрана за это время: разбор Markdown на каждый кусок
+        /// в несколько символов тратил бы процессор впустую
+        static let partialInterval: TimeInterval = 0.1
     }
 
     /// Creates `ProcessingManager` with a concrete `LLMClienting` instance.
@@ -26,14 +29,46 @@ public final class ProcessingManager: ProcessingManaging {
     }
 
     public func process(text: String, operation: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
-        // if operation.operation == .summarize {
-        //     // Временно: возвращаем исходный текст без LLM
-        //     completion(.success(text))
-        //     return
-        // }
+        process(text: text, operation: operation, onPartial: nil, completion: completion)
+    }
+
+    public func process(
+        text: String,
+        operation: InventoryOperation,
+        onPartial: ((String) -> Void)?,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
         Task {
-            await self.processAsync(text: text, operation: operation, completion: completion)
+            await self.processAsync(text: text, operation: operation, onPartial: onPartial, completion: completion)
         }
+    }
+
+    /// Получает ответ модели: по кускам, если операция показывает его по мере написания
+    /// и кто-то ждёт промежуточный текст, иначе целиком
+    private func answer(
+        messages: [LLMMessage],
+        apiKey: String,
+        streams: Bool,
+        onPartial: ((String) -> Void)?
+    ) async throws -> String {
+        guard streams, let onPartial else {
+            return try await llmClient.send(messages: messages, apiKey: apiKey)
+        }
+        // [REF:fr:ux.streaming]
+        var text = ""
+        var lastReport = Date.distantPast
+        for try await piece in llmClient.stream(messages: messages, apiKey: apiKey) {
+            text += piece
+            let now = Date()
+            if now.timeIntervalSince(lastReport) >= Constants.partialInterval {
+                lastReport = now
+                onPartial(text)
+            }
+        }
+        guard !text.isEmpty else {
+            throw LLMAPIClientError.invalidResponse("Empty streamed answer")
+        }
+        return text
     }
 
     private func logRequest(operation: InventoryOperation, apiKey: String, messages: [LLMMessage]) {
@@ -84,14 +119,19 @@ public final class ProcessingManager: ProcessingManaging {
         ))
     }
 
-    private func processAsync(text: String, operation: InventoryOperation, completion: (Result<String, Error>) -> Void) async {
+    private func processAsync(
+        text: String,
+        operation: InventoryOperation,
+        onPartial: ((String) -> Void)?,
+        completion: (Result<String, Error>) -> Void
+    ) async {
         do {
             let apiKey = try await authManager.getAPIKey() ?? ""
             let opType = OperationFactory.make(kind: operation.operation)
             let input = try opType.decodeInput(from: operation.params)
             let messages = opType.makeMessages(input: input, text: text, customPrompt: operation.customPrompt)
             logRequest(operation: operation, apiKey: apiKey, messages: messages)
-            let result = try await llmClient.send(messages: messages, apiKey: apiKey)
+            let result = try await answer(messages: messages, apiKey: apiKey, streams: opType.streamsResult, onPartial: onPartial)
             logResponse(operation: operation, text: text, result: result)
             completion(.success(opType.presentResult(result, sourceText: text)))
         } catch {
