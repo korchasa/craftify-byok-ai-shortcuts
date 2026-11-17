@@ -84,7 +84,9 @@ public struct MarkdownLLMView: View {
         Text(Self.attributedText(from: markdown))
             .font(.body)
             .lineSpacing(Self.lineSpacing)
-            .padding()
+            // Только сверху и снизу: боковой отступ уже даёт экран вокруг, а второй
+            // делал ответ уже заголовка и кнопок
+            .padding(.vertical)
             .multilineTextAlignment(.leading)
             .tint(.blue)
             .textSelection(.enabled)

@@ -69,4 +69,6 @@ Cut the time a user stares at an empty progress sheet: show the answer as the mo
 
 - `deno task check`, 2026-11-17: 268 tests green, SwiftLint strict clean, the app launches in the simulator. Besides the DoD tests, `ProcessingManagerLLMIntegrationTests::test_streamingOperation_reportsGrowingText` and `::test_findErrors_isNotStreamed` cover the processing layer.
 - Live OpenAI stream, `gpt-5.6-luna`, 2026-11-17: `text/event-stream`, only `data:` lines, `choices[0].delta.content` pieces and a closing `data: [DONE]` — the shape the parser expects. First text after 2.4 s, whole answer after 3.5 s, 122 pieces.
-- Not checked live: Claude, Mistral and OpenRouter (no keys in this environment; their formats are covered by recorded-event tests), and the growing text inside the real share sheet (needs a provider key in the app).
+- Share sheet on the iPhone 17 simulator with the owner's OpenAI key, 2026-11-17, Debug build: Summarize on `https://en.wikipedia.org/wiki/Nocebo`, frames captured with `simctl io screenshot` about every 0.4 s. The first two sentences appeared 3.0 s after the tap, the text grew in place at 3.5 s and 3.9 s, and the answer was whole at 4.3 s. Simplify on the same link showed the answer and the "copied" note.
+- The same walk found the answer narrower than the title and the buttons: `MarkdownLLMView` padded all four sides inside a screen that already supplies the side margin. It now pads only top and bottom.
+- Not checked live: Claude, Mistral and OpenRouter (no keys in this environment; their formats are covered by recorded-event tests).

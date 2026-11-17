@@ -1,6 +1,6 @@
 ---
 date: "2026-10-14"
-status: in progress
+status: done
 implements: [FR-UX.DYNAMIC-TYPE]
 tags: [accessibility, dynamic-type, layout, ipad, dark-mode]
 related_tasks: []
@@ -68,10 +68,12 @@ stack horizontally arranged items vertically.
     the default size, status bar cropped: consent, home, settings and add sheet on
     iPhone in light and dark, consent and home on iPad in light — 0 differing pixels.
     In iPad dark mode the only difference is the side margins (the band fix).
-- [ ] FR-UX.DYNAMIC-TYPE: the extension's result screen stacks "Close" and
+- [x] FR-UX.DYNAMIC-TYPE: the extension's result screen stacks "Close" and
       "Copy & Close" at accessibility sizes
-  - Acceptance: manual — not walked: reaching the result needs a live provider key.
-    Same `AdaptiveStack` as the form button bar, which was walked.
+  - Acceptance: manual — agent simulator walk 2026-11-17 on iPhone 17 with a live
+    OpenAI key: a Summarize result at `accessibility-extra-large` shows the two
+    buttons stacked and readable in full, in light and dark; at the default size
+    they stay side by side.
 
 ## Solution
 
