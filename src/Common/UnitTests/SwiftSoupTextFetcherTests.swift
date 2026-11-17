@@ -80,6 +80,82 @@ final class SwiftSoupTextFetcherTests: XCTestCase {
         let text = try await self.fetcher.fetchText(from: "https://test.com")
         XCTAssertEqual(text, "Привет, мир!")
     }
+
+    /// Страница, устроенная как статья Википедии: меню, оглавление, вкладки и подвал
+    /// вокруг основного блока. Модели уходит только статья с её заголовком
+    func test_fetchText_takesTheMainBlockAndDropsSiteChrome() async throws {
+        let html = """
+        <html><head><style>.a{}</style></head><body>
+        <a href="#content">Jump to content</a>
+        <header><nav aria-label="Site">Main menu Random article</nav></header>
+        <nav id="toc" aria-label="Contents">Contents Effects Ethics</nav>
+        <main id="content">
+          <header><h1>Nocebo</h1><nav aria-label="Views">Read Edit</nav></header>
+          <p>A nocebo effect is said to occur.</p>
+          <script>trackVisit()</script>
+        </main>
+        <aside>Page tools</aside>
+        <footer>Privacy policy</footer>
+        </body></html>
+        """
+        mockSession.nextData = html.data(using: .utf8)
+
+        let text = try await self.fetcher.fetchText(from: "https://en.wikipedia.org/wiki/Nocebo")
+
+        XCTAssertEqual(text, "Nocebo A nocebo effect is said to occur.")
+    }
+
+    /// Без основного блока берётся вся страница, но без навигации, шапки сайта и подвала;
+    /// шапка самой статьи с её заголовком остаётся
+    func test_fetchText_withoutMainBlock_keepsTheArticleAndDropsNavigation() async throws {
+        let html = """
+        <html><body>
+        <header>Site name <nav>Home Blog</nav></header>
+        <div role="navigation">Breadcrumbs</div>
+        <article><header><h1>Title</h1></header><p>Body text.</p></article>
+        <form>Subscribe</form>
+        <footer>Copyright</footer>
+        </body></html>
+        """
+        mockSession.nextData = html.data(using: .utf8)
+
+        let text = try await self.fetcher.fetchText(from: "https://blog.example.com/post")
+
+        XCTAssertEqual(text, "Title Body text.")
+    }
+
+    /// Выпадающее меню, скрытое за кнопкой (у Википедии так устроен список языков
+    /// статьи), выбрасывается вместе с кнопкой даже внутри основного блока
+    func test_fetchText_dropsPopupMenusInsideTheMainBlock() async throws {
+        let html = """
+        <html><body><main>
+        <h1>Nocebo</h1>
+        <div class="dropdown">
+          <input type="checkbox" role="button" aria-haspopup="true" aria-label="Languages">
+          <label>34 languages</label>
+          <div><ul><li><a lang="de">Deutsch</a></li><li><a lang="fr">Français</a></li></ul>
+          <a>Edit links</a></div>
+        </div>
+        <p>A nocebo effect is said to occur.</p>
+        </main></body></html>
+        """
+        mockSession.nextData = html.data(using: .utf8)
+
+        let text = try await self.fetcher.fetchText(from: "https://en.wikipedia.org/wiki/Nocebo")
+
+        XCTAssertEqual(text, "Nocebo A nocebo effect is said to occur.")
+    }
+
+    /// Если на странице нет ничего, кроме служебных блоков, лучше отдать их текст,
+    /// чем сообщить пользователю о пустой странице
+    func test_fetchText_pageOfOnlyNavigation_fallsBackToTheWholeBody() async throws {
+        let html = "<html><body><nav>Only links here</nav></body></html>"
+        mockSession.nextData = html.data(using: .utf8)
+
+        let text = try await self.fetcher.fetchText(from: "https://links.example.com")
+
+        XCTAssertEqual(text, "Only links here")
+    }
 }
 
 // MARK: - Async Error Assertion Helper

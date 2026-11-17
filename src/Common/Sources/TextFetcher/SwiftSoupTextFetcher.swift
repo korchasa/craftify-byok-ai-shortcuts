@@ -85,7 +85,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
         do {
             let document = try SwiftSoup.parse(html)
             guard let body = document.body() else { throw FetchError.parseError }
-            let text = try body.text()
+            let text = try PageMainText.text(of: body)
             if text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 throw FetchError.emptyText
             }
@@ -144,7 +144,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
                 guard let body = document.body() else { completion(.failure(FetchError.parseError))
                     return
                 }
-                try completion(.success(body.text()))
+                try completion(.success(PageMainText.text(of: body)))
             } catch {
                 completion(.failure(FetchError.parseError))
             }
