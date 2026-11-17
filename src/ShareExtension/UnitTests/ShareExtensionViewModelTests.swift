@@ -699,6 +699,51 @@ final class ShareExtensionViewModelTests: XCTestCase {
         return viewModel
     }
 
+    /// Текст страницы уходит модели с пометкой, что это страница сайта, и с её адресом
+    func testProcess_PageTextIsMarkedAsAWebPage() async {
+        final class FixedFetcher: TextFetching {
+            func fetchText(from _: String) async throws -> String {
+                "Nocebo article"
+            }
+
+            func fetchAndExtractText(from _: String, completion: @escaping (Result<String, Error>) -> Void) {
+                completion(.success("Nocebo article"))
+            }
+        }
+        final class CapturingProcessingStub: NSObject, ProcessingManaging {
+            private(set) var receivedText: String?
+            func process(text: String, operation _: InventoryOperation, completion: @escaping (Result<String, Error>) -> Void) {
+                receivedText = text
+                completion(.success("Simple"))
+            }
+
+            func cancel() {}
+        }
+        URLInputResolver.setTextFetcher(FixedFetcher())
+        defer { URLInputResolver.setTextFetcher(SwiftSoupTextFetcher()) }
+        let processing = CapturingProcessingStub()
+        let consentManager = ConsentManagerStub()
+        consentManager.setConsent(true)
+        let manager = ShareExtensionManager(
+            inventoryManager: InventoryManagerStub(),
+            authManager: AuthManagerStub(key: "sk-valid-key-1234567890"),
+            clipboardManager: ClipboardManagerStub(),
+            processingManager: processing,
+            consentManager: consentManager,
+            logManager: LogManagerSharedInMemory()
+        )
+        let viewModel = ShareExtensionViewModel(manager: manager, reviewPolicy: Self.makeReviewPolicy())
+        manager.inputText = "https://en.wikipedia.org/wiki/Nocebo"
+
+        viewModel.process(operation: InventoryOperation(operation: .simplify, params: Data()))
+        for _ in 0 ..< 200 where processing.receivedText == nil {
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
+        await waitUntilIdle(viewModel)
+
+        XCTAssertEqual(processing.receivedText, "<page url=\"https://en.wikipedia.org/wiki/Nocebo\">\nNocebo article\n</page>")
+    }
+
     /// Первая часть ответа появляется на экране результата, пока модель ещё пишет
     func testProcess_StreamedTextIsShownBeforeCompletion() async {
         let processing = StreamingProcessingStub(partial: "Partial answer", finalText: "")

@@ -52,6 +52,15 @@ public final class OperationPromptTemplateTests: XCTestCase {
         XCTAssertTrue(prompt(.simplify).contains("never translate it"))
     }
 
+    /// Операции, которые принимают ссылку, просят модель выделить основную часть страницы
+    public func testURLOperationsAskForThePageMainContent() {
+        let urlKinds = OperationKind.allCases.filter { OperationFactory.make(kind: $0).supportsURL }
+        XCTAssertFalse(urlKinds.isEmpty)
+        for kind in urlKinds {
+            XCTAssertTrue(prompt(kind).contains(WebPageInput.promptRule), "\(kind) prompt must ask for the page's main content")
+        }
+    }
+
     /// Шаблоны с пошаговым разбором не печатают сам разбор
     public func testRewritingPromptsForbidReasoningInOutput() {
         for kind in [OperationKind.simplify, .summarize] {

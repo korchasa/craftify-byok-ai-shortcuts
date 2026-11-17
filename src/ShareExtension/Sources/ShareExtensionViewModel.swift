@@ -219,7 +219,9 @@ public final class ShareExtensionViewModel: ObservableObject {
             logOperationInput(input)
 
             setStage(isURL ? .fetchingPage : .askingModel)
-            let resolvedText = try await opType.resolveInput(input: input)
+            let pageOrText = try await opType.resolveInput(input: input)
+            // [REF:fr:input.page-text] — модель должна знать, что перед ней страница сайта
+            let resolvedText = isURL ? WebPageInput.wrap(pageOrText, url: manager.inputText) : pageOrText
 
             logResolvedInput(resolvedText)
 
