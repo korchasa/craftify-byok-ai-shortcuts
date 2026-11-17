@@ -328,17 +328,41 @@ public struct HomeView: View {
     }
 
     /// Строка заголовка: крупный титул слева, Edit — на той же линии справа
+    /// Заголовок экрана одной строкой: перенос одного слова по слогам читается хуже, чем
+    /// кнопка под ним
+    private var titleText: some View {
+        Text(LocalizedStringKey(L10n.homeTitle))
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .lineLimit(1)
+    }
+
+    /// Кнопка правки списка; на пустом списке редактировать нечего, и её нет
+    @ViewBuilder private var editButton: some View {
+        if !viewModel.operations.isEmpty {
+            EditButton()
+                .font(.craftifyBody)
+                .lineLimit(1)
+        }
+    }
+
     private var titleBar: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(LocalizedStringKey(L10n.homeTitle))
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            Spacer()
-            // Нечего редактировать на пустом списке — кнопку прячем
-            if !viewModel.operations.isEmpty {
-                EditButton()
-                    .font(.craftifyBody)
+        // [REF:fr:ux.dynamic-type]
+        // На размерах «Универсального доступа» заголовок и Edit не помещаются в одну строку,
+        // и SwiftUI переносил по слогам одно из слов. Если рядом им тесно, кнопка уходит
+        // под заголовок, а заголовок в крайнем случае чуть уменьшается, но остаётся одной строкой
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .firstTextBaseline) {
+                titleText
+                Spacer(minLength: FormStyleConstants.sectionSpacing)
+                editButton
             }
+            VStack(alignment: .leading, spacing: 0) {
+                titleText
+                    .minimumScaleFactor(ViewConstants.titleMinimumScaleFactor)
+                editButton
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .padding(.horizontal, FormStyleConstants.titleBarHorizontalPadding)
         .padding(.top, FormStyleConstants.sectionSpacing)
