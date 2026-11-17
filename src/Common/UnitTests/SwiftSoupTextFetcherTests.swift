@@ -113,7 +113,7 @@ final class SwiftSoupTextFetcherTests: XCTestCase {
         <header>Site name <nav>Home Blog</nav></header>
         <div role="navigation">Breadcrumbs</div>
         <article><header><h1>Title</h1></header><p>Body text.</p></article>
-        <form>Subscribe</form>
+        <form><label>Email</label><input type="email"><button>Subscribe</button></form>
         <footer>Copyright</footer>
         </body></html>
         """
@@ -155,6 +155,47 @@ final class SwiftSoupTextFetcherTests: XCTestCase {
         let text = try await self.fetcher.fetchText(from: "https://links.example.com")
 
         XCTAssertEqual(text, "Only links here")
+    }
+
+    /// Старые сайты оборачивают статью вместе с комментариями в форму (у OpenNet это
+    /// форма модерации). Статья остаётся, из формы уходят только поля и кнопки
+    func test_fetchText_keepsAnArticleWrappedInAForm() async throws {
+        let html = """
+        <html><body>
+        <table><tr><td>News Forum Tags</td></tr></table>
+        <form action="/cgi-bin/moderate" method="POST">
+          <h1>iLeakage</h1><p>Researchers found a flaw.</p>
+          <textarea>Draft comment</textarea><button>Send</button>
+        </form>
+        </body></html>
+        """
+        mockSession.nextData = html.data(using: .utf8)
+
+        let text = try await self.fetcher.fetchText(from: "https://www.opennet.ru/opennews/art.shtml?num=60000")
+
+        XCTAssertEqual(text, "News Forum Tags iLeakage Researchers found a flaw.")
+    }
+
+    /// Страница в кодировке из заголовка ответа сервера (OpenNet отдаёт KOI8-R)
+    func test_fetchText_decodesThePageInTheCharsetTheServerDeclares() async throws {
+        let koi8 = String.Encoding(rawValue: CFStringConvertEncodingToNSStringEncoding(CFStringEncoding(CFStringEncodings.KOI8_R.rawValue)))
+        mockSession.nextData = "<html><body><p>Привет, мир!</p></body></html>".data(using: koi8)
+        let url = try XCTUnwrap(URL(string: "https://www.opennet.ru/opennews/art.shtml?num=60000"))
+        mockSession.nextResponse = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: ["Content-Type": "text/html; charset=koi8-r"])
+
+        let text = try await self.fetcher.fetchText(from: url.absoluteString)
+
+        XCTAssertEqual(text, "Привет, мир!")
+    }
+
+    /// Страница, которая объявляет кодировку только в теге meta
+    func test_fetchText_decodesThePageInTheCharsetItsMetaDeclares() async throws {
+        let html = "<html><head><meta charset=\"windows-1251\"></head><body><p>Привет, мир!</p></body></html>"
+        mockSession.nextData = html.data(using: .windowsCP1251)
+
+        let text = try await self.fetcher.fetchText(from: "https://old.example.ru/page")
+
+        XCTAssertEqual(text, "Привет, мир!")
     }
 }
 

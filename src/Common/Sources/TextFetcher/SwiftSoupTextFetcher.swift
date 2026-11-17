@@ -71,7 +71,7 @@ public final class SwiftSoupTextFetcher: TextFetching {
             timestamp: afterNetwork
         ))
 
-        guard let html = String(data: data, encoding: .utf8) else { throw FetchError.noData }
+        guard let html = HTMLDecoding.decode(data, declaredCharset: httpResponse.textEncodingName) else { throw FetchError.noData }
         // Проверка meta robots
         if html.lowercased().contains("<meta name=\"robots\""), let idx = html.range(of: "<meta name=\"robots\"", options: .caseInsensitive)?.lowerBound {
             // Extract tag substring up to '>' maybe 250 chars ahead
@@ -130,12 +130,12 @@ public final class SwiftSoupTextFetcher: TextFetching {
             completion(.failure(FetchError.badURL))
             return
         }
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        URLSession.shared.dataTask(with: url) { data, response, error in
             if let error {
                 completion(.failure(error))
                 return
             }
-            guard let data, let html = String(data: data, encoding: .utf8) else {
+            guard let data, let html = HTMLDecoding.decode(data, declaredCharset: response?.textEncodingName) else {
                 completion(.failure(FetchError.noData))
                 return
             }

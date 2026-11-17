@@ -5,9 +5,11 @@ import SwiftSoup
 /// панелей и подвала сайта. Иначе модель получает навигацию вперемешку со статьёй и
 /// пересказывает её вместе со статьёй.
 public enum PageMainText {
-    /// Блоки, которые никогда не бывают текстом страницы
+    /// Блоки, которые никогда не бывают текстом страницы. Форма сюда не входит: старые
+    /// сайты оборачивают в неё всю статью, поэтому убираются только её поля и кнопки
     private static let chromeSelector = [
-        "script", "style", "noscript", "template", "nav", "aside", "form",
+        "script", "style", "noscript", "template", "nav", "aside",
+        "input", "select", "textarea", "button", "label",
         "[role=navigation]", "[role=banner]", "[role=contentinfo]", "[role=complementary]",
         "[role=search]", "[aria-hidden=true]", "[hidden]"
     ].joined(separator: ", ")
