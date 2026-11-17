@@ -4,6 +4,10 @@ import XCTest
 @MainActor
 final class ShareExtensionViewModelTests: XCTestCase {
     private static let reviewSuiteName = "ShareExtensionViewModelTests.review"
+    /// Сколько ждать ошибку или результат асинхронной обработки. Ожидание кончается, как только
+    /// событие пришло, поэтому запас ничего не стоит на быстрой машине, а на перегруженной машине
+    /// сборки обработка шла дольше секунды, и тест падал, хотя код работал верно
+    private static let asyncWaitTimeout: TimeInterval = 10
 
     /// Счётчик успехов для просьбы об оценке — в своём хранилище, чистом в начале каждого теста
     private static func makeReviewPolicy() -> ReviewRequestPolicy {
@@ -122,7 +126,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         viewModel.process(operation: op)
-        await fulfillment(of: [exp], timeout: 1.0)
+        await fulfillment(of: [exp], timeout: Self.asyncWaitTimeout)
         try? await Task.sleep(nanoseconds: 100_000_000) // 100 мс
         // Assert: Должна быть установлена ошибка (любая)
         XCTAssertNotNil(viewModel.errorMessage)
@@ -159,7 +163,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         viewModel.process(operation: op)
-        await fulfillment(of: [exp], timeout: 1.0)
+        await fulfillment(of: [exp], timeout: Self.asyncWaitTimeout)
         // Assert: после успешной обработки в режиме clipboard расширение закрывается
         XCTAssertTrue(viewModel.shouldCloseExtension)
         XCTAssertNil(viewModel.errorMessage)
@@ -299,7 +303,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         viewModel.process(operation: op)
-        await fulfillment(of: [exp], timeout: 1.0)
+        await fulfillment(of: [exp], timeout: Self.asyncWaitTimeout)
         try? await Task.sleep(nanoseconds: 100_000_000) // 100 мс
         // Assert: Ошибка должна быть установлена только один раз
         XCTAssertNotNil(viewModel.errorMessage)
@@ -338,7 +342,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
         }
         // Act
         viewModel.process(operation: op)
-        await fulfillment(of: [exp], timeout: 1.0)
+        await fulfillment(of: [exp], timeout: Self.asyncWaitTimeout)
         stageCancellable.cancel()
         // Assert: для текстового входа публикуется стадия запроса к модели,
         // стадия загрузки страницы не появляется, после завершения стадия сброшена
@@ -384,7 +388,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         viewModel.process(operation: op)
-        await fulfillment(of: [firstError], timeout: 1.0)
+        await fulfillment(of: [firstError], timeout: Self.asyncWaitTimeout)
 
         // Assert 1: ошибка помечена как повторяемая
         XCTAssertTrue(viewModel.isLastErrorRetryable)
@@ -399,7 +403,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         viewModel.retry()
-        await fulfillment(of: [secondError], timeout: 1.0)
+        await fulfillment(of: [secondError], timeout: Self.asyncWaitTimeout)
         XCTAssertEqual(processingManager.calls, 2)
 
         // Arrange 2: ошибка согласия — НЕ повторяемая, retry не запускает обработку
@@ -426,7 +430,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         consentViewModel.process(operation: op)
-        await fulfillment(of: [consentError], timeout: 1.0)
+        await fulfillment(of: [consentError], timeout: Self.asyncWaitTimeout)
         XCTAssertFalse(consentViewModel.isLastErrorRetryable)
         consentViewModel.retry()
         try? await Task.sleep(nanoseconds: 200_000_000)
@@ -470,7 +474,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         viewModel.process(operation: InventoryOperation(operation: .translate, params: Data()))
-        await fulfillment(of: [errorShown], timeout: 1.0)
+        await fulfillment(of: [errorShown], timeout: Self.asyncWaitTimeout)
 
         // Assert: показан именно ключевой текст, а не «неизвестная ошибка»
         XCTAssertEqual(viewModel.lastErrorKey, .errorInvalidApiKey)
@@ -533,7 +537,7 @@ final class ShareExtensionViewModelTests: XCTestCase {
             }
         }
         viewModel.process(operation: InventoryOperation(operation: .translate, params: Data()))
-        await fulfillment(of: [errorShown], timeout: 1.0)
+        await fulfillment(of: [errorShown], timeout: Self.asyncWaitTimeout)
 
         XCTAssertEqual(viewModel.lastErrorKey, .errorProviderRejectedRequest)
         XCTAssertFalse(viewModel.isLastErrorRetryable)
