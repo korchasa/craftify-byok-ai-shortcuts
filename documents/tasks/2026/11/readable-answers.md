@@ -61,4 +61,18 @@ An answer read on the result screen must be easy to scan: a summary of ten sente
   - "2-3 sentences": 3, 4 and 3 sentences; "18-20 sentences": 18, 20 and 20 sentences in 5 or 6 paragraphs.
   - Explain: TL;DR plus 3 paragraphs, 1215–1884 characters, in all 6 runs (the term "Эффект ноцебо" and "Spectre v1 и спекулятивное выполнение").
 - `deno task check`: 279 tests passed, 0 failed.
-- Not checked: Claude, Mistral and OpenRouter models; the result screen in the simulator.
+- Not checked: Claude, Mistral and OpenRouter models. The owner decided on 2026-11-18 that they need no separate run.
+- Simulator walk of the Release build, 2026-11-18, iPhone 17 with the owner's OpenAI key: Summarize on the Wikipedia Nocebo link gave 3 paragraphs; Explain on "nocebo" gave a TL;DR and 3 paragraphs; both in light and dark appearance and at the largest text size.
+
+## Follow-ups
+
+- The new Summarize and Explain prompts reach users only with the next Craftify release, and that release needs the owner's per-app OK.
+
+## Status
+
+- State: done
+- Needs from the operator: nothing
+- Not verified: the prompts on Claude, Mistral and OpenRouter models (the owner waived that run)
+- Branch: main; the code is committed and pushed (09df908, 92ebd9a) with green CI
+- Told directly by the operator: keep the paragraph count per length (the loose "format it nicely" rule was tried and rejected); the CI-hang session was archived at the operator's request; no test on other models; the next release (2.1.0) waits until App Review decides on 2.0.4
+- Updated: 2026-11-18 18:15 EET

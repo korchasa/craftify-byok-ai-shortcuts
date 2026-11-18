@@ -56,4 +56,4 @@ Five operations exist (`OperationKind`), each an `OperationType` whose prompt go
 
 - Live check, `gpt-5.6-luna`, 2026-11-17: a Russian text with four misspellings over two lines returned four fragments with Russian descriptions; an English text returned three (including the two-word fragment "they has"); a correct sentence returned `{"errors":[]}`. Every answer was bare JSON, as the prompt asks.
 - Simulator, iPhone 17, Russian UI: "Найти ошибки" is the last entry of the add-operation type picker and saves as a tile with the magnifier symbol.
-- Not checked on screen: the Share Extension result sheet with a real answer. Its rendering path is the same inline-Markdown parser that `testOriginalTextIsKeptVerbatim` runs.
+- Checked on screen in the Release build walk of 2026-11-18 (iPhone 17, owner's OpenAI key): the Share Extension result sheet lists each error with its fix.
