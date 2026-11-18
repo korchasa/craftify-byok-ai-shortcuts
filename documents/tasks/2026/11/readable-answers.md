@@ -51,6 +51,11 @@ An answer read on the result screen must be easy to scan: a summary of ten sente
 
 - RED first: both new tests failed on the old prompts for the reasons they check.
 - Wording that failed, kept here so it is not tried again: "short paragraphs of two or three sentences, one topic each" (and the variant "paragraphs only group those sentences and never add to their number") made Summarize overshoot "9-10 sentences" — 12 to 20 sentences in 11 of 12 runs. The old prompt gave exactly 10 in 3 of 3 runs on the same page. Splitting the change showed the rule caused it, not the new example (example alone: 10 sentences, one paragraph, 3 of 3).
+- A loose rule was tried too, at the owner's request: "Format the summary so it is easy to read on a phone screen: split it into paragraphs, and use a list … where the text enumerates things." 3 runs per case:
+  - "9-10 sentences": 10 to 14 sentences, and the layout changed from run to run — 1 to 7 paragraphs, once every sentence on its own line with no paragraph at all.
+  - "18-20 sentences": 17, 24 and 29 sentences, once 19 one-sentence paragraphs.
+  - "2-3 sentences": 3 sentences in all 3 runs.
+  The paragraph count per length stays: it is what keeps both the length and the layout stable.
 - Final wording, 3 runs per case on `gpt-5.6-luna`:
   - "9-10 sentences": 9 sentences in 3 paragraphs in all 6 runs (OpenNet and Nocebo).
   - "2-3 sentences": 3, 4 and 3 sentences; "18-20 sentences": 18, 20 and 20 sentences in 5 or 6 paragraphs.
