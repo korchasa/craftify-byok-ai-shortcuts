@@ -1,6 +1,6 @@
 ---
 date: "2026-11-18"
-status: in progress
+status: done
 implements: []
 tags: [ci, tests, simulator]
 related_tasks: []
@@ -45,7 +45,7 @@ The owner chose the last variant on 2026-11-18.
   - Evidence: `grep -n "TEST_PARALLEL" .github/workflows/ci.yml scripts/config.ts`
 - [x] `deno task check` passes locally (279 tests, 2026-11-18).
   - Evidence: `SKIP_LOG_STREAM=1 NO_COLOR=1 deno task check`
-- [ ] A CI run on `main` with this change passes.
+- [x] A CI run on `main` with this change passes (run 44325666164: tests 1 min, job 8 min 19 s).
   - Evidence: `gh run list --branch main -L 1 --json conclusion -q '.[0].conclusion'` prints `success`
 
 ## Solution
