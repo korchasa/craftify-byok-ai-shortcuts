@@ -66,6 +66,6 @@ The owner chose the last variant on 2026-11-18.
 - State: done
 - Needs from the operator: nothing
 - Not verified: that cancellations are gone for good (one green run on the fix, the old rate was about one run in three); how a failing test looks in the CI log without parallel testing (no failing run was produced)
-- Branch: fix `9f89ad1` and closing commit `ca462c3` are pushed to `main`; this status section is committed on local branch `status/ci-simulator-boot-storm`, not pushed; the local main checkout is still at 92ebd9a
+- Branch: fix `9f89ad1` and closing commit `ca462c3` are pushed to `main`; this status section is on `main` too; the local main checkout is still at 92ebd9a
 - Told directly by the operator: nobody cancelled the runs by hand; chose a pre-booted simulator with serial tests on CI over keeping parallel testing; approved pushing the fix and the closing commit to `main`; approved deleting the diagnostic branch `diag/ci-test-hang`
 - Updated: 2026-11-18 17:27 EET
