@@ -67,10 +67,23 @@ jobs:
           echo "SIMULATOR_ID=$udid" >> "$GITHUB_ENV"
           echo "TEST_SIMULATOR_ID=$udid" >> "$GITHUB_ENV"
 
+      # The first boot of a fresh simulator starts hundreds of iOS services and
+      # saturates the 3-core runner for minutes. Overlapping the tests, it starved
+      # the runner until GitHub cancelled the job, so the boot gets its own step
+      # and the build starts only once it is over.
+      - name: Boot simulator
+        run: |
+          xcrun simctl boot "$TEST_SIMULATOR_ID"
+          xcrun simctl bootstatus "$TEST_SIMULATOR_ID" -b
+
       # The same command a developer runs locally, minus the simulator smoke run:
       # gitleaks, generate, format, lint, localization parity, build + tests,
-      # comment scan.
+      # comment scan. The tests run serially on the simulator booted above:
+      # parallel testing would create a fresh clone and pay for a first boot
+      # again, during the tests.
       - name: deno task ci
+        env:
+          TEST_PARALLEL: "NO"
         run: deno task ci
 
       # `fmt` and `lint --fix` rewrite files in place, so they can never fail on

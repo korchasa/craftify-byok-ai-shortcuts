@@ -7,7 +7,7 @@
  */
 
 import { fail, run } from "./lib.ts";
-import { DERIVED_DATA, DEST_TEST_SIMULATOR, step } from "./config.ts";
+import { DERIVED_DATA, DEST_TEST_SIMULATOR, PARALLEL_TESTING, step } from "./config.ts";
 
 const SCHEME = "AllTests";
 
@@ -21,7 +21,7 @@ function testArgs(derivedData: string, resultBundle: string): string[] {
     "-derivedDataPath",
     derivedData,
     "-parallel-testing-enabled",
-    "YES",
+    PARALLEL_TESTING,
     "-parallel-testing-worker-count",
     "4",
     "-resultBundlePath",

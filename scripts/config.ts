@@ -16,6 +16,16 @@ export const DEST_SIMULATOR = `id=${SIMULATOR_ID},arch=arm64`;
 export const DEST_TEST_SIMULATOR = `id=${TEST_SIMULATOR_ID},arch=arm64`;
 
 /**
+ * `-parallel-testing-enabled`, overridden by TEST_PARALLEL. CI sets it to NO:
+ * parallel testing makes xcodebuild create a fresh simulator clone, and that
+ * clone's first boot pushed the 3-core runner to a load average of 500–645
+ * until GitHub cancelled the job. On a pre-booted simulator without a clone
+ * the tests took 1 min with a peak load of 52–133 (runs of 2026-11-18,
+ * [REF:task:2026-11-ci-simulator-boot-storm]).
+ */
+export const PARALLEL_TESTING = Deno.env.get("TEST_PARALLEL") ?? "YES";
+
+/**
  * One derived-data directory for every simulator build in the gate.
  *
  * The test run and the smoke run compile the same targets in the same

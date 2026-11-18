@@ -37,7 +37,7 @@ deno task check
 - `deno task logs` — view logs
 
 ## CI/CD
-- GitHub Actions runs `deno task ci` on every pull request and on `main` (`.github/workflows/ci.yml`): secret scan, project generation, format, lint, localization parity, build and unit tests
+- GitHub Actions runs `deno task ci` on every pull request and on `main` (`.github/workflows/ci.yml`): secret scan, project generation, format, lint, localization parity, build and unit tests. It boots the test simulator in its own step and runs the tests on it without parallel testing: a simulator's first boot saturates the runner, and overlapping the tests it got jobs cancelled
 - Checks only. This repository never signs or uploads the app — `deno task dist` produces an unsigned archive, and signing, packaging and delivery to App Store Connect happen outside it
 - Share Extension size and test coverage ≥ 80% are project targets, not gates — nothing enforces them automatically yet
 
