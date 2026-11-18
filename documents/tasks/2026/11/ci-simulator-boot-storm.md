@@ -55,3 +55,17 @@ The owner chose the last variant on 2026-11-18.
 3. `.github/workflows/ci.yml`: after "Pick a simulator", a "Boot simulator" step runs `xcrun simctl boot` and `xcrun simctl bootstatus -b` on `$TEST_SIMULATOR_ID`; the `deno task ci` step sets `TEST_PARALLEL: "NO"`.
 4. README "CI/CD": say that CI tests on a pre-booted simulator without parallel testing, and why.
 5. Run `deno task check`, commit, push after the owner's OK, confirm the CI run on `main`.
+
+## Follow-ups
+
+- `actionlint` warns SC2211 on the "Toolchain" step (`.tools/swiftformat-*/swiftformat --version`: a glob used as a command name). It predates this task.
+- Tuist 4.218 cannot generate the project inside a `git worktree` checkout ("Couldn't locate the root directory": it looks for a `.git` directory, and a worktree has a `.git` file). `deno task check` has to run in a plain clone or the main checkout.
+
+## Status
+
+- State: done
+- Needs from the operator: nothing
+- Not verified: that cancellations are gone for good (one green run on the fix, the old rate was about one run in three); how a failing test looks in the CI log without parallel testing (no failing run was produced)
+- Branch: fix `9f89ad1` and closing commit `ca462c3` are pushed to `main`; this status section is committed on local branch `status/ci-simulator-boot-storm`, not pushed; the local main checkout is still at 92ebd9a
+- Told directly by the operator: nobody cancelled the runs by hand; chose a pre-booted simulator with serial tests on CI over keeping parallel testing; approved pushing the fix and the closing commit to `main`; approved deleting the diagnostic branch `diag/ci-test-hang`
+- Updated: 2026-11-18 17:27 EET
