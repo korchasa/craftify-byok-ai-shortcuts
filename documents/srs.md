@@ -112,6 +112,13 @@
 - **Status:** [x]
 
 
+### FR-OP.READABLE-ANSWERS: Answers read on screen come in paragraphs, not one block [ANC:fr:op.readable-answers]
+
+- **Description:** The default prompts of Summarize and Explain, whose answers are read on the result screen, ask the model to split the answer into paragraphs with a blank line between them. Summarize ties the number of paragraphs to the chosen length — one for "2-3 sentences", two for "5-6", three for "9-10", five or six for "18-20" — so the paragraphs group the sentences asked for and never add to their number. Explain keeps its one- or two-sentence TL;DR, then gives two to four short paragraphs, still under 400 words, with a list only for three or more parallel items. In each prompt at least one example answer is itself split into paragraphs, because the model copies the form of its examples. Simplify, Translate and Correct keep the formatting of the text they rewrite and are not changed. A prompt the user has rewritten is used as it is.
+- **Tasks:** [REF:task:2026-11-readable-answers | readable-answers]
+- **Acceptance:** `src/Common/UnitTests/OperationPromptTemplateTests.swift::testOnScreenAnswersAreSplitIntoParagraphs` | `src/Common/UnitTests/OperationPromptTemplateTests.swift::testOnScreenAnswerExamplesShowParagraphs` | `deno task check`
+- **Status:** [x]
+
 ### FR-INPUT.PAGE-TEXT: A shared link sends the page's own text, not the site around it [ANC:fr:input.page-text]
 
 - **Description:** When the user shares a link, the operation receives the text a reader of the page would read: the site's navigation, menus, table of contents, sidebars, form fields and buttons, site header and footer, scripts and styles are left out. A form itself is kept, because old sites wrap the whole article in one. The page is read in the character set its server or its `meta` tag declares (such as KOI8-R or Windows-1251), and as UTF-8 when neither declares one. When the page marks its main content (a `main` element or `role="main"`), only that block is used; otherwise the rest of the page is. A header inside the main content or inside an article — where the page title lives — is kept. A pop-up menu hidden behind a toggle button (`aria-haspopup`, such as Wikipedia's list of the article's languages) is left out together with its button, even inside the main content. A page made of nothing but navigation still yields its text rather than an empty-page error. Because a site can build its menus without such markup, the page text reaches the model wrapped in `<page url="…">`, and every operation that accepts a link tells the model to find the page's main content — the article or post with its title — work only on it, and never output the wrapper.

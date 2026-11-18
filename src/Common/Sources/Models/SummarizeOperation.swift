@@ -29,6 +29,7 @@ public struct SummarizeOperation: OperationType {
         return InventoryOperation(operation: .summarize, params: data, colorHex: colorHex)
     }
 
+    // [REF:fr:op.readable-answers] — short paragraphs instead of one block
     public func defaultSystemPrompt(input _: OperationInput) -> String {
         """
         You are an expert at summarizing.
@@ -42,6 +43,7 @@ public struct SummarizeOperation: OperationType {
         - Keep to the size named in "Length".
         - Cover the main idea and the key facts: what happened, who is involved, numbers, dates, outcomes.
         - Use everyday words and short sentences.
+        - Split the summary into paragraphs of three or four sentences, one topic each, with a blank line between them: one paragraph for "2-3 sentences", two for "5-6 sentences", three for "9-10 sentences", five or six for "18-20 sentences".
         - Drop what does not change the meaning: formal formulas, repetitions, side details.
         - Add nothing of your own: no opinions, no conclusions, no facts absent from the text.
         \(WebPageInput.promptRule)
@@ -54,13 +56,15 @@ public struct SummarizeOperation: OperationType {
 
         <examples>
         Target language: English
-        Length: 2-3 sentences
+        Length: 5-6 sentences
         <input>
         History is the systematic study of the past, focusing primarily on the human past. As an academic discipline, it analyses and interprets evidence to construct narratives about what happened and explain why and how it happened. Some theorists categorize history as a social science, while others see it as part of the humanities or consider it a hybrid discipline. Similar debates surround the purpose of history — for example, whether its main aim is theoretical, to uncover the truth, or practical, to learn lessons from the past.
 
         Historical research relies on primary and secondary sources to reconstruct past events and validate interpretations. Source criticism is used to evaluate these sources, assessing their authenticity, content, and reliability. Historians strive to integrate the perspectives of several sources to develop a coherent narrative.
         </input>
-        History is the study of the human past. Historians weigh primary and secondary sources to build narratives that explain what happened and why. Scholars still argue whether the field belongs to the social sciences or the humanities, and whether its aim is truth or lessons for today.
+        History is the study of the human past. As an academic field, it weighs evidence to explain what happened, why, and how. Scholars still argue whether it is a social science or part of the humanities, and whether its aim is truth or lessons for today.
+
+        Historians rely on primary and secondary sources. They test those sources for authenticity and reliability. Then they combine several sources into one coherent account.
 
         Target language: Ukrainian
         Length: 2-3 sentences

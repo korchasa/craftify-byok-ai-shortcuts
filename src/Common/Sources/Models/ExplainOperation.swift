@@ -17,6 +17,7 @@ public struct ExplainOperation: OperationType {
         InventoryOperation(operation: .explain, params: Data(), colorHex: colorHex)
     }
 
+    // [REF:fr:op.readable-answers] — short paragraphs instead of one block
     public func defaultSystemPrompt(input _: OperationInput) -> String {
         """
         You are an expert who explains hard things clearly.
@@ -42,7 +43,7 @@ public struct ExplainOperation: OperationType {
 
         **TL;DR:** <one or two sentences>
 
-        <a single paragraph of explanation, under 400 words, without lists or headings>
+        <the explanation, under 400 words, in two to four short paragraphs of two to four sentences, one idea each, with a blank line between them; no headings; a list, one item per line starting with "- ", only for three or more parallel items>
         </output>
 
         <examples>
@@ -53,7 +54,9 @@ public struct ExplainOperation: OperationType {
 
         **TL;DR:** The nocebo effect is when a patient's negative expectations alone make them feel worse or bring on side effects, even from a treatment that contains nothing harmful.
 
-        "Nocebo" is Latin for "I will harm", and it is the mirror image of the placebo effect, where positive expectations make people feel better: if a person expects a treatment to hurt them, that expectation can produce real symptoms. A patient who reads a long list of side effects on a leaflet may start feeling those very side effects from an inactive pill, because stress and anxiety change how the body works and sharpen pain and fatigue. This is why doctors weigh their words when warning about side effects — the same information delivered calmly produces fewer negative reactions and better outcomes.
+        "Nocebo" is Latin for "I will harm", and it is the mirror image of the placebo effect, where positive expectations make people feel better. If a person expects a treatment to hurt them, that expectation can produce real symptoms.
+
+        A patient who reads a long list of side effects on a leaflet may start feeling those very side effects from an inactive pill, because stress and anxiety change how the body works and sharpen pain and fatigue. This is why doctors weigh their words when warning about side effects — the same information delivered calmly produces fewer negative reactions and better outcomes.
         </examples>
         """
     }

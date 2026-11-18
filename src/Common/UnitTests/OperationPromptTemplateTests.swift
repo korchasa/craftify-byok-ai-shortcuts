@@ -89,4 +89,37 @@ public final class OperationPromptTemplateTests: XCTestCase {
     public func testExplainPromptCapsAnswerLength() {
         XCTAssertTrue(prompt(.explain).contains("under 400 words"))
     }
+
+    /// Ответы, которые читают на экране, делятся на короткие абзацы: без этого
+    /// пересказ в 9–10 предложений приходил одним сплошным блоком
+    // [REF:fr:op.readable-answers]
+    public func testOnScreenAnswersAreSplitIntoParagraphs() {
+        for kind in [OperationKind.summarize, .explain] {
+            let text = prompt(kind)
+            XCTAssertTrue(text.contains("with a blank line between them"), "\(kind) prompt must ask for paragraphs")
+            XCTAssertFalse(text.contains("single paragraph"), "\(kind) prompt must not ask for a single paragraph")
+        }
+    }
+
+    /// Модель повторяет форму примеров, поэтому хотя бы один пример ответа сам
+    /// разбит на абзацы
+    // [REF:fr:op.readable-answers]
+    public func testOnScreenAnswerExamplesShowParagraphs() {
+        for kind in [OperationKind.summarize, .explain] {
+            let text = prompt(kind)
+            guard let start = text.range(of: "<examples>"), let end = text.range(of: "</examples>") else {
+                return XCTFail("\(kind) prompt has no examples")
+            }
+            let answers = text[start.upperBound ..< end.lowerBound]
+                .components(separatedBy: "</input>")
+                .dropFirst()
+                .map { $0.components(separatedBy: "Target language:").first ?? $0 }
+            let paragraphed = answers.contains { answer in
+                answer.trimmingCharacters(in: .whitespacesAndNewlines)
+                    .components(separatedBy: "\n\n")
+                    .count(where: { !$0.hasPrefix("**TL;DR:**") }) >= 2
+            }
+            XCTAssertTrue(paragraphed, "No \(kind) example answer is split into paragraphs")
+        }
+    }
 }
